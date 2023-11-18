@@ -1,0 +1,267 @@
+\documentclass[aspectratio=169,xcolor=dvipsnames, t]{beamer}
+
+\usepackage{cp24}
+
+%*************************************************************************************************************
+\title[Customizable Roundtrips with Tour4Me]{Customizable Roundtrips with Tour4Me}
+\subtitle{Meta-heuristic Approaches for Personalized Running and Cycling Routes}
+\author[Lisa Salewsky]{
+	Lisa Salewsky
+	}
+
+
+\institute[TU Dortmund]{
+	 \begin{minipage}[t][2.3cm][b]{0.7\textwidth}
+		\centering
+		\begin{tikzpicture}[remember picture,overlay]
+			\node[inner sep=0] at (2.5,-0.8) {\includegraphics[scale=0.1]{logo.png}};
+		\end{tikzpicture}
+	 	TU Dortmund, Fakultät für Informatik\\
+		\vspace{1.5cm}
+		Reviewer:\\
+		Prof. Dr. Kevin Buchin\\
+		Mart Hagedoorn, M. Sc.
+	\end{minipage}
+	
+}
+\date[\today]{\today}
+\beamertemplatenavigationsymbolsempty %Navigantionszeite unten aus
+%*************************************************************************************************************
+%\usetheme{Malmoe} 
+%\usetheme{Madrid}
+%\usecolortheme{rose} %schwache farben
+% Themes:
+%AnnArbor | Antibes | Bergen |Berkeley | Berlin | Boadilla |boxes | CambridgeUS | Copenhagen |Darmstadt | default | Dresden |
+%Frankfurt | Goettingen |Hannover | Ilmenau | JuanLesPins | Luebeck | Madrid | Malmoe | Marburg |
+%Montpellier | PaloAlto | Pittsburgh |Rochester | Singapore | Szeged |Warsaw
+\useinnertheme{rounded}
+%\useoutertheme{shadow} %schattierung in den Rechtecken der Blocken -- nix
+%*************************************************************************************************************
+
+
+% Customize the table of contents
+\setbeamertemplate{section in toc}[square]
+\setbeamertemplate{subsection in toc}[square]
+\setbeamertemplate{section/subsection in toc}[square]
+\setbeamercolor{section number projected}{bg=tu_green_full,fg=white}
+\setbeamercolor{subsection number projected}{bg=tu_green_full,fg=white}
+
+% Customize all the bulletpoints
+\setbeamertemplate{items}[square]
+
+% Customize the link colors
+\hypersetup{
+	colorlinks=true,
+	linkcolor=tu_green_full2,
+	urlcolor=tu_green_full2,
+	citecolor=tu_green_full2
+}
+
+\setbeamercolor{block title}{bg=tu_light_green_full2, fg=black}
+\setbeamercolor{block body}{bg=tu_light_green_full3, fg=black}
+
+
+\begin{document}
+%*************************************************************
+\begin{frame}
+	\thispagestyle{empty}
+	\titlepage
+\end{frame}
+%*************************************************************
+
+\begin{frame}{Agenda}
+	\centering	
+	\tableofcontents
+\end{frame}
+
+\section{Einf\"uhrung}
+%*************************************************************
+\begin{frame}{Beispiel Box}
+	\begin{block}{\href{https://icpc.global/}{International Collegiate Programming Contest (ICPC)}}
+		\begin{itemize}
+			\item Association for Computing Machinery (ACM)
+			\item seit 1970
+			\item an Universit\"uten weltweit
+		\end{itemize}
+	\end{block}
+	\begin{itemize}
+		\item Teams von 3 Studierenden
+		\item 10 Probleme mit verschiedenem Schwierigkeitsgrad
+		\item 1 Computer pro Gruppe
+		\item Hilfsmittel: \glqq Cheat Sheet\grqq
+		\item L\"osungen werden zu einem Judge Server hochgeladen
+		\item Gewinner: die Gruppe, welche die meisten Probleme gel\"ost hat
+	\end{itemize}
+
+\end{frame}
+
+\section{Organisatorisches}
+
+
+%*************************************************************
+\begin{frame}{Beispiel column plus Box}
+	\vspace{-0.5cm}
+	\begin{columns}
+		\begin{column}{.65\linewidth}
+			\begin{itemize}
+				{\small
+				\item { \bf 11.10.} Einf\"uhrungstreffen
+				\item { \bf 18.10.} Systemeinf\"uhrung
+				\item { \bf 25.10.} Tipps und Tricks
+				\item { \bf 08.11.} Datenstrukturen und Algorithmenentwurfsmethoden
+				\item { \bf 15.11.} Such- und Sortieralgorithmen
+				\item { \bf 22.11.} Dynamisch Programmieren
+				\item { \bf 29.11.} Strings
+				\item { \bf 06.12.} \"Ubungswettbewerb 1
+				\item { \bf 13.12.} Graphtraversierung
+				\item { \bf 20.12.} Flussalgorithmen und Matchings
+				\item { \bf 10.01.} Algorithmische Geometrie
+				\item { \bf 17.01.} \"Ubungswettbewerb 2
+				\item { \bf 24.01.} Wintercontest oder Interner Wettbewerb 
+    		}
+			\end{itemize}
+		\end{column}
+		\begin{column}{.25\linewidth}
+			\begin{block}{W\"ochentliche Treffen}
+				12:15 -- ca.\ 13:30\\
+				Besprechung, Vortrag\\
+				13:30 -- 15:45\\
+				Probleme l\"osen, Hilfestellung
+			\end{block}
+		\end{column}
+	\end{columns}
+
+\end{frame}
+%*************************************************************
+\begin{frame}{Beispiel Spalten mit Boxen}
+	\begin{columns}
+		\begin{column}{0.3\textwidth}
+			\begin{block}{Kommunikation}
+				\begin{enumerate}
+					\item Sprache
+					\item Stimme \& K\"orpersprache
+					\item Einfachheit \& Pr\"ogranz, Zeit
+				\end{enumerate}
+			\end{block}
+		\end{column}
+		\pause
+		\begin{column}{0.3\textwidth}
+			\begin{block}{Methodik}
+				\begin{enumerate}
+					\item Struktur
+					\item Stimulanz
+					\item Medien- \& Materialeinsatz
+					\item Interaktion
+				\end{enumerate}
+			\end{block}
+		\end{column}
+		\pause
+		\begin{column}{0.3\textwidth}
+			\begin{block}{Vortragsqualit\"at}
+				\begin{enumerate}
+					\item Korrektheit \& Technische Tiefe
+					\item Beantowrtung der Fragen
+					\item Pr\"asentationsziel
+				\end{enumerate}
+			\end{block}
+		\end{column}
+	\end{columns} ~\\
+	Motivation beim Vortrag!
+\end{frame}
+
+\begin{frame}{Timeline}
+   \centering
+   \vspace{0.5cm}
+   \tikzstyle{descript} = [text = black,align=center, minimum height=1.8cm, align=center, outer sep=0pt,font = \footnotesize]
+\begin{tikzpicture}[very thick, black]
+	\small
+	
+	%% Coordinates
+	\coordinate (O) at (-1,0); % Origin
+	\coordinate (P1) at (1,0);
+	\coordinate (P2) at (8,0);
+	\coordinate (P3) at (11,0);
+	\coordinate (P4) at (12.5,0);
+	\coordinate (F) at (13,0); %End
+	\coordinate (E1) at (5,0); %Event
+	\coordinate (E2) at (0.5,0); %Event
+	
+		
+	%% Arrow
+	\draw[->] (O) -- (F);
+	%% Ticks
+	\foreach \x in {0,2,...,12}
+	\draw(\x cm,3pt) -- (\x cm,-3pt);
+	%% Labels
+	\foreach \i \j in {0/Nov,2/Dec,4/Jan,6/Feb,8/Mar,10/Apr,12/May}{
+		\draw (\i,0) node[below=3pt] {\j} ;
+	}
+	\pause
+	
+	%% Filled regions
+	\fill[color=ColorOne!20] rectangle ($(O)+(0.2,0)$) -- (P1) -- ($(P1)+(0,1)$) -- ($(O)+(0.2,1)$);
+	\path [pattern color=ColorOne!80, pattern=north east lines, line width = 1pt, very thick] rectangle ($(O)+(0.4,0)$) -- ($(O)+(2,0)$) -- ($(O)+(2,1)$) -- ($(O)+(0.4,1)$);
+	\draw ($(P1)+(-0.9,0.5)$) node[activity,ColorOne] {Pre-work};
+	\pause	
+	
+	%% Description
+	\node[descript,fill=ColorOne!15,text=ColorOne](P0) at ($(P1)+(2,-2.5)$) {%
+		literature\\
+		examples\\
+		implementing interface};
+	
+	%% Arrows
+	\path[->,color=ColorOne] ($(P1)+(-0.5,-0.1)$) edge [out=-90, in=130]  ($(P0)+(0,1)$);
+	\pause
+	
+	\fill[color=ColorTwo!15] rectangle (P1) -- (P2) -- ($(P2)+(0,1)$) -- ($(P1)+(0,1)$);
+	\draw ($(P2)+(-3.55,0.5)$) node[activity,ColorTwo] {Implementing and testing different algorithms,\\ changing other aspects of the app};
+	\pause
+	
+	\fill[ColorThree!30] rectangle (P2) -- (P3) -- ($(P3)+(0,1)$) -- ($(P2)+(0,1)$);
+	\draw ($(P3)+(-1.55,0.5)$)  node[activity, ColorThree] {Gathering \\results};
+	\pause
+	
+	\fill[ColorFour!20] rectangle (P3) -- (P4) -- ($(P4)+(0,1)$) -- ($(P3)+(0,1)$);
+	\draw ($(P4)+(-0.8,0.5)$)  node[activity, ColorFour!80!black] {Writing \\only};
+	\pause
+
+	
+	%% Events
+	\draw [decorate,decoration={brace,amplitude=6pt}]($(P1)+(-1.8,1.2)$) -- ($(F)+(-0.5,1.2)$) node [black,midway,above=6pt, align=center] {Writing on the thesis};
+
+	
+\end{tikzpicture}
+\end{frame}
+%*************************************************************
+\begin{frame}{Thema 1: Datenstrukturen und Algorithmenentwurfsmethoden}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{itemize}
+				\item Listen
+				\item Arrays
+				\item Stacks
+				\item Heaps
+				\item Hashing
+			\end{itemize}
+		\end{column}
+		% \end{frame}
+		% %*************************************************************
+		% \begin{frame}{Thema 2: }
+		\begin{column}{0.5\textwidth}
+			\begin{itemize}
+				\item Greedy
+				\item Divide \& Conquer
+				\item Brute-Force
+				\item Backtracking
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%*************************************************************
+
+%*************************************************************
+%*************************************************************
+\end{document}
+
