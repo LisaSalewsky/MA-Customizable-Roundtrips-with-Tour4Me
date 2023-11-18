@@ -9,9 +9,6 @@ node_modules/
 **/.vs/
 **/appsettings.Development.json
 **/wwwroot/
-bootstrap/
-datatables/
-fontawesome/
 
 
 *.obj
