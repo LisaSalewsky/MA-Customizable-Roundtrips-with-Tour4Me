@@ -3,6 +3,39 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+#added
+*.pbf
+node_modules/
+**/.vs/
+**/appsettings.Development.json
+**/wwwroot/
+bootstrap/
+datatables/
+fontawesome/
+
+
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+
+*.lib
+*.sbr
+obj/s
+
 # User-specific files
 *.rsuser
 *.suo
