@@ -37,7 +37,7 @@
 
     <section>
         <%--<img src="img/jogging-4211946.jpg" class="img-fluid"/>--%>
-        <img src="img/jog-3789342-cropped.jpg class="img-fluid" />
+        <img src="img/jog-3789342-cropped.jpg" class="img-fluid" />
     </section>
 
 </asp:Content>

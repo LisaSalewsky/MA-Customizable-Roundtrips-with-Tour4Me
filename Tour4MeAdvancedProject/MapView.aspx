@@ -44,7 +44,10 @@
         <input type="text" id="distance" class="form-control" value="50" aria-label="Target Distance (m)">
         <div class="input-group-append">
             <button class="btn btn-secondary" disabled type="button">km</button>
-            <button type="button" class="btn btn-primary" onclick="getPath()">Compute Path</button>
+            <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" OnClick="GetPathButton_Click" />
+        </div>
+        <div>
+
         </div>
     </div>
 
@@ -156,7 +159,7 @@
         const lon_dor = 7.2185;
 
         lat_gran = 0.5 / 4
-        lat_pad = 0.5 / 6
+        lat_pad = 0.5 / 6;
         abs_min_lat = lat_dor;
         abs_max_lat = abs_min_lat + lat_gran;
 
@@ -175,8 +178,10 @@
         center_lat = 51.489808;
         center_lon = 7.406319;
 
+        var centered = false;
 
-        setTimeout(function () { map.invalidateSize(true) }, 100);
+
+        setTimeout(function () { map.invalidateSize(true) }, 10);
 
         navigator.geolocation.watchPosition(success, error);
 
@@ -189,9 +194,12 @@
             const accuracy = pos.coords.accuracy;
             zoomed = false;
 
-            lat = center_lat;
-            lng = center_lon;
-            map.setView([lat, lng], 13);
+            if (!centered) {
+                lat = center_lat;
+                lng = center_lon;
+                map.setView([lat, lng], 13);
+                centered = true;
+            }
 
 
             if (marker) {
@@ -225,6 +233,30 @@
             marker.addTo(map);
             center_lat = e.latlng.lat;
             center_lon = e.latlng.lng;
+
+
+            var marker_lat = marker.getLatLng().lat;
+            var marker_lon = marker.getLatLng().lng;
+
+            centered = false;
+
+            $.ajax({
+                type:'POST',
+                url: "MapView.aspx/setlatlon",
+                data: JSON.stringify({ latIn: marker_lat, lonIn: marker_lon }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (result) {
+                    // center_lat = result["center_lat"];
+                    // center_lon = result["center_lon"];
+                    console.log('Made first ajax call!')
+
+                },
+                error: function (xhr, status) {
+                    alert("Failed to contact server");
+                }
+            })
+
         };
 
 
@@ -266,7 +298,7 @@
 
 
         $.ajax({
-            url: "graphdata",
+            url: "MapView.aspx/RenderGraph",
             contentType: "application/json",
             dataType: 'json',
             success: function (result) {
@@ -412,7 +444,7 @@
             var dis = document.getElementById("distance").value * 1000;
 
             $.ajax({
-                url: "graphdata?lat=" + lat + "&lon=" + lon + "&map=" + selectedMap,
+                url: "MapView/GetPath?lat=" + lat + "&lon=" + lon + "&map=" + selectedMap,
                 contentType: "application/json",
                 dataType: 'json',
                 success: function (result) {
@@ -426,15 +458,22 @@
                     }
 
                     inner_box = l.polygon(
-                        [[[abs_min_lat - lat_pad, abs_min_lon - lon_pad],
-                        [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
-                        [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
-                        [abs_max_lat + lat_pad, abs_min_lon - lon_pad]],
-                        [[min_lat, min_lon],
-                        [min_lat, max_lon],
-                        [max_lat, max_lon],
-                        [max_lat, min_lon]]
-                        ], { interactive: false, color: 'yellow' }).addto(map);
+                        [
+                          [
+                            [abs_min_lat - lat_pad, abs_min_lon - lon_pad],
+                            [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
+                            [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
+                            [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
+                          ],
+                          [
+                            [min_lat, min_lon],
+                            [min_lat, max_lon],
+                            [max_lat, max_lon],
+                            [max_lat, min_lon]
+                          ]
+                        ], 
+                        { interactive: false, color: 'yellow' })
+                        .addto(map);
                 },
                 error: function (xhr, status) {
                     document.getElementById("overlay").style.display = "none";
