@@ -36,5 +36,13 @@ namespace Tour4MeAdvancedProject.Helper
             minCost,
             ILS
         }
+
+        public enum SolveStatus
+        {
+            Unsolved,
+            Optimal,
+            Feasible,
+            Timeout
+        }
     }
 }

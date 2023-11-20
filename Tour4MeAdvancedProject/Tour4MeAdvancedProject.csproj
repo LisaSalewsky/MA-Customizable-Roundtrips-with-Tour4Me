@@ -2169,6 +2169,10 @@
     <Compile Include="MapView.aspx.designer.cs">
       <DependentUpon>MapView.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ObjectClasses\Edge.cs" />
+    <Compile Include="ObjectClasses\Graph.cs" />
+    <Compile Include="ObjectClasses\Node.cs" />
+    <Compile Include="ObjectClasses\Problem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="site.Master.cs">
       <DependentUpon>site.Master</DependentUpon>
@@ -2184,6 +2188,9 @@
     <Compile Include="MapContent.aspx.designer.cs">
       <DependentUpon>MapContent.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Solver\JoggerSolver.cs" />
+    <Compile Include="Solver\Selection.cs" />
+    <Compile Include="Solver\Solver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fontawesome\less\brands.less" />

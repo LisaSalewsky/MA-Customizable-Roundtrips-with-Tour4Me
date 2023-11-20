@@ -17,7 +17,7 @@
         if (!MyGlobalVariables) {
             MyGlobalVariables = {};
         }
-        MyGlobalVariables.MapUrl = "@Url.Action("Map")";
+        //MyGlobalVariables.MapUrl = "@Url.Action("Map")";
     </script>
 
 </asp:Content>
@@ -44,7 +44,7 @@
         <input type="text" id="distance" class="form-control" value="50" aria-label="Target Distance (m)">
         <div class="input-group-append">
             <button class="btn btn-secondary" disabled type="button">km</button>
-            <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" OnClick="GetPathButton_Click" />
+            <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" />
         </div>
         <div>
 
@@ -57,7 +57,7 @@
             <label class="btn btn-primary" for="jogger">Jogger</label> -->
     </div>
 
-    <button type="button" class="btn btn-warning" data-bs-toggle="modal" style="position:absolute; right:20px" ;
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" style="position:absolute; right:20px"
             data-bs-target="#settingsModal">
         Open settings
     </button>
@@ -197,16 +197,25 @@
             if (!centered) {
                 lat = center_lat;
                 lng = center_lon;
-                map.setView([lat, lng], 13);
+                map.setView([lat, lng]);
                 centered = true;
             }
 
 
             if (marker) {
                 map.removeLayer(marker);
+            } else {
+                marker = L.marker([center_lat, center_lon], { draggable: 'true' }).addTo(map);
             }
-            marker = L.marker([center_lat, center_lon], { draggable: 'true' }).addTo(map);
 
+            // when marker is dragged
+            marker.on('dragend', function (event) {
+                var marker = event.target;
+                var position = marker.getLatLng();
+                marker.setLatLng(new L.LatLng(position.lat, position.lng), { draggable: 'true' });
+                map.panTo(new L.LatLng(position.lat, position.lng))
+            });
+            marker.addTo(map)
 
 
             // Set map focus to current user position
@@ -233,7 +242,7 @@
             marker.addTo(map);
             center_lat = e.latlng.lat;
             center_lon = e.latlng.lng;
-
+            map.panTo(new L.LatLng(center_lat, center_lon))
 
             var marker_lat = marker.getLatLng().lat;
             var marker_lon = marker.getLatLng().lng;
@@ -271,53 +280,55 @@
         map.on('click', onClick);
 
 
-        but = document.getElementById("switcherDor");
-        if (urlParams.has("map")) {
-            if (urlParams.get("map") == "sea") {
-                but = document.getElementById("switcherSea");
-                selectedMap = "sea";
+        //but = document.getElementById("switcherDor");
+        //if (urlParams.has("map")) {
+        //    if (urlParams.get("map") == "sea") {
+        //        but = document.getElementById("switcherSea");
+        //        selectedMap = "sea";
 
-                abs_min_lat = lat_sea;
-                abs_max_lat = abs_min_lat + lat_gran;
-                lat_gran = 0.5 / 2
-                lat_pad = 0.5 / 4
+        //        abs_min_lat = lat_sea;
+        //        abs_max_lat = abs_min_lat + lat_gran;
+        //        lat_gran = 0.5 / 2
+        //        lat_pad = 0.5 / 4
 
-                abs_min_lon = lon_sea;
-                abs_max_lon = abs_min_lon + lon_gran;
+        //        abs_min_lon = lon_sea;
+        //        abs_max_lon = abs_min_lon + lon_gran;
 
-                lon_gran = 0.75 / 2
-                lon_pad = 0.75 / 4;
+        //        lon_gran = 0.75 / 2
+        //        lon_pad = 0.75 / 4;
 
-                center_lat = (abs_max_lat + abs_min_lat) / 2;
-                center_lon = (abs_max_lon + abs_min_lon) / 2;
-            }
-        }
+        //        center_lat = (abs_max_lat + abs_min_lat) / 2;
+        //        center_lon = (abs_max_lon + abs_min_lon) / 2;
+        //    }
+        //}
 
-        but.setAttribute("aria-disabled", "true");
-        but.classList.add("disabled");
+        //but.setAttribute("aria-disabled", "true");
+        //but.classList.add("disabled");
 
 
         $.ajax({
+            type: "POST",
             url: "MapView.aspx/RenderGraph",
-            contentType: "application/json",
+            contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success: function (result) {
                 // center_lat = result["center_lat"];
                 // center_lon = result["center_lon"];
 
-                tags = result["tags"];
-                algos = result["algorithms"];
+                tagsHighway = result.d.highway;
+                tagsSurface = result.d.surface;
+                algos = result.d.algorithms;
 
-                map = L.map('map').setView([center_lat, center_lon], 14);
+                //map = L.map('map').setView([center_lat, center_lon], 14);
 
-                var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-                    maxZoom: 25,
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-                        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                    id: 'mapbox/streets-v11',
-                    tileSize: 512,
-                    zoomOffset: -1
-                }).addTo(map);
+                //var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                //    maxZoom: 25,
+                //    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                //        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                //    id: 'mapbox/streets-v11',
+                //    tileSize: 512,
+                //    zoomOffset: -1
+                //}).addTo(map);
 
                 // var polyline = L.polyline(path, {color: 'red'}).addTo(map);
 
@@ -357,38 +368,36 @@
                 tagButtonsHighway = document.getElementById("tagButtonsHighway");
                 tagButtonsSurface = document.getElementById("tagButtonsSurface");
 
-                tags.forEach(tag => {
-                    var name = tag[0][0].toUpperCase() + tag[0].slice(1);
+                tagsHighway.forEach(tag => {
 
                     tagButtons = tagButtonsHighway;
-                    if (tag[1] == 1) {
-                        tagButtons = tagButtonsSurface;
-                    }
 
-                    if (name == "Path" || name == "Track") {
-                        tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-success desire\" id=\"" + tag + "\">" + name + "</label>"
-                    } else {
-                        tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-secondary neutral\" id=\"" + tag + "\">" + name + "</label>"
-                    }
+                    const key_val_keys = Object.keys(tag);
 
+                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-success desire\" id=\"highway" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
+                });
+
+                tagsSurface.forEach(tag => {
+                    
+                    tagButtons = tagButtonsSurface;
+
+                    const key_val_keys = Object.keys(tag);
+
+                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-secondary neutral\" id=\"surface" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
                 });
 
 
                 algosRadio = document.getElementById("algoRadio");
 
-                // const algo = algos[0];
-                // var name = algo[0].toUpperCase() + algo.slice(1);
-                // algosRadio.innerHTML += "<input type=\"radio\" class=\"btn-check\" name=\"algorithm\" value=" + 0 + " id=\"" + algo + "\" autocomplete=\"off\" checked/>";
-                // algosRadio.innerHTML += "<label class=\"btn btn-primary\" for=\"" + algo + "\">" + name + "</label>";
+                algos.forEach(algorithm => {
+
+                    const key_val_keys = Object.keys(algorithm);
+
+                    algosRadio.innerHTML += "<input type=\"radio\" class=\"btn-check\" name=\"algorithm\" value=" + algorithm[key_val_keys[0]] + " id=\"" + algorithm[key_val_keys[1]] + "\" autocomplete=\"off\" " + (algorithm[key_val_keys[0]] == 1 ? "checked" : "") + "/>";
+                    algosRadio.innerHTML += "<label class=\"btn btn-primary\" for=\"" + algorithm[key_val_keys[0]] + "\">" + algorithm[key_val_keys[1]] + "</label>";
+                });
 
 
-                for (let index = 0; index < algos.length; index++) {
-                    const algo = algos[index];
-                    var name = algo[0].toUpperCase() + algo.slice(1);
-                    algosRadio.innerHTML += "<input type=\"radio\" class=\"btn-check\" name=\"algorithm\" value=" + index + " id=\"" + algo + "\" autocomplete=\"off\" " + (index == 1 ? "checked" : "") + "/>";
-                    algosRadio.innerHTML += "<label class=\"btn btn-primary\" for=\"" + algo + "\">" + name + "</label>";
-
-                }
 
                 $(".btn-group > .btn-cycle").click(function () {
                     if ($(this).hasClass("neutral")) {
@@ -437,15 +446,20 @@
             targetLabel.innerHTML = (100 - current.value) + "%"
         }
 
-        function getPath() {
+        $("#GetPathButton").click(function getPath() {
 
             var lat = marker.getLatLng()["lat"];
             var lon = marker.getLatLng()["lng"];
             var dis = document.getElementById("distance").value * 1000;
 
             $.ajax({
-                url: "MapView/GetPath?lat=" + lat + "&lon=" + lon + "&map=" + selectedMap,
-                contentType: "application/json",
+                url: "MapView/GetPath",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    latIn: lat,
+                    lonIn: lon,
+                    mapIn: selectedMap
+                }),
                 dataType: 'json',
                 success: function (result) {
                     max_lat = result["max_lat"];
@@ -459,19 +473,19 @@
 
                     inner_box = l.polygon(
                         [
-                          [
-                            [abs_min_lat - lat_pad, abs_min_lon - lon_pad],
-                            [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
-                            [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
-                            [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
-                          ],
-                          [
-                            [min_lat, min_lon],
-                            [min_lat, max_lon],
-                            [max_lat, max_lon],
-                            [max_lat, min_lon]
-                          ]
-                        ], 
+                            [
+                                [abs_min_lat - lat_pad, abs_min_lon - lon_pad],
+                                [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
+                                [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
+                                [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
+                            ],
+                            [
+                                [min_lat, min_lon],
+                                [min_lat, max_lon],
+                                [max_lat, max_lon],
+                                [max_lat, min_lon]
+                            ]
+                        ],
                         { interactive: false, color: 'yellow' })
                         .addto(map);
                 },
@@ -516,8 +530,20 @@
 
 
             $.ajax({
-                url: "tour?dis=" + dis + "&lat=" + lat + "&lon=" + lon + "&algo=" + algorithm + tag_str + "&rt=" + runningTime + "&ep=" + edgeProfit + "&ca=" + coveredArea + "&mt=" + mapType + "&map=" + selectedMap,
-                contentType: "application/json",
+                url: "MapView/Tour",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    latIn: lat,
+                    lonIn: lon,
+                    distIn: dis,
+                    algoIn: algorithm,
+                    tagsHIn: tagsHighway,
+                    tagsSIn: tagsSurface,
+                    runningTimeIn: runningTime,
+                    edgeProfitIn: edgeProfit,
+                    coveredAreaIn: coveredArea,
+                    mapIn: selectedMap
+                }),
                 dataType: 'json',
                 success: function (result) {
                     var line = L.polyline(result["path"], { color: colors[route_counter % colors.length], weight: 5 }).addTo(map);
@@ -583,7 +609,7 @@
                 }
             })
 
-        }
+        });
 
         function findRoute(route_id) {
             var route_obj;
