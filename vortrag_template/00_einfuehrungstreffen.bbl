@@ -1,0 +1,292 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{16}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[Bast et~al\mbox{.}(2016)]%
+        {bastRoutePlanningTransportation2016}
+\bibfield{author}{\bibinfo{person}{Hannah Bast}, \bibinfo{person}{Daniel
+  Delling}, \bibinfo{person}{Andrew Goldberg}, \bibinfo{person}{Matthias
+  {M{\"u}ller-Hannemann}}, \bibinfo{person}{Thomas Pajor},
+  \bibinfo{person}{Peter Sanders}, \bibinfo{person}{Dorothea Wagner}, {and}
+  \bibinfo{person}{Renato~F. Werneck}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Route {{Planning}} in {{Transportation Networks}}}.
+\newblock In \bibinfo{booktitle}{\emph{Algorithm {{Engineering}}: {{Selected
+  Results}} and {{Surveys}}}}, \bibfield{editor}{\bibinfo{person}{Lasse
+  Kliemann} {and} \bibinfo{person}{Peter Sanders}} (Eds.).
+  \bibinfo{publisher}{{Springer International Publishing}},
+  \bibinfo{address}{{Cham}}, \bibinfo{pages}{19--80}.
+\newblock
+\showISBNx{978-3-319-49487-6}
+\urldef\tempurl%
+\url{https://doi.org/10.1007/978-3-319-49487-6_2}
+\showDOI{\tempurl}
+
+
+\bibitem[Br{\"a}ysy and Gendreau(2005)]%
+        {braysyVehicleRoutingProblem2005}
+\bibfield{author}{\bibinfo{person}{Olli Br{\"a}ysy} {and}
+  \bibinfo{person}{Michel Gendreau}.} \bibinfo{year}{2005}\natexlab{}.
+\newblock \showarticletitle{Vehicle {{Routing Problem}} with {{Time Windows}},
+  {{Part I}}: {{Route Construction}} and {{Local Search Algorithms}}}.
+\newblock \bibinfo{journal}{\emph{Transportation Science}}
+  \bibinfo{volume}{39}, \bibinfo{number}{1} (\bibinfo{date}{Feb.}
+  \bibinfo{year}{2005}), \bibinfo{pages}{104--118}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1287/trsc.1030.0056}
+\showDOI{\tempurl}
+
+
+\bibitem[Cherkassky et~al\mbox{.}(1996)]%
+        {cherkasskyShortestPathsAlgorithms1996}
+\bibfield{author}{\bibinfo{person}{Boris~V. Cherkassky},
+  \bibinfo{person}{Andrew~V. Goldberg}, {and} \bibinfo{person}{Tomasz Radzik}.}
+  \bibinfo{year}{1996}\natexlab{}.
+\newblock \showarticletitle{Shortest Paths Algorithms: {{Theory}} and
+  Experimental Evaluation}.
+\newblock \bibinfo{journal}{\emph{Mathematical Programming}}
+  \bibinfo{volume}{73}, \bibinfo{number}{2} (\bibinfo{date}{May}
+  \bibinfo{year}{1996}), \bibinfo{pages}{129--174}.
+\newblock
+\showISSN{1436-4646}
+\urldef\tempurl%
+\url{https://doi.org/10.1007/BF02592101}
+\showDOI{\tempurl}
+
+
+\bibitem[Delling(2011)]%
+        {dellingTimeDependentSHARCRouting2011}
+\bibfield{author}{\bibinfo{person}{Daniel Delling}.}
+  \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Time-{{Dependent SHARC-Routing}}}.
+\newblock \bibinfo{journal}{\emph{Algorithmica}} \bibinfo{volume}{60},
+  \bibinfo{number}{1} (\bibinfo{date}{May} \bibinfo{year}{2011}),
+  \bibinfo{pages}{60--94}.
+\newblock
+\showISSN{1432-0541}
+\urldef\tempurl%
+\url{https://doi.org/10.1007/s00453-009-9341-0}
+\showDOI{\tempurl}
+
+
+\bibitem[Delling et~al\mbox{.}(2017)]%
+        {dellingCustomizableRoutePlanning2017}
+\bibfield{author}{\bibinfo{person}{Daniel Delling}, \bibinfo{person}{Andrew~V.
+  Goldberg}, \bibinfo{person}{Thomas Pajor}, {and} \bibinfo{person}{Renato~F.
+  Werneck}.} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Customizable {{Route Planning}} in {{Road
+  Networks}}}.
+\newblock \bibinfo{journal}{\emph{Transportation Science}}
+  \bibinfo{volume}{51}, \bibinfo{number}{2} (\bibinfo{date}{May}
+  \bibinfo{year}{2017}), \bibinfo{pages}{566--591}.
+\newblock
+\showISSN{0041-1655}
+\urldef\tempurl%
+\url{https://doi.org/10.1287/trsc.2014.0579}
+\showDOI{\tempurl}
+
+
+\bibitem[Delling et~al\mbox{.}(2015)]%
+        {dellingRoundBasedPublicTransit2015}
+\bibfield{author}{\bibinfo{person}{Daniel Delling}, \bibinfo{person}{Thomas
+  Pajor}, {and} \bibinfo{person}{Renato~F. Werneck}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Round-{{Based Public Transit Routing}}}.
+\newblock \bibinfo{journal}{\emph{Transportation Science}}
+  \bibinfo{volume}{49}, \bibinfo{number}{3} (\bibinfo{date}{Aug.}
+  \bibinfo{year}{2015}), \bibinfo{pages}{591--604}.
+\newblock
+\showISSN{0041-1655}
+\urldef\tempurl%
+\url{https://doi.org/10.1287/trsc.2014.0534}
+\showDOI{\tempurl}
+
+
+\bibitem[Delling et~al\mbox{.}(2009)]%
+        {dellingEngineeringRoutePlanning2009}
+\bibfield{author}{\bibinfo{person}{Daniel Delling}, \bibinfo{person}{Peter
+  Sanders}, \bibinfo{person}{Dominik Schultes}, {and} \bibinfo{person}{Dorothea
+  Wagner}.} \bibinfo{year}{2009}\natexlab{}.
+\newblock \showarticletitle{Engineering {{Route Planning Algorithms}}}.
+\newblock In \bibinfo{booktitle}{\emph{Algorithmics of {{Large}} and {{Complex
+  Networks}}: {{Design}}, {{Analysis}}, and {{Simulation}}}},
+  \bibfield{editor}{\bibinfo{person}{J{\"u}rgen Lerner},
+  \bibinfo{person}{Dorothea Wagner}, {and} \bibinfo{person}{Katharina~A.
+  Zweig}} (Eds.). \bibinfo{publisher}{{Springer}}, \bibinfo{address}{{Berlin,
+  Heidelberg}}, \bibinfo{pages}{117--139}.
+\newblock
+\showISBNx{978-3-642-02094-0}
+\urldef\tempurl%
+\url{https://doi.org/10.1007/978-3-642-02094-0_7}
+\showDOI{\tempurl}
+
+
+\bibitem[Gemsa et~al\mbox{.}(2013)]%
+        {gemsaEfficientComputationJogging2013}
+\bibfield{author}{\bibinfo{person}{Andreas Gemsa}, \bibinfo{person}{Thomas
+  Pajor}, \bibinfo{person}{Dorothea Wagner}, {and} \bibinfo{person}{Tobias
+  Z{\"u}ndorf}.} \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{Efficient {{Computation}} of {{Jogging Routes}}}.
+  In \bibinfo{booktitle}{\emph{Experimental {{Algorithms}}}}
+  \emph{(\bibinfo{series}{Lecture {{Notes}} in {{Computer Science}}})},
+  \bibfield{editor}{\bibinfo{person}{Vincenzo Bonifaci}, \bibinfo{person}{Camil
+  Demetrescu}, {and} \bibinfo{person}{Alberto {Marchetti-Spaccamela}}} (Eds.).
+  \bibinfo{publisher}{{Springer}}, \bibinfo{address}{{Berlin, Heidelberg}},
+  \bibinfo{pages}{272--283}.
+\newblock
+\showISBNx{978-3-642-38527-8}
+\urldef\tempurl%
+\url{https://doi.org/10.1007/978-3-642-38527-8_25}
+\showDOI{\tempurl}
+
+
+\bibitem[Gendreau and Potvin(2010)]%
+        {gendreauHandbookMetaheuristics2010}
+\bibfield{editor}{\bibinfo{person}{Michel Gendreau} {and}
+  \bibinfo{person}{Jean-Yves Potvin}} (Eds.). \bibinfo{year}{2010}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Handbook of {{Metaheuristics}}}}.
+  \bibinfo{series}{International {{Series}} in {{Operations Research}} \&
+  {{Management Science}}}, Vol.~\bibinfo{volume}{146}.
+\newblock \bibinfo{publisher}{{Springer US}}, \bibinfo{address}{{Boston, MA}}.
+\newblock
+\showISBNx{978-1-4419-1663-1 978-1-4419-1665-5}
+\urldef\tempurl%
+\url{https://doi.org/10.1007/978-1-4419-1665-5}
+\showDOI{\tempurl}
+
+
+\bibitem[Irnich et~al\mbox{.}(2006)]%
+        {irnichSequentialSearchIts2006}
+\bibfield{author}{\bibinfo{person}{Stefan Irnich}, \bibinfo{person}{Birger
+  Funke}, {and} \bibinfo{person}{Tore Gr{\"u}nert}.}
+  \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{Sequential Search and Its Application to
+  Vehicle-Routing Problems}.
+\newblock \bibinfo{journal}{\emph{Computers \& Operations Research}}
+  \bibinfo{volume}{33}, \bibinfo{number}{8} (\bibinfo{date}{Aug.}
+  \bibinfo{year}{2006}), \bibinfo{pages}{2405--2429}.
+\newblock
+\showISSN{0305-0548}
+\urldef\tempurl%
+\url{https://doi.org/10.1016/j.cor.2005.02.020}
+\showDOI{\tempurl}
+
+
+\bibitem[Lawler and Wood(1966)]%
+        {lawlerBranchandBoundMethodsSurvey1966}
+\bibfield{author}{\bibinfo{person}{E.~L. Lawler} {and} \bibinfo{person}{D.~E.
+  Wood}.} \bibinfo{year}{1966}\natexlab{}.
+\newblock \showarticletitle{Branch-and-{{Bound Methods}}: {{A Survey}}}.
+\newblock \bibinfo{journal}{\emph{Operations Research}} \bibinfo{volume}{14},
+  \bibinfo{number}{4} (\bibinfo{date}{Aug.} \bibinfo{year}{1966}),
+  \bibinfo{pages}{699--719}.
+\newblock
+\showISSN{0030-364X}
+\urldef\tempurl%
+\url{https://doi.org/10.1287/opre.14.4.699}
+\showDOI{\tempurl}
+
+
+\bibitem[Madkour et~al\mbox{.}(2017)]%
+        {madkourSurveyShortestPathAlgorithms2017}
+\bibfield{author}{\bibinfo{person}{Amgad Madkour}, \bibinfo{person}{Walid~G.
+  Aref}, \bibinfo{person}{Faizan~Ur Rehman}, \bibinfo{person}{Mohamed~Abdur
+  Rahman}, {and} \bibinfo{person}{Saleh Basalamah}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \bibinfo{title}{A {{Survey}} of {{Shortest-Path Algorithms}}}.
+\newblock
+\newblock
+\showeprint[arxiv]{1705.02044}~[cs]
+
+
+\bibitem[Reinelt(2003)]%
+        {reineltTravelingSalesmanComputational2003}
+\bibfield{author}{\bibinfo{person}{Gerhard Reinelt}.}
+  \bibinfo{year}{2003}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{The {{Traveling Salesman}}: {{Computational
+  Solutions}} for {{TSP Applications}}}}.
+\newblock \bibinfo{publisher}{{Springer}}, \bibinfo{address}{{Berlin,
+  Heidelberg}}.
+\newblock
+\showISBNx{978-3-540-48661-9}
+
+
+\bibitem[Ropke(2005)]%
+        {ropkeHeuristicExactAlgorithms2005}
+\bibfield{author}{\bibinfo{person}{Stefan Ropke}.}
+  \bibinfo{year}{2005}\natexlab{}.
+\newblock \emph{\bibinfo{title}{Heuristic and Exact Algorithms for Vehicle
+  Routing Problems}}.
+\newblock \bibinfo{thesistype}{Ph.\,D. Dissertation}.
+  \bibinfo{school}{Technical University of Denmark}.
+\newblock
+
+
+\bibitem[Sommer(2014)]%
+        {sommerShortestpathQueriesStatic2014}
+\bibfield{author}{\bibinfo{person}{Christian Sommer}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Shortest-Path Queries in Static Networks}.
+\newblock \bibinfo{journal}{\emph{Comput. Surveys}} \bibinfo{volume}{46},
+  \bibinfo{number}{4} (\bibinfo{date}{April} \bibinfo{year}{2014}),
+  \bibinfo{pages}{1--31}.
+\newblock
+\showISSN{0360-0300, 1557-7341}
+\urldef\tempurl%
+\url{https://doi.org/10.1145/2530531}
+\showDOI{\tempurl}
+
+
+\bibitem[Wayahdi et~al\mbox{.}(2021)]%
+        {wayahdiGreedyAStarDijkstra2021}
+\bibfield{author}{\bibinfo{person}{Muhammad~Rhifky Wayahdi},
+  \bibinfo{person}{Subhan Hafiz~Nanda Ginting}, {and} \bibinfo{person}{Dinur
+  Syahputra}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{Greedy, {{A-Star}}, and {{Dijkstra}}'s
+  {{Algorithms}} in {{Finding Shortest Path}}}.
+\newblock \bibinfo{journal}{\emph{International Journal of Advances in Data and
+  Information Systems}} \bibinfo{volume}{2}, \bibinfo{number}{1}
+  (\bibinfo{date}{Feb.} \bibinfo{year}{2021}), \bibinfo{pages}{45--52}.
+\newblock
+\showISSN{2721-3056}
+\urldef\tempurl%
+\url{https://doi.org/10.25008/ijadis.v2i1.1206}
+\showDOI{\tempurl}
+
+
+\end{thebibliography}

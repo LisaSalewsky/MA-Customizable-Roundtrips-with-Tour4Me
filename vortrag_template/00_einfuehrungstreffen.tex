@@ -1,6 +1,9 @@
 \documentclass[aspectratio=169,xcolor=dvipsnames, t]{beamer}
 
 \usepackage{cp24}
+\usepackage[square,numbers]{natbib}
+
+\bibliographystyle{ACM-Reference-Format}
 
 %*************************************************************************************************************
 \title[Customizable Roundtrips with Tour4Me]{Customizable Roundtrips with Tour4Me}
@@ -68,87 +71,253 @@
 		\titlepage
 	\end{frame}
 	%*************************************************************
-	
-	\begin{frame}{Agenda}
-		\centering	
-		\tableofcontents
-	\end{frame}
+%	
+%	\begin{frame}{Agenda}
+%		\centering	
+%		\tableofcontents
+%	\end{frame}
 	
 	\section{Einleitung}
 	
 	\begin{frame}{Einleitung}
+		\vspace{0.25cm}
 		Warum eine App zum Erstellen von Rundrips?
-		\begin{itemize}[<+->]
-			\item viele Lösungen für kürzeste Wege von A nach B
-			\item aber kaum Ansätze für Rundtrips mit Präferenzen
-			\item Joggen und Radfahren in der Freizeit:
-			\begin{itemize}[<+->]
-				\item meist Runden von beliebigem Startpunkt aus
-				\item bestimmte Länge vorgegeben (kein kürzester Weg)
-				\item weitere Bedingungen für attraktive Strecken nötig
-			\end{itemize}
-		\end{itemize}
+		\only<2>{	
+			\begin{figure}
+				\includegraphics[height=0.6\textheight]{images/IMG-20231124-WA0010-cropped.jpg}
+			\end{figure}}
+		\only<3>{	
+			\begin{figure}
+				\includegraphics[height=0.6\textheight]{images/IMG-20231124-WA0039-cropped.jpg}
+			\end{figure}}
+		\only<4>{	
+			\begin{figure}
+				\includegraphics[height=0.6\textheight]{images/WhatsApp Bild 2023-11-24 um 14.35.53_5752c78a.jpg}
+			\end{figure}}
+	\end{frame}
+	\begin{frame}{Einleitung}
+		\vspace{0.25cm}
+		Warum eine App zum Erstellen von Rundrips?
+		\begin{columns}
+			\begin{column}{0.48\textwidth}
+				\includegraphics[height=0.3\textheight]{images/IMG-20231124-WA0010-cropped.jpg}
+			\vspace{-1.5cm}
+				\begin{flushright}
+					\includegraphics[height=0.3\textheight]{images/IMG-20231124-WA0039-cropped.jpg}
+				\end{flushright}
+			\vspace{-1cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/WhatsApp Bild 2023-11-24 um 14.35.53_5752c78a.jpg}
+				\end{flushleft}
+		\end{column}
+		\pause
+		\begin{column}{0.48\textwidth}
+			\vspace{-2cm}
+			\begin{block}{Gemeinsamkeiten}
+				\begin{itemize}[<+->]
+					\item Kann von A nach B gehen
+					\item In der Freizeit aber oft Rundtrips
+					\item Möglichst "hübsche" Routen mit zusätzlichen individuellen Wünschen gewünscht
+				\end{itemize}
+			\end{block}
+		\end{column}
+		\end{columns} ~\\
+		
 	\end{frame}
 	
 	\begin{frame}{Einleitung}
-		Was macht eine Strecke attraktiv?
-		\begin{itemize}[<+->]
-			\item abhängig von individuellen Bedürfnissen und vom Level der Person
-			\item viele verschiedene Faktoren
+	\vspace{0.25cm}
+	Warum eine App zum Erstellen von Rundrips?
+	\pause
+	\begin{itemize}[<+->]	
+		\item viele Lösungen für kürzeste Wege von A nach B
+		\item Optimieren alltägliche Routen
+		\item Joggen und Radfahren in der Freizeit:
+		\item weitere Bedingungen für attraktive Strecken nötig
+		\item aber kaum Ansätze für Rundtrips mit Präferenzen
+	\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Einleitung}
+		\vspace{0.25cm}
+		Was macht eine Strecke attraktiv?\\
+		\pause
+		\vspace{-0.2cm}
+		\begin{minipage}[t]{0.48\textwidth}
 			\begin{itemize}[<+->]
-				\item Wegtyp (Straße, Waldpfad, etc.)
-				\item Untergrund (Teer, Kies, Sand, Erde, etc.)
-				\item Steigung
-				\item Umgebung (Wald, Park, Wohngegend, etc.)
-				\item Form (Rund, gerade mit U-Turn, viele Abzweigungen, etc.)
-			\end{itemize}
-			\item Einfluss dieser auf Strecke individuell auswählen 
+				\item abhängig von individuellen Bedürfnissen und vom Level der Person
+				\item viele verschiedene Faktoren
+				\begin{itemize}[<+->]
+					\item Wegtyp (Straße, Waldpfad, Radweg etc.)
+					\item Untergrund (Teer, Kies, Sand, Erde, etc.)
+					\item Steigung
+					\item Umgebung (Wald, Park, Wohngegend, etc.)
+					\item Form (Rund, gerade mit U-Turn, viele Abzweigungen, etc.)
+				\end{itemize}
+				\item Einfluss dieser auf Strecke individuell auswählen 
 		\end{itemize}
+		\end{minipage}
+		\begin{minipage}[t][0.7\textheight][b]{0.48\textwidth}
+			\only<4>{
+				\includegraphics[height=0.5\textheight]{images/IMG_20220921_181918.jpg}
+				\vspace{-3.5cm}
+				\begin{flushright}
+					\includegraphics[height=0.5\textheight]{images/IMG-20231124-WA0038.jpg}
+				\end{flushright}
+				\vspace{-1cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/DSC00708.JPG}
+				\end{flushleft}}
+			\only<5>{
+				\includegraphics[height=0.3\textheight]{images/DSC08658.JPG}
+				\vspace{-2cm}
+				\begin{flushright}
+					\includegraphics[height=0.5\textheight]{images/IMG_20220921_181918.jpg}
+				\end{flushright}
+				\vspace{-2cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/DSC03182.JPG}
+				\end{flushleft}}
+			\only<6>{
+				\includegraphics[height=0.3\textheight, angle=90]{images/DSC00758.JPG}
+				\vspace{-3cm}
+				\begin{flushright}
+					\includegraphics[height=0.3\textheight]{images/DSC08658.JPG}
+				\end{flushright}
+%				\vspace{0.5cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/DSC03182.JPG}
+				\end{flushleft}}
+			\only<7>{
+				\includegraphics[height=0.3\textheight]{images/DSC03653.JPG}
+				\vspace{-3cm}
+				\begin{flushright}
+					\includegraphics[height=0.3\textheight]{images/IMG_20230208_095155.jpg}
+				\end{flushright}
+				\vspace{0.5cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/IMG_20221008_161529.jpg}
+				\end{flushleft}
+				\vspace{-3cm}
+				\begin{flushright}
+					\includegraphics[height=0.3\textheight]{images/IMG_20220913_171859.jpg}
+				\end{flushright}}
+			\only<8>{
+			\includegraphics[height=0.4\textheight]{images/laufstrecke_rund.jpg}
+			\vspace{-3cm}
+				\begin{flushright}
+					\includegraphics[height=0.4\textheight]{images/laufstecke_uturn.jpg}
+				\end{flushright}
+				%				\vspace{0.5cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/laufstrecke_komplex.jpg}
+				\end{flushleft}}
+		\end{minipage}
 	\end{frame}
 	
 	\section{Ziel}
-	
 	\begin{frame}
+		\vspace{0.25cm}
 		Was ist das Ziel?
+		\pause
 		\begin{itemize}[<+->]
 			\item Grundlage: Tour4Me
 			\item App erweitern und nutzbarer machen
-			\item Mögliche algorithmische Erweiterungen: Metaheuristiken
-			\begin{itemize}[<+->]
-				\item AntColony
-				\item Simulated Annealing
-				\item Genetisch
-				\item Kombinationen
-			\end{itemize}
-			\item mögliche UI Erweiterungen: Mehr Parameter, Änderung des Interfaces
-			\begin{itemize}[<+->]
-				\item Einbeziehen der genannten Faktoren
-				\item algorithmisch und in der GUI
-				\item Anpassen der GUI auf neue Optionen
-			\end{itemize}
-			\item allgemein: Tour4Me so anpassen, dass für (fast) jeden Startpunkt und jede Routenlänge ein (möglichst gutes) Ergebnis ausgegeben wird
 		\end{itemize}
+		\pause
+		\begin{columns}
+			\begin{column}{0.48\textwidth}
+				\begin{block}{ Mögliche algorithmische Erweiterungen: Metaheuristiken}		
+					\pause			
+					\begin{itemize}[<+->]
+						\item AntColony
+						\item Simulated Annealing
+						\item Genetisch
+						\item Kombinationen
+					\end{itemize}
+				\end{block}
+			\end{column}
+			\pause
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Mögliche UI Erweiterungen: Mehr Parameter, Änderung des Interfaces}
+					\pause
+					\begin{itemize}[<+->]
+						\item Einbeziehen der genannten Faktoren
+						\item algorithmisch und in der GUI
+						\item Anpassen der GUI auf neue Optionen
+					\end{itemize}
+				\end{block}
+			\end{column}
+		\end{columns} ~\\
+		
+		\pause
+		$\Rightarrow$ allgemein: Tour4Me so anpassen, dass für (fast) jeden Startpunkt und jede Routenlänge ein (möglichst gutes) Ergebnis ausgegeben wird
 	\end{frame}
 	
 	\begin{frame}{Tour4Me Demo}
 		\centering
 		\vspace{2cm}
-		\Huge Demo
+		\Huge \href{http://tour4me.cs.tu-dortmund.de/} {Tour4Me}
 	\end{frame}
 	
 	
-	\section{Motivation und Hintergrund}
-	
+	\section{Motivation und Hintergrund}	
 	\begin{frame}
+		\vspace{0.5cm}
+		Viele Algorithmen, Ansätze und viel  Forschung zu Kürzeste-Wege-Problemen
+		\pause
+		\begin{itemize}[<+->]
+			\item Reviews, Vergleiche und Analysen \cite{madkourSurveyShortestPathAlgorithms2017, sommerShortestpathQueriesStatic2014, wayahdiGreedyAStarDijkstra2021}
+			\item Zusätzlich weitere heuristische Ansätze
+			\begin{itemize}[<+->]
+				\item local search Varianten \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
+				\item neighborhood basierte Ideen \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
+			\end{itemize} 
+		\item algorithmische Routing-Probleme  bereits NP-schwer \cite{reineltTravelingSalesmanComputational2003}
+		\begin{itemize}[<+->]
+			\item Traveling Salesman (TSP)\cite{gendreauHandbookMetaheuristics2010} 
+			\item vehicle routing \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006}
+		\end{itemize}
+		\end{itemize}
+		\pause
 		
+		$\Rightarrow$ Rundtrips mit Nebenbedingungen noch komplexer \cite{gemsaEfficientComputationJogging2013}
+		\pause
+		\begin{itemize}[<+->]
+			\item vorhandene Tools meist eingeschränkt
+			\item Auswahl an Nebenbedingungen beschränkt
+			\item Editieren schwierig/ ignoriert Nebenbedingungen
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Beispiele}
+		\centering
+		\vspace{2.5cm}
+		\Huge
+		\only<1> {\href{https://www.routeyou.com}{RouteYou}}
+		\only<2> {\href{https://www.routeloops.com/}{RouteLoops}}
 	\end{frame}
 	
 	
-	\section{Vorgehensweise}
-	
-	
-	\begin{frame}
-		
+	\section{Vorgehensweise}		
+	\begin{frame}	
+		\vspace{0.5cm}
+		\begin{block}{}
+			\begin{itemize}[<+->]
+				\item Interface zum Testen neuer Ansätze und Metaheuristiken (C\#)
+				\item Einbauen neuer Auswahloptionen für User (z.B. Höhe/Anstieg)
+				\item Implementieren verschiedener Ansätze
+				\begin{itemize}[<+->]
+					\item Metaheuristiken
+					\item Kombinationen dieser
+					\item Kobination mit bereits implementierten Ansätzen
+				\end{itemize}
+				\item Auswertung und Vergleich der Ansätze
+				\item Anpassen des User Interfaces
+				\item Auswahl des/der best passenden Umsetzungen
+				\item Übertragen in eine finale Tour4Me Anwendung (vollständig c++ oder \#)
+			\end{itemize}
+		\end{block}
 	\end{frame}
 	
 	\begin{frame}{Timeline}
@@ -218,7 +387,8 @@
 	
 	
 	\section{Literatur}
-	\begin{frame}{Literatur}
+	\begin{frame}[allowframebreaks]{Literatur}
+		\tiny
 		\bibliography{LS11Buchin.bib}
 	\end{frame}
 	
