@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{16}
+\begin{thebibliography}{10}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -37,26 +37,6 @@
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
 
-\bibitem[Bast et~al\mbox{.}(2016)]%
-        {bastRoutePlanningTransportation2016}
-\bibfield{author}{\bibinfo{person}{Hannah Bast}, \bibinfo{person}{Daniel
-  Delling}, \bibinfo{person}{Andrew Goldberg}, \bibinfo{person}{Matthias
-  {M{\"u}ller-Hannemann}}, \bibinfo{person}{Thomas Pajor},
-  \bibinfo{person}{Peter Sanders}, \bibinfo{person}{Dorothea Wagner}, {and}
-  \bibinfo{person}{Renato~F. Werneck}.} \bibinfo{year}{2016}\natexlab{}.
-\newblock \showarticletitle{Route {{Planning}} in {{Transportation Networks}}}.
-\newblock In \bibinfo{booktitle}{\emph{Algorithm {{Engineering}}: {{Selected
-  Results}} and {{Surveys}}}}, \bibfield{editor}{\bibinfo{person}{Lasse
-  Kliemann} {and} \bibinfo{person}{Peter Sanders}} (Eds.).
-  \bibinfo{publisher}{{Springer International Publishing}},
-  \bibinfo{address}{{Cham}}, \bibinfo{pages}{19--80}.
-\newblock
-\showISBNx{978-3-319-49487-6}
-\urldef\tempurl%
-\url{https://doi.org/10.1007/978-3-319-49487-6_2}
-\showDOI{\tempurl}
-
-
 \bibitem[Br{\"a}ysy and Gendreau(2005)]%
         {braysyVehicleRoutingProblem2005}
 \bibfield{author}{\bibinfo{person}{Olli Br{\"a}ysy} {and}
@@ -69,90 +49,6 @@
 \newblock
 \urldef\tempurl%
 \url{https://doi.org/10.1287/trsc.1030.0056}
-\showDOI{\tempurl}
-
-
-\bibitem[Cherkassky et~al\mbox{.}(1996)]%
-        {cherkasskyShortestPathsAlgorithms1996}
-\bibfield{author}{\bibinfo{person}{Boris~V. Cherkassky},
-  \bibinfo{person}{Andrew~V. Goldberg}, {and} \bibinfo{person}{Tomasz Radzik}.}
-  \bibinfo{year}{1996}\natexlab{}.
-\newblock \showarticletitle{Shortest Paths Algorithms: {{Theory}} and
-  Experimental Evaluation}.
-\newblock \bibinfo{journal}{\emph{Mathematical Programming}}
-  \bibinfo{volume}{73}, \bibinfo{number}{2} (\bibinfo{date}{May}
-  \bibinfo{year}{1996}), \bibinfo{pages}{129--174}.
-\newblock
-\showISSN{1436-4646}
-\urldef\tempurl%
-\url{https://doi.org/10.1007/BF02592101}
-\showDOI{\tempurl}
-
-
-\bibitem[Delling(2011)]%
-        {dellingTimeDependentSHARCRouting2011}
-\bibfield{author}{\bibinfo{person}{Daniel Delling}.}
-  \bibinfo{year}{2011}\natexlab{}.
-\newblock \showarticletitle{Time-{{Dependent SHARC-Routing}}}.
-\newblock \bibinfo{journal}{\emph{Algorithmica}} \bibinfo{volume}{60},
-  \bibinfo{number}{1} (\bibinfo{date}{May} \bibinfo{year}{2011}),
-  \bibinfo{pages}{60--94}.
-\newblock
-\showISSN{1432-0541}
-\urldef\tempurl%
-\url{https://doi.org/10.1007/s00453-009-9341-0}
-\showDOI{\tempurl}
-
-
-\bibitem[Delling et~al\mbox{.}(2017)]%
-        {dellingCustomizableRoutePlanning2017}
-\bibfield{author}{\bibinfo{person}{Daniel Delling}, \bibinfo{person}{Andrew~V.
-  Goldberg}, \bibinfo{person}{Thomas Pajor}, {and} \bibinfo{person}{Renato~F.
-  Werneck}.} \bibinfo{year}{2017}\natexlab{}.
-\newblock \showarticletitle{Customizable {{Route Planning}} in {{Road
-  Networks}}}.
-\newblock \bibinfo{journal}{\emph{Transportation Science}}
-  \bibinfo{volume}{51}, \bibinfo{number}{2} (\bibinfo{date}{May}
-  \bibinfo{year}{2017}), \bibinfo{pages}{566--591}.
-\newblock
-\showISSN{0041-1655}
-\urldef\tempurl%
-\url{https://doi.org/10.1287/trsc.2014.0579}
-\showDOI{\tempurl}
-
-
-\bibitem[Delling et~al\mbox{.}(2015)]%
-        {dellingRoundBasedPublicTransit2015}
-\bibfield{author}{\bibinfo{person}{Daniel Delling}, \bibinfo{person}{Thomas
-  Pajor}, {and} \bibinfo{person}{Renato~F. Werneck}.}
-  \bibinfo{year}{2015}\natexlab{}.
-\newblock \showarticletitle{Round-{{Based Public Transit Routing}}}.
-\newblock \bibinfo{journal}{\emph{Transportation Science}}
-  \bibinfo{volume}{49}, \bibinfo{number}{3} (\bibinfo{date}{Aug.}
-  \bibinfo{year}{2015}), \bibinfo{pages}{591--604}.
-\newblock
-\showISSN{0041-1655}
-\urldef\tempurl%
-\url{https://doi.org/10.1287/trsc.2014.0534}
-\showDOI{\tempurl}
-
-
-\bibitem[Delling et~al\mbox{.}(2009)]%
-        {dellingEngineeringRoutePlanning2009}
-\bibfield{author}{\bibinfo{person}{Daniel Delling}, \bibinfo{person}{Peter
-  Sanders}, \bibinfo{person}{Dominik Schultes}, {and} \bibinfo{person}{Dorothea
-  Wagner}.} \bibinfo{year}{2009}\natexlab{}.
-\newblock \showarticletitle{Engineering {{Route Planning Algorithms}}}.
-\newblock In \bibinfo{booktitle}{\emph{Algorithmics of {{Large}} and {{Complex
-  Networks}}: {{Design}}, {{Analysis}}, and {{Simulation}}}},
-  \bibfield{editor}{\bibinfo{person}{J{\"u}rgen Lerner},
-  \bibinfo{person}{Dorothea Wagner}, {and} \bibinfo{person}{Katharina~A.
-  Zweig}} (Eds.). \bibinfo{publisher}{{Springer}}, \bibinfo{address}{{Berlin,
-  Heidelberg}}, \bibinfo{pages}{117--139}.
-\newblock
-\showISBNx{978-3-642-02094-0}
-\urldef\tempurl%
-\url{https://doi.org/10.1007/978-3-642-02094-0_7}
 \showDOI{\tempurl}
 
 
@@ -207,18 +103,19 @@
 \showDOI{\tempurl}
 
 
-\bibitem[Lawler and Wood(1966)]%
-        {lawlerBranchandBoundMethodsSurvey1966}
-\bibfield{author}{\bibinfo{person}{E.~L. Lawler} {and} \bibinfo{person}{D.~E.
-  Wood}.} \bibinfo{year}{1966}\natexlab{}.
-\newblock \showarticletitle{Branch-and-{{Bound Methods}}: {{A Survey}}}.
-\newblock \bibinfo{journal}{\emph{Operations Research}} \bibinfo{volume}{14},
-  \bibinfo{number}{4} (\bibinfo{date}{Aug.} \bibinfo{year}{1966}),
-  \bibinfo{pages}{699--719}.
+\bibitem[Liu et~al\mbox{.}(2021)]%
+        {liuImprovingAntColony2021}
+\bibfield{author}{\bibinfo{person}{Yahui Liu}, \bibinfo{person}{Buyang Cao},
+  {and} \bibinfo{person}{Hehua Li}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{Improving Ant Colony Optimization Algorithm with
+  Epsilon Greedy and {{Levy}} Flight}.
+\newblock \bibinfo{journal}{\emph{Complex \& Intelligent Systems}}
+  \bibinfo{volume}{7}, \bibinfo{number}{4} (\bibinfo{date}{Aug.}
+  \bibinfo{year}{2021}), \bibinfo{pages}{1711--1722}.
 \newblock
-\showISSN{0030-364X}
+\showISSN{2198-6053}
 \urldef\tempurl%
-\url{https://doi.org/10.1287/opre.14.4.699}
+\url{https://doi.org/10.1007/s40747-020-00138-3}
 \showDOI{\tempurl}
 
 
