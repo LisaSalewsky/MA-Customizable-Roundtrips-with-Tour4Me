@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using Tour4MeAdvancedProject.ObjectClasses;
 using Tour4MeAdvancedProject.Solver;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
+using Path = System.IO.Path;
 
 namespace Tour4MeAdvancedProject
 {
@@ -69,15 +70,20 @@ namespace Tour4MeAdvancedProject
         protected void GetPathButton_Click(object sender, EventArgs e)
         {
             Response.Write("<script>alert('Testing');</script>");
+        }
 
-            
+        [WebMethod]
+        public static List<Tuple<string, List<object>>> GetPath(double latIn, double lonIn) 
+        {
+            List<Tuple<string, List<object>>> result = new List<Tuple<string, List<object>>>();
+            return result;
         }
 
         [WebMethod]
         public static List<Tuple<string, List<object>>> Tour(double latIn, double lonIn, double distIn,
-                                                                int algoIn, List<KeyValuePair<int, string>> tagsHIn, List<KeyValuePair<int, string>> tagsSIn,
-                                                                double runningTimeIn, double edgeProfitIn, double coveredAreaIn,
-                                                                string mapIn)
+                                                                string algoIn, List<KeyValuePair<int, string>> tagsHIn, List<KeyValuePair<int, string>> tagsSIn,
+                                                                string runningTimeIn, double edgeProfitIn, double coveredAreaIn
+                                                                )
         {
             List<Tuple<string, List<object>>> result = new List<Tuple<string, List<object>>>();
 
@@ -92,8 +98,8 @@ namespace Tour4MeAdvancedProject
             lat = latIn;
             lon = lonIn;
             distance = distIn;
-            algorithm = algoIn;
-            runningTime = runningTimeIn;
+            algorithm = Convert.ToInt32(algoIn);
+            runningTime = Convert.ToDouble(runningTimeIn);
 
             runningTime = runningTime < 5 * 60 ? runningTime : 5 * 60;
 
@@ -107,10 +113,10 @@ namespace Tour4MeAdvancedProject
             double max_lon = min_lon + 2 * LonPad + LonGran;
 
             var stream = new StringBuilder();
-            stream.AppendFormat("grid-{0:F4}-{1:F4}-{2:F4}-{3:F4}", max_lat, min_lat, max_lon, min_lon);
-            filename = stream.ToString();
+            //stream.AppendFormat("grid-{0:F4}-{1:F4}-{2:F4}-{3:F4}", max_lat, min_lat, max_lon, min_lon);
+            filename = stream.AppendFormat("grid-dor").ToString();//stream.ToString();
 
-            if (mapIn.Equals("sea"))
+            if (false)
             {
                 filename = "grid-sea";
             }
@@ -123,17 +129,22 @@ namespace Tour4MeAdvancedProject
             }
 
             // Locking mechanism (use appropriate synchronization object)
-            lock (problem)
+            //lock (problem)
             {
                 try
                 {
-                    //problem = new Problem("../input/" + filename + ".txt");
-                    problem = new Problem("../input/" + filename + ".txt");
+
+                    var path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)));
+                    Uri uri = new Uri(path);
+                    string localPath = Uri.UnescapeDataString(uri.LocalPath);
+
+
+                    problem = new Problem(Path.Combine(localPath, "Tour4MeAdvancedProject", "input", filename + ".txt"));
                     Console.WriteLine($"Got request: lat {lat}, lon {lon}, dis {distance}");
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Something went wrong whilst loading the graph");
+                    Console.WriteLine("Something went wrong whilst loading the graph " + e.Message);
                     result.Add(new Tuple<string, List<object>>("error", new List<object>() { "Something went wrong whilst loading the graph 404 " }));
                     return result;
                 }
@@ -208,14 +219,14 @@ namespace Tour4MeAdvancedProject
             {
                 case 0:
                     {
-                        Selection solver = new Selection();
+                        SelectionSolver solver = new SelectionSolver();
                         status = solver.Solve(problem);
                         break;
                     }
                 case 1:
                     {
-                        //Jogger solver = new Jogger();
-                        //status = solver.Solve(problem);
+                        JoggerSolver solver = new JoggerSolver();
+                        status = solver.Solve(problem);
                         break;
                     }
                 case 2:
@@ -249,7 +260,7 @@ namespace Tour4MeAdvancedProject
                                          " (theoretical upper bound: " +
                                          (Math.PI * (problem.TargetDistance / (2 * Math.PI)) *
                                           (problem.TargetDistance / (2 * Math.PI))) + ")");
-                    result.Add(new Tuple<string, List<object>>("error", new List<object>() { problem.OutputToString() + " 200" }));
+                    result.Add(new Tuple<string, List<object>>("success", new List<object>() { problem.OutputToString() + " 200" }));
                     return result;
                     //if (gpx)
                     //{
@@ -263,7 +274,7 @@ namespace Tour4MeAdvancedProject
                                          " (theoretical upper bound: " +
                                          (Math.PI * (problem.TargetDistance / (2 * Math.PI)) *
                                           (problem.TargetDistance / (2 * Math.PI))) + ")");
-                    result.Add(new Tuple<string, List<object>>("error", new List<object>() { problem.OutputToString() + " 200" }));
+                    result.Add(new Tuple<string, List<object>>("success", new List<object>() { problem.OutputToString() + " 200" }));
                     return result;
                     //if (gpx)
                     //{

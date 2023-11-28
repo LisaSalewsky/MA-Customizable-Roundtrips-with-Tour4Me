@@ -2149,6 +2149,10 @@
     <Content Include="img\jogging-4211946-cropped.jpg" />
     <Content Include="img\jogging-4211946.jpg" />
     <Content Include="img\map-logo.png" />
+    <Content Include="input\grid-51.5731-51.2815-7.5305-7.0930.txt" />
+    <Content Include="input\grid-51.5731-51.2815-7.5305-7.0930_B.txt" />
+    <Content Include="input\grid-dor.txt" />
+    <Content Include="input\grid-sea.txt" />
     <Content Include="MapView.aspx" />
     <Content Include="Web.config" />
     <Content Include="MapContent.aspx" />
@@ -2188,6 +2192,7 @@
     <Compile Include="MapContent.aspx.designer.cs">
       <DependentUpon>MapContent.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Solver\SelectionSolver.cs" />
     <Compile Include="Solver\JoggerSolver.cs" />
     <Compile Include="Solver\Selection.cs" />
     <Compile Include="Solver\Solver.cs" />

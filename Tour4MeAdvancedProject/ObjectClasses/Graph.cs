@@ -28,6 +28,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public void AddEdge(Edge edge)
         {
+            if (VEdges == null)
+            {
+                VEdges = new List<Edge>();
+            }
             VNodes[edge.S].Incident.Add(edge);
             VNodes[edge.T].Incident.Add(edge);
             VEdges.Add(edge);
@@ -65,6 +69,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             using (StreamReader file = new StreamReader(fileName))
             {
+                VNodes = new List<Node>();
+                VEdges = new List<Edge>();
+                GIdNode = new Dictionary<long, int>();
                 string str;
                 int nNodes = 0;
                 int nEdges = 0;
@@ -127,7 +134,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         Edge edge = AddEdge(cEdges, sId, tId, cost);
                         cEdges++;
 
-                        file.ReadLine();
+                        str = file.ReadLine();
                         if (str[0] != 'f')
                         {
                             throw new InvalidOperationException("Error: graph file not in correct format; 'f' expected after 'e'");
@@ -141,7 +148,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                             edge.GeoLocations.Add(new Tuple<double, double>(lon, lat));
                         }
 
-                        file.ReadLine();
+                        str = file.ReadLine();
                         if (str[0] != 'g')
                         {
                             throw new InvalidOperationException("Error: graph file not in correct format; 'g' expected after 'f'");
@@ -156,15 +163,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     }
                 }
 
-                if (cNodes != nNodes)
-                {
-                    throw new InvalidOperationException($"Error: number of nodes ({cNodes}) does not match the file preamble ({nNodes})");
-                }
+                //if (cNodes != nNodes)
+                //{
+                //    throw new InvalidOperationException($"Error: number of nodes ({cNodes}) does not match the file preamble ({nNodes})");
+                //}
 
-                if (cEdges != nEdges)
-                {
-                    throw new InvalidOperationException($"Error: number of edges ({cEdges}) does not match the file preamble ({nEdges})");
-                }
+                //if (cEdges != nEdges)
+                //{
+                //    throw new InvalidOperationException($"Error: number of edges ({cEdges}) does not match the file preamble ({nEdges})");
+                //}
             }
         }
 
@@ -219,7 +226,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             double[] actDist = new double[VNodes.Count];
 
-            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
+            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>((x, y) => x.Item1.CompareTo(y.Item1));
             Dictionary<int, Tuple<int, Edge>> parent = new Dictionary<int, Tuple<int, Edge>>();
 
             dist[source] = 0.0;
@@ -356,6 +363,23 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return line.Length != 0;
         }
 
+        public double GetDistanceFromLatLon(int node1Id, int node2Id)
+        {
+            const double R = 6371; // Radius of the earth in km
+            Node node1 = VNodes[node1Id];
+            Node node2 = VNodes[node2Id];
+            double dLat = Deg2Rad(node2.Lat - node1.Lat);  // deg2rad below
+            double dLon = Deg2Rad(node2.Lon - node1.Lon);
+            double a =
+              Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+              Math.Cos(Deg2Rad(node1.Lat)) * Math.Cos(Deg2Rad(node2.Lat)) *
+              Math.Sin(dLon / 2) * Math.Sin(dLon / 2)
+              ;
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            double distance = R * c; // Distance in km
+            return distance;
+        }
+
         public double GetDistanceFromLatLon(Node node1, Node node2)
         {
             const double R = 6371; // Radius of the earth in km
@@ -375,6 +399,57 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             return deg * (Math.PI / 180);
         }
+
+
+        public double ShortestPath(int start, int end)
+        {
+            Dictionary<int, double> dist = new Dictionary<int, double>();
+            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>((x,y) => x.Item1.CompareTo(y.Item1));
+            
+
+            dist[start] = 0.0;
+            queue.Enqueue(0.0, new Tuple<int,double>(start, 0.0));
+
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+
+                double actualHeuristic = current.Item1;
+                int currentNode = current.Item2.Item1;
+                double actual = current.Item2.Item2;
+
+                if (currentNode == end)
+                    return dist[currentNode];
+
+                if (!dist.TryGetValue(currentNode, out double bestKnownDist))
+                {
+                    dist[currentNode] = actual;
+                    bestKnownDist = actual;
+                }
+
+                if (bestKnownDist != actual)
+                    continue;
+
+                foreach (Edge edge in VNodes[currentNode].Incident)
+                {
+                    int neighborId = edge.S == currentNode ? edge.T : edge.S;
+
+                    double newDistance = bestKnownDist + edge.Cost;
+
+                    if (!dist.TryGetValue(neighborId, out double currentNeighborDist))
+                        dist[neighborId] = double.MaxValue;
+
+                    if (newDistance < currentNeighborDist)
+                    {
+                        double heuristic = newDistance + GetDistanceFromLatLon(neighborId, end);
+                        queue.Enqueue(heuristic, new Tuple<int, double>(neighborId, newDistance));
+                        dist[neighborId] = newDistance;
+                    }
+                }
+            }
+            return double.MaxValue;
+        }
+
     }
 
 
@@ -383,7 +458,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         private SortedSet<(double, T)> set = new SortedSet<(double, T)>();
 
         public int Count => set.Count;
-
+        private List<T> items;
+        private Comparison<T> comparison;
+        public PriorityQueue(Comparison<T> comparison)
+        {
+            this.comparison = comparison;
+            this.items = new List<T>();
+        }
         public void Enqueue(double priority, T item)
         {
             set.Add((priority, item));

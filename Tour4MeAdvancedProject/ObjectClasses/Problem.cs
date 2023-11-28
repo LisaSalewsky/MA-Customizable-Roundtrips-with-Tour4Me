@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SysPath = System.IO.Path;
 
 
 namespace Tour4MeAdvancedProject.ObjectClasses
@@ -33,21 +34,29 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public Problem(string fileName)
         {
             Graph = new Graph(fileName);
+            Path = new List<int>();
+            Metadata = new List<string>();
             PrefTags = new HashSet<string>();
             AvoidTags = new HashSet<string>();
         }
 
         public void FillShortestPath(string filename)
         {
-            using (StreamWriter outputFile = new StreamWriter("/home/hagedoorn/Documents/TUD/Code/AOPcpp/input/" + filename + "_sp.txt"))
+            var path = SysPath.GetDirectoryName(SysPath.GetDirectoryName(SysPath.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)));
+            Uri uri = new Uri(path);
+            string localPath = Uri.UnescapeDataString(uri.LocalPath);
+            string finalPath = SysPath.Combine(localPath, "input", filename, "_sp.txt");
+
+            using (StreamWriter outputFile = new StreamWriter(finalPath))
             {
+
                 ShortestPath = new List<List<double>>(Graph.VNodes.Count);
 
                 for (int source = 0; source < Graph.VNodes.Count; source++)
                 {
                     ShortestPath.Add(new List<double>(Graph.VNodes.Count));
                     Dictionary<int, double> dist = new Dictionary<int, double>();
-                    PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
+                    PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>((x, y) => x.Item1.CompareTo(y.Item1));
 
                     dist[source] = 0.0;
                     queue.Enqueue(0.0, new Tuple<int, double>(source, 0.0));

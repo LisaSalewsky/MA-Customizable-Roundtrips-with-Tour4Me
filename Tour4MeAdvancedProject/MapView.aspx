@@ -37,6 +37,15 @@
 
 <div id="map" style="height: 580px;">
 </div>
+    
+    
+    <div class="card" style="width: 400px; position:fixed; z-index: 1; top: 70px; right:20px;">
+        <div class="card-body" id="route_overview">
+            <h5 class="card-title">Computed Routes</h5>
+
+        </div>
+    </div>
+
 <div style="width: 100%; margin: 60px auto 0; padding: 20px; bottom:0; background-color:rgba(255, 255, 255, 0.8); height: auto;">
 
     <div class="input-group mb-3">
@@ -44,7 +53,8 @@
         <input type="text" id="distance" class="form-control" value="50" aria-label="Target Distance (m)">
         <div class="input-group-append">
             <button class="btn btn-secondary" disabled type="button">km</button>
-            <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" />
+                <%--<button type="button" class="btn btn-primary" onclick="getPath()">Compute Path</button>--%>
+            <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" onClientClick="return false;"/>
         </div>
         <div>
 
@@ -53,8 +63,6 @@
 
 
     <div class="btn-group" id="algoRadio">
-        <!-- <input type="radio" class="btn-check" name="algorithm" id="jogger" autocomplete="off" checked />
-            <label class="btn btn-primary" for="jogger">Jogger</label> -->
     </div>
 
     <button type="button" class="btn btn-warning" data-bs-toggle="modal" style="position:absolute; right:20px"
@@ -188,6 +196,7 @@
 
         function success(pos) {
             console.log("success");
+            ////////console.log($("#<%= GetPathButton.ClientID %>");
 
             var lat = pos.coords.latitude;
             var lng = pos.coords.longitude;
@@ -307,7 +316,7 @@
 
 
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: "MapView.aspx/RenderGraph",
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
@@ -395,6 +404,8 @@
 
                     algosRadio.innerHTML += "<input type=\"radio\" class=\"btn-check\" name=\"algorithm\" value=" + algorithm[key_val_keys[0]] + " id=\"" + algorithm[key_val_keys[1]] + "\" autocomplete=\"off\" " + (algorithm[key_val_keys[0]] == 1 ? "checked" : "") + "/>";
                     algosRadio.innerHTML += "<label class=\"btn btn-primary\" for=\"" + algorithm[key_val_keys[0]] + "\">" + algorithm[key_val_keys[1]] + "</label>";
+
+                    console.log(algorithm[key_val_keys[1]] + " Button created")
                 });
 
 
@@ -446,22 +457,24 @@
             targetLabel.innerHTML = (100 - current.value) + "%"
         }
 
-        $("#GetPathButton").click(function getPath() {
+        $("#<%= GetPathButton.ClientID %>").click(function getPath() {
 
             var lat = marker.getLatLng()["lat"];
             var lon = marker.getLatLng()["lng"];
             var dis = document.getElementById("distance").value * 1000;
 
             $.ajax({
-                url: "MapView/GetPath",
+                type: 'POST',
+                url: "MapView.aspx/GetPath",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify({
                     latIn: lat,
-                    lonIn: lon,
-                    mapIn: selectedMap
+                    lonIn: lon
                 }),
                 dataType: 'json',
                 success: function (result) {
+                    console.log("get path success")
+                    
                     max_lat = result["max_lat"];
                     min_lat = result["min_lat"];
                     max_lon = result["max_lon"];
@@ -490,6 +503,7 @@
                         .addto(map);
                 },
                 error: function (xhr, status) {
+                    console.log("get path error")
                     document.getElementById("overlay").style.display = "none";
                     alert("Failed to connect to server!");
                 }
@@ -503,8 +517,10 @@
 
             tag_str = "&tags="
 
-            tags.forEach(tag => {
-                tag_button = document.getElementById(tag);
+            const key_val_keys = ["Key", "Value"];
+
+            tagsHighway.forEach(tag => {
+                tag_button = document.getElementById("highway" + tag[key_val_keys[0]]);
                 if (tag_button.classList.contains("neutral")) {
                     tag_str += "n";
                 } else if (tag_button.classList.contains("desire")) {
@@ -513,6 +529,18 @@
                     tag_str += "a";
                 }
             });
+
+            tagsSurface.forEach(tag => {
+                tag_button = document.getElementById("surface" + tag[key_val_keys[0]]);
+                if (tag_button.classList.contains("neutral")) {
+                    tag_str += "n";
+                } else if (tag_button.classList.contains("desire")) {
+                    tag_str += "d";
+                } else if (tag_button.classList.contains("avoid")) {
+                    tag_str += "a";
+                }
+            });
+
 
             var algorithm = document.querySelector('input[name="algorithm"]:checked').value;
 
@@ -530,7 +558,8 @@
 
 
             $.ajax({
-                url: "MapView/Tour",
+                type: 'POST',
+                url: "MapView.aspx/Tour",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify({
                     latIn: lat,
@@ -541,11 +570,15 @@
                     tagsSIn: tagsSurface,
                     runningTimeIn: runningTime,
                     edgeProfitIn: edgeProfit,
-                    coveredAreaIn: coveredArea,
-                    mapIn: selectedMap
+                    coveredAreaIn: coveredArea
                 }),
                 dataType: 'json',
                 success: function (result) {
+                    if (result.d[0].Item1 == "success") {
+                        console.log("Tour success");
+                    } else if (result.d[0].Item1 =="error") {
+                        console.log(result.d[0].Item2)
+                    }
                     var line = L.polyline(result["path"], { color: colors[route_counter % colors.length], weight: 5 }).addTo(map);
 
                     var path = result["path"];
@@ -598,7 +631,7 @@
                 },
                 error: function (xhr, status) {
                     document.getElementById("overlay").style.display = "none";
-
+                    console.log("Tour error");
                     if (xhr.status == 504) {
                         alert("Computation did not find a solution with the given time bound, please increase the running time (settings) and try again.");
                     } else if (xhr.status == 503) {
