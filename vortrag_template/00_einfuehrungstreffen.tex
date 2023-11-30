@@ -215,7 +215,7 @@
 					\includegraphics[height=0.3\textheight]{images/laufstrecke_komplex.jpg}
 				\end{flushleft}}
 		\end{minipage}
-	\end{frame}
+sory 	\end{frame}
 	
 	\begin{frame}{Tour4Me Demo}
 	\centering
@@ -372,34 +372,34 @@
 			%% Filled regions
 			\fill[color=ColorOne!20] rectangle ($(S)+(0.2,0)$) -- (P1) -- ($(P1)+(0,1)$) -- ($(S)+(0.2,1)$);
 			\path [pattern color=ColorOne!80, pattern=north east lines, line width = 1pt, very thick] rectangle ($(O)+(0.6,0)$) -- ($(O)+(2,0)$) -- ($(O)+(2,1)$) -- ($(O)+(0.6,1)$);
-			\draw ($(O)+(-0.4,0.5)$) node[activity,ColorOne] {Pre-work};
+			\draw ($(O)+(-0.4,0.5)$) node[activity,ColorOne] {Vorarbeit};
 			\pause	
 			
 			%% Description
 			\node[descript,fill=ColorOne!15,text=ColorOne](P0) at ($(O)+(2,-2.5)$) {%
-				literature\\
-				examples\\
-				implementing interface};
+				Literatur\\
+				Beispiele\\
+				Erste Implementierung Interface};
 			
 			%% Arrows
 			\path[->,color=ColorOne] ($(O)+(-0.5,-0.1)$) edge [out=-90, in=130]  ($(P0)+(0,1)$);
 			\pause
 			
 			\fill[color=ColorTwo!15] rectangle (P1) -- (P2) -- ($(P2)+(0,1)$) -- ($(P1)+(0,1)$);
-			\draw ($(P2)+(-3.55,0.5)$) node[activity,ColorTwo] {Implementing and testing different algorithms,\\ changing other aspects of the app};
+			\draw ($(P2)+(-3.55,0.5)$) node[activity,ColorTwo] {Implementierung und Testen versch. Algorithmen,\\ Ändern anderer Teile der App};
 			\pause
 			
 			\fill[ColorThree!30] rectangle (P2) -- (P3) -- ($(P3)+(0,1)$) -- ($(P2)+(0,1)$);
-			\draw ($(P3)+(-1.55,0.5)$)  node[activity, ColorThree] {Gathering \\results};
+			\draw ($(P3)+(-1.55,0.5)$)  node[activity, ColorThree] {Ergebnisse \\sammeln};
 			\pause
 			
 			\fill[ColorFour!20] rectangle (P3) -- (P4) -- ($(P4)+(0,1)$) -- ($(P3)+(0,1)$);
-			\draw ($(P4)+(-0.8,0.5)$)  node[activity, ColorFour!80!black] {Writing \\only};
+			\draw ($(P4)+(-0.8,0.5)$)  node[activity, ColorFour!80!black] {Nur noch \\schreiben};
 			\pause
 			
 			
 			%% Events
-			\draw [decorate,decoration={brace,amplitude=6pt}]($(P1)+(-1.8,1.2)$) -- ($(F)+(-0.5,1.2)$) node [black,midway,above=6pt, align=center] {Writing on the thesis};
+			\draw [decorate,decoration={brace,amplitude=6pt}]($(P1)+(-1.8,1.2)$) -- ($(F)+(-0.5,1.2)$) node [black,midway,above=6pt, align=center] {Schreiben an der Masterarbeit};
 			
 			
 		\end{tikzpicture}
