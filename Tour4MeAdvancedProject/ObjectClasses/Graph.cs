@@ -247,14 +247,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 double bestKnownDist = dist[currentNode];
 
-                if (Math.Abs(bestKnownDist - double.MaxValue) < double.Epsilon)
+                if (bestKnownDist == 2147483647)
                 {
                     dist[currentNode] = currentDist;
                     actDist[currentNode] = currentActual;
                     bestKnownDist = currentDist;
                 }
 
-                if (!(Math.Abs(bestKnownDist - currentDist) < double.Epsilon))
+                if (bestKnownDist != currentDist)
                 {
                     continue;
                 }

@@ -80,12 +80,12 @@ namespace Tour4MeAdvancedProject
         }
 
         [WebMethod]
-        public static List<Tuple<string, List<object>>> Tour(double latIn, double lonIn, double distIn,
+        public static Dictionary<string, string> Tour(double latIn, double lonIn, double distIn,
                                                                 string algoIn, List<KeyValuePair<int, string>> tagsHIn, List<KeyValuePair<int, string>> tagsSIn,
                                                                 string runningTimeIn, double edgeProfitIn, double coveredAreaIn
                                                                 )
         {
-            List<Tuple<string, List<object>>> result = new List<Tuple<string, List<object>>>();
+            Dictionary<string, string> result = new Dictionary<string, string>();
 
 
             var init_time_1 = DateTime.Now;
@@ -124,7 +124,7 @@ namespace Tour4MeAdvancedProject
             var f = new FileInfo(filename);
             if (f.Exists)
             {
-                result.Add(new Tuple<string, List<object>>("error", new List<object>() { "Grid was not found 404 " }));
+                result.Add("error",  "Grid was not found 404 ");
                 return result;
             }
 
@@ -145,7 +145,7 @@ namespace Tour4MeAdvancedProject
                 catch (Exception e)
                 {
                     Console.WriteLine("Something went wrong whilst loading the graph " + e.Message);
-                    result.Add(new Tuple<string, List<object>>("error", new List<object>() { "Something went wrong whilst loading the graph 404 " }));
+                    result.Add("error", "Something went wrong whilst loading the graph 404 ");
                     return result;
                 }
             }
@@ -219,13 +219,13 @@ namespace Tour4MeAdvancedProject
             {
                 case 0:
                     {
-                        SelectionSolver solver = new SelectionSolver();
+                        JoggerSolver solver = new JoggerSolver();
                         status = solver.Solve(problem);
                         break;
                     }
                 case 1:
                     {
-                        JoggerSolver solver = new JoggerSolver();
+                        SelectionSolver solver = new SelectionSolver();
                         status = solver.Solve(problem);
                         break;
                     }
@@ -260,7 +260,11 @@ namespace Tour4MeAdvancedProject
                                          " (theoretical upper bound: " +
                                          (Math.PI * (problem.TargetDistance / (2 * Math.PI)) *
                                           (problem.TargetDistance / (2 * Math.PI))) + ")");
-                    result.Add(new Tuple<string, List<object>>("success", new List<object>() { problem.OutputToString() + " 200" }));
+                    result.Add("success", "200");
+                    foreach(KeyValuePair<string, string> kv in problem.OutputToResultString())
+                    {
+                       result.Add(kv.Key, kv.Value);
+                    }
                     return result;
                     //if (gpx)
                     //{
@@ -274,7 +278,11 @@ namespace Tour4MeAdvancedProject
                                          " (theoretical upper bound: " +
                                          (Math.PI * (problem.TargetDistance / (2 * Math.PI)) *
                                           (problem.TargetDistance / (2 * Math.PI))) + ")");
-                    result.Add(new Tuple<string, List<object>>("success", new List<object>() { problem.OutputToString() + " 200" }));
+                    result.Add("success", "200");
+                    foreach (KeyValuePair<string, string> kv in problem.OutputToResultString())
+                    {
+                        result.Add(kv.Key, kv.Value);
+                    }
                     return result;
                     //if (gpx)
                     //{
@@ -282,14 +290,14 @@ namespace Tour4MeAdvancedProject
                     //}
                     break;
                 case SolveStatus.Unsolved:
-                    result.Add(new Tuple<string, List<object>>("error", new List<object>() { "Not solved 400" }));
+                    result.Add("error", "Not solved 400");
                     return result;
                     break;
                 case SolveStatus.Timeout:
-                    result.Add(new Tuple<string, List<object>>("error", new List<object>() { "Timeout 504" }));
+                    result.Add("error", "Timeout 504");
                     return result;
             }
-            result.Add(new Tuple<string, List<object>>("error", new List<object>() { "Not solved 400" }));
+            result.Add("error", "Not solved 400");
             return result;
 
         }

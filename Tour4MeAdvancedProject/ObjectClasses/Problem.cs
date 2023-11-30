@@ -157,7 +157,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public string OutputToString()
         {
-            StringBuilder outputString = new StringBuilder("{\n    \"path\": [\n");
+            //StringBuilder outputString = new StringBuilder("{\n    \"path\": [\n");
+            StringBuilder outputString = new StringBuilder("{\n    [\n");
 
             foreach (int node in Path)
             {
@@ -193,6 +194,52 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             outputString.Append("    ]\n}");
 
             return outputString.ToString();
+        }
+
+        public List<KeyValuePair<string, string>> OutputToResultString()
+        {
+            List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
+            StringBuilder outputString = new StringBuilder("[");
+
+            foreach (int node in Path)
+            {
+                outputString.Append($"[{Graph.VNodes[node].Lat},{Graph.VNodes[node].Lon}],");
+
+                Edge edge = Graph.GetEdge(node, Path.ElementAtOrDefault(Path.IndexOf(node) + 1));
+
+                if (edge == null)
+                    continue;
+
+                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.T].GId;
+                if (!reverse)
+                {
+                    edge.GeoLocations.Reverse();
+                    reverse = true;
+                }
+                foreach ((double lat, double lon) in edge.GeoLocations)
+                {
+                    outputString.Append($"[{lat},{lon}],");
+                }
+            }
+            //outputString = outputString.Remove(outputString.Length - 1, 1);
+            outputString.Append($"[{Graph.VNodes[Path.First()].Lat},{Graph.VNodes[Path.First()].Lon}]");
+            outputString.Append("]");
+
+            result.Add(new KeyValuePair<string, string>("path", outputString.ToString()));
+
+            outputString = new StringBuilder("[");
+
+            for (int i = 0; i < Metadata.Count - 1; i++)
+            {
+                outputString.Append($"\"{Metadata[i]}\",");
+            }
+
+            outputString.Append($"\"{Metadata[Metadata.Count - 1]}\"");
+            outputString.Append("]");
+
+            result.Add(new KeyValuePair<string, string>("meta", outputString.ToString()));
+
+            return result;
         }
 
         public void CalculateProfit(Graph G)

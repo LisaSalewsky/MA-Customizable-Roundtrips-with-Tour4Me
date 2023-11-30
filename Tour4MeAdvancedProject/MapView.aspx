@@ -574,19 +574,19 @@
                 }),
                 dataType: 'json',
                 success: function (result) {
-                    if (result.d[0].Item1 == "success") {
-                        console.log("Tour success");
-                    } else if (result.d[0].Item1 =="error") {
-                        console.log(result.d[0].Item2)
+                    if ("success" in result.d) {
+                        console.log("Tour success" + result.d.success);
+                    } else if ("error" in result.d) {
+                        console.log(result.d.error)
                     }
-                    var line = L.polyline(result["path"], { color: colors[route_counter % colors.length], weight: 5 }).addTo(map);
+                    var line = L.polyline(JSON.parse(result.d.path), { color: colors[route_counter % colors.length], weight: 5 }).addTo(map);
 
-                    var path = result["path"];
+                    var path = result.d.path;
 
                     document.getElementById("overlay").style.display = "none";
                     map.fitBounds(line.getBounds());
 
-                    var metadata = result["meta"];
+                    var metadata = result.d.meta;
 
                     m_body = document.getElementById("metadata-body");
 
