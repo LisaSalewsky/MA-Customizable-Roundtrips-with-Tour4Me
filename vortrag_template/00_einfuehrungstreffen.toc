@@ -3,4 +3,3 @@
 \beamer@sectionintoc {2}{Ziel}{28}{0}{2}
 \beamer@sectionintoc {3}{Motivation und Hintergrund}{42}{0}{3}
 \beamer@sectionintoc {4}{Vorgehensweise}{57}{0}{4}
-\beamer@sectionintoc {5}{Literatur}{75}{0}{5}

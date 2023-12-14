@@ -131,12 +131,12 @@
 	Warum eine App zum Erstellen von Rundrips?
 	\pause
 	\begin{itemize}	
-		\item<2-> viele Lösungen für kürzeste Wege von A nach B
+		\item<2-> Viele Lösungen für kürzeste Wege von A nach B
 		\item<3-> Optimieren alltägliche Routen
 		\item<4-> Joggen und Radfahren in der Freizeit:
-		\item<5-> weitere Bedingungen für attraktive Strecken nötig
-		\only<6>{\item aber kaum Ansätze für Rundtrips}
-		\only<7->{\item aber kaum Ansätze für Rundtrips mit Präferenzen}
+		\item<5-> Weitere Bedingungen für attraktive Strecken nötig
+		\only<6>{\item Aber kaum Ansätze für Rundtrips}
+		\only<7->{\item Aber kaum Ansätze für Rundtrips mit Präferenzen}
 	\end{itemize}
 	\end{frame}
 
@@ -147,8 +147,8 @@
 		\vspace{-0.2cm}
 		\begin{minipage}[t]{0.48\textwidth}
 			\begin{itemize}[<+->]
-				\item abhängig von individuellen Bedürfnissen und vom Level der Person
-				\item viele verschiedene Faktoren
+				\item Abhängig von individuellen Bedürfnissen und vom Level der Person
+				\item Viele verschiedene Faktoren
 				\begin{itemize}[<+->]
 					\item Wegtyp (Straße, Waldpfad, Radweg etc.)
 					\item Untergrund (Teer, Kies, Sand, Erde, etc.)
@@ -215,7 +215,7 @@
 					\includegraphics[height=0.3\textheight]{images/laufstrecke_komplex.jpg}
 				\end{flushleft}}
 		\end{minipage}
-sory 	\end{frame}
+ 	\end{frame}
 	
 	\begin{frame}{Tour4Me Demo}
 	\centering
@@ -268,14 +268,14 @@ sory 	\end{frame}
 					\pause
 					\begin{itemize}
 						\item<10-> Einbeziehen der genannten Faktoren
-						\item<11-> algorithmisch und in der GUI
+						\item<11-> Algorithmisch und in der GUI
 						\item<12-> Anpassen der GUI auf neue Optionen
 					\end{itemize}
 				\end{block}
 			\textcolor{white}{a}\\
 			\textcolor{white}{a}}
 			\end{minipage}}
-		\only<14->{$\Rightarrow$ allgemein: Tour4Me so anpassen, dass für (fast) jeden Startpunkt und jede Routenlänge ein (möglichst gutes) Ergebnis ausgegeben wird}
+		\only<14->{$\Rightarrow$ Allgemein: Tour4Me so anpassen, dass für (fast) jeden Startpunkt und jede Routenlänge ein (möglichst gutes) Ergebnis ausgegeben wird}
 	\end{frame}
 	
 	
@@ -288,13 +288,13 @@ sory 	\end{frame}
 			\item Reviews, Vergleiche und Analysen \cite{madkourSurveyShortestPathAlgorithms2017, sommerShortestpathQueriesStatic2014, wayahdiGreedyAStarDijkstra2021}
 			\item Zusätzlich weitere heuristische Ansätze
 			\begin{itemize}[<+->]
-				\item local search Varianten \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
-				\item neighborhood basierte Ideen \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
+				\item Local Search Varianten \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
+				\item Neighborhood basierte Ideen \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
 			\end{itemize} 
-		\item algorithmische Routing-Probleme  bereits NP-schwer \cite{reineltTravelingSalesmanComputational2003}
+		\item Algorithmische Routing-Probleme  bereits NP-schwer \cite{reineltTravelingSalesmanComputational2003}
 		\begin{itemize}[<+->]
 			\item Traveling Salesman (TSP)\cite{gendreauHandbookMetaheuristics2010} 
-			\item vehicle routing \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006}
+			\item Vehicle routing \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006}
 		\end{itemize}
 		\end{itemize}
 		\pause
@@ -302,7 +302,7 @@ sory 	\end{frame}
 		$\Rightarrow$ Rundtrips mit Nebenbedingungen noch komplexer \cite{gemsaEfficientComputationJogging2013}
 		\pause
 		\begin{itemize}[<+->]
-			\item vorhandene Tools meist eingeschränkt
+			\item Vorhandene Tools meist eingeschränkt
 			\item Auswahl an Nebenbedingungen beschränkt
 			\item Editieren schwierig/ ignoriert Nebenbedingungen
 		\end{itemize}
@@ -339,76 +339,76 @@ sory 	\end{frame}
 		\end{block}
 	\end{frame}
 	
-	\begin{frame}{Timeline}
-		\centering
-		\vspace{0.5cm}
-		\tikzstyle{descript} = [text = black,align=center, minimum height=1.8cm, align=center, outer sep=0pt,font = \footnotesize]
-		\begin{tikzpicture}[very thick, black, scale=0.9, font=\scriptsize]
-			\small
-			
-			%% Coordinates
-			\coordinate (S) at (-3,0);
-			\coordinate (O) at (-1,0); % Origin
-			\coordinate (P1) at (1,0);
-			\coordinate (P2) at (8,0);
-			\coordinate (P3) at (11,0);
-			\coordinate (P4) at (12.5,0);
-			\coordinate (F) at (13,0); %End
-			\coordinate (E1) at (5,0); %Event
-			\coordinate (E2) at (0.5,0); %Event
-			
-			
-			%% Arrow
-			\draw[->] ($(S)+(0,-0.1)$) -- ($(F)+(0,-0.1)$);
-			%% Ticks
-			\foreach \x in {-2,0,2,...,12}
-			\draw(\x cm,6pt) -- (\x cm,-6pt);
-			%% Labels
-			\foreach \i \j in {-2/Nov, 0/Dez,2/Jan,4/Feb,6/Mär,8/Apr,10/Mai,12/Jun}{
-				\draw (\i,-0.1) node[below=3pt] {\j} ;
-			}
-			\pause
-			
-			%% Filled regions
-			\fill[color=ColorOne!20] rectangle ($(S)+(0.2,0)$) -- (P1) -- ($(P1)+(0,1)$) -- ($(S)+(0.2,1)$);
-			\path [pattern color=ColorOne!80, pattern=north east lines, line width = 1pt, very thick] rectangle ($(O)+(0.6,0)$) -- ($(O)+(2,0)$) -- ($(O)+(2,1)$) -- ($(O)+(0.6,1)$);
-			\draw ($(O)+(-0.4,0.5)$) node[activity,ColorOne] {Vorarbeit};
-			\pause	
-			
-			%% Description
-			\node[descript,fill=ColorOne!15,text=ColorOne](P0) at ($(O)+(2,-2.5)$) {%
-				Literatur\\
-				Beispiele\\
-				Erste Implementierung Interface};
-			
-			%% Arrows
-			\path[->,color=ColorOne] ($(O)+(-0.5,-0.1)$) edge [out=-90, in=130]  ($(P0)+(0,1)$);
-			\pause
-			
-			\fill[color=ColorTwo!15] rectangle (P1) -- (P2) -- ($(P2)+(0,1)$) -- ($(P1)+(0,1)$);
-			\draw ($(P2)+(-3.55,0.5)$) node[activity,ColorTwo] {Implementierung und Testen versch. Algorithmen,\\ Ändern anderer Teile der App};
-			\pause
-			
-			\fill[ColorThree!30] rectangle (P2) -- (P3) -- ($(P3)+(0,1)$) -- ($(P2)+(0,1)$);
-			\draw ($(P3)+(-1.55,0.5)$)  node[activity, ColorThree] {Ergebnisse \\sammeln};
-			\pause
-			
-			\fill[ColorFour!20] rectangle (P3) -- (P4) -- ($(P4)+(0,1)$) -- ($(P3)+(0,1)$);
-			\draw ($(P4)+(-0.8,0.5)$)  node[activity, ColorFour!80!black] {Nur noch \\schreiben};
-			\pause
-			
-			
-			%% Events
-			\draw [decorate,decoration={brace,amplitude=6pt}]($(P1)+(-1.8,1.2)$) -- ($(F)+(-0.5,1.2)$) node [black,midway,above=6pt, align=center] {Schreiben an der Masterarbeit};
-			
-			
-		\end{tikzpicture}
-	\end{frame}
+%	\begin{frame}{Timeline}
+%		\centering
+%		\vspace{0.5cm}
+%		\tikzstyle{descript} = [text = black,align=center, minimum height=1.8cm, align=center, outer sep=0pt,font = \footnotesize]
+%		\begin{tikzpicture}[very thick, black, scale=0.9, font=\scriptsize]
+%			\small
+%			
+%			%% Coordinates
+%			\coordinate (S) at (-3,0);
+%			\coordinate (O) at (-1,0); % Origin
+%			\coordinate (P1) at (1,0);
+%			\coordinate (P2) at (8,0);
+%			\coordinate (P3) at (11,0);
+%			\coordinate (P4) at (12.5,0);
+%			\coordinate (F) at (13,0); %End
+%			\coordinate (E1) at (5,0); %Event
+%			\coordinate (E2) at (0.5,0); %Event
+%			
+%			
+%			%% Arrow
+%			\draw[->] ($(S)+(0,-0.1)$) -- ($(F)+(0,-0.1)$);
+%			%% Ticks
+%			\foreach \x in {-2,0,2,...,12}
+%			\draw(\x cm,6pt) -- (\x cm,-6pt);
+%			%% Labels
+%			\foreach \i \j in {-2/Nov, 0/Dez,2/Jan,4/Feb,6/Mär,8/Apr,10/Mai,12/Jun}{
+%				\draw (\i,-0.1) node[below=3pt] {\j} ;
+%			}
+%			\pause
+%			
+%			%% Filled regions
+%			\fill[color=ColorOne!20] rectangle ($(S)+(0.2,0)$) -- (P1) -- ($(P1)+(0,1)$) -- ($(S)+(0.2,1)$);
+%			\path [pattern color=ColorOne!80, pattern=north east lines, line width = 1pt, very thick] rectangle ($(O)+(0.6,0)$) -- ($(O)+(2,0)$) -- ($(O)+(2,1)$) -- ($(O)+(0.6,1)$);
+%			\draw ($(O)+(-0.4,0.5)$) node[activity,ColorOne] {Vorarbeit};
+%			\pause	
+%			
+%			%% Description
+%			\node[descript,fill=ColorOne!15,text=ColorOne](P0) at ($(O)+(2,-2.5)$) {%
+%				Literatur\\
+%				Beispiele\\
+%				Erste Implementierung Interface};
+%			
+%			%% Arrows
+%			\path[->,color=ColorOne] ($(O)+(-0.5,-0.1)$) edge [out=-90, in=130]  ($(P0)+(0,1)$);
+%			\pause
+%			
+%			\fill[color=ColorTwo!15] rectangle (P1) -- (P2) -- ($(P2)+(0,1)$) -- ($(P1)+(0,1)$);
+%			\draw ($(P2)+(-3.55,0.5)$) node[activity,ColorTwo] {Implementierung und Testen versch. Algorithmen,\\ Ändern anderer Teile der App};
+%			\pause
+%			
+%			\fill[ColorThree!30] rectangle (P2) -- (P3) -- ($(P3)+(0,1)$) -- ($(P2)+(0,1)$);
+%			\draw ($(P3)+(-1.55,0.5)$)  node[activity, ColorThree] {Ergebnisse \\sammeln};
+%			\pause
+%			
+%			\fill[ColorFour!20] rectangle (P3) -- (P4) -- ($(P4)+(0,1)$) -- ($(P3)+(0,1)$);
+%			\draw ($(P4)+(-0.8,0.5)$)  node[activity, ColorFour!80!black] {Nur noch \\schreiben};
+%			\pause
+%			
+%			
+%			%% Events
+%			\draw [decorate,decoration={brace,amplitude=6pt}]($(P1)+(-1.8,1.2)$) -- ($(F)+(-0.5,1.2)$) node [black,midway,above=6pt, align=center] {Schreiben an der Masterarbeit};
+%			
+%			
+%		\end{tikzpicture}
+%	\end{frame}
+%	
 	
-	
-	\section{Literatur}
+%	\section{Literatur}
 	\begin{frame}[allowframebreaks]{Literatur}
-		\tiny
+		
 		\bibliography{LS11Buchin.bib}
 	\end{frame}
 	
