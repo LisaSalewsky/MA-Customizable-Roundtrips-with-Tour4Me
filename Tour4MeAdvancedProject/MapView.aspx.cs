@@ -219,13 +219,13 @@ namespace Tour4MeAdvancedProject
             {
                 case 0:
                     {
-                        JoggerSolver solver = new JoggerSolver();
+                        SelectionSolver solver = new SelectionSolver();
                         status = solver.Solve(problem);
                         break;
                     }
                 case 1:
                     {
-                        SelectionSolver solver = new SelectionSolver();
+                        JoggerSolver solver = new JoggerSolver();
                         status = solver.Solve(problem);
                         break;
                     }

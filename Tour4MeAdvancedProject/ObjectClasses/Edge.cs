@@ -53,13 +53,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Id = nodeId;
             if (source < target)
             {
-                S = source;
-                T = target;
+                SourceNode = source;
+                TargetNode = target;
             }
             else
             {
-                S = target;
-                T = source;
+                SourceNode = target;
+                TargetNode = source;
             }
             Cost = nodeCost;
 
@@ -67,15 +67,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             GeoLocations = new List<Tuple<double, double>>();
         }
 
-        public int S { get; set; }
-        public int T { get; set; }
+        public int SourceNode { get; set; }
+        public int TargetNode { get; set; }
         public double Pheromone { get; set; } = 1;
         public double Cost { get; set; }
         public double Profit { get; set; }
 
         public bool LessThan(Edge otherEdge)
         {
-            return S < otherEdge.S || (S == otherEdge.S && T < otherEdge.T);
+            return SourceNode < otherEdge.SourceNode || (SourceNode == otherEdge.SourceNode && TargetNode < otherEdge.TargetNode);
         }
     }
 

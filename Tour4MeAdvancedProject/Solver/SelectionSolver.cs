@@ -33,7 +33,7 @@ namespace Tour4MeAdvancedProject.Solver
 
                 foreach (Edge e in P.Graph.VNodes[current].Incident)
                 {
-                    int neigh = e.S == current ? e.T : e.S;
+                    int neigh = e.SourceNode == current ? e.TargetNode : e.SourceNode;
                     double dis = P.Graph.ShortestPath(P.Start, neigh);
 
                     if (dis > P.TargetDistance - length - e.Cost)

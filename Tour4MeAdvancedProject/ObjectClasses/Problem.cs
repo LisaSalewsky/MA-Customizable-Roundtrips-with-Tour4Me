@@ -76,7 +76,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                         foreach (Edge edge in Graph.VNodes[currentNode].Incident)
                         {
-                            int neighborId = edge.S == currentNode ? edge.T : edge.S;
+                            int neighborId = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
                             double newDistance = bestKnownDist + edge.Cost;
 
                             if (!dist.TryGetValue(neighborId, out double currentDist))
@@ -169,7 +169,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 if (edge == null)
                     continue;
 
-                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.T].GId;
+                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.TargetNode].GId;
                 if (!reverse) 
                 {
                     edge.GeoLocations.Reverse();
@@ -210,7 +210,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 if (edge == null)
                     continue;
 
-                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.T].GId;
+                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.TargetNode].GId;
                 if (!reverse)
                 {
                     edge.GeoLocations.Reverse();
@@ -332,7 +332,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 {
                     Edge edge = Graph.GetEdge(prev, current);
 
-                    area += prev == edge.S ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                    area += prev == edge.SourceNode ? edge.ShoelaceForward : edge.ShoelaceBackward;
                 }
 
                 prev = current;
@@ -341,7 +341,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             if (prev != path.First())
             {
                 Edge edge = Graph.GetEdge(prev, path.First());
-                area += prev == edge.S ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                area += prev == edge.SourceNode ? edge.ShoelaceForward : edge.ShoelaceBackward;
             }
 
             return area / 2;

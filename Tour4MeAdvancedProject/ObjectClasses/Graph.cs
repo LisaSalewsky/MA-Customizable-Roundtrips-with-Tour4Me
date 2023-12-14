@@ -32,8 +32,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 VEdges = new List<Edge>();
             }
-            VNodes[edge.S].Incident.Add(edge);
-            VNodes[edge.T].Incident.Add(edge);
+            VNodes[edge.SourceNode].Incident.Add(edge);
+            VNodes[edge.TargetNode].Incident.Add(edge);
             VEdges.Add(edge);
         }
 
@@ -179,7 +179,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             foreach (Edge e in VNodes[sId].Incident)
             {
-                if (tId == e.S || tId == e.T)
+                if (tId == e.SourceNode || tId == e.TargetNode)
                 {
                     return e;
                 }
@@ -192,7 +192,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             foreach (Edge e in VNodes[sId].Incident)
             {
-                if (tId == e.S || tId == e.T)
+                if (tId == e.SourceNode || tId == e.TargetNode)
                 {
                     return true;
                 }
@@ -215,8 +215,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         }
 
 
-        public List<Tuple<int, Path>> Ring(int source, double ldis, double udis,
-                                           int nodeLimit, HashSet<int> contained)
+        public List<Tuple<int, Path>> CalculateRing(int sourceNode, double innerDistance, double outerDistande,
+                                                    int nodeLimit, HashSet<int> contained)
         {
             double[] dist = new double[VNodes.Count];
             for (int i = 0; i < dist.Length; i++)
@@ -229,10 +229,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>((x, y) => x.Item1.CompareTo(y.Item1));
             Dictionary<int, Tuple<int, Edge>> parent = new Dictionary<int, Tuple<int, Edge>>();
 
-            dist[source] = 0.0;
-            actDist[source] = 0.0;
+            dist[sourceNode] = 0.0;
+            actDist[sourceNode] = 0.0;
 
-            queue.Enqueue(0.0, new Tuple<int, double>(source, 0.0));
+            queue.Enqueue(0.0, new Tuple<int, double>(sourceNode, 0.0));
 
             List<int> visited = new List<int>();
 
@@ -240,14 +240,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 (double currentDist, (int currentNode, double currentActual)) = queue.Dequeue();
 
-                if (currentActual > udis)
+                if (currentActual > outerDistande)
                 {
                     continue;
                 }
 
                 double bestKnownDist = dist[currentNode];
 
-                if (bestKnownDist == 2147483647)
+                if (bestKnownDist == double.MaxValue)
                 {
                     dist[currentNode] = currentDist;
                     actDist[currentNode] = currentActual;
@@ -261,7 +261,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 foreach (Edge edge in VNodes[currentNode].Incident)
                 {
-                    int neighborId = edge.S == currentNode ? edge.T : edge.S;
+                    int neighborId = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
 
                     double newDist = bestKnownDist + (edge.Cost / (edge.Profit + 0.1));
                     double newActual = currentActual + edge.Cost;
@@ -293,7 +293,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     break;
                 }
 
-                if (actDist[vis] < ldis)
+                if (actDist[vis] < innerDistance)
                 {
                     continue;
                 }
@@ -303,19 +303,30 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 bool aborted = false;
 
-                while (current != source)
+                while (current != sourceNode && parent[current].Item1 != sourceNode)
                 {
                     Edge e = parent[current].Item2;
-                    path.Edges.Insert(0, new DirEdge(e, e.T == current));
+                    path.Edges.Insert(0, new DirEdge(e, e.TargetNode == current));
                     path.Length += e.Cost;
 
-                    if (current == parent[parent[current].Item1].Item1)
+                    // if any of the null checks holds, current was not deeply enough routed
+                    if ((parent.ContainsKey(current) &&
+                        parent[current] != null && // current has no parent (is the start)
+                        parent[current].Item1 != null && // error case, abort
+                        parent.ContainsKey(parent[current].Item1) &&
+                        parent[parent[current].Item1] != null) && // current has not 2 parent nodes, so it's the first child only
+                        current == parent[parent[current].Item1].Item1)
+                    //if (current == parent[parent[current].Item1].Item1)
                     {
                         aborted = true;
                         break;
                     }
 
-                    if (current == parent[parent[parent[current].Item1].Item1].Item1)
+                    if ((parent[parent[current].Item1].Item1 != null && // error case, abort
+                        parent.ContainsKey(parent[parent[current].Item1].Item1) &&
+                        parent[parent[parent[current].Item1].Item1] != null) && // current has not 3 parent nodes
+                        current == parent[parent[parent[current].Item1].Item1].Item1)
+                    //if (current == parent[parent[parent[current].Item1].Item1].Item1)
                     {
                         aborted = true;
                         break;
@@ -432,7 +443,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 foreach (Edge edge in VNodes[currentNode].Incident)
                 {
-                    int neighborId = edge.S == currentNode ? edge.T : edge.S;
+                    int neighborId = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
 
                     double newDistance = bestKnownDist + edge.Cost;
 
