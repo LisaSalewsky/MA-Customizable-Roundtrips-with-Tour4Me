@@ -1,0 +1,66 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+Reallocating 'name_of_file' (item size: 1) to 23 items.
+A level-1 auxiliary file: kapitel/titelseite.aux
+Reallocating 'name_of_file' (item size: 1) to 23 items.
+A level-1 auxiliary file: kapitel/einleitung.aux
+Reallocating 'name_of_file' (item size: 1) to 21 items.
+A level-1 auxiliary file: kapitel/kapitel2.aux
+Reallocating 'name_of_file' (item size: 1) to 21 items.
+A level-1 auxiliary file: kapitel/kapitel3.aux
+Reallocating 'name_of_file' (item size: 1) to 21 items.
+A level-1 auxiliary file: kapitel/kapitel4.aux
+Reallocating 'name_of_file' (item size: 1) to 21 items.
+A level-1 auxiliary file: kapitel/kapitel5.aux
+Reallocating 'name_of_file' (item size: 1) to 21 items.
+A level-1 auxiliary file: kapitel/kapitel6.aux
+Reallocating 'name_of_file' (item size: 1) to 19 items.
+A level-1 auxiliary file: kapitel/anhang.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: gerplain.bst
+Reallocating 'name_of_file' (item size: 1) to 25 items.
+Reallocating 'name_of_file' (item size: 1) to 23 items.
+A level-1 auxiliary file: kapitel/erklaerung.aux
+Database file #1: literatur/LS11Buchin.bib
+You've used 30 entries,
+            2343 wiz_defined-function locations,
+            787 strings with 12544 characters,
+and the built_in function-call counts, 12691 in all, are:
+= -- 1325
+> -- 545
+< -- 9
++ -- 214
+- -- 180
+* -- 1119
+:= -- 1934
+add.period$ -- 67
+call.type$ -- 30
+change.case$ -- 146
+chr.to.int$ -- 0
+cite$ -- 30
+duplicate$ -- 523
+empty$ -- 1001
+format.name$ -- 180
+if$ -- 2809
+int.to.chr$ -- 0
+int.to.str$ -- 30
+missing$ -- 47
+newline$ -- 122
+num.names$ -- 67
+pop$ -- 156
+preamble$ -- 1
+purify$ -- 146
+quote$ -- 0
+skip$ -- 410
+stack$ -- 0
+substring$ -- 801
+swap$ -- 201
+text.length$ -- 9
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 116
+warning$ -- 0
+while$ -- 121
+width$ -- 32
+write$ -- 320

@@ -1,0 +1,62 @@
+% einleitung.tex
+\chapter{Introduction}
+\label{chapter:introduction}
+
+
+Algorithms for optimal tours are an important and much studied part of computer science.
+It is a topic that directly influences the lives of many people.
+Better routing algorithms can help reduce travel times by car, bicycle or even on foot. 
+There is also considerable work on optimizing public transportation \cite{bastRoutePlanningTransportation2016, dellingRoundBasedPublicTransit2015} and managing traffic jams \cite{dellingTimeDependentSHARCRouting2011, dellingCustomizableRoutePlanning2017}. 
+Examples are Dijkstra (uni- and bidirectional) \cite{madkourSurveyShortestPathAlgorithms2017, sommerShortestpathQueriesStatic2014, wayahdiGreedyAStarDijkstra2021}, A* search (also uni- and bidirectional) \cite{madkourSurveyShortestPathAlgorithms2017, sommerShortestpathQueriesStatic2014, wayahdiGreedyAStarDijkstra2021}, greedy algorithms \cite{madkourSurveyShortestPathAlgorithms2017, wayahdiGreedyAStarDijkstra2021}, branch-and-bound algorithms \cite{lawlerBranchandBoundMethodsSurvey1966}, the Bellman-Ford-Moore algorithm \cite{cherkasskyShortestPathsAlgorithms1996} and many more \cite{dellingEngineeringRoutePlanning2009, sommerShortestpathQueriesStatic2014}.
+
+All of these have in common that they always look for the shortest or quickest path between two different points.
+However, when planning a tour, the goal might not be to simply get to a location as quick as possible.
+In particular, in many cases people plan round-trips.
+Especially for running and cycling - for training towards a specific goal or even as a pastime hobby - it is often desired to have roundtrips of a certain length. 
+Additionally, people typically enjoy running or cycling on more appealing paths in nature rather than between high buildings and on softer ground rather than on asphalt.
+So, a lot more information have to be taken into account when trying to find good running or cycling roundtrips. 
+Which means, these algorithms become useless for these scenarios. 
+The shortest path from the starting point back to it will always be to never leave. 
+So, a different approach is needed for these kinds of routes \cite{gemsaEfficientComputationJogging2013}.
+
+Considering the benefits of running and cycling (for overall health \cite{ojaHealthBenefitsCycling2011, ruegseggerHealthBenefitsExercise2018, vinaExerciseActsDrug2012}, the cardiovascular system\cite{nystoriakCardiovascularEffectsBenefits2018}, as a measure against many different diseases\cite{ojaHealthBenefitsCycling2011} as well as for social\cite{muellerJoggingDistanceSupporting2007, obrienJoggingDistance2007, wankelPsychologicalSocialBenefits1990} and psychological benefits\cite{biddlePsychologicalBenefitsExercise1993, cekinPsychologicalBenefitsRegular2015, szaboPsychologicalBenefitsRecreational2013, wankelPsychologicalSocialBenefits1990} and also further benefits of touristic cycling for cities \cite{blondiauEconomicBenefitsIncreased2016}), the problem at hand becomes all the more important.
+Not only are there many joggers and cyclists, who would profit from a tool that returns a roundtrip for their preferred personal optimal route, but having such a tool at hand could help convince more people of starting one or both of the two activities.
+This could result in an overall larger population doing some exercise and profiting from the previously mentioned benefits of physical activity outdoors. 
+Not only does such a web app lower the effort it takes to start running or cycling (as route planning is coupled with effort), it also helps to show people better or more appealing routes and encourage participation in outdoor activities.
+
+Additionally, as already stated in examples for benefits of running and cycling, such an app can prove useful for tourism purposes as well. 
+People typically enjoy running or cycling along enticing, exiting routes, which are hard to find - especially in unfamiliar areas.
+For any kind of holiday trip, planning new roundtrips for either exercise purposes or event for several-day roundtrips, this app can be very useful.
+
+
+\section{Goal and Methodology}
+\label{sec:goal}
+
+
+The goal of this thesis is to create a usable application for computing running or cycling roundtrips of (almost) arbitrary length. 
+Useful in this case means an app that can be used in real time, that produces results of the desired length and prioritizes paths according to the users' input. 
+To achieve this, the thesis will be built on the already existing prototype Tour4Me and eventually add meta-heuristic approaches that have been deemed the most fitting for its purpose. 
+
+First, an interface for testing the new approaches has to be built. This also needs an overlay for adding in user options like the length of the desired roundtrip, as well as other preference inputs. 
+Based on this interface, different algorithms can be added and compared with each other to find the ones that will produce optimal results.
+These optimal results can have very different definitions of optimal. 
+An ideal algorithm would be fast, always generate a route and use all the users' preference inputs.
+However, it is not possible to achieve all these goals with just one algorithm. 
+Therefore, different approaches will be implemented and analyzed according to how well they fulfill the previously mentioned criteria. 
+
+Some of the possible approaches include different implementations of genetic algorithms \cite{gendreauHandbookMetaheuristics2010}, of ant colony or anthill algorithms \cite{babaogluAnthillFrameworkDevelopment2002, gendreauHandbookMetaheuristics2010, wangApplicationAntColony2014} as well as possible hybrid versions.
+These hybrids can either be hybrids of one of the meta-heuristics with - for example - local search algorithms \cite{gendreauHandbookMetaheuristics2010, wangApplicationAntColony2014} or hybrids of these two joined together.
+Furthermore, if there is enough time left, it is also possible to include the new algorithms into already implemented ones to improve those.
+
+When the best algorithms for this application have been determined, they will be integrated into the already existing Tour4Me application. The aim is for the app to calculate a high-quality tour for any typical roundtrip requests for running and cycling.
+
+In addition to finding suitable algorithms that allow for fast and reliable computation of all typical roundtrips, working on the interface and data used also improves the usefulness of the app.
+It can be equally important to improve the interface, add more options like elevation data, include more information (for example previously used routes) etc. 
+There are several opportunities and options to improve the app not only by changing the used algorithms but also adding and upgrading the GUI and user selection options.
+This is an alternative approach towards the goal of making Tour4Me more usable.
+It is another option to put more work into improving the app aside from adding more or faster algorithms.
+
+
+
+\section{Structure}
+\label{sec:structure}
