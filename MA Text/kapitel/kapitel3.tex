@@ -41,7 +41,7 @@ A valid edge is determined by checking whether the start- and endpoint s can sti
 
 
 For Integer Linear Programming, the touring problem must be stated in an appropriate form.
-To do so, a single instance can be encoded as $\mathcal{}{I}(G, w, \pi, B, v_0)$, containing the Graph $G$, edge costs $w$, the profit function $\pi$, the budget (length restrictions) $B$ and the starting (and end-) point $v_0$.
+To do so, a single instance can be encoded as $\mathcal{I}(G, w, \pi, B, v_0)$, containing the Graph $G$, edge costs $w$, the profit function $\pi$, the budget (length restrictions) $B$ and the starting (and end-) point $v_0$.
 Given this encoding, cycles $P=(v_0,...,v_i,...,v_0)$, which are always at most of length L, can be built.
 For the current definition, a few additional variables an be introduced to encode whether or not an edge is part of a solution (and how many times it occurs), whether or not an edge is the k-th edge of the solution and whether or not a vertex is the k-th vertex of a solution. 
 Using these, constraints can be built to describe the desired behavior of the algorithm \cite{buchinTour4MeFrameworkCustomized2022a}.
@@ -98,7 +98,72 @@ Furthermore, it is not possible to specify directly what type of underground or 
 
 \subsection{Computing Running Routes}
 \label{subsec:runningRoutes}
-\# TODO efficient jogging paper
+
+The problem of calculating good running roundtrips is not new.
+In addition to the commercial applications, there also are research papers on this subject.
+One of these papers is "Efficient Computation of Jogging Routes" \cite{gemsaEfficientComputationJogging2013}, presents two ideas to handle the new routing problem which the authors labeled "Jogging Problem".
+It is split up into two variants: 
+One being the simple version, that only aims to build a cycle that contains the starting point s and has the desired length.
+The other is a more complex version, that allows for some flexibility regarding the length of the final tour during optimization. 
+Hence, it is named "Relaxed Jogging Problem". 
+This relaxation allows to take more factors into account to also optimize for the resulting shape, the area surrounding the tour and/or the simplicity of the path \cite{gemsaEfficientComputationJogging2013}. 
+
+The second problem is chosen as the one to optimize, since it enables the addition of other conditions than just the length of a tour.
+For this, two different ideas are proposed.
+The first approach - "Greedy Faces" - is based on extending previous cycles.
+It starts with a cycle containing the starting point s that can be selected by the user. 
+This roundtrip then can be extended to gradually approach the user specified length. 
+The second algorithm was named "Partial Shortest Paths" and uses via-vertices.
+These are a number of new points that can be connected with shortest paths.
+When the via-vertices are connected with each other and the start, they form a roundtrip \cite{gemsaEfficientComputationJogging2013}.
+
+
+For both algorithms, the authors measure the badness of paths, the number of edges that are shared as well as the number of turns.
+The badness is used to take the additional constraints into account. 
+To reduce the possibility of having a roundtrip which turns at the end and uses all paths twice, the shared edges have to be minimized.
+The number of turns corresponds to the complexity of the tour and is measured by a percentage of a full u-turn \cite{gemsaEfficientComputationJogging2013}. 
+
+\#TODO how often do I need to reference the paper?
+
+
+\paragraph{Greedy Faces}
+
+Greedy Faces is built from an already existing circle by extending it.
+For this, blocks outside the tour that are adjacent to the current path are used.
+The previous circle encloses the chosen block and thus extends the previous route. 
+New blocks are picked until the desired length is reached.
+To ensure only blocks that correspond to faces are picked, a preprocessing phase is introduced that identifies faces of the graph.
+During this step, first, dead-ends are removed, so the resulting graph will be two-connected.
+Faces then are defined by the edges that surround them. 
+While identifying all faces, a dual graph $G^{\star} = (V^{\star},E^{\star})$ for $G = (V,E)$ is built as well.
+
+The Greedy Faces algorithm then works on the dual graph $G^{\star}$, selects a face f from $V^{\star}$ which has a surrounding path that contains the starting point s. 
+Then, a Breadth First Search Tree T is built, starting at f, until the desired length (a relaxed version $(1 + \varepsilon) L$) is exceeded.
+The resulting tour will be a simple path iff all vertices in V without the ones in T are connected and contain s.
+The final jogging path can be extracted by taking the cut edges between the tree T and the remaining vertices.
+This always forms a circle and thus builds a roundtrip.
+
+For building a path which optimizes all constraints, the three introduced measures for badness, number of shared edges and the number of turns are used.
+The badness function is incorporated into a different force function which can assign positive and negative badness values to edges.
+Furthermore, the force function uses the cost of the face and a vector $\vec{d} = \vec{p} - \vec{C}(f)$ which is built from the geometric center $\vec{C}(f)$ of a face to any point $\vec{p}$
+ 
+
+
+After the tour has been created, it will be smoothed to reduce the complexity.
+
+
+\paragraph{Partial Shortest Paths}
+
+
+
+
+
+\paragraph{Computational Complexity}
+
+Aside from introducing two methods to calculate roundtrip tours for running, this paper also presents a proof for the computational complexity of their Simple and Relaxed Jogging Problems.
+The authors show NP hardness by reduction of Hamiltonian Cycle to the optimization problem corresponding to their original problems.
+
+ \# TODO add the actual proof?
 
 \# TODO other jogging route paper
 
@@ -108,7 +173,7 @@ Furthermore, it is not possible to specify directly what type of underground or 
 
 
 
-\subsection{Computing Jogging Routes}
+\subsection{Computing Cycling Routes}
 \label{subsec:cyclingRoutes}
 \# TODO cycling paper Tour4Me
 

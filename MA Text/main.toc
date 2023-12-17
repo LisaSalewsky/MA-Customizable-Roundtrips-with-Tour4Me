@@ -15,23 +15,26 @@
 \contentsline {section}{\numberline {3.2}Roundtrip paths}{9}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}RouteLoops \& RouteYou}{9}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Computing Running Routes}{10}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Computing Jogging Routes}{10}{subsection.3.2.3}%
-\contentsline {chapter}{\numberline {4}Implemented Changes}{11}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Application}{11}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}New Architecture}{11}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Database}{11}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Interface and Frontend changes}{11}{subsection.4.1.3}%
-\contentsline {section}{\numberline {4.2}Algorithmic changes}{11}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Ant Colony}{11}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Genetic Algorithms}{11}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Simulated Annealing}{11}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Parameter changes}{11}{section.4.3}%
-\contentsline {chapter}{\numberline {5}Evaluation}{13}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Conclusion}{15}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Results}{15}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Future Work}{15}{section.6.2}%
-\contentsline {chapter}{\numberline {A}Source Code}{17}{appendix.A}%
-\contentsline {chapter}{Bibliography}{i}{appendix*.2}%
-\contentsline {chapter}{List of Figures}{iii}{appendix*.3}%
-\contentsline {chapter}{List of Algorithms}{v}{appendix*.4}%
-\contentsline {chapter}{Affidavit}{vii}{appendix*.4}%
+\contentsline {paragraph}{Greedy Faces}{10}{section*.2}%
+\contentsline {paragraph}{Partial Shortest Paths}{11}{section*.3}%
+\contentsline {paragraph}{Computational Complexity}{11}{section*.4}%
+\contentsline {subsection}{\numberline {3.2.3}Computing Cycling Routes}{11}{subsection.3.2.3}%
+\contentsline {chapter}{\numberline {4}Implemented Changes}{13}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Application}{13}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}New Architecture}{13}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Database}{13}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Interface and Frontend changes}{13}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}Algorithmic changes}{13}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Ant Colony}{13}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Genetic Algorithms}{13}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Simulated Annealing}{13}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Parameter changes}{13}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Evaluation}{15}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Conclusion}{17}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Results}{17}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future Work}{17}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Source Code}{19}{appendix.A}%
+\contentsline {chapter}{Bibliography}{i}{appendix*.5}%
+\contentsline {chapter}{List of Figures}{iii}{appendix*.6}%
+\contentsline {chapter}{List of Algorithms}{v}{appendix*.7}%
+\contentsline {chapter}{Affidavit}{vii}{appendix*.7}%
