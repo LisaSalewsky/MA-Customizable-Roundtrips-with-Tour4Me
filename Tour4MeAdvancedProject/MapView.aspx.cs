@@ -81,7 +81,7 @@ namespace Tour4MeAdvancedProject
 
         [WebMethod]
         public static Dictionary<string, string> Tour(double latIn, double lonIn, double distIn,
-                                                                string algoIn, List<KeyValuePair<int, string>> tagsHIn, List<KeyValuePair<int, string>> tagsSIn,
+                                                                string algoIn, string[] tagsHIn, List<string> tagsSIn,
                                                                 string runningTimeIn, double edgeProfitIn, double coveredAreaIn
                                                                 )
         {
@@ -152,30 +152,36 @@ namespace Tour4MeAdvancedProject
 
 
             Console.WriteLine("tags:");
-            //for (int i = 0; i < tagsHIn.Count; i++)
-            //{
-            //    if (req.GetArg("tags")[i] == 'd')
-            //    {
-            //        problem.PrefTags.Add(all_tags[i].Attr);
-            //    }
-            //    else if (req.GetArg("tags")[i] == 'a')
-            //    {
-            //        problem.AvoidTags.Add(all_tags[i].Attr);
-            //        Console.WriteLine(all_tags[i].Attr);
-            //    }
-            //}
-            //for (int i = 0; i < tagsSIn.Count; i++)
-            //{
-            //    if (tagsSIn[i] == 'd')
-            //    {
-            //        problem.PrefTags.Add(all_tags[i].Attr);
-            //    }
-            //    else if (req.GetArg("tags")[i] == 'a')
-            //    {
-            //        problem.AvoidTags.Add(all_tags[i].Attr);
-            //        Console.WriteLine(all_tags[i].Attr);
-            //    }
-            //}
+            for (int i = 0; i < tagsHIn.Length; i++)
+            {
+                string[] tagsNameDesireChoice = tagsHIn[i].Split(',');
+                string desireChoice = tagsNameDesireChoice[1];
+                string tagName = tagsNameDesireChoice[0];
+                if (desireChoice == "d")
+                {
+                    problem.PrefTags.Add(tagName);
+                }
+                else if (desireChoice == "a")
+                {
+                    problem.AvoidTags.Add(tagName);
+                    Console.WriteLine(tagName);
+                }
+            }
+            for (int i = 0; i < tagsSIn.Count; i++)
+            {
+                string[] tagsNameDesireChoice = tagsSIn[i].Split(',');
+                string desireChoice = tagsNameDesireChoice[1];
+                string tagName = tagsNameDesireChoice[0];
+                if (desireChoice == "d")
+                {
+                    problem.PrefTags.Add(tagName);
+                }
+                else if (desireChoice == "a")
+                {
+                    problem.AvoidTags.Add(tagName);
+                    Console.WriteLine(tagName);
+                }
+            }
 
 
             double best_distance = 1000000000000;

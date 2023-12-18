@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System;
+using System.Globalization;
 
 
 namespace Tour4MeAdvancedProject.ObjectClasses
@@ -85,12 +86,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     if (type == 'g')
                     {
                         string t = NextWord(ref str, ' ');
-                        MaxLat = double.Parse(NextWord(ref str, ' '));
-                        MinLat = double.Parse(NextWord(ref str, ' '));
-                        MaxLon = double.Parse(NextWord(ref str, ' '));
-                        MinLon = double.Parse(NextWord(ref str, ' '));
-                        CenterLat = double.Parse(NextWord(ref str, ' '));
-                        CenterLon = double.Parse(NextWord(ref str, ' '));
+                        MaxLat = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
+                        MinLat = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
+                        MaxLon = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
+                        MinLon = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
+                        CenterLat = double.Parse(NextWord(ref str,' '), CultureInfo.InvariantCulture);
+                        CenterLon = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
+                        double test = double.Parse("51.57313333", CultureInfo.InvariantCulture);
                     }
                     else if (type == 'p')
                     {
@@ -104,8 +106,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     {
                         string t = NextWord(ref str, ' ');
                         long id = long.Parse(NextWord(ref str, ' '));
-                        double lat = double.Parse(NextWord(ref str, ' '));
-                        double lon = double.Parse(NextWord(ref str, ' '));
+                        double lat = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
+                        double lon = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
 
                         Node node = new Node(cNodes, id, lat, lon);
                         VNodes.Add(node);
@@ -119,7 +121,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         string t = NextWord(ref str, ' ');
                         long vId = long.Parse(NextWord(ref str, ' '));
                         long wId = long.Parse(NextWord(ref str, ' '));
-                        double cost = double.Parse(NextWord(ref str, ' '));
+                        double cost = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
 
                         int sId = GIdNode[vId];
                         int tId = GIdNode[wId];
@@ -143,8 +145,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         t = NextWord(ref str, ' ');
                         while (HasWord(ref str, ' '))
                         {
-                            double lat = double.Parse(NextWord(ref str, ' '));
-                            double lon = double.Parse(NextWord(ref str, ' '));
+                            double lat = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
+                            double lon = double.Parse(NextWord(ref str, ' '), CultureInfo.InvariantCulture);
                             edge.GeoLocations.Add(new Tuple<double, double>(lon, lat));
                         }
 
@@ -158,6 +160,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         while (HasWord(ref str, ' '))
                         {
                             string word = NextWord(ref str, ' ');
+                            word = char.ToUpper(word[0]) + word.Substring(1);
                             edge.Tags.Add(word);
                         }
                     }
@@ -226,9 +229,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             double[] actDist = new double[VNodes.Count];
 
-            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>((x, y) => x.Item1.CompareTo(y.Item1));
-            Dictionary<int, Tuple<int, Edge>> parent = new Dictionary<int, Tuple<int, Edge>>();
-
+            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
+            Tuple<int, Edge>[] parent = new Tuple<int, Edge>[VNodes.Count];
+            List<int> neighbors = new List<int>();
             dist[sourceNode] = 0.0;
             actDist[sourceNode] = 0.0;
 
@@ -259,7 +262,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                foreach (Edge edge in VNodes[currentNode].Incident)
+
+                neighbors.Add(VNodes[currentNode].Incident.Count);
+                if(neighbors.Count == 92 || neighbors.Count == 93 || neighbors.Count == 94)
+                {
+                    Node cur = VNodes[currentNode];
+                }
+                    foreach (Edge edge in VNodes[currentNode].Incident)
                 {
                     int neighborId = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
 
@@ -303,35 +312,33 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 bool aborted = false;
 
-                while (current != sourceNode && parent[current].Item1 != sourceNode)
+                while (current != sourceNode)
                 {
                     Edge e = parent[current].Item2;
                     path.Edges.Insert(0, new DirEdge(e, e.TargetNode == current));
                     path.Length += e.Cost;
 
                     // if any of the null checks holds, current was not deeply enough routed
-                    if ((parent.ContainsKey(current) &&
-                        parent[current] != null && // current has no parent (is the start)
+                    if (parent[current] != null && // current has no parent (is the start)
                         parent[current].Item1 != null && // error case, abort
-                        parent.ContainsKey(parent[current].Item1) &&
-                        parent[parent[current].Item1] != null) && // current has not 2 parent nodes, so it's the first child only
-                        current == parent[parent[current].Item1].Item1)
-                    //if (current == parent[parent[current].Item1].Item1)
+                        parent[parent[current].Item1] != null)// current has not 2 parent nodes, so it's the first child only
                     {
-                        aborted = true;
-                        break;
-                    }
+                        if (current == parent[parent[current].Item1].Item1)
+                        //if (current == parent[parent[current].Item1].Item1)
+                        {
+                            aborted = true;
+                            break;
+                        }
 
-                    if ((parent[parent[current].Item1].Item1 != null && // error case, abort
-                        parent.ContainsKey(parent[parent[current].Item1].Item1) &&
-                        parent[parent[parent[current].Item1].Item1] != null) && // current has not 3 parent nodes
-                        current == parent[parent[parent[current].Item1].Item1].Item1)
-                    //if (current == parent[parent[parent[current].Item1].Item1].Item1)
-                    {
-                        aborted = true;
-                        break;
+                        if (parent[parent[current].Item1].Item1 != null && // error case, abort
+                            parent[parent[parent[current].Item1].Item1] != null && // current has not 3 parent nodes
+                            current == parent[parent[parent[current].Item1].Item1].Item1)
+                        //if (current == parent[parent[parent[current].Item1].Item1].Item1)
+                        {
+                            aborted = true;
+                            break;
+                        }
                     }
-
                     current = parent[current].Item1;
                 }
 
@@ -393,7 +400,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public double GetDistanceFromLatLon(Node node1, Node node2)
         {
-            const double R = 6371; // Radius of the earth in km
+            const double R = 6371000; // Radius of the earth in km
             double dLat = Deg2Rad(node2.Lat - node1.Lat);  // deg2rad below
             double dLon = Deg2Rad(node2.Lon - node1.Lon);
             double a =
@@ -415,7 +422,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double ShortestPath(int start, int end)
         {
             Dictionary<int, double> dist = new Dictionary<int, double>();
-            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>((x,y) => x.Item1.CompareTo(y.Item1));
+            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
             
 
             dist[start] = 0.0;
@@ -466,26 +473,80 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
     public class PriorityQueue<T>
     {
-        private SortedSet<(double, T)> set = new SortedSet<(double, T)>();
+        private List<(double, T)> heap = new List<(double, T)>();
 
-        public int Count => set.Count;
-        private List<T> items;
-        private Comparison<T> comparison;
-        public PriorityQueue(Comparison<T> comparison)
-        {
-            this.comparison = comparison;
-            this.items = new List<T>();
-        }
+        public int Count => heap.Count;
+
         public void Enqueue(double priority, T item)
         {
-            set.Add((priority, item));
+            heap.Add((priority, item));
+            HeapifyUp(heap.Count - 1);
         }
 
         public (double, T) Dequeue()
         {
-            var item = set.Min;
-            set.Remove(item);
-            return item;
+            if (heap.Count == 0)
+                throw new InvalidOperationException("Queue is empty");
+
+            var top = heap[0];
+            heap[0] = heap[heap.Count - 1];
+            heap.RemoveAt(heap.Count - 1);
+
+            if (heap.Count > 1)
+                HeapifyDown(0);
+
+            return top;
+        }
+
+        private void HeapifyUp(int index)
+        {
+            while (index > 0)
+            {
+                int parentIndex = (index - 1) / 2;
+
+                if (heap[index].Item1 < heap[parentIndex].Item1)
+                {
+                    Swap(index, parentIndex);
+                    index = parentIndex;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        private void HeapifyDown(int index)
+        {
+            while (true)
+            {
+                int leftChild = 2 * index + 1;
+                int rightChild = 2 * index + 2;
+                int smallest = index;
+
+                if (leftChild < heap.Count && heap[leftChild].Item1 < heap[smallest].Item1)
+                    smallest = leftChild;
+
+                if (rightChild < heap.Count && heap[rightChild].Item1 < heap[smallest].Item1)
+                    smallest = rightChild;
+
+                if (smallest != index)
+                {
+                    Swap(index, smallest);
+                    index = smallest;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        private void Swap(int i, int j)
+        {
+            var temp = heap[i];
+            heap[i] = heap[j];
+            heap[j] = temp;
         }
     }
 

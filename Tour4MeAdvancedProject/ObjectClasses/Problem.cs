@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,7 +57,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 {
                     ShortestPath.Add(new List<double>(Graph.VNodes.Count));
                     Dictionary<int, double> dist = new Dictionary<int, double>();
-                    PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>((x, y) => x.Item1.CompareTo(y.Item1));
+                    PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
 
                     dist[source] = 0.0;
                     queue.Enqueue(0.0, new Tuple<int, double>(source, 0.0));
@@ -203,7 +204,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             foreach (int node in Path)
             {
-                outputString.Append($"[{Graph.VNodes[node].Lat},{Graph.VNodes[node].Lon}],");
+                outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:G10},{1:G10}],", Graph.VNodes[node].Lat,Graph.VNodes[node].Lon);
 
                 Edge edge = Graph.GetEdge(node, Path.ElementAtOrDefault(Path.IndexOf(node) + 1));
 
@@ -218,7 +219,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
                 foreach ((double lat, double lon) in edge.GeoLocations)
                 {
-                    outputString.Append($"[{lat},{lon}],");
+                    outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:G10},{1:G10}],", lat, lon);
                 }
             }
             //outputString = outputString.Remove(outputString.Length - 1, 1);

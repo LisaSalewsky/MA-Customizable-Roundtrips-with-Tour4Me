@@ -34,7 +34,10 @@ namespace Tour4MeAdvancedProject.Helper
         {
             Greedy,
             minCost,
-            ILS
+            ILS,
+            AntColony,
+            SimulatedAnnealing,
+            Genetic
         }
 
         public enum SolveStatus

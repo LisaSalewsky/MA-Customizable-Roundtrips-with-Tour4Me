@@ -400,14 +400,37 @@
 
                 algos.forEach(algorithm => {
 
-                    const key_val_keys = Object.keys(algorithm);
+                //    const key_val_keys = Object.keys(algorithm);
 
-                    algosRadio.innerHTML += "<input type=\"radio\" class=\"btn-check\" name=\"algorithm\" value=" + algorithm[key_val_keys[0]] + " id=\"" + algorithm[key_val_keys[1]] + "\" autocomplete=\"off\" " + (algorithm[key_val_keys[0]] == 1 ? "checked" : "") + "/>";
-                    algosRadio.innerHTML += "<label class=\"btn btn-primary\" for=\"" + algorithm[key_val_keys[0]] + "\">" + algorithm[key_val_keys[1]] + "</label>";
+                //    algosRadio.innerHTML += "<input type=\"radio\" class=\"btn-check\" name=\"algorithm\" value=" + algorithm[key_val_keys[0]] + " id=\"" + algorithm[key_val_keys[1]] + "\" autocomplete=\"off\" " + (algorithm[key_val_keys[0]] == 1 ? "checked" : "") + "/>";
+                //    algosRadio.innerHTML += "<label class=\"btn btn-primary\" for=\"" + algorithm[key_val_keys[0]] + "\">" + algorithm[key_val_keys[1]] + "</label>";
 
-                    console.log(algorithm[key_val_keys[1]] + " Button created")
+                //    console.log(algorithm[key_val_keys[1]] + " Button created")
+                //});
+
+                    const radioInput = document.createElement("input");
+                    radioInput.type = "radio";
+                    radioInput.className = "btn-check";
+                    radioInput.name = "algorithm";
+                    radioInput.value = algorithm.Key;
+                    radioInput.id = "algo" + algorithm.Key;
+                    radioInput.autocomplete = "off";
+                    radioInput.checked = algorithm.Key === 1; // Set checked based on some condition
+
+                    const label = document.createElement("label");
+                    label.className = "btn btn-primary";
+                    label.htmlFor = "algo" + algorithm.Key;
+                    label.textContent = algorithm.Value;
+
+                    algosRadio.appendChild(radioInput);
+                    algosRadio.appendChild(label);
+
+                    // Add event listener to each radio button
+                    radioInput.addEventListener("change", function () {
+                        console.log(algorithm.Value + " Button clicked");
+                        // Add your logic here for handling the change event
+                    });
                 });
-
 
 
                 $(".btn-group > .btn-cycle").click(function () {
@@ -480,27 +503,27 @@
                     max_lon = result["max_lon"];
                     min_lon = result["min_lon"];
 
-                    if (inner_box) {
-                        inner_box.remove(map);
-                    }
+                    //if (inner_box) {
+                    //    inner_box.remove(map);
+                    //}
 
-                    inner_box = l.polygon(
-                        [
-                            [
-                                [abs_min_lat - lat_pad, abs_min_lon - lon_pad],
-                                [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
-                                [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
-                                [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
-                            ],
-                            [
-                                [min_lat, min_lon],
-                                [min_lat, max_lon],
-                                [max_lat, max_lon],
-                                [max_lat, min_lon]
-                            ]
-                        ],
-                        { interactive: false, color: 'yellow' })
-                        .addto(map);
+                    //inner_box = l.polygon(
+                    //    [
+                    //        [
+                    //            [abs_min_lat - lat_pad, abs_min_lon - lon_pad],
+                    //            [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
+                    //            [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
+                    //            [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
+                    //        ],
+                    //        [
+                    //            [min_lat, min_lon],
+                    //            [min_lat, max_lon],
+                    //            [max_lat, max_lon],
+                    //            [max_lat, min_lon]
+                    //        ]
+                    //    ],
+                    //    { interactive: false, color: 'yellow' })
+                    //    .addto(map);
                 },
                 error: function (xhr, status) {
                     console.log("get path error")
@@ -522,22 +545,22 @@
             tagsHighway.forEach(tag => {
                 tag_button = document.getElementById("highway" + tag[key_val_keys[0]]);
                 if (tag_button.classList.contains("neutral")) {
-                    tag_str += "n";
+                    tag[key_val_keys[1]] += ",n";
                 } else if (tag_button.classList.contains("desire")) {
-                    tag_str += "d";
+                    tag[key_val_keys[1]] += ",d";
                 } else if (tag_button.classList.contains("avoid")) {
-                    tag_str += "a";
+                    tag[key_val_keys[1]] += ",a";
                 }
             });
 
             tagsSurface.forEach(tag => {
                 tag_button = document.getElementById("surface" + tag[key_val_keys[0]]);
                 if (tag_button.classList.contains("neutral")) {
-                    tag_str += "n";
+                    tag[key_val_keys[1]] += ",n";
                 } else if (tag_button.classList.contains("desire")) {
-                    tag_str += "d";
+                    tag[key_val_keys[1]] += ",d";
                 } else if (tag_button.classList.contains("avoid")) {
-                    tag_str += "a";
+                    tag[key_val_keys[1]] += ",a";
                 }
             });
 
@@ -555,23 +578,47 @@
 
             document.getElementById("overlay").style.display = "block";
 
+            function createKeyValuePairArray(pairList) {
+                return pairList.map(pair => ((pair[key_val_keys[0]], pair[key_val_keys[1]] )));
+            }
 
+            var dataToSend = {
+                latIn: lat,
+                lonIn: lon,
+                distIn: dis,
+                algoIn: algorithm,
+                tagsHIn: createKeyValuePairArray(tagsHighway),
+                tagsSIn: createKeyValuePairArray(tagsSurface),
+                runningTimeIn: runningTime,
+                edgeProfitIn: edgeProfit,
+                coveredAreaIn: coveredArea
+            };
+
+            const testKVPair = createKeyValuePairArray(tagsHighway);
+            console.log(testKVPair.key);
+            console.log(testKVPair.value);
+            console.log(createKeyValuePairArray(tagsSurface)); 
+
+            console.log(tagsHighway.map(pair => ((pair[key_val_keys[0]], pair[key_val_keys[1]] ))));
+            console.log(tagsSurface.map(pair => ({ Key: pair[key_val_keys[0]], Value: pair[key_val_keys[1]] }))); 
+
+
+            // Custom serialization for KeyValuePair
+            dataToSend = JSON.parse(JSON.stringify(dataToSend, (key, value) => {
+                if (value instanceof Object && value.hasOwnProperty('key') && value.hasOwnProperty('value')) {
+                    return { key: value.key, value: value.value };
+                }
+                return value;
+            }));
+
+
+            console.log(JSON.stringify(dataToSend));
 
             $.ajax({
                 type: 'POST',
                 url: "MapView.aspx/Tour",
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({
-                    latIn: lat,
-                    lonIn: lon,
-                    distIn: dis,
-                    algoIn: algorithm,
-                    tagsHIn: tagsHighway,
-                    tagsSIn: tagsSurface,
-                    runningTimeIn: runningTime,
-                    edgeProfitIn: edgeProfit,
-                    coveredAreaIn: coveredArea
-                }),
+                data: JSON.stringify(dataToSend),
                 dataType: 'json',
                 success: function (result) {
                     if ("success" in result.d) {
@@ -579,9 +626,11 @@
                     } else if ("error" in result.d) {
                         console.log(result.d.error)
                     }
-                    var line = L.polyline(JSON.parse(result.d.path), { color: colors[route_counter % colors.length], weight: 5 }).addTo(map);
 
-                    var path = result.d.path;
+                    var path = JSON.parse(result.d.path);
+
+                    var line = L.polyline(path, { color: colors[route_counter % colors.length], weight: 5 });
+                    line = line.addTo(map);
 
                     document.getElementById("overlay").style.display = "none";
                     map.fitBounds(line.getBounds());
