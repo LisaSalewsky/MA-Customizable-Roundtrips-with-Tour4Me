@@ -111,34 +111,39 @@
 				\end{flushleft}
 		\end{column}
 		\begin{column}{0.48\textwidth}
-			\vspace{-2cm}
+			\vspace{-2.5cm}
 			\begin{block}{Gemeinsamkeiten}
 				\pause
 				\begin{itemize}
 					\only<2>{\item Trips von A nach B}
 					\only<3->{\item Trips von A nach B?}
 					\item<4-> In der Freizeit aber oft Rundtrips
-					\item<5-> Möglichst "hübsche" Routen mit zusätzlichen individuellen Wünschen gewünscht
+					\item<5-> Möglichst "hübsche" Routen mit zusätzlichen individuellen Wünschen
 				\end{itemize}
-			\end{block}
+			\end{block}	
+			\begin{itemize}	
+			\item<6-> Viele Lösungen für kürzeste Wege von A nach B
+				\only<7>{\item Aber kaum Ansätze für Rundtrips}
+				\only<8->{\item Aber kaum Ansätze für Rundtrips mit Präferenzen}
+			\end{itemize}
 		\end{column}
-		\end{columns} ~\\
-		
+		\end{columns} ~\\		
 	\end{frame}
 	
-	\begin{frame}{Einleitung}
-	\vspace{0.25cm}
-	Warum eine App zum Erstellen von Rundrips?
-	\pause
-	\begin{itemize}	
-		\item<2-> Viele Lösungen für kürzeste Wege von A nach B
-		\item<3-> Optimieren alltägliche Routen
-		\item<4-> Joggen und Radfahren in der Freizeit:
-		\item<5-> Weitere Bedingungen für attraktive Strecken nötig
-		\only<6>{\item Aber kaum Ansätze für Rundtrips}
-		\only<7->{\item Aber kaum Ansätze für Rundtrips mit Präferenzen}
-	\end{itemize}
-	\end{frame}
+%	\begin{frame}{Einleitung}
+%	\vspace{0.25cm}
+%	Warum eine App zum Erstellen von Rundrips?
+%	\begin{itemize}	
+%		\item<1-> Viele Lösungen für kürzeste Wege von A nach B
+%		\item<2-> Optimieren alltägliche Routen
+%		\item<3-> Joggen und Radfahren in der Freizeit:
+%		\begin{itemize}	
+%		\item<3-> Weitere Bedingungen für gute Strecken nötig
+%		\only<4>{\item Und kaum Ansätze für Rundtrips}
+%		\only<5->{\item Und kaum Ansätze für Rundtrips mit Präferenzen}
+%		\end{itemize}
+%	\end{itemize}
+%	\end{frame}
 
 	\begin{frame}{Einleitung}
 		\vspace{0.25cm}
@@ -147,7 +152,7 @@
 		\vspace{-0.2cm}
 		\begin{minipage}[t]{0.48\textwidth}
 			\begin{itemize}[<+->]
-				\item Abhängig von individuellen Bedürfnissen und vom Level der Person
+				\item Abhängig von individuellen Bedürfnissen
 				\item Viele verschiedene Faktoren
 				\begin{itemize}[<+->]
 					\item Wegtyp (Straße, Waldpfad, Radweg etc.)
@@ -282,26 +287,16 @@
 	\section{Motivation und Hintergrund}	
 	\begin{frame}
 		\vspace{0.5cm}
-		Viele Algorithmen, Ansätze und viel  Forschung zu Kürzeste-Wege-Problemen
+		Viele Algorithmen, Ansätze und Forschung zu Kürzeste-Wege-Problemen
 		\pause
 		\begin{itemize}[<+->]
-			\item Reviews, Vergleiche und Analysen \cite{madkourSurveyShortestPathAlgorithms2017, sommerShortestpathQueriesStatic2014, wayahdiGreedyAStarDijkstra2021}
 			\item Zusätzlich weitere heuristische Ansätze
-			\begin{itemize}[<+->]
-				\item Local Search Varianten \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
-				\item Neighborhood basierte Ideen \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
+			\begin{itemize}
+				\item<2-> Local Search Varianten \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
+				\item<2-> Neighborhood basierte Ideen \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}
 			\end{itemize} 
-		\item Algorithmische Routing-Probleme  bereits NP-schwer \cite{reineltTravelingSalesmanComputational2003}
-		\begin{itemize}[<+->]
-			\item Traveling Salesman (TSP)\cite{gendreauHandbookMetaheuristics2010} 
-			\item Vehicle routing \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006}
-		\end{itemize}
-		\end{itemize}
-		\pause
-		
-		$\Rightarrow$ Rundtrips mit Nebenbedingungen noch komplexer \cite{gemsaEfficientComputationJogging2013}
-		\pause
-		\begin{itemize}[<+->]
+		\item Algorithmische Routing-Probleme bereits NP-schwer \cite{reineltTravelingSalesmanComputational2003}		
+			\item[$\Rightarrow$] Rundtrips mit Nebenbedingungen noch komplexer \cite{gemsaEfficientComputationJogging2013}
 			\item Vorhandene Tools meist eingeschränkt
 			\item Auswahl an Nebenbedingungen beschränkt
 			\item Editieren schwierig/ ignoriert Nebenbedingungen

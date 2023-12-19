@@ -1,5 +1,5 @@
 \babel@toc {ngerman}{}\relax 
 \beamer@sectionintoc {1}{Einleitung}{2}{0}{1}
-\beamer@sectionintoc {2}{Ziel}{28}{0}{2}
-\beamer@sectionintoc {3}{Motivation und Hintergrund}{42}{0}{3}
-\beamer@sectionintoc {4}{Vorgehensweise}{57}{0}{4}
+\beamer@sectionintoc {2}{Ziel}{24}{0}{2}
+\beamer@sectionintoc {3}{Motivation und Hintergrund}{38}{0}{3}
+\beamer@sectionintoc {4}{Vorgehensweise}{47}{0}{4}
