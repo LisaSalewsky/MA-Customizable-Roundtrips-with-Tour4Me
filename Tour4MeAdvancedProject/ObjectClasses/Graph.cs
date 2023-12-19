@@ -455,7 +455,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     double newDistance = bestKnownDist + edge.Cost;
 
                     if (!dist.TryGetValue(neighborId, out double currentNeighborDist))
+                    {
                         dist[neighborId] = double.MaxValue;
+                        currentNeighborDist = double.MaxValue;
+                    }
 
                     if (newDistance < currentNeighborDist)
                     {

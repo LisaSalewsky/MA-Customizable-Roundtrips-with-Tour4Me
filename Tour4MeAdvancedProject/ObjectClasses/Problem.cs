@@ -222,8 +222,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:G10},{1:G10}],", lat, lon);
                 }
             }
+            outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:G10},{1:G10}]", Graph.VNodes[Path.First()].Lat,Graph.VNodes[Path.First()].Lon);
             //outputString = outputString.Remove(outputString.Length - 1, 1);
-            outputString.Append($"[{Graph.VNodes[Path.First()].Lat},{Graph.VNodes[Path.First()].Lon}]");
             outputString.Append("]");
 
             result.Add(new KeyValuePair<string, string>("path", outputString.ToString()));

@@ -321,37 +321,22 @@ namespace Tour4MeAdvancedProject
         {
             Dictionary<string, List<KeyValuePair<int, string>>> result = new Dictionary<string, List<KeyValuePair<int, string>>>();
 
-            List<KeyValuePair<int, string>> tagList = new List<KeyValuePair<int, string>>
-            {
-                new KeyValuePair<int, string>(0, HighwayTag.Footway.ToString()),
-                new KeyValuePair<int, string>(1, HighwayTag.Cycleway.ToString()),
-                new KeyValuePair<int, string>(2, HighwayTag.Unclassified.ToString()),
-                new KeyValuePair<int, string>(3, HighwayTag.Residential.ToString()),
-                new KeyValuePair<int, string>(4, HighwayTag.Path.ToString()),
-                new KeyValuePair<int, string>(5, HighwayTag.Track.ToString()),
-                new KeyValuePair<int, string>(6, HighwayTag.Secondary.ToString())
-            };
+            List<KeyValuePair<int, string>> tagList = Enum.GetValues(typeof(HighwayTag))
+            .Cast<HighwayTag>()
+            .Select((value, index) => new KeyValuePair<int, string>(index, value.ToString()))
+            .ToList();
             result.Add("highway",tagList);
 
-            tagList = new List<KeyValuePair<int, string>>
-            {
-                new KeyValuePair<int, string>(0, SurfaceTag.Paved.ToString()),
-                new KeyValuePair<int, string>(1, SurfaceTag.Cobblestone.ToString()),
-                new KeyValuePair<int, string>(2, SurfaceTag.Gravel.ToString()),
-                new KeyValuePair<int, string>(3, SurfaceTag.Unpaved.ToString()),
-                new KeyValuePair<int, string>(4, SurfaceTag.Compacted.ToString()),
-                new KeyValuePair<int, string>(5, SurfaceTag.FineGravel.ToString()),
-                new KeyValuePair<int, string>(6, SurfaceTag.Rock.ToString()),
-                new KeyValuePair<int, string>(7, SurfaceTag.Pebblestone.ToString())
-            };
+            tagList = Enum.GetValues(typeof(SurfaceTag))
+           .Cast<SurfaceTag>()
+           .Select((value, index) => new KeyValuePair<int, string>(index, value.ToString()))
+           .ToList();
             result.Add("surface", tagList);
 
-            List<KeyValuePair<int, string>> algoList = new List<KeyValuePair<int, string>>
-            {
-                new KeyValuePair<int, string>(0, Algo.Greedy.ToString()),
-                new KeyValuePair<int, string>(1, Algo.minCost.ToString()),
-                new KeyValuePair<int, string>(2, Algo.ILS.ToString())
-            };
+            List<KeyValuePair<int, string>> algoList = Enum.GetValues(typeof(Algo))
+            .Cast<Algo>()
+            .Select((value, index) => new KeyValuePair<int, string>(index, value.ToString()))
+            .ToList();
             result.Add("algorithms", algoList);
 
             return result;
