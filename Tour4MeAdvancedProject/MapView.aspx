@@ -35,7 +35,7 @@
 </div>
 
 
-<div id="map" style="height: 580px;">
+<div id="map" style="height: 580px; z-index: 0;">
 </div>
     
     
@@ -138,7 +138,27 @@
     </div>
 </div>
 
+    
 
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="false">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="infoModalLabel">Route Information</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <h5></h5> -->
+                    <div id="metadata-body">
+                        <p>No route exists yet!</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
 
     <script>
@@ -271,6 +291,7 @@
 
                 },
                 error: function (xhr, status) {
+                    document.getElementById("overlay").style.display = "none";
                     alert("Failed to contact server");
                 }
             })
@@ -460,6 +481,7 @@
 
             },
             error: function (xhr, status) {
+                document.getElementById("overlay").style.display = "none";
                 alert("Failed to contact server");
             }
         })
@@ -623,58 +645,60 @@
                 success: function (result) {
                     if ("success" in result.d) {
                         console.log("Tour success" + result.d.success);
+                        var path = JSON.parse(result.d.path);
+
+                        var line = L.polyline(path, { color: colors[route_counter % colors.length], weight: 5 });
+                        line = line.addTo(map);
+
+                        document.getElementById("overlay").style.display = "none";
+                        map.fitBounds(line.getBounds());
+
+                        var metadata = JSON.parse(result.d.meta);
+
+                        m_body = document.getElementById("metadata-body");
+
+                        m_body.innerHTML = ""
+                        metadata.forEach(element => {
+                            m_body.innerHTML += "<p>" + element + "</p>\n";
+                        });
+
+                        stored_routes.push({ 'route_id': route_counter, 'line': line, 'path': path, 'metadata': metadata })
+
+                        html_routes = document.getElementById("route_overview");
+
+                        html_routes.innerHTML += "     <div class=\"input-group mb-3\" id=\"d" + route_counter + "\">"
+                            + "        <div class=\"input-group-prepend\">"
+                            + "            <button class=\"btn btn-warning\" route_id=\"" + route_counter + "\" onclick=\"toggleRoute(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
+                            + "                title=\"Toggle Selected Route\">T</button>"
+                            + "            <button class=\"btn btn-secondary\" route_id=\"" + route_counter + "\" data-bs-toggle=\"modal\" data-bs-target=\"#infoModal\" onclick=\"showInfo(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
+                            + "                title=\"Display Route Information\">I</button>"
+                            + "        </div>"
+                            + ""
+                            + "        <input type=\"text\" class=\"form-control\" id=\"r" + route_counter + "\" style=\"color:" + colors[route_counter % colors.length] + "\" value=\"Route " + route_counter + "\">"
+                            + ""
+                            + "        <div class=\"input-group-append\">"
+                            + "            <button class=\"btn btn-success\" route_id=\"" + route_counter + "\" onclick=\"toGPX(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
+                            + "                title=\"Export Route to GPX\">E</button>"
+                            + "            <button class=\"btn btn-danger\" route_id=\"" + route_counter + "\" onclick=\"deleteRoute(this)\"  data-toggle=\"tooltip\" data-placement=\"bottom\""
+                            + "                title=\"Delete Route\">D</button>"
+                            + "        </div>"
+                            + "    </div>"
+
+                        $('[data-toggle="tooltip"]').tooltip({
+                            trigger: 'hover'
+                        })
+
+                        $('[data-toggle="tooltip"]').on('click', function () {
+                            $(this).tooltip('hide')
+                        })
+
+                        route_counter += 1;
+
                     } else if ("error" in result.d) {
                         console.log(result.d.error)
+                        document.getElementById("overlay").style.display = "none";
+                        alert("Failed to calculate a route!");
                     }
-
-                    var path = JSON.parse(result.d.path);
-
-                    var line = L.polyline(path, { color: colors[route_counter % colors.length], weight: 5 });
-                    line = line.addTo(map);
-
-                    document.getElementById("overlay").style.display = "none";
-                    map.fitBounds(line.getBounds());
-
-                    var metadata = result.d.meta;
-
-                    m_body = document.getElementById("metadata-body");
-
-                    m_body.innerHTML = ""
-                    metadata.forEach(element => {
-                        m_body.innerHTML += "<p>" + element + "</p>\n";
-                    });
-
-                    stored_routes.push({ 'route_id': route_counter, 'line': line, 'path': path, 'metadata': metadata })
-
-                    html_routes = document.getElementById("route_overview");
-
-                    html_routes.innerHTML += "     <div class=\"input-group mb-3\" id=\"d" + route_counter + "\">"
-                        + "        <div class=\"input-group-prepend\">"
-                        + "            <button class=\"btn btn-warning\" route_id=\"" + route_counter + "\" onclick=\"toggleRoute(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
-                        + "                title=\"Toggle Selected Route\">T</button>"
-                        + "            <button class=\"btn btn-secondary\" route_id=\"" + route_counter + "\" data-bs-toggle=\"modal\" data-bs-target=\"#infoModal\" onclick=\"showInfo(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
-                        + "                title=\"Display Route Information\">I</button>"
-                        + "        </div>"
-                        + ""
-                        + "        <input type=\"text\" class=\"form-control\" id=\"r" + route_counter + "\" style=\"color:" + colors[route_counter % colors.length] + "\" value=\"Route " + route_counter + "\">"
-                        + ""
-                        + "        <div class=\"input-group-append\">"
-                        + "            <button class=\"btn btn-success\" route_id=\"" + route_counter + "\" onclick=\"toGPX(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
-                        + "                title=\"Export Route to GPX\">E</button>"
-                        + "            <button class=\"btn btn-danger\" route_id=\"" + route_counter + "\" onclick=\"deleteRoute(this)\"  data-toggle=\"tooltip\" data-placement=\"bottom\""
-                        + "                title=\"Delete Route\">D</button>"
-                        + "        </div>"
-                        + "    </div>"
-
-                    $('[data-toggle="tooltip"]').tooltip({
-                        trigger: 'hover'
-                    })
-
-                    $('[data-toggle="tooltip"]').on('click', function () {
-                        $(this).tooltip('hide')
-                    })
-
-                    route_counter += 1;
 
 
                 },
