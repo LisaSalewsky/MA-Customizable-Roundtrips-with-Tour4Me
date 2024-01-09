@@ -23,44 +23,46 @@ Reallocating 'name_of_file' (item size: 1) to 25 items.
 Reallocating 'name_of_file' (item size: 1) to 23 items.
 A level-1 auxiliary file: kapitel/erklaerung.aux
 Database file #1: literatur/LS11Buchin.bib
-You've used 30 entries,
+Warning--I didn't find a database entry for ""
+You've used 31 entries,
             2343 wiz_defined-function locations,
-            787 strings with 12544 characters,
-and the built_in function-call counts, 12691 in all, are:
-= -- 1325
-> -- 545
-< -- 9
-+ -- 214
-- -- 180
-* -- 1119
-:= -- 1934
-add.period$ -- 67
-call.type$ -- 30
-change.case$ -- 146
+            796 strings with 12890 characters,
+and the built_in function-call counts, 13164 in all, are:
+= -- 1379
+> -- 558
+< -- 10
++ -- 219
+- -- 184
+* -- 1149
+:= -- 1998
+add.period$ -- 70
+call.type$ -- 31
+change.case$ -- 150
 chr.to.int$ -- 0
-cite$ -- 30
-duplicate$ -- 523
-empty$ -- 1001
-format.name$ -- 180
-if$ -- 2809
+cite$ -- 31
+duplicate$ -- 547
+empty$ -- 1042
+format.name$ -- 184
+if$ -- 2923
 int.to.chr$ -- 0
-int.to.str$ -- 30
-missing$ -- 47
-newline$ -- 122
-num.names$ -- 67
-pop$ -- 156
+int.to.str$ -- 31
+missing$ -- 49
+newline$ -- 126
+num.names$ -- 69
+pop$ -- 163
 preamble$ -- 1
-purify$ -- 146
+purify$ -- 150
 quote$ -- 0
-skip$ -- 410
+skip$ -- 430
 stack$ -- 0
-substring$ -- 801
-swap$ -- 201
-text.length$ -- 9
+substring$ -- 838
+swap$ -- 213
+text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 116
+type$ -- 118
 warning$ -- 0
-while$ -- 121
-width$ -- 32
-write$ -- 320
+while$ -- 126
+width$ -- 33
+write$ -- 332
+(There was 1 warning)

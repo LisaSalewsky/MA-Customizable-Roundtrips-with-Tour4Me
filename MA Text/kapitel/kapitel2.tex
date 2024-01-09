@@ -5,14 +5,71 @@
 As stated in the \href{chapter:introduction}{introduction}, most routing algorithms focus on shortest paths between two or more points.
 Many of those have been reviewed in several different surveys \cite{madkourSurveyShortestPathAlgorithms2017, sommerShortestpathQueriesStatic2014, wayahdiGreedyAStarDijkstra2021}.
 Additionally, there have been many more heuristic approaches, like local search variants \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005} or different neighborhood based ideas \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006, ropkeHeuristicExactAlgorithms2005}.
-Much research has been done and is still ongoing for these kinds of problems, which is only natural since many routing problems (for example the traveling salesman problem (TSP) \cite{gendreauHandbookMetaheuristics2010} or the vehicle routing problem \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006}) are NP-hard \cite{reineltTravelingSalesmanComputational2003}.
+Much research has been done and is still ongoing for these kinds of problems, stemming from the fact that many routing problems (for example the traveling salesman problem (TSP) \cite{gendreauHandbookMetaheuristics2010} or the vehicle routing problem \cite{braysyVehicleRoutingProblem2005, irnichSequentialSearchIts2006}) are NP-hard \cite{reineltTravelingSalesmanComputational2003}. 
+Furthermore, finding a shortest path is important in various parts of daily life.
+Whether it is the best way to get to work or to a supermarket by car or bike, a good way to minimize travel time by bus or any other trip from one place to another.
+Additionally, shortest paths are not limited to real-world networks but can also prove useful for social networks or any form of digital network. \cite{madkourSurveyShortestPathAlgorithms2017}
 
 \section{Shortest Path algorithms}
 \label{sec:shortestPath}
 
+For calculating shortest path trips from one starting point s to a destination d, several different approaches can be used.
+This problem has been well-studied and still continues to advance in terms of quality of the returned paths as well as in optimizing the running time of algorithms.
+Thus, the number of ideas to solve it is enormous. 
+
+Generally most shortest path problems are in one of two categories: they are either single-source shortest paths (SSSP) or all-pairs shortest paths(APSP).
+The first only uses a starting point and tries to find the one shortest path between it and all other vertices.
+The second aims to find shortest paths between all vertices of a graph, which can be necessary for transportation networks and similar use cases. 
+Aside from these two categories, many more can be found to describe and sort types of approaches. 
+Madkour et al propose a taxonomy to help classify the different algorithms into specific categories. \cite{madkourSurveyShortestPathAlgorithms2017} 
+
+Which of these algorithms performs best is typically dependent on the type of graph it is being used on, the graph's structure and the specific problem to be solved. 
+A graph can be categorized as planar or not, directed or undirected, weighted or not (and carry only non-negative weights or allow negative ones as well), they can contain cycles or be acyclic and many more. 
+These different types determine which algorithms can be used as well as which will return better results.
+
+\subsection{Single Source Shortest Paths}
+
+
+\subsection{All Pairs Shortest Paths}
+
+
+\subsection{Heuristic Approaches}
+
+Additionally to exact approaches, heuristics can be used to improve the runtime of an algorithm.
+A heuristic is a technique that is based on experience or statistical insights.
+The downside of using such an approach is, that there will no longer be a guarantee that the result is the global optimum, as heuristics specifically only find partial or approximate solutions to a given problem. 
+In many cases where it would take too much time or space to find the actual optimal solution, heuristics can be used to find the best possible solution within the given bounds.
+
+For these, several different ideas have been formed. 
+These can then be categorized into construction heuristics, improvement heuristics and meta-heuristics \cite{ropkeHeuristicExactAlgorithms2005}.
+Sometimes, a fourth category for two-phase heuristics is included as well (see \cite{laporteClassicalHeuristicsCapacitated2002a}).
+
+\#TODO is this correct for heuristics in general? The paper refers to heuristics for VRP
+
+Construction heuristics build their solution from a starting point until a certain boundary is reached. 
+They typically don't have a separate improvement phase.
+Improvement heuristics try to improve an already existing solution.
+They perform improvement steps several times until a specified boundary is reached.
+These boundaries can be e.g. a time limit or reaching the threshold for a good enough approximation.
+(Iterative) Local Search and Neighborhoods are examples of improvement heuristics that can be used to reach a more optimized solution. \cite{laporteClassicalHeuristicsCapacitated2002a, ropkeHeuristicExactAlgorithms2005}
+
+
 
 \section{Meta-heuristics}
 \label{sec:metaHeuristics}
+
+Metaheuristics are a form of heuristic approaches.
+As such, they also try to find an approximate solution to a problem that is as optimal as possible.
+The distinction between classical heuristics and meta-heuristics is, that the latter are combined with additional strategies.
+These are used to enable the meta-heuristics to not produce only solution that are locally optimal, but to broaden the search space they can use for finding optima.
+
+Classical heuristics oftentimes carry the inherent risk of only finding a local optimum that can be far from the actual global one.
+To reduce this risk, higher level approaches are necessary.
+These can include using several neighborhood structures to broaden the search space or entirely new concepts like the Ant Colony approach or Genetic Algorithms. \cite{gendreauHandbookMetaheuristics2010}
+
+Some of these meta-heuristic ideas that will be used in this thesis will be explained in the following subsections.
+
+
 
 \subsection{Ant Colony}
 \label{subsec:antColonyBackground}

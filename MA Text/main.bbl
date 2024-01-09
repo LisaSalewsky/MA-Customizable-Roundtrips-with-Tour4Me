@@ -21,7 +21,7 @@
 \bibitem{biddlePsychologicalBenefitsExercise1993}
 {\sc Biddle, Stuart J.~H.}: {\em {Psychological benefits of exercise and
   physical activity}}.
-\newblock Revista de psicolog\'ia del deporte, 2(2):0099--107, 1993.
+\newblock Revista de psicolog{\'i}a del deporte, 2(2):0099--107, 1993.
 
 \bibitem{blondiauEconomicBenefitsIncreased2016}
 {\sc Blondiau, Thomas}, {\sc Bruno {van Zeebroeck}} \btxandlong{}\ {\sc Holger
@@ -100,6 +100,13 @@
   {\em Sequential Search and Its Application to Vehicle-Routing Problems}.
 \newblock Computers \& Operations Research, 33(8):2405--2429, \btxmonauglong{}
   2006.
+
+\bibitem{laporteClassicalHeuristicsCapacitated2002a}
+{\sc Laporte, Gilbert} \btxandlong{}\ {\sc Fr{\'e}d{\'e}ric Semet}: {\em 5.
+  {{Classical Heuristics}} for the {{Capacitated VRP}}}, \btxpageslong{}\
+  109--128.
+\newblock {{SIAM}} Monographs on Discrete Mathematics and Applications.
+  {Society for Industrial and Applied Mathematics}, {Philadelphia, Pa}, 2002.
 
 \bibitem{lawlerBranchandBoundMethodsSurvey1966}
 {\sc Lawler, E.~L.} \btxandlong{}\ {\sc D.~E. Wood}: {\em Branch-and-{{Bound
