@@ -16,22 +16,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
     }
 
 
-    public class Path
-    {
-        public List<DirEdge> Edges { get; } 
-        public List<int> Visited { get; set; }
-        public double Quality { get; set; }
-        public double Length { get; set; }
-
-        public Path()
-        {
-            Edges = new List<DirEdge>();
-            Visited = new List<int>();
-        }
-
-    }
-
-
     public class Edge
     {
         //private double preference;
