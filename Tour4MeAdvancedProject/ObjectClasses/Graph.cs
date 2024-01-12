@@ -8,6 +8,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 {
     public class Graph
     {
+        private int Id;
+
         public double MaxLat { get; set; }
         public double MinLat { get; set; }
         public double MaxLon { get; set; }
@@ -33,24 +35,24 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 VEdges = new List<Edge>();
             }
-            VNodes[edge.SourceNode].Incident.Add(edge);
-            VNodes[edge.TargetNode].Incident.Add(edge);
+            VNodes[edge.SourceNode.Id].Incident.Add(edge);
+            VNodes[edge.TargetNode.Id].Incident.Add(edge);
             VEdges.Add(edge);
         }
 
-        public Edge AddEdge(int id, int s, int t, double cost)
+        public Edge AddEdge(Node s, Node t, double cost)
         {
-            if (s > t)
+            if (s.Id > t.Id)
             {
-                int temp = s;
+                Node temp = s;
                 s = t;
                 t = temp;
             }
 
-            Edge edge = new Edge(id, s, t, cost);
+            Edge edge = new Edge(s, t, cost);
 
-            Node l = VNodes[s];
-            Node r = VNodes[t];
+            Node l = VNodes[s.Id];
+            Node r = VNodes[t.Id];
 
             Node c = new Node(-1, -1, MinLat, MinLon);
             double yl = GetDistanceFromLatLon(l, new Node(-1, -1, c.Lat, l.Lon)) * (l.Lat < c.Lat ? -1 : 1);
@@ -132,8 +134,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                             file.ReadLine();
                             continue;
                         }
-
-                        Edge edge = AddEdge(cEdges, sId, tId, cost);
+                        // TODO: DB Access to get Node and correct Data
+                        Edge edge = AddEdge(new Node(sId, vId,0,0), new Node(tId,wId,0,0), cost);
+                        //Edge edge = AddEdge(cEdges, sId, tId, cost);
                         cEdges++;
 
                         str = file.ReadLine();
@@ -182,7 +185,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             foreach (Edge e in VNodes[sId].Incident)
             {
-                if (tId == e.SourceNode || tId == e.TargetNode)
+                if (tId == e.SourceNode.Id || tId == e.TargetNode.Id)
                 {
                     return e;
                 }
@@ -195,7 +198,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             foreach (Edge e in VNodes[sId].Incident)
             {
-                if (tId == e.SourceNode || tId == e.TargetNode)
+                if (tId == e.SourceNode.Id || tId == e.TargetNode.Id)
                 {
                     return true;
                 }
@@ -270,7 +273,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
                     foreach (Edge edge in VNodes[currentNode].Incident)
                 {
-                    int neighborId = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
+                    int neighborId = edge.SourceNode.Id  == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id;
 
                     double newDist = bestKnownDist + (edge.Cost / (edge.Profit + 0.1));
                     double newActual = currentActual + edge.Cost;
@@ -315,12 +318,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 while (current != sourceNode)
                 {
                     Edge e = parent[current].Item2;
-                    path.Edges.Insert(0, new DirEdge(e, e.TargetNode == current));
+                    path.Edges.Insert(0, new Edge(e, e.TargetNode.Id == current));
                     path.Length += e.Cost;
 
                     // if any of the null checks holds, current was not deeply enough routed
                     if (parent[current] != null && // current has no parent (is the start)
-                        parent[current].Item1 != null && // error case, abort
                         parent[parent[current].Item1] != null)// current has not 2 parent nodes, so it's the first child only
                     {
                         if (current == parent[parent[current].Item1].Item1)
@@ -330,8 +332,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                             break;
                         }
 
-                        if (parent[parent[current].Item1].Item1 != null && // error case, abort
-                            parent[parent[parent[current].Item1].Item1] != null && // current has not 3 parent nodes
+                        if (parent[parent[parent[current].Item1].Item1] != null && // current has not 3 parent nodes
                             current == parent[parent[parent[current].Item1].Item1].Item1)
                         //if (current == parent[parent[parent[current].Item1].Item1].Item1)
                         {
@@ -450,7 +451,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 foreach (Edge edge in VNodes[currentNode].Incident)
                 {
-                    int neighborId = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
+                    int neighborId = edge.SourceNode.Id == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id;
 
                     double newDistance = bestKnownDist + edge.Cost;
 

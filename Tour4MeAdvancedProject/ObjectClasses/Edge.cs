@@ -4,18 +4,6 @@ using System.Collections.Generic;
 namespace Tour4MeAdvancedProject.ObjectClasses
 {
 
-    public struct DirEdge
-    {
-        public Edge Edge { get; set; }
-        public bool Reversed { get; set; }
-        public DirEdge(Edge edge, bool reversed)
-        {
-            Edge = edge;
-            Reversed = reversed;
-        }
-    }
-
-
     public class Edge
     {
         //private double preference;
@@ -23,8 +11,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public int Id { get; set; }
         public double ShoelaceForward { get; set; }
         public double ShoelaceBackward { get; set; }
+        public bool Reversed { get; set; }
         public List<string> Tags { get; set; }
         public List<Tuple<double, double>> GeoLocations { get; set; }
+
+        public Node SourceNode { get; set; }
+        public Node TargetNode { get; set; }
+        public double Pheromone { get; set; } = 1;
+        public double Cost { get; set; }
+        public double Profit { get; set; }
 
         public Edge()
         {
@@ -32,10 +27,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             GeoLocations = new List<Tuple<double, double>>();
         }
 
-        public Edge(int nodeId, int source, int target, double nodeCost)
+        public Edge(Node source, Node target, double nodeCost)
         {
-            Id = nodeId;
-            if (source < target)
+            int.TryParse(source.Id.ToString() + target.Id.ToString(), out int id);
+            Id = id;
+            if (source.Id < target.Id)
             {
                 SourceNode = source;
                 TargetNode = target;
@@ -51,15 +47,25 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             GeoLocations = new List<Tuple<double, double>>();
         }
 
-        public int SourceNode { get; set; }
-        public int TargetNode { get; set; }
-        public double Pheromone { get; set; } = 1;
-        public double Cost { get; set; }
-        public double Profit { get; set; }
+        public Edge (Edge e, bool reversed)
+        {
+            Id = e.Id;
+            SourceNode = e.SourceNode;
+            TargetNode = e.TargetNode;
+
+            Reversed = reversed;
+
+            Tags = e.Tags;
+            GeoLocations = e.GeoLocations;
+
+            Pheromone = e.Pheromone;
+            Profit = e.Profit;
+            Cost = e.Cost;
+        }
 
         public bool LessThan(Edge otherEdge)
         {
-            return SourceNode < otherEdge.SourceNode || (SourceNode == otherEdge.SourceNode && TargetNode < otherEdge.TargetNode);
+            return SourceNode.Id < otherEdge.SourceNode.Id || (SourceNode == otherEdge.SourceNode && TargetNode.Id < otherEdge.TargetNode.Id);
         }
     }
 

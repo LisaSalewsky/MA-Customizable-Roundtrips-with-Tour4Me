@@ -20,9 +20,9 @@ namespace Tour4MeAdvancedProject
     public partial class MapView : System.Web.UI.Page
     {
 
-        private const double LAT_SEA = 47.45;
-        private const double LON_SEA = -122.4;
-        private const double SIZ_SEA = 2;
+        //private const double LAT_SEA = 47.45;
+        //private const double LON_SEA = -122.4;
+        //private const double SIZ_SEA = 2;
 
         private const double LAT_DOR = 51.3648;
         private const double LON_DOR = 7.2185;
@@ -35,21 +35,16 @@ namespace Tour4MeAdvancedProject
         // InnerBox: List(List(Lat,Lon)) = List((minmin(LatLon), minmax(LatLon), maxmax(LatLon), maxmin(LatLon))
         private static List<List<Tuple<double, double>>> InnerBox= new List<List<Tuple<double, double>>>() { };
 
-
-        private HighwayTag[] HighwayTags;
-        private SurfaceTag[] SurfaceTags;
-        private Algo[] algos;
-
         private static double LatGran = 0.5 / 4;
         private static double LatPad = 0.5 / 6;
         private static double AbsMinLat = LAT_DOR;
-        private static double AbsMaxLat = AbsMinLat + LatGran;
+        //private static double AbsMaxLat = AbsMinLat + LatGran;
 
         private static double LonGran = 0.75 / 4;
         private static double LonPad = 0.75 / 6;
         private static double AbsMinLon = LON_DOR;
-        private static double AbsMaxLon = AbsMinLon + LonGran;
-        private static readonly string[] COLORS = {"red", "green", "blue", "maroon", "purple", "lime", "navy" };
+        //private static double AbsMaxLon = AbsMinLon + LonGran;
+        private static readonly string[] COLORS = { "red", "green", "blue", "maroon", "purple", "lime", "navy" };
 
         private string SelectedMap = "dor";
 
@@ -58,8 +53,8 @@ namespace Tour4MeAdvancedProject
         // StoredRoutes: List(RouteID, Path)
         private List<Tuple<int, List<int>>> Stored_routes = new List<Tuple<int, List<int>>>();
 
-        private double CenterLat = 51.489808;
-        private double CenterLon = 7.406319;
+        //private double CenterLat = 51.489808;
+        //private double CenterLon = 7.406319;
 
 
         protected void Page_Load(object sender, EventArgs e)
@@ -107,19 +102,19 @@ namespace Tour4MeAdvancedProject
             coveredAreaImportance = coveredAreaIn;
 
 
-            double min_lat = lat - (lat - AbsMinLat) % LatGran - LatPad;
-            double max_lat = min_lat + 2 * LatPad + LatGran;
-            double min_lon = lon - (lon - AbsMinLon) % LatGran - LonPad;
-            double max_lon = min_lon + 2 * LonPad + LonGran;
+            //double min_lat = lat - (lat - AbsMinLat) % LatGran - LatPad;
+            //double max_lat = min_lat + 2 * LatPad + LatGran;
+            //double min_lon = lon - (lon - AbsMinLon) % LatGran - LonPad;
+            //double max_lon = min_lon + 2 * LonPad + LonGran;
 
             var stream = new StringBuilder();
             //stream.AppendFormat("grid-{0:F4}-{1:F4}-{2:F4}-{3:F4}", max_lat, min_lat, max_lon, min_lon);
             filename = stream.AppendFormat("grid-dor").ToString();//stream.ToString();
 
-            if (false)
-            {
-                filename = "grid-sea";
-            }
+            //if (false)
+            //{
+            //    filename = "grid-sea";
+            //}
 
             var f = new FileInfo(filename);
             if (f.Exists)
@@ -209,7 +204,7 @@ namespace Tour4MeAdvancedProject
             problem.EdgeProfitImportance = edgeProfitImportance;
             problem.CoveredAreaImportance = coveredAreaImportance;
 
-            problem.Path.Clear();
+            problem.Path.Visited.Clear();
             problem.Quality = -1;
             problem.CalculateProfit(problem.Graph);
 
@@ -276,7 +271,6 @@ namespace Tour4MeAdvancedProject
                     //{
                     //    problem.OutputToGPX(filename);
                     //}
-                    break;
                 case SolveStatus.Feasible:
                     problem.Metadata.Add("Profit: " + problem.GetProfit(problem.Path) +
                                          " (theoretical upper bound: " + problem.TargetDistance + ")");
@@ -294,11 +288,9 @@ namespace Tour4MeAdvancedProject
                     //{
                     //    problem.OutputToGPX(filename);
                     //}
-                    break;
                 case SolveStatus.Unsolved:
                     result.Add("error", "Not solved 400");
                     return result;
-                    break;
                 case SolveStatus.Timeout:
                     result.Add("error", "Timeout 504");
                     return result;

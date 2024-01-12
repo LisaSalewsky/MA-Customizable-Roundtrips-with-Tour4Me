@@ -14,6 +14,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
     {
         protected string graphName;
 
+        private int Id;
+
         public int Start { get; set; }
         public double CenterLat { get; set; }
         public double CenterLon { get; set; }
@@ -26,7 +28,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double CoveredAreaImportance { get; set; }
         public List<List<double>> ShortestPath { get; set; }
 
-        public List<int> Path { get; set; }
+        public Path Path { get; set; }
         public double Quality { get; set; }
 
         public double TargetDistance { get; set; }
@@ -35,7 +37,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public Problem(string fileName)
         {
             Graph = new Graph(fileName);
-            Path = new List<int>();
+            Path = new Path();
             Metadata = new List<string>();
             PrefTags = new HashSet<string>();
             AvoidTags = new HashSet<string>();
@@ -77,7 +79,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                         foreach (Edge edge in Graph.VNodes[currentNode].Incident)
                         {
-                            int neighborId = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
+                            int neighborId = edge.SourceNode.Id == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id    ;
                             double newDistance = bestKnownDist + edge.Cost;
 
                             if (!dist.TryGetValue(neighborId, out double currentDist))
@@ -102,7 +104,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public void OutputPath(string fileName)
         {
-            using (StreamWriter outputFile = new StreamWriter("/home/hagedoorn/Documents/TUD/Code/AOPcpp/output/" + fileName + ".json"))
+
+            using (StreamWriter outputFile = new StreamWriter("C:/Users/Lisa Salewsky/OneDrive" +
+                "/Dokumente/Uni/Dortmund/Master/MA/Tour4MeAdvanced/" +
+                "Tour4MeExtensions/Tour4MeAdvancedProject/output/" + fileName + ".json"))
             {
                 outputFile.WriteLine("{");
                 outputFile.WriteLine("    \"info\": {");
@@ -114,15 +119,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 outputFile.WriteLine("    },");
                 outputFile.WriteLine("    \"node_path\": [");
 
-                foreach (int node in Path)
+                foreach (int node in Path.Visited)
                 {
                     outputFile.Write($"        {Graph.VNodes[node].GId}, ");
                 }
 
-                outputFile.WriteLine($"{Graph.VNodes[Path.First()].GId}], ");
+                outputFile.WriteLine($"{Graph.VNodes[Path.Visited.First()].GId}], ");
                 outputFile.WriteLine("    \"cord_path\": [");
 
-                foreach (int node in Path)
+                foreach (int node in Path.Visited)
                 {
                     outputFile.Write($"[{Graph.VNodes[node].Lat}, {Graph.VNodes[node].Lon}], ");
                 }
@@ -134,10 +139,16 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public void OutputToGPX(string fileName)
         {
-            using (StreamWriter outputFile = new StreamWriter("/home/hagedoorn/Documents/TUD/Code/AOPcpp/output/gpx/" + fileName + ".gpx"))
+            using (StreamWriter outputFile = new StreamWriter("C:/Users/Lisa Salewsky/OneDrive" +
+                "/Dokumente/Uni/Dortmund/Master/MA/Tour4MeAdvanced/" +
+                "Tour4MeExtensions/Tour4MeAdvancedProject/output/" + fileName + ".gpx"))
             {
                 outputFile.WriteLine("<?xml version='1.0' encoding='UTF-8'?>");
-                outputFile.WriteLine("<gpx version=\"1.1\" creator=\"JeBoi\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">");
+                outputFile.WriteLine("<gpx version=\"1.1\" creator=\"JeBoi\" " +
+                    "xmlns=\"http://www.topografix.com/GPX/1/1\" " +
+                    "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
+                    "xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 " +
+                    "http://www.topografix.com/GPX/1/1/gpx.xsd\">");
                 outputFile.WriteLine("  <metadata>");
                 outputFile.WriteLine($"    <name>{fileName}</name>");
                 outputFile.WriteLine("  </metadata>");
@@ -145,9 +156,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 outputFile.WriteLine($"    <name>{fileName}</name>");
                 outputFile.WriteLine("    <trkseg>");
 
-                foreach (int node in Path)
+                foreach (int node in Path.Visited)
                 {
-                    outputFile.WriteLine($"      <trkpt lat=\"{Graph.VNodes[node].Lat}\" lon=\"{Graph.VNodes[node].Lon}\"></trkpt>");
+                    outputFile.WriteLine($"      <trkpt lat=\"{Graph.VNodes[node].Lat}\" " +
+                        $"lon=\"{Graph.VNodes[node].Lon}\"></trkpt>");
                 }
 
                 outputFile.WriteLine("    </trkseg>");
@@ -161,16 +173,18 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             //StringBuilder outputString = new StringBuilder("{\n    \"path\": [\n");
             StringBuilder outputString = new StringBuilder("{\n    [\n");
 
-            foreach (int node in Path)
+            foreach (int node in Path.Visited)
             {
-                outputString.Append($"        [{Graph.VNodes[node].Lat},{Graph.VNodes[node].Lon}], \n");
+                outputString.Append($"        [{Graph.VNodes[node].Lat},{Graph.VNodes[node].Lon}], " +
+                    $"\n");
 
-                Edge edge = Graph.GetEdge(node, Path.ElementAtOrDefault(Path.IndexOf(node) + 1));
+                Edge edge = Graph.GetEdge(node, Path.Visited.ElementAtOrDefault(
+                    Path.Visited.IndexOf(node) + 1));
 
                 if (edge == null)
                     continue;
 
-                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.TargetNode].GId;
+                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.TargetNode.Id].GId;
                 if (!reverse) 
                 {
                     edge.GeoLocations.Reverse();
@@ -182,7 +196,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
             }
 
-            outputString.Append($"        [{Graph.VNodes[Path.First()].Lat},{Graph.VNodes[Path.First()].Lon}] \n");
+            outputString.Append($"        [{Graph.VNodes[Path.Visited.First()].Lat}," +
+                $"{Graph.VNodes[Path.Visited.First()].Lon}] \n");
             outputString.Append("    ],\n");
             outputString.Append("    \"meta\": [\n");
 
@@ -202,28 +217,31 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
             StringBuilder outputString = new StringBuilder("[");
 
-            foreach (int node in Path)
+            for (int i = 0; i < Path.Visited.Count()-1; i++)
             {
-                outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:G10},{1:G10}],", Graph.VNodes[node].Lat,Graph.VNodes[node].Lon);
+                int node = Path.Visited.ElementAt(i);
+                outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:F6},{1:F6}],", 
+                    Graph.VNodes[node].Lat,Graph.VNodes[node].Lon);
 
-                Edge edge = Graph.GetEdge(node, Path.ElementAtOrDefault(Path.IndexOf(node) + 1));
+                Edge edge = Graph.GetEdge(node, Path.Visited.ElementAt(i + 1));
 
                 if (edge == null)
                     continue;
 
-                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.TargetNode].GId;
+                bool reverse = Graph.VNodes[node].GId < Graph.VNodes[edge.TargetNode.Id].GId;
                 if (!reverse)
                 {
                     edge.GeoLocations.Reverse();
-                    reverse = true;
                 }
                 foreach ((double lat, double lon) in edge.GeoLocations)
                 {
-                    outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:G10},{1:G10}],", lat, lon);
+                    outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:F6},{1:F6}],", 
+                        lat, lon);
                 }
             }
-            outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:G10},{1:G10}]", Graph.VNodes[Path.First()].Lat,Graph.VNodes[Path.First()].Lon);
-            //outputString = outputString.Remove(outputString.Length - 1, 1);
+            outputString.AppendFormat(CultureInfo.InvariantCulture, "[{0:F6},{1:F6}]", 
+                Graph.VNodes[Path.Visited.First()].Lat,Graph.VNodes[Path.Visited.First()].Lon);
+
             outputString.Append("]");
 
             result.Add(new KeyValuePair<string, string>("path", outputString.ToString()));
@@ -273,12 +291,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             double quality = 0.0;
 
-            foreach (DirEdge dEdge in path.Edges)
+            foreach (Edge edge in path.Edges)
             {
-                if (path.Visited[dEdge.Edge.Id] == 0)
+                if (path.Visited[edge.Id] == 0)
                 {
-                    quality += dEdge.Edge.Cost * dEdge.Edge.Profit;
-                    path.Visited[dEdge.Edge.Id]++;
+                    quality += edge.Cost * edge.Profit;
+                    path.Visited[edge.Id]++;
                 }
             }
 
@@ -312,9 +330,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             double area = 0.0;
 
-            foreach (DirEdge dEdge in path.Edges)
+            foreach (Edge edge in path.Edges)
             {
-                area += !dEdge.Reversed ? dEdge.Edge.ShoelaceForward : dEdge.Edge.ShoelaceBackward;
+                area += !edge.Reversed ? edge.ShoelaceForward : edge.ShoelaceBackward;
             }
 
             return area / 2;
@@ -333,7 +351,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 {
                     Edge edge = Graph.GetEdge(prev, current);
 
-                    area += prev == edge.SourceNode ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                    area += prev == edge.SourceNode.Id ? edge.ShoelaceForward : edge.ShoelaceBackward;
                 }
 
                 prev = current;
@@ -342,7 +360,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             if (prev != path.First())
             {
                 Edge edge = Graph.GetEdge(prev, path.First());
-                area += prev == edge.SourceNode ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                area += prev == edge.SourceNode.Id ? edge.ShoelaceForward : edge.ShoelaceBackward;
             }
 
             return area / 2;
