@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using SysPath = System.IO.Path;
 
 
@@ -14,7 +15,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
     {
         protected string graphName;
 
-        private int Id;
+        private Guid Id;
 
         public int Start { get; set; }
         public double CenterLat { get; set; }
@@ -41,6 +42,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Metadata = new List<string>();
             PrefTags = new HashSet<string>();
             AvoidTags = new HashSet<string>();
+        }
+
+        public Problem(Guid ProblemId, out string error)
+        {
+            error = "";
+            Id = ProblemId;
+            Guid.TryParse("123E4567-E89B-12D3-A456-426614174001", out Guid guid);
+            Graph = new Graph(guid, out string graphError);
+            Path = new Path();
+            Metadata = new List<string>();
+            PrefTags = new HashSet<string>();
+            AvoidTags = new HashSet<string>();
+            error = error + graphError;
         }
 
         public void FillShortestPath(string filename)

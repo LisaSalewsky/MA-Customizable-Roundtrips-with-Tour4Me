@@ -67,43 +67,51 @@ namespace Tour4MeAdvancedProject.Solver
                         double profit = 0;
                         double area = 0;
                         List<int> finalPath = new List<int>();
+                        List<Edge> finalEdges = new List<Edge>();
+                        double length = 0;
 
-                        foreach (DirEdge v in pathSA.Edges)
+                        foreach (Edge v in pathSA.Edges)
                         {
-                            if (visited[v.Edge.Id] != visitedIndex)
+                            if (visited[v.Id] != visitedIndex)
                             {
-                                profit += v.Edge.Cost * v.Edge.Profit;
-                                visited[v.Edge.Id] = visitedIndex;
+                                profit += v.Cost * v.Profit;
+                                visited[v.Id] = visitedIndex;
                             }
-                            area += !v.Reversed ? v.Edge.ShoelaceForward : v.Edge.ShoelaceBackward;
+                            area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
 
-                            finalPath.Add(v.Reversed ? v.Edge.TargetNode : v.Edge.SourceNode);
+                            finalPath.Add(v.Reversed ? v.TargetNode.Id : v.SourceNode.Id);
+                            finalEdges.Add(v);
+                            length += v.Cost;
                         }
 
-                        foreach (DirEdge v in tPair.Item2.Edges)
+                        foreach (Edge v in tPair.Item2.Edges)
                         {
-                            if (visited[v.Edge.Id] != visitedIndex)
+                            if (visited[v.Id] != visitedIndex)
                             {
-                                profit += v.Edge.Cost * v.Edge.Profit;
-                                visited[v.Edge.Id] = visitedIndex;
+                                profit += v.Cost * v.Profit;
+                                visited[v.Id] = visitedIndex;
                             }
-                            area += !v.Reversed ? v.Edge.ShoelaceForward : v.Edge.ShoelaceBackward;
-                            Debug.Assert(finalPath[finalPath.Count - 1] == (!v.Reversed ? v.Edge.TargetNode : v.Edge.SourceNode));
-                            finalPath.Add(v.Reversed ? v.Edge.TargetNode : v.Edge.SourceNode);
+                            area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
+                            Debug.Assert(finalPath[finalPath.Count - 1] == (!v.Reversed ? v.TargetNode.Id : v.SourceNode.Id));
+                            finalPath.Add(v.Reversed ? v.TargetNode.Id : v.SourceNode.Id);
+                            finalEdges.Add(v);
+                            length += v.Cost;
                         }
 
                         for (int i = pathSB.Edges.Count - 1; i >= 0; i--)
                         {
-                            DirEdge v = pathSB.Edges[i];
+                            Edge v = pathSB.Edges[i];
 
-                            if (visited[v.Edge.Id] != visitedIndex)
+                            if (visited[v.Id] != visitedIndex)
                             {
-                                profit += v.Edge.Cost * v.Edge.Profit;
-                                visited[v.Edge.Id] = visitedIndex;
+                                profit += v.Cost * v.Profit;
+                                visited[v.Id] = visitedIndex;
                             }
-                            area += v.Reversed ? v.Edge.ShoelaceForward : v.Edge.ShoelaceBackward;
-                            Debug.Assert(finalPath[finalPath.Count - 1] == (v.Reversed ? v.Edge.TargetNode : v.Edge.SourceNode));
-                            finalPath.Add(!v.Reversed ? v.Edge.TargetNode : v.Edge.SourceNode);
+                            area += v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
+                            Debug.Assert(finalPath[finalPath.Count - 1] == (v.Reversed ? v.TargetNode.Id : v.SourceNode.Id));
+                            finalPath.Add(!v.Reversed ? v.TargetNode.Id : v.SourceNode.Id);
+                            finalEdges.Add(v);
+                            length += v.Cost;
                         }
 
                         Debug.Assert(CurrentProblem.Graph.GetEdge(finalPath[finalPath.Count - 1], finalPath[0]) != null);
@@ -115,7 +123,7 @@ namespace Tour4MeAdvancedProject.Solver
                         if (quality > bestQuality)
                         {
                             bestQuality = quality;
-                            CurrentProblem.Path = finalPath;
+                            CurrentProblem.Path = new Path(finalEdges, finalPath, quality, length);
                         }
                     }
                 }

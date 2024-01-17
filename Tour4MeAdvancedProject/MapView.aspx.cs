@@ -19,7 +19,6 @@ namespace Tour4MeAdvancedProject
 {
     public partial class MapView : System.Web.UI.Page
     {
-
         //private const double LAT_SEA = 47.45;
         //private const double LON_SEA = -122.4;
         //private const double SIZ_SEA = 2;
@@ -59,7 +58,6 @@ namespace Tour4MeAdvancedProject
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
         }
 
         protected void GetPathButton_Click(object sender, EventArgs e)
@@ -135,6 +133,20 @@ namespace Tour4MeAdvancedProject
 
 
                     problem = new Problem(Path.Combine(localPath, "Tour4MeAdvancedProject", "input", filename + ".txt"));
+                    Guid.TryParse("123E4567-E89B-12D3-A456-426614174001", out Guid guid);
+                    Problem problemTest = new Problem(guid, out string error);
+                    if (error  !=  "" ) 
+                    {
+                        HttpContext currentContext = HttpContext.Current;
+
+                        if (currentContext != null)
+                        {
+                            // Access the Response property
+                            HttpResponse response = currentContext.Response;
+
+                            response.Write(error);
+                        }
+                    }
                     Console.WriteLine($"Got request: lat {lat}, lon {lon}, dis {distance}");
                 }
                 catch (Exception e)

@@ -18,7 +18,7 @@ namespace Tour4MeAdvancedProject.Solver
             visited.AddRange(new bool[P.Graph.VEdges.Count]);
 
             int current = P.Start;
-            P.Path.Add(current);
+            P.Path.Add(null, current, 0, 0);
 
             //Path endPath = new Path();
             double length = 0;
@@ -33,7 +33,7 @@ namespace Tour4MeAdvancedProject.Solver
 
                 foreach (Edge e in P.Graph.VNodes[current].Incident)
                 {
-                    int neigh = e.SourceNode == current ? e.TargetNode : e.SourceNode;
+                    int neigh = e.SourceNode.Id == current ? e.TargetNode.Id : e.SourceNode.Id;
                     double dis = P.Graph.ShortestPath(P.Start, neigh);
 
                     if (dis > P.TargetDistance - length - e.Cost)
@@ -49,12 +49,13 @@ namespace Tour4MeAdvancedProject.Solver
                         bestNeigh = neigh;
                         bestEdge = e;
                         validCandidates = true;
+                        length += e.Cost;
                     }
                 }
 
                 if (validCandidates)
                 {
-                    P.Path.Add(bestNeigh);
+                    P.Path.Add(bestEdge, bestNeigh, bestProfit, length);
                     visited[bestEdge.Id] = true;
                     length += bestEdge.Cost;
                     current = bestNeigh;

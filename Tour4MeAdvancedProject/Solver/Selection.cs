@@ -5,18 +5,18 @@ using System;
 
 namespace Tour4MeAdvancedProject.Solver
 {
-    public class Selection : Solver
+    public class Selection
     {
         protected List<int> OutputPath;
 
         public Selection() { }
         
-        public SolveStatus Solver()
+        public virtual SolveStatus Solve(Problem p)
         {
             return SolveStatus.Unsolved;
         }
 
-        public new List<int> GetPath()
+        public List<int> GetPath()
         {
             return OutputPath;
         }

@@ -2,13 +2,26 @@
 using System.IO;
 using System;
 using System.Globalization;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using Tour4MeAdvancedProject.Helper;
+using System.Web.Caching;
+using Microsoft.SqlServer.Types;
+using System.Data.SqlTypes;
 
 
 namespace Tour4MeAdvancedProject.ObjectClasses
 {
     public class Graph
     {
-        private int Id;
+        private string dbConString = ConfigurationManager.ConnectionStrings["con"].ConnectionString;
+        private SqlConnection DBSqlConnection;
+        private SqlCommand DBSqlCommand;
+
+        private Guid Id;
 
         public double MaxLat { get; set; }
         public double MinLat { get; set; }
@@ -22,12 +35,80 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public Dictionary<long, int> GIdNode { get; set; }
 
-        public Graph()
+        public Graph(Guid InID, out string error)
         {
+            error = "";
+            Id = InID;
             VNodes = new List<Node>();
             VEdges = new List<Edge>();
             GIdNode = new Dictionary<long, int>();
+            string connectError = "";
+            try
+            {
+                connectToDB(out connectError);
+
+                DBSqlCommand = new SqlCommand("SELECT * from Graph WHERE Id='" + Id + "';", DBSqlConnection);
+                SqlDataAdapter DBSqldataAdapter = new SqlDataAdapter(DBSqlCommand);
+                SqlDataReader dataReader = DBSqlCommand.ExecuteReader();
+
+                if (dataReader.HasRows)
+                {
+                    while (dataReader.Read())
+                    {
+                        var VNodesTemp = dataReader.GetValue((int)GraphColumnsEnumHelper.Columns.VNodes);
+                        var VEdgesTemp = dataReader.GetValue((int)GraphColumnsEnumHelper.Columns.VEdges);
+                        var GIdNodeTemp = dataReader.GetValue((int)GraphColumnsEnumHelper.Columns.GraphIdNode);
+
+
+                        //SqlBytes MaxLatLonBytes = dataReader.GetSqlBytes((int)GraphColumnsEnumHelper.Columns.MaxLatLon);
+                        //string MaxLatLonString = BitConverter.ToString(MaxLatLonBytes.Buffer).Replace("-", "");
+                        //SqlGeography MaxLatLon = SqlGeography.Parse(MaxLatLonString);
+                        //SqlBytes MinLatLonBytes = dataReader.GetSqlBytes((int)GraphColumnsEnumHelper.Columns.MaxLatLon);
+                        //string MinLatLonString = BitConverter.ToString(MinLatLonBytes.Buffer).Replace("-", "");
+                        //SqlGeography MinLatLon = SqlGeography.Parse(MinLatLonString);
+                        //SqlBytes CenterLatLonBytes = dataReader.GetSqlBytes((int)GraphColumnsEnumHelper.Columns.MaxLatLon);
+                        //string CenterLatLonString = BitConverter.ToString(CenterLatLonBytes.Buffer).Replace("-", "");
+                        //SqlGeography CenterLatLon = SqlGeography.Parse(CenterLatLonString);
+
+                        var MaxLatLonBytes = dataReader.GetSqlBytes((int)GraphColumnsEnumHelper.Columns.MaxLatLon);
+                        var MaxLatLonTemp = SqlGeography.STGeomFromWKB(MaxLatLonBytes, 4326);
+                        var MinLatLonBytes = dataReader.GetSqlBytes((int)GraphColumnsEnumHelper.Columns.MaxLatLon);
+                        var MinLatLonTemp = SqlGeography.STGeomFromWKB(MinLatLonBytes, 4326);
+                        var CenterLatLonBytes = dataReader.GetSqlBytes((int)GraphColumnsEnumHelper.Columns.MaxLatLon);
+                        var CenterLatLonTemp = SqlGeography.STGeomFromWKB(CenterLatLonBytes, 4326);
+                    }
+                }
+                else 
+                {
+                    error = "<script> alert('No Graph Data available! " +
+                        "Please run script for creating and filling the database first';</script>)";
+                }
+            }
+            catch (Exception ex)
+            {
+                error = "<script> alert('" + ex.ToString() + "';</script>)\");";
+            }
+            error = error + connectError;
         }
+
+        private void connectToDB(out string error)
+        {
+            error = "";
+            try
+            {
+                DBSqlConnection = new SqlConnection(dbConString);
+                if (DBSqlConnection.State == ConnectionState.Closed)
+                {
+                    DBSqlConnection.Open();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                error = "<script> alert('" + ex.ToString() + "';</script>)\");";
+            }
+        }
+
 
         public void AddEdge(Edge edge)
         {
@@ -39,35 +120,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             VNodes[edge.TargetNode.Id].Incident.Add(edge);
             VEdges.Add(edge);
         }
-
-        public Edge AddEdge(Node s, Node t, double cost)
-        {
-            if (s.Id > t.Id)
-            {
-                Node temp = s;
-                s = t;
-                t = temp;
-            }
-
-            Edge edge = new Edge(s, t, cost);
-
-            Node l = VNodes[s.Id];
-            Node r = VNodes[t.Id];
-
-            Node c = new Node(-1, -1, MinLat, MinLon);
-            double yl = GetDistanceFromLatLon(l, new Node(-1, -1, c.Lat, l.Lon)) * (l.Lat < c.Lat ? -1 : 1);
-            double xl = GetDistanceFromLatLon(l, new Node(-1, -1, l.Lat, c.Lon)) * (l.Lon < c.Lon ? -1 : 1);
-
-            double yr = GetDistanceFromLatLon(r, new Node(-1, -1, c.Lat, r.Lon)) * (r.Lat < c.Lat ? -1 : 1);
-            double xr = GetDistanceFromLatLon(r, new Node(-1, -1, r.Lat, c.Lon)) * (r.Lon < c.Lon ? -1 : 1);
-
-            edge.ShoelaceForward = (yl + yr) * (xl - xr);
-            edge.ShoelaceBackward = (yr + yl) * (xr - xl);
-
-            AddEdge(edge);
-            return edge;
-        }
-
         public Graph(string fileName)
         {
             using (StreamReader file = new StreamReader(fileName))
@@ -181,6 +233,35 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
         }
 
+        public Edge AddEdge(Node s, Node t, double cost)
+        {
+            if (s.Id > t.Id)
+            {
+                Node temp = s;
+                s = t;
+                t = temp;
+            }
+
+            Edge edge = new Edge(s, t, cost);
+
+            Node l = VNodes[s.Id];
+            Node r = VNodes[t.Id];
+
+            Node c = new Node(-1, -1, MinLat, MinLon);
+            double yl = GetDistanceFromLatLon(l, new Node(-1, -1, c.Lat, l.Lon)) * (l.Lat < c.Lat ? -1 : 1);
+            double xl = GetDistanceFromLatLon(l, new Node(-1, -1, l.Lat, c.Lon)) * (l.Lon < c.Lon ? -1 : 1);
+
+            double yr = GetDistanceFromLatLon(r, new Node(-1, -1, c.Lat, r.Lon)) * (r.Lat < c.Lat ? -1 : 1);
+            double xr = GetDistanceFromLatLon(r, new Node(-1, -1, r.Lat, c.Lon)) * (r.Lon < c.Lon ? -1 : 1);
+
+            edge.ShoelaceForward = (yl + yr) * (xl - xr);
+            edge.ShoelaceBackward = (yr + yl) * (xr - xl);
+
+            AddEdge(edge);
+            return edge;
+        }
+
+
         public Edge GetEdge(int sId, int tId)
         {
             foreach (Edge e in VNodes[sId].Incident)
@@ -221,7 +302,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         }
 
 
-        public List<Tuple<int, Path>> CalculateRing(int sourceNode, double innerDistance, double outerDistande,
+        public List<Tuple<int, Path>> CalculateRing(int sourceNode, double innerDistance, double outerDistance,
                                                     int nodeLimit, HashSet<int> contained)
         {
             double[] dist = new double[VNodes.Count];
@@ -246,7 +327,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 (double currentDist, (int currentNode, double currentActual)) = queue.Dequeue();
 
-                if (currentActual > outerDistande)
+                if (currentActual > outerDistance)
                 {
                     continue;
                 }
@@ -267,11 +348,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
 
                 neighbors.Add(VNodes[currentNode].Incident.Count);
-                if(neighbors.Count == 92 || neighbors.Count == 93 || neighbors.Count == 94)
-                {
-                    Node cur = VNodes[currentNode];
-                }
-                    foreach (Edge edge in VNodes[currentNode].Incident)
+               
+                foreach (Edge edge in VNodes[currentNode].Incident)
                 {
                     int neighborId = edge.SourceNode.Id  == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id;
 
