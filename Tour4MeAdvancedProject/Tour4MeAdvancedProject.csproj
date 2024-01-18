@@ -2257,6 +2257,7 @@
     <Content Include="fontawesome\webfonts\fa-v4compatibility.ttf" />
     <Content Include="fontawesome\webfonts\fa-v4compatibility.woff2" />
     <Content Include="img\map-logo.webp" />
+    <Content Include=".editorconfig" />
     <None Include="packages.config" />
     <Content Include="site.Master" />
     <None Include="Web.Debug.config">

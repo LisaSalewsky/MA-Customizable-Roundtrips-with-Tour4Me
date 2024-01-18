@@ -5,6 +5,11 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tour4MeAdvancedProject", "Tour4MeAdvancedProject\Tour4MeAdvancedProject.csproj", "{7C0BC39E-43AD-4924-9555-7545ADB61BEF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D7BB2BA1-869D-4A17-9B2B-DB4A828141A5}"
+	ProjectSection(SolutionItems) = preProject
+		Tour4MeAdvancedProject\.editorconfig = Tour4MeAdvancedProject\.editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

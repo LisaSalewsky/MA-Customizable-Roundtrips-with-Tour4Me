@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using static Tour4MeAdvancedProject.Helper.EnumHelper;
 using Tour4MeAdvancedProject.ObjectClasses;
-using System;
+using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
 namespace Tour4MeAdvancedProject.Solver
 {
@@ -9,14 +8,14 @@ namespace Tour4MeAdvancedProject.Solver
     {
         protected List<int> OutputPath;
 
-        public Selection() { }
-        
-        public virtual SolveStatus Solve(Problem p)
+        public Selection () { }
+
+        public virtual SolveStatus Solve ( Problem p )
         {
             return SolveStatus.Unsolved;
         }
 
-        public List<int> GetPath()
+        public List<int> GetPath ()
         {
             return OutputPath;
         }

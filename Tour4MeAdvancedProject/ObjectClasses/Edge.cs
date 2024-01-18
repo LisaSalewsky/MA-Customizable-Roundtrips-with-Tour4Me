@@ -22,15 +22,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double Cost { get; set; }
         public double Profit { get; set; }
 
-        public Edge()
+        public Edge ()
         {
             Tags = new List<string>();
             GeoLocations = new List<Tuple<double, double>>();
         }
 
-        public Edge(Node source, Node target, double nodeCost)
+        public Edge ( Node source, Node target, double nodeCost )
         {
-            int.TryParse(source.Id.ToString() + target.Id.ToString(), out int id);
+            _ = int.TryParse( source.Id.ToString() + target.Id.ToString(), out int id );
             Id = id;
             if (source.Id < target.Id)
             {
@@ -48,7 +48,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             GeoLocations = new List<Tuple<double, double>>();
         }
 
-        public Edge (Edge e, bool reversed)
+        public Edge ( Edge e, bool reversed )
         {
             Id = e.Id;
             SourceNode = e.SourceNode;
@@ -64,9 +64,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Cost = e.Cost;
         }
 
-        public bool LessThan(Edge otherEdge)
+        public bool LessThan ( Edge otherEdge )
         {
-            return SourceNode.Id < otherEdge.SourceNode.Id || (SourceNode == otherEdge.SourceNode && TargetNode.Id < otherEdge.TargetNode.Id);
+            return SourceNode.Id < otherEdge.SourceNode.Id || ( SourceNode == otherEdge.SourceNode && TargetNode.Id < otherEdge.TargetNode.Id );
         }
     }
 

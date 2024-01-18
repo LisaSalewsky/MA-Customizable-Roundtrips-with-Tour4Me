@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
@@ -10,15 +9,15 @@ namespace Tour4MeAdvancedProject.Solver
 
     public class SelectionSolver : Selection
     {
-        public SelectionSolver() { }
+        public SelectionSolver () { }
 
-        public override SolveStatus Solve(Problem P)
+        public override SolveStatus Solve ( Problem P )
         {
             List<bool> visited = new List<bool>();
-            visited.AddRange(new bool[P.Graph.VEdges.Count]);
+            visited.AddRange( new bool[ P.Graph.VEdges.Count ] );
 
             int current = P.Start;
-            P.Path.Add(null, current, 0, 0);
+            P.Path.Add( null, current, 0, 0 );
 
             //Path endPath = new Path();
             double length = 0;
@@ -31,17 +30,17 @@ namespace Tour4MeAdvancedProject.Solver
                 int bestNeigh = 0;
                 double bestProfit = -9999999999;
 
-                foreach (Edge e in P.Graph.VNodes[current].Incident)
+                foreach (Edge e in P.Graph.VNodes[ current ].Incident)
                 {
                     int neigh = e.SourceNode.Id == current ? e.TargetNode.Id : e.SourceNode.Id;
-                    double dis = P.Graph.ShortestPath(P.Start, neigh);
+                    double dis = P.Graph.ShortestPath( P.Start, neigh );
 
                     if (dis > P.TargetDistance - length - e.Cost)
                     {
                         continue;
                     }
 
-                    double prof = !visited[e.Id] ? e.Profit * e.Cost : -dis;
+                    double prof = !visited[ e.Id ] ? e.Profit * e.Cost : -dis;
 
                     if (prof > bestProfit)
                     {
@@ -55,14 +54,14 @@ namespace Tour4MeAdvancedProject.Solver
 
                 if (validCandidates)
                 {
-                    P.Path.Add(bestEdge, bestNeigh, bestProfit, length);
-                    visited[bestEdge.Id] = true;
+                    P.Path.Add( bestEdge, bestNeigh, bestProfit, length );
+                    visited[ bestEdge.Id ] = true;
                     length += bestEdge.Cost;
                     current = bestNeigh;
                 }
             }
 
-            Console.WriteLine(length);
+            Console.WriteLine( length );
             return SolveStatus.Feasible;
         }
     }
