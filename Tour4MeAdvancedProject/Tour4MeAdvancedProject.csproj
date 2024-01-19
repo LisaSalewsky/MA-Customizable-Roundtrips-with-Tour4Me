@@ -2197,6 +2197,7 @@
     <Compile Include="MapContent.aspx.designer.cs">
       <DependentUpon>MapContent.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Solver\AntSolver.cs" />
     <Compile Include="Solver\SelectionSolver.cs" />
     <Compile Include="Solver\JoggerSolver.cs" />
     <Compile Include="Solver\Selection.cs" />

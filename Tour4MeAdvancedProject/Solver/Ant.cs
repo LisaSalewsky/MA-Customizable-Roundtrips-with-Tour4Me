@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tour4MeAdvancedProject.Solver;
-using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
 namespace Tour4MeAdvancedProject.ObjectClasses
 {
-    public class Ant : Selection
+    public class Ant
     {
-        public List<Node> Solution { get; set; }
+        //public List<Node> Solution { get; set; }
+
+        public List<Edge> SolutionEdges { get; set; }
 
         // constant for calculating pheromone distribution of  this specific ant
         public int PheromoneAmount { get; set; }
@@ -19,11 +19,36 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public Ant ( int pheromoneAmount )
         {
-            Solution = new List<Node>();
+            //Solution = new List<Node>();
+            SolutionEdges = new List<Edge>();
             PheromoneAmount = pheromoneAmount;
         }
 
-        public override SolveStatus Solve ( Problem CurrentProblem )
+
+        /// <summary>
+        /// Conducts a tour of the given problem's graph using an ant, 
+        /// applying the Ant Colony Optimization (ACO) algorithm.
+        /// </summary>
+        /// <param name="CurrentProblem">
+        /// The problem instance containing the graph and necessary parameters for the tour.
+        /// </param>
+        /// <returns>
+        /// A list of edges representing the tour taken by the ant. 
+        /// If the tour is incomplete or fails, returns null.
+        /// </returns>
+        /// <remarks>
+        /// The Ant Colony Optimization algorithm aims to find an optimal path in a graph by 
+        /// simulating the foraging behavior of ants. 
+        /// This method applies the ACO algorithm to navigate the graph and construct a tour based
+        /// on pheromone levels, edge visibility, and other parameters specified in the 
+        /// <paramref name="CurrentProblem"/>.
+        /// </remarks>
+        /// <seealso cref="Problem"/>
+        /// <seealso cref="Graph"/>
+        /// <seealso cref="Edge"/>
+        /// <seealso cref="Node"/>
+        /// <seealso cref="AntColonyOptimizer"/>
+        public List<Edge> Tour ( Problem CurrentProblem )
         {
             Graph graph = CurrentProblem.Graph;
             int start = CurrentProblem.Start;
@@ -45,7 +70,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             Dictionary<Edge, float> edgeProbabilities = new Dictionary<Edge, float>();
 
-            double currentActual = 0;
+            double currentDistance = 0;
 
             // TODO: ensure we close our tour not going over the max length!
             while (queue.Count > 0)
@@ -54,11 +79,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 int currentNode = queue.First();
                 _ = queue.Remove( currentNode );
 
-                if (currentActual > CurrentProblem.TargetDistance)
-                {
-                    continue;
-                }
-
+                //if (currentDistance > CurrentProblem.TargetDistance)
+                //{
+                //    continue;
+                //}
                 // only look into edges where the opposite of currentNode wasn't visited yet
                 List<Edge> allowed = vNodes[ currentNode ].Incident.FindAll( x =>
                 ( x.SourceNode.Id == currentNode && !visited.Contains( x.TargetNode.Id ) ) ||
@@ -77,7 +101,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 foreach (Edge edge in allowed)
                 {
                     int neighborId = edge.SourceNode.Id == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id;
-                    currentActual += edge.Cost;
+
+                    // TODO @Mart: does this actually provide a path of maximum target distance length?
+                    if (graph.ShortestPath( start, neighborId ) > CurrentProblem.TargetDistance - currentDistance - edge.Cost)
+                    {
+                        continue;
+                    }
+
+                    currentDistance += edge.Cost;
 
                     // delta t_{ij}^k
                     double edgeValue = edge.Cost * edge.TrailIntensity;
@@ -109,20 +140,16 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     visited.Add( neighborId );
                     _ = visitableNodes.Remove( visitableNodes.Find( x => x.Id == neighborId ) );
 
-                    Solution.Add( neighbor );
+                    //Solution.Add( neighbor );
+                    SolutionEdges.Add( pickedEdge );
                 }
                 else
                 {
-                    return SolveStatus.Unsolved;
+                    return null;
                 }
             }
 
-            UpdatePheromoneTrail( graph );
-
-            // TODO add option for more tries 
-            // TODO add option for more ants
-
-            return SolveStatus.Feasible;
+            return SolutionEdges;
         }
 
         /// <summary>
@@ -130,12 +157,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// newly placed pheromones.
         /// </summary>
         /// <param name="graph">The graph containing edges with pheromone trails and trail intensities.</param>
-        private void UpdatePheromoneTrail ( Graph graph )
+        public void UpdatePheromoneTrail ( Graph graph, List<Edge> visited )
         {
             double evaporationRate = 0.9;
 
-            foreach (Edge edge in graph.VEdges)
+            foreach (Edge visitedEdge in visited)
             {
+                // update actual edge of the graph
+                Edge edge = graph.VEdges.Find( x => x.Id == visitedEdge.Id );
+
                 // trailIntensity contains the actual pheromone left on the trail
                 // evaporationRate descibes how much of the trail has evaporated during one tour
                 // pheromone contains the newly placed pheromone from the current ants (updated during tour)

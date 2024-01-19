@@ -9,6 +9,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
     {
         public double Lat { get; set; }
         public double Lon { get; set; }
+        public double Elevation { get; set; }
         public long GId { get; set; }
         public int Id { get; set; }
         public List<Edge> Incident { get; set; }

@@ -18,7 +18,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public Node SourceNode { get; set; }
         public Node TargetNode { get; set; }
         public double Pheromone { get; set; } = 1;
-        public double TrailIntensity { get; set; }
+        public double TrailIntensity { get; set; } = 1;
         public double Cost { get; set; }
         public double Profit { get; set; }
 
