@@ -10,16 +10,16 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double Lat { get; set; }
         public double Lon { get; set; }
         public double Elevation { get; set; }
-        public long GId { get; set; }
-        public int Id { get; set; }
+        public Guid NodeId { get; set; }
+        public int GraphNodeId { get; set; }
         public List<Edge> Incident { get; set; }
 
-        public Node ( int nodeId, long nodeGId, double nodeLat, double nodeLon )
+        public Node ( int graphId, Guid id, double nodeLat, double nodeLon )
         {
             Lat = nodeLat;
             Lon = nodeLon;
-            Id = nodeId;
-            GId = nodeGId;
+            GraphNodeId = graphId;
+            NodeId = id;
             Incident = new List<Edge>();
         }
 
@@ -53,7 +53,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public bool Compare ( Node otherNode )
         {
-            return Id == otherNode.Id;
+            return GraphNodeId == otherNode.GraphNodeId;
         }
 
         public bool IsRight ( Node l1, Node l2 )

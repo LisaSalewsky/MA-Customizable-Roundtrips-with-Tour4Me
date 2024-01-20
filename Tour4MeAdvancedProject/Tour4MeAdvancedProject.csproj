@@ -2161,6 +2161,7 @@
   <ItemGroup>
     <Compile Include="Helper\EnumHelper.cs" />
     <Compile Include="Helper\GraphColumnsEnumHelper.cs" />
+    <Compile Include="Helper\ImportGraphDataToSQL.cs" />
     <Compile Include="homepage.aspx.cs">
       <DependentUpon>homepage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

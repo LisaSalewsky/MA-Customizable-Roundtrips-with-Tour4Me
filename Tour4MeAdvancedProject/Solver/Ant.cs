@@ -85,8 +85,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 //}
                 // only look into edges where the opposite of currentNode wasn't visited yet
                 List<Edge> allowed = vNodes[ currentNode ].Incident.FindAll( x =>
-                ( x.SourceNode.Id == currentNode && !visited.Contains( x.TargetNode.Id ) ) ||
-                ( x.TargetNode.Id == currentNode && !visited.Contains( x.SourceNode.Id ) ) );
+                ( x.SourceNode.GraphNodeId == currentNode && !visited.Contains( x.TargetNode.GraphNodeId ) ) ||
+                ( x.TargetNode.GraphNodeId == currentNode && !visited.Contains( x.SourceNode.GraphNodeId ) ) );
 
                 // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
                 float sumOfAllowed = 0;
@@ -100,7 +100,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 foreach (Edge edge in allowed)
                 {
-                    int neighborId = edge.SourceNode.Id == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id;
+                    int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
 
                     // TODO @Mart: does this actually provide a path of maximum target distance length?
                     if (graph.ShortestPath( start, neighborId ) > CurrentProblem.TargetDistance - currentDistance - edge.Cost)
@@ -132,13 +132,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 if (pickedEdge != null && pickedProbability > 0)
                 {
                     // now choose next node based on probability
-                    Node neighbor = pickedEdge.SourceNode.Id == currentNode ? pickedEdge.TargetNode : pickedEdge.SourceNode;
-                    int neighborId = neighbor.Id;
+                    Node neighbor = pickedEdge.SourceNode.GraphNodeId == currentNode ? pickedEdge.TargetNode : pickedEdge.SourceNode;
+                    int neighborId = neighbor.GraphNodeId;
 
                     queue.Add( neighborId );
                     // once a node was visited, it cannot be visited again in this tour by the same ant
                     visited.Add( neighborId );
-                    _ = visitableNodes.Remove( visitableNodes.Find( x => x.Id == neighborId ) );
+                    _ = visitableNodes.Remove( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
 
                     //Solution.Add( neighbor );
                     SolutionEdges.Add( pickedEdge );

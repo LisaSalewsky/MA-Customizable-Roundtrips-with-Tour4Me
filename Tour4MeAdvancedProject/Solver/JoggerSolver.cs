@@ -79,7 +79,7 @@ namespace Tour4MeAdvancedProject.Solver
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
 
-                            finalPath.Add( v.Reversed ? v.TargetNode.Id : v.SourceNode.Id );
+                            finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
                             length += v.Cost;
                         }
@@ -92,8 +92,8 @@ namespace Tour4MeAdvancedProject.Solver
                                 visited[ v.Id ] = visitedIndex;
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
-                            Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.Id : v.SourceNode.Id ) );
-                            finalPath.Add( v.Reversed ? v.TargetNode.Id : v.SourceNode.Id );
+                            Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
+                            finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
                             length += v.Cost;
                         }
@@ -108,8 +108,8 @@ namespace Tour4MeAdvancedProject.Solver
                                 visited[ v.Id ] = visitedIndex;
                             }
                             area += v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
-                            Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.Id : v.SourceNode.Id ) );
-                            finalPath.Add( !v.Reversed ? v.TargetNode.Id : v.SourceNode.Id );
+                            Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
+                            finalPath.Add( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
                             length += v.Cost;
                         }

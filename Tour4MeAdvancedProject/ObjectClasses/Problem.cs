@@ -95,7 +95,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                         foreach (Edge edge in Graph.VNodes[ currentNode ].Incident)
                         {
-                            int neighborId = edge.SourceNode.Id == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id;
+                            int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
                             double newDistance = bestKnownDist + edge.Cost;
 
                             if (!dist.TryGetValue( neighborId, out double currentDist ))
@@ -139,10 +139,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 foreach (int node in Path.Visited)
                 {
-                    outputFile.Write( $"        {Graph.VNodes[ node ].GId}, " );
+                    outputFile.Write( $"        {Graph.VNodes[ node ].NodeId}, " );
                 }
 
-                outputFile.WriteLine( $"{Graph.VNodes[ Path.Visited.First() ].GId}], " );
+                outputFile.WriteLine( $"{Graph.VNodes[ Path.Visited.First() ].NodeId}], " );
                 outputFile.WriteLine( "    \"cord_path\": [" );
 
                 foreach (int node in Path.Visited)
@@ -204,7 +204,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                bool reverse = Graph.VNodes[ node ].GId < Graph.VNodes[ edge.TargetNode.Id ].GId;
+                bool reverse = Graph.VNodes[ node ].NodeId < Graph.VNodes[ edge.TargetNode.GraphNodeId ].NodeId;
                 if (!reverse)
                 {
                     edge.GeoLocations.Reverse();
@@ -250,7 +250,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                bool reverse = Graph.VNodes[ node ].GId < Graph.VNodes[ edge.TargetNode.Id ].GId;
+                bool reverse = Graph.VNodes[ node ].NodeId < Graph.VNodes[ edge.TargetNode.GraphNodeId ].NodeId;
                 if (!reverse)
                 {
                     edge.GeoLocations.Reverse();
@@ -373,7 +373,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 {
                     Edge edge = Graph.GetEdge( prev, current );
 
-                    area += prev == edge.SourceNode.Id ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                    area += prev == edge.SourceNode.GraphNodeId ? edge.ShoelaceForward : edge.ShoelaceBackward;
                 }
 
                 prev = current;
@@ -382,7 +382,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             if (prev != path.First())
             {
                 Edge edge = Graph.GetEdge( prev, path.First() );
-                area += prev == edge.SourceNode.Id ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                area += prev == edge.SourceNode.GraphNodeId ? edge.ShoelaceForward : edge.ShoelaceBackward;
             }
 
             return area / 2;

@@ -30,7 +30,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public List<Node> VNodes { get; set; }
         public List<Edge> VEdges { get; set; }
 
-        public Dictionary<long, int> GIdNode { get; set; }
+        public Dictionary<Guid, int> GIdNode { get; set; }
 
         public Graph ( Guid InID, out string error )
         {
@@ -38,7 +38,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Id = InID;
             VNodes = new List<Node>();
             VEdges = new List<Edge>();
-            GIdNode = new Dictionary<long, int>();
+            GIdNode = new Dictionary<Guid, int>();
             string connectError = "";
             try
             {
@@ -113,8 +113,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 VEdges = new List<Edge>();
             }
-            VNodes[ edge.SourceNode.Id ].Incident.Add( edge );
-            VNodes[ edge.TargetNode.Id ].Incident.Add( edge );
+            VNodes[ edge.SourceNode.GraphNodeId ].Incident.Add( edge );
+            VNodes[ edge.TargetNode.GraphNodeId ].Incident.Add( edge );
             VEdges.Add( edge );
         }
         public Graph ( string fileName )
@@ -123,7 +123,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 VNodes = new List<Node>();
                 VEdges = new List<Edge>();
-                GIdNode = new Dictionary<long, int>();
+                GIdNode = new Dictionary<Guid, int>();
                 string str;
                 int nNodes = 0;
                 int nEdges = 0;
@@ -143,7 +143,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         MinLon = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
                         CenterLat = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
                         CenterLon = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
-                        double test = double.Parse( "51.57313333", CultureInfo.InvariantCulture );
                     }
                     else if (type == 'p')
                     {
@@ -156,7 +155,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     else if (type == 'n')
                     {
                         string t = NextWord( ref str, ' ' );
-                        long id = long.Parse( NextWord( ref str, ' ' ) );
+                        Guid id = Guid.Parse( NextWord( ref str, ' ' ) );
                         double lat = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
                         double lon = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
 
@@ -170,8 +169,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     else if (type == 'e')
                     {
                         string t = NextWord( ref str, ' ' );
-                        long vId = long.Parse( NextWord( ref str, ' ' ) );
-                        long wId = long.Parse( NextWord( ref str, ' ' ) );
+                        Guid vId = Guid.Parse( NextWord( ref str, ' ' ) );
+                        Guid wId = Guid.Parse( NextWord( ref str, ' ' ) );
                         double cost = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
 
                         int sId = GIdNode[ vId ];
@@ -183,7 +182,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                             _ = file.ReadLine();
                             continue;
                         }
-                        // TODO: DB Access to get Node and correct Data
+
+
                         Edge edge = AddEdge( new Node( sId, vId, 0, 0 ), new Node( tId, wId, 0, 0 ), cost );
                         //Edge edge = AddEdge(cEdges, sId, tId, cost);
                         cEdges++;
@@ -232,22 +232,21 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public Edge AddEdge ( Node s, Node t, double cost )
         {
-            if (s.Id > t.Id)
+            if (s.GraphNodeId > t.GraphNodeId)
             {
                 (t, s) = (s, t);
             }
 
             Edge edge = new Edge( s, t, cost );
 
-            Node l = VNodes[ s.Id ];
-            Node r = VNodes[ t.Id ];
+            Node l = VNodes[ s.GraphNodeId ];
+            Node r = VNodes[ t.GraphNodeId ];
 
-            Node c = new Node( -1, -1, MinLat, MinLon );
-            double yl = GetDistanceFromLatLon( l, new Node( -1, -1, c.Lat, l.Lon ) ) * ( l.Lat < c.Lat ? -1 : 1 );
-            double xl = GetDistanceFromLatLon( l, new Node( -1, -1, l.Lat, c.Lon ) ) * ( l.Lon < c.Lon ? -1 : 1 );
+            double yl = GetDistanceFromLatLon( l.Lat, l.Lon, MinLat, l.Lon ) * ( l.Lat < MinLat ? -1 : 1 );
+            double xl = GetDistanceFromLatLon( l.Lat, l.Lon, l.Lat, MinLon ) * ( l.Lon < MinLon ? -1 : 1 );
 
-            double yr = GetDistanceFromLatLon( r, new Node( -1, -1, c.Lat, r.Lon ) ) * ( r.Lat < c.Lat ? -1 : 1 );
-            double xr = GetDistanceFromLatLon( r, new Node( -1, -1, r.Lat, c.Lon ) ) * ( r.Lon < c.Lon ? -1 : 1 );
+            double yr = GetDistanceFromLatLon( r.Lat, r.Lon, MinLat, r.Lon ) * ( r.Lat < MinLat ? -1 : 1 );
+            double xr = GetDistanceFromLatLon( r.Lat, r.Lon, r.Lat, MinLon ) * ( r.Lon < MinLon ? -1 : 1 );
 
             edge.ShoelaceForward = ( yl + yr ) * ( xl - xr );
             edge.ShoelaceBackward = ( yr + yl ) * ( xr - xl );
@@ -261,7 +260,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             foreach (Edge e in VNodes[ sId ].Incident)
             {
-                if (tId == e.SourceNode.Id || tId == e.TargetNode.Id)
+                if (tId == e.SourceNode.GraphNodeId || tId == e.TargetNode.GraphNodeId)
                 {
                     return e;
                 }
@@ -274,7 +273,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             foreach (Edge e in VNodes[ sId ].Incident)
             {
-                if (tId == e.SourceNode.Id || tId == e.TargetNode.Id)
+                if (tId == e.SourceNode.GraphNodeId || tId == e.TargetNode.GraphNodeId)
                 {
                     return true;
                 }
@@ -346,7 +345,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 foreach (Edge edge in VNodes[ currentNode ].Incident)
                 {
-                    int neighborId = edge.SourceNode.Id == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id;
+                    int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
 
                     double newDist = bestKnownDist + ( edge.Cost / ( edge.Profit + 0.1 ) );
                     double newActual = currentActual + edge.Cost;
@@ -391,7 +390,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 while (current != sourceNode)
                 {
                     Edge e = parent[ current ].Item2;
-                    path.Edges.Insert( 0, new Edge( e, e.TargetNode.Id == current ) );
+                    path.Edges.Insert( 0, new Edge( e, e.TargetNode.GraphNodeId == current ) );
                     path.Length += e.Cost;
 
                     // if any of the null checks holds, current was not deeply enough routed
@@ -472,14 +471,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return distance;
         }
 
-        public double GetDistanceFromLatLon ( Node node1, Node node2 )
+        public static double GetDistanceFromLatLon ( double node1Lat, double node1Lon, double node2Lat, double node2Lon )
         {
             const double R = 6371000; // Radius of the earth in km
-            double dLat = Deg2Rad( node2.Lat - node1.Lat );  // deg2rad below
-            double dLon = Deg2Rad( node2.Lon - node1.Lon );
+            double dLat = Deg2Rad( node2Lat - node1Lat );  // deg2rad below
+            double dLon = Deg2Rad( node2Lon - node1Lon );
             double a =
               ( Math.Sin( dLat / 2 ) * Math.Sin( dLat / 2 ) ) +
-              ( Math.Cos( Deg2Rad( node1.Lat ) ) * Math.Cos( Deg2Rad( node2.Lat ) ) *
+              ( Math.Cos( Deg2Rad( node1Lat ) ) * Math.Cos( Deg2Rad( node2Lat ) ) *
               Math.Sin( dLon / 2 ) * Math.Sin( dLon / 2 ) )
               ;
             double c = 2 * Math.Atan2( Math.Sqrt( a ), Math.Sqrt( 1 - a ) );
@@ -487,7 +486,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return distance;
         }
 
-        private double Deg2Rad ( double deg )
+        private static double Deg2Rad ( double deg )
         {
             return deg * ( Math.PI / 180 );
         }
@@ -527,7 +526,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 foreach (Edge edge in VNodes[ currentNode ].Incident)
                 {
-                    int neighborId = edge.SourceNode.Id == currentNode ? edge.TargetNode.Id : edge.SourceNode.Id;
+                    int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
 
                     double newDistance = bestKnownDist + edge.Cost;
 

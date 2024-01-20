@@ -203,7 +203,7 @@ namespace Tour4MeAdvancedProject
 
             if (start != null)
             {
-                problem.Start = start.Id;
+                problem.Start = start.GraphNodeId;
                 problem.Graph.CenterLon = start.Lon;
                 problem.Graph.CenterLat = start.Lat;
             }

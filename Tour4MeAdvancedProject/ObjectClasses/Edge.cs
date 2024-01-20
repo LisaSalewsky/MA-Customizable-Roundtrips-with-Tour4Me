@@ -30,9 +30,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public Edge ( Node source, Node target, double nodeCost )
         {
-            _ = int.TryParse( source.Id.ToString() + target.Id.ToString(), out int id );
+            _ = int.TryParse( source.GraphNodeId.ToString() + target.GraphNodeId.ToString(), out int id );
             Id = id;
-            if (source.Id < target.Id)
+            if (source.GraphNodeId < target.GraphNodeId)
             {
                 SourceNode = source;
                 TargetNode = target;
@@ -66,7 +66,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public bool LessThan ( Edge otherEdge )
         {
-            return SourceNode.Id < otherEdge.SourceNode.Id || ( SourceNode == otherEdge.SourceNode && TargetNode.Id < otherEdge.TargetNode.Id );
+            return SourceNode.GraphNodeId < otherEdge.SourceNode.GraphNodeId || ( SourceNode == otherEdge.SourceNode && TargetNode.GraphNodeId < otherEdge.TargetNode.GraphNodeId );
         }
     }
 
