@@ -24,6 +24,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             PheromoneAmount = pheromoneAmount;
         }
 
+        public Ant ( int pheromoneAmount, double alpha, double beta )
+        {
+            //Solution = new List<Node>();
+            SolutionEdges = new List<Edge>();
+            PheromoneAmount = pheromoneAmount;
+            Alpha = alpha;
+            Beta = beta;
+        }
+
 
         /// <summary>
         /// Conducts a tour of the given problem's graph using an ant, 
@@ -110,25 +119,26 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                     currentDistance += edge.Cost;
 
-                    // delta t_{ij}^k
                     double edgeValue = edge.Cost * edge.TrailIntensity;
                     double edgeVisibility = 1 / edge.Cost;
 
-                    // p_{ij}^k
+                    // p_{ij}^k (used for choosing town to move to)
                     float currentProbability = (float)( Math.Pow( edge.TrailIntensity, Alpha ) * Math.Pow( edgeVisibility, Beta ) / sumOfAllowed );
-
                     edgeProbabilities.Add( edge, currentProbability );
+
+                    // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
                     edge.Pheromone += PheromoneAmount / edge.Cost;
                 }
 
                 // randomly generate a random number between [0.0, 1.0) (excluding 1)
                 float probability = (float)Random.NextDouble();
 
+                // pick an edge according to edgeProbabilities and calculated probability
                 KeyValuePair<Edge, float> pickedPair = ChooseEdge( edgeProbabilities, probability );
                 Edge pickedEdge = pickedPair.Key;
                 float pickedProbability = pickedPair.Value;
 
-                // if we picked an edge: move to the respctive neighbor and add it to the queue 
+                // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
                 {
                     // now choose next node based on probability
@@ -140,7 +150,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     visited.Add( neighborId );
                     _ = visitableNodes.Remove( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
 
-                    //Solution.Add( neighbor );
+                    // Add the picked edge to the solution path
                     SolutionEdges.Add( pickedEdge );
                 }
                 else

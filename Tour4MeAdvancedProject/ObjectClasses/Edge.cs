@@ -8,7 +8,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
     {
         //private double preference;
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public double ShoelaceForward { get; set; }
         public double ShoelaceBackward { get; set; }
         public bool Reversed { get; set; }
@@ -46,6 +46,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             Tags = new List<string>();
             GeoLocations = new List<Tuple<double, double>>();
+        }
+        public Edge ( Guid id, Node source, Node target, double nodeCost ) : this( source, target, nodeCost )
+        {
+            Id = id;
         }
 
         public Edge ( Edge e, bool reversed )

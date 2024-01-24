@@ -16,12 +16,15 @@ namespace Tour4MeAdvancedProject.Helper
         private static readonly SqlConnection connection = new SqlConnection( connectionString );
         private static readonly StreamReader file = new StreamReader( "your_data_file.txt" );
         private static readonly Dictionary<Guid, Node> GId = new Dictionary<Guid, Node>();
-        private static double MaxLat = 0;
-        private static double MinLat = 0;
-        private static double MaxLon = 0;
-        private static double MinLon = 0;
-        private static double CenterLat = 0;
-        private static double CenterLon = 0;
+        private static Guid GraphId;
+        private static double maxLat = 0;
+        private static double minLat = 0;
+        private static double maxLon = 0;
+        private static double minLon = 0;
+        private static double centerLat = 0;
+        private static double centerLon = 0;
+        private static List<Node> VNodes;
+        private static List<Edge> VEdges;
 
 
         public static void ReadDataFile ()
@@ -34,12 +37,25 @@ namespace Tour4MeAdvancedProject.Helper
                 string dataType = lineData[ 0 ];
                 if (dataType == "g")
                 {
-                    MaxLat = double.Parse( lineData[ 1 ], CultureInfo.InvariantCulture );
-                    MinLat = double.Parse( lineData[ 2 ], CultureInfo.InvariantCulture );
-                    MaxLon = double.Parse( lineData[ 3 ], CultureInfo.InvariantCulture );
-                    MinLon = double.Parse( lineData[ 4 ], CultureInfo.InvariantCulture );
-                    CenterLat = double.Parse( lineData[ 5 ], CultureInfo.InvariantCulture );
-                    CenterLon = double.Parse( lineData[ 6 ], CultureInfo.InvariantCulture );
+                    maxLat = double.Parse( lineData[ 1 ], CultureInfo.InvariantCulture );
+                    minLat = double.Parse( lineData[ 2 ], CultureInfo.InvariantCulture );
+                    maxLon = double.Parse( lineData[ 3 ], CultureInfo.InvariantCulture );
+                    minLon = double.Parse( lineData[ 4 ], CultureInfo.InvariantCulture );
+                    centerLat = double.Parse( lineData[ 5 ], CultureInfo.InvariantCulture );
+                    centerLon = double.Parse( lineData[ 6 ], CultureInfo.InvariantCulture );
+                    GraphId = Guid.NewGuid();
+
+                    SqlGeography maxLatLon = SqlGeography.Point( maxLat, maxLon, 4326 );
+                    SqlGeography minLatLon = SqlGeography.Point( minLat, minLon, 4326 );
+                    SqlGeography centerLatLon = SqlGeography.Point( centerLat, centerLon, 4326 );
+
+                    InsertGraph( GraphId, maxLatLon, minLatLon, centerLatLon );
+                }
+                else if (dataType == "p")
+                {
+                    int nNodes = int.Parse( lineData[ 1 ] );
+
+                    VNodes = new List<Node>( nNodes );
                 }
                 else if (dataType == "n")
                 {
@@ -49,14 +65,18 @@ namespace Tour4MeAdvancedProject.Helper
                     SqlGeography geography = SqlGeography.Point( lat, lon, 4326 );
                     InsertNode( id, geography );
 
-                    GId.Add( id, new Node( cNodes, id, lat, lon ) );
+                    Node node = new Node( cNodes, id, lat, lon );
+
+                    GId.Add( id, node );
+
+                    VNodes.Add( node );
                     cNodes++;
                 }
                 else if (dataType == "e")
                 {
                     string vId = lineData[ 1 ];
                     string wId = lineData[ 2 ];
-                    double eCost = double.Parse( lineData[ 3 ] );
+                    double eCost = double.Parse( lineData[ 3 ], CultureInfo.InvariantCulture );
 
                     Guid sourceNode = Guid.Parse( vId );
                     Guid targetNode = Guid.Parse( wId );
@@ -109,6 +129,48 @@ namespace Tour4MeAdvancedProject.Helper
                     AssociateTagsWithEdge( currentEdgeId.Value, tags );
                 }
             }
+
+            foreach (Node node in VNodes)
+            {
+                AddNodeIntoGraph( node.NodeId, GraphId );
+            }
+
+            foreach (Edge edge in VEdges)
+            {
+
+                AddEdgeIntoGraph( edge.Id, GraphId );
+            }
+
+        }
+
+        private static void InsertGraph ( Guid graphId, SqlGeography maxLatLon, SqlGeography minLatLon, SqlGeography centerLatLon )
+        {
+
+            try
+            {
+                connection.Open();
+
+                string query = $"INSERT INTO Graph (Id, MaxLatLon, MinLatLon, CenterLatLon) VALUES ('{graphId}', @maxLatLon, @minLatLon, @centerLatLon)";
+                using (SqlCommand command = new SqlCommand( query, connection ))
+                {
+                    _ = command.Parameters.Add( new SqlParameter( "@maxLatLon", System.Data.SqlDbType.Udt ) { UdtTypeName = "maxLatLon", Value = maxLatLon } );
+                    _ = command.Parameters.Add( new SqlParameter( "@minLatLon", System.Data.SqlDbType.Udt ) { UdtTypeName = "minLatLon", Value = minLatLon } );
+                    _ = command.Parameters.Add( new SqlParameter( "@centerLatLon", System.Data.SqlDbType.Udt ) { UdtTypeName = "centerLatLon", Value = centerLatLon } );
+
+                    _ = command.ExecuteNonQuery();
+                }
+                query = $"INSERT INTO GIdNode (GraphId, MaxLatLon, MinLatLon, CenterLatLon) VALUES ('{id}', @geography)";
+                using (SqlCommand command = new SqlCommand( query, connection ))
+                {
+                    _ = command.Parameters.Add( new SqlParameter( "@geography", System.Data.SqlDbType.Udt ) { UdtTypeName = "geography", Value = geography } );
+
+                    _ = command.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         private static Guid GenerateGuidFromGuids ( Guid guid1, Guid guid2 )
@@ -152,7 +214,7 @@ namespace Tour4MeAdvancedProject.Helper
             {
                 connection.Open();
 
-                string query = $"INSERT INTO IncidentEdges (nodeId, edgeId) VALUES (@vId, @edgeId);";
+                string query = $"INSERT INTO IncidentEdges (NodeId, EdgeId) VALUES (' {vId} ', '{edgeId} ');";
                 using (SqlCommand command = new SqlCommand( query, connection ))
                 {
                     _ = command.ExecuteNonQuery();
@@ -207,11 +269,11 @@ namespace Tour4MeAdvancedProject.Helper
                 (target, source) = (source, target);
             }
 
-            double yl = Graph.GetDistanceFromLatLon( source.Lat, source.Lon, MinLat, source.Lon ) * ( source.Lat < MinLat ? -1 : 1 );
-            double xl = Graph.GetDistanceFromLatLon( source.Lat, source.Lon, source.Lat, MinLon ) * ( source.Lon < MinLon ? -1 : 1 );
+            double yl = Graph.GetDistanceFromLatLon( source.Lat, source.Lon, minLat, source.Lon ) * ( source.Lat < minLat ? -1 : 1 );
+            double xl = Graph.GetDistanceFromLatLon( source.Lat, source.Lon, source.Lat, minLon ) * ( source.Lon < minLon ? -1 : 1 );
 
-            double yr = Graph.GetDistanceFromLatLon( target.Lat, target.Lon, MinLat, target.Lon ) * ( target.Lat < MinLat ? -1 : 1 );
-            double xr = Graph.GetDistanceFromLatLon( target.Lat, target.Lon, target.Lat, MinLon ) * ( target.Lon < MinLon ? -1 : 1 );
+            double yr = Graph.GetDistanceFromLatLon( target.Lat, target.Lon, minLat, target.Lon ) * ( target.Lat < minLat ? -1 : 1 );
+            double xr = Graph.GetDistanceFromLatLon( target.Lat, target.Lon, target.Lat, minLon ) * ( target.Lon < minLon ? -1 : 1 );
 
             double ShoelaceForward = ( yl + yr ) * ( xl - xr );
             double ShoelaceBackward = ( yr + yl ) * ( xr - xl );
@@ -231,6 +293,17 @@ namespace Tour4MeAdvancedProject.Helper
             finally
             {
                 connection.Close();
+
+                Edge edge = new Edge( edgeId, source, target, eCost );
+
+                VNodes[ edge.SourceNode.GraphNodeId ].Incident.Add( edge );
+                VNodes[ edge.TargetNode.GraphNodeId ].Incident.Add( edge );
+
+                if (VEdges == null)
+                {
+                    VEdges = new List<Edge>();
+                }
+                VEdges.Add( edge );
             }
         }
 
@@ -277,6 +350,44 @@ namespace Tour4MeAdvancedProject.Helper
 
                 // Assuming you have a table for storing edge tags
                 string query = $"UPDATE Edges SET Tags = ISNULL(Tags, '') + '{tags}' WHERE Id = '{edgeId}'";
+                using (SqlCommand command = new SqlCommand( query, connection ))
+                {
+                    _ = command.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        private static void AddEdgeIntoGraph ( Guid edgeId, Guid graphId )
+        {
+            try
+            {
+                connection.Open();
+
+                // Assuming you have a table for storing edge tags
+                string query = $"INSERT INTO VEdges (EdgeId, GraphId) VALUES (' {edgeId} ', ' {graphId} ')";
+                using (SqlCommand command = new SqlCommand( query, connection ))
+                {
+                    _ = command.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        private static void AddNodeIntoGraph ( Guid nodeId, Guid graphId )
+        {
+            try
+            {
+                connection.Open();
+
+                // Assuming you have a table for storing edge tags
+                string query = $"INSERT INTO VNodes (NodeId, GraphId) VALUES (' {nodeId}', ' {graphId} ')";
                 using (SqlCommand command = new SqlCommand( query, connection ))
                 {
                     _ = command.ExecuteNonQuery();

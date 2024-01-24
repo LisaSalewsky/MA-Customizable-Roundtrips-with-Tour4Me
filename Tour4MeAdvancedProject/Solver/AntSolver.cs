@@ -6,11 +6,21 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntSolver : Selection
     {
-        public int NumberTours { get; set; }
-        public int NumberAnts { get; set; }
-        public List<Ant> Ants { get; set; }
+        public int NumberTours { get; set; } = 1;
+        public int NumberAnts { get; set; } = 1;
+        public List<Ant> Ants { get; set; } = new List<Ant>();
+        public double Alpha { get; set; } = 0.5;
+        public double Beta { get; set; } = 0.5;
 
         public AntSolver () { }
+
+        public AntSolver ( int numberTours, int numberAnts, double alpha, double beta )
+        {
+            NumberTours = numberTours;
+            NumberAnts = numberAnts;
+            Alpha = alpha;
+            Beta = beta;
+        }
 
 
         /// <summary>
