@@ -7,7 +7,7 @@ Algorithms for optimal tours are an important and much studied part of computer 
 It is a topic that directly influences the lives of many people.
 Better routing algorithms can help reduce travel times by car, bicycle or even on foot. 
 There is also considerable work on optimizing public transportation \cite{bastRoutePlanningTransportation2016, dellingRoundBasedPublicTransit2015} and managing traffic jams \cite{dellingTimeDependentSHARCRouting2011, dellingCustomizableRoutePlanning2017}. 
-Examples are Dijkstra (uni- and bidirectional) \cite{madkourSurveyShortestPathAlgorithms2017, sommerShortestpathQueriesStatic2014, wayahdiGreedyAStarDijkstra2021}, A* search (also uni- and bidirectional) \cite{madkourSurveyShortestPathAlgorithms2017, sommerShortestpathQueriesStatic2014, wayahdiGreedyAStarDijkstra2021}, greedy algorithms \cite{madkourSurveyShortestPathAlgorithms2017, wayahdiGreedyAStarDijkstra2021}, branch-and-bound algorithms \cite{lawlerBranchandBoundMethodsSurvey1966}, the Bellman-Ford-Moore algorithm \cite{cherkasskyShortestPathsAlgorithms1996} and many more \cite{dellingEngineeringRoutePlanning2009, sommerShortestpathQueriesStatic2014}.
+Examples are Dijkstra (uni- and bidirectional) \cite{madkour_survey_2017, sommer_shortest-path_2014, wayahdi_greedy_2021}, A* search (also uni- and bidirectional) \cite{madkour_survey_2017, sommer_shortest-path_2014, wayahdi_greedy_2021}, greedy algorithms \cite{madkour_survey_2017, wayahdi_greedy_2021}, branch-and-bound algorithms \cite{lawler_branch-and-bound_1966}, the Bellman-Ford-Moore algorithm \cite{cherkassky_shortest_1996} and many more \cite{delling_engineering_2009, sommer_shortest-path_2014}.
 
 All of these have in common that they always look for the shortest or quickest path between two different points.
 However, when planning a tour, the goal might not be to simply get to a location as quick as possible.
@@ -17,9 +17,9 @@ Additionally, people typically enjoy running or cycling on more appealing paths 
 So, a lot more information have to be taken into account when trying to find good running or cycling roundtrips. 
 Which means, these algorithms become useless for these scenarios. 
 The shortest path from the starting point back to it will always be to never leave. 
-So, a different approach is needed for these kinds of routes \cite{gemsaEfficientComputationJogging2013}.
+So, a different approach is needed for these kinds of routes \cite{gemsa_efficient_2013}.
 
-Considering the benefits of running and cycling (for overall health \cite{ojaHealthBenefitsCycling2011, ruegseggerHealthBenefitsExercise2018, vinaExerciseActsDrug2012}, the cardiovascular system\cite{nystoriakCardiovascularEffectsBenefits2018}, as a measure against many different diseases\cite{ojaHealthBenefitsCycling2011} as well as for social\cite{muellerJoggingDistanceSupporting2007, obrienJoggingDistance2007, wankelPsychologicalSocialBenefits1990} and psychological benefits\cite{biddlePsychologicalBenefitsExercise1993, cekinPsychologicalBenefitsRegular2015, szaboPsychologicalBenefitsRecreational2013, wankelPsychologicalSocialBenefits1990} and also further benefits of touristic cycling for cities \cite{blondiauEconomicBenefitsIncreased2016}), the problem at hand becomes all the more important.
+Considering the benefits of running and cycling (for overall health \cite{oja_health_2011, ruegsegger_health_2018, vina_exercise_2012}, the cardiovascular system\cite{nystoriak_cardiovascular_2018}, as a measure against many different diseases\cite{oja_health_2011} as well as for social\cite{mueller_jogging_2007, obrien_jogging_2007, wankel_psychological_1990} and psychological benefits\cite{biddle_psychological_1993, cekin_psychological_2015, szabo_psychological_2013, wankel_psychological_1990} and also further benefits of touristic cycling for cities \cite{blondiau_economic_2016}), the problem at hand becomes all the more important.
 Not only are there many joggers and cyclists, who would profit from a tool that returns a roundtrip for their preferred personal optimal route, but having such a tool at hand could help convince more people of starting one or both of the two activities.
 This could result in an overall larger population doing some exercise and profiting from the previously mentioned benefits of physical activity outdoors. 
 Not only does such a web app lower the effort it takes to start running or cycling (as route planning is coupled with effort), it also helps to show people better or more appealing routes and encourage participation in outdoor activities.
@@ -44,8 +44,8 @@ An ideal algorithm would be fast, always generate a route and use all the users'
 However, it is not possible to achieve all these goals with just one algorithm. 
 Therefore, different approaches will be implemented and analyzed according to how well they fulfill the previously mentioned criteria. 
 
-Some of the possible approaches include different implementations of genetic algorithms \cite{gendreauHandbookMetaheuristics2010}, of ant colony or anthill algorithms \cite{babaogluAnthillFrameworkDevelopment2002, gendreauHandbookMetaheuristics2010, wangApplicationAntColony2014} as well as possible hybrid versions.
-These hybrids can either be hybrids of one of the meta-heuristics with - for example - local search algorithms \cite{gendreauHandbookMetaheuristics2010, wangApplicationAntColony2014} or hybrids of these two joined together.
+Some of the possible approaches include different implementations of genetic algorithms \cite{gendreau_handbook_2010}, of ant colony or anthill algorithms \cite{babaoglu_anthill_2002, gendreau_handbook_2010, wang_application_2014} as well as possible hybrid versions.
+These hybrids can either be hybrids of one of the meta-heuristics with - for example - local search algorithms \cite{gendreau_handbook_2010, wang_application_2014} or hybrids of these two joined together.
 Furthermore, if there is enough time left, it is also possible to include the new algorithms into already implemented ones to improve those.
 
 When the best algorithms for this application have been determined, they will be integrated into the already existing Tour4Me application. The aim is for the app to calculate a high-quality tour for any typical roundtrip requests for running and cycling.

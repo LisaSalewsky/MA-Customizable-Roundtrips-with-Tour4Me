@@ -3,7 +3,7 @@
 \label{chapter:relatedWork}
 
 
-Much research has been done for shortest path algorithms and their optimization, however, for the - more complicated \cite{gemsaEfficientComputationJogging2013} - problem of finding a round trip with additional conditions, not much work has been done yet.
+Much research has been done for shortest path algorithms and their optimization, however, for the - more complicated \cite{gemsa_efficient_2013} - problem of finding a round trip with additional conditions, not much work has been done yet.
 While there are a few tools that can be used to calculate round trips, most of them only focus on cycling or create a very limited set of trips that do not satisfy the needs of most people, or both. 
 Some examples for these tools are RouteLoops \footnote{https://www.routeloops.com/} and RouteYou \footnote{https://www.routeyou.com} which both do not allow for much customization of preferences. 
 
@@ -16,7 +16,7 @@ All gathered information are collected from exploring the functionality of the t
 \section{Tour4Me}
 \label{sec:Tour4Me}
 
-The tool which this thesis will be based off, Tour4Me\footnote{http://tour4me.cs.tu-dortmund.de/} \cite{buchinTour4MeFrameworkCustomized2022a}, incorporates many of these points in its web interface. 
+The tool which this thesis will be based off, Tour4Me\footnote{http://tour4me.cs.tu-dortmund.de/} \cite{buchin_tour4me_2022}, incorporates many of these points in its web interface. 
 It is possible to choose the preferred ground type as well as make selections about preferred route types.
 Furthermore, the user can also mark certain types as unpreferrable (rather than just keeping them neutral or preferring them).
 This allows for much more customization.
@@ -33,18 +33,18 @@ To achieve an optimal solution, two factors are taken into consideration.
 First is the total profit, that can be collected within the given length restriction for the tour.
 Second is an additional quality function that assures for a relatively round tour by maximizing the area that is surrounded by the created roundtrip.
 Tour4Me presents a selection of four different algorithms to calculate the tour as well as some additional customization options.
-The offered choices include a Greedy Selection approach, Integer Linear Programming, MinCost with Waypoints, a shortest paths variant, and Iterative Local Search \cite{buchinTour4MeFrameworkCustomized2022a}. 
+The offered choices include a Greedy Selection approach, Integer Linear Programming, MinCost with Waypoints, a shortest paths variant, and Iterative Local Search \cite{buchin_tour4me_2022}. 
 
 The Greedy Selection is the simplest algorithm which only ensures that the chosen route is a roundtrip.
 It builds it's path by iterating over the valid edges and picking the most profitable of these until the cycle is finished or no candidate is left.
-A valid edge is determined by checking whether the start- and endpoint s can still be reached if that edge is picked next \cite{buchinTour4MeFrameworkCustomized2022a}.
+A valid edge is determined by checking whether the start- and endpoint s can still be reached if that edge is picked next \cite{buchin_tour4me_2022}.
 
 
 For Integer Linear Programming, the touring problem must be stated in an appropriate form.
 To do so, a single instance can be encoded as $\mathcal{I}(G, w, \pi, B, v_0)$, containing the Graph $G$, edge costs $w$, the profit function $\pi$, the budget (length restrictions) $B$ and the starting (and end-) point $v_0$.
 Given this encoding, cycles $P=(v_0,...,v_i,...,v_0)$, which are always at most of length L, can be built.
 For the current definition, a few additional variables an be introduced to encode whether or not an edge is part of a solution (and how many times it occurs), whether or not an edge is the k-th edge of the solution and whether or not a vertex is the k-th vertex of a solution. 
-Using these, constraints can be built to describe the desired behavior of the algorithm \cite{buchinTour4MeFrameworkCustomized2022a}.
+Using these, constraints can be built to describe the desired behavior of the algorithm \cite{buchin_tour4me_2022}.
 
 The MinCost algorithm needs the waypoints because it is typically meant to solve shortest path problems. 
 Thus it would always choose not leaving the starting position without the added points. 
@@ -55,7 +55,7 @@ Using this inefficiency, a ring of candidate points $R_s$ surrounding the start-
 All points that are part of this ring have a shortest path distance of at most $\pi$.
 From these, new rings $R_r$ with the same requirements can be calculated. 
 The solution path is then obtained through intersecting the sets of all circles and selecting all those that intersect with $R_s$.
-To ensure the highest profit tour is returned, all possible combinations are calculated and the optimum is returned\cite{buchinTour4MeFrameworkCustomized2022a}.
+To ensure the highest profit tour is returned, all possible combinations are calculated and the optimum is returned\cite{buchin_tour4me_2022}.
 
 Building from this solution, the Iterative Local Search can be applied to improve the found tours.
 From the returned roundtrip, the algorithm removes partial paths $P$ from the current best solution $S$ and tries to iteratively add new parts that improve the solution profit while always staying within the given budget ($B-w(\frac{S}{P})$).
@@ -64,7 +64,7 @@ To keep track of the added length and profit, two variables ($l$ and $p$ respect
 These start with an initial value of one and are raised by a single increment for each iteration.
 $p$ is reset when the starting point is reached by the removal step.
 $l$ is reset when the maximum length for the solution is reached.
-The best solution is improved constantly until the user selected time limit is reached \cite{buchinTour4MeFrameworkCustomized2022a}.
+The best solution is improved constantly until the user selected time limit is reached \cite{buchin_tour4me_2022}.
 
 \#TODO add more citations --> see Tour4Me paper
 
@@ -101,12 +101,12 @@ Furthermore, it is not possible to specify directly what type of underground or 
 
 The problem of calculating good running roundtrips is not new.
 In addition to the commercial applications, there also are research papers on this subject.
-One of these papers is "Efficient Computation of Jogging Routes" \cite{gemsaEfficientComputationJogging2013}, presents two ideas to handle the new routing problem which the authors labeled "Jogging Problem".
+One of these papers is "Efficient Computation of Jogging Routes" \cite{gemsa_efficient_2013}, presents two ideas to handle the new routing problem which the authors labeled "Jogging Problem".
 It is split up into two variants: 
 One being the simple version, that only aims to build a cycle that contains the starting point s and has the desired length.
 The other is a more complex version, that allows for some flexibility regarding the length of the final tour during optimization. 
 Hence, it is named "Relaxed Jogging Problem". 
-This relaxation allows to take more factors into account to also optimize for the resulting shape, the area surrounding the tour and/or the simplicity of the path \cite{gemsaEfficientComputationJogging2013}. 
+This relaxation allows to take more factors into account to also optimize for the resulting shape, the area surrounding the tour and/or the simplicity of the path \cite{gemsa_efficient_2013}. 
 
 The second problem is chosen as the one to optimize, since it enables the addition of other conditions than just the length of a tour.
 For this, two different ideas are proposed.
@@ -115,7 +115,7 @@ It starts with a cycle containing the starting point s that can be selected by t
 This roundtrip then can be extended to gradually approach the user specified length. 
 The second algorithm was named "Partial Shortest Paths" and uses via-vertices.
 These are a number of new points that can be connected with shortest paths.
-When the via-vertices are connected with each other and the start, they form a roundtrip \cite{gemsaEfficientComputationJogging2013}.
+When the via-vertices are connected with each other and the start, they form a roundtrip \cite{gemsa_efficient_2013}.
 
 \#TODO maybe stop the description here already
 
@@ -123,7 +123,7 @@ When the via-vertices are connected with each other and the start, they form a r
 For both algorithms, the authors measure the badness of paths, the number of edges that are shared as well as the number of turns.
 The badness is used to take the additional constraints into account. 
 To reduce the possibility of having a roundtrip which turns at the end and uses all paths twice, the shared edges have to be minimized.
-The number of turns corresponds to the complexity of the tour and is measured by a percentage of a full u-turn \cite{gemsaEfficientComputationJogging2013}. 
+The number of turns corresponds to the complexity of the tour and is measured by a percentage of a full u-turn \cite{gemsa_efficient_2013}. 
 
 \#TODO how often do I need to reference the paper?
 
@@ -185,7 +185,10 @@ The authors show NP hardness by reduction of Hamiltonian Cycle to the optimizati
 
 
 
+\section{Running apps}
+\label{sec:runningApps}
 
+\# TODO write about other sources e.g. \cite{loepp_recommending_nodate}
 
 
 

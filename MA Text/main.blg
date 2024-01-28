@@ -23,46 +23,99 @@ Reallocating 'name_of_file' (item size: 1) to 25 items.
 Reallocating 'name_of_file' (item size: 1) to 23 items.
 A level-1 auxiliary file: kapitel/erklaerung.aux
 Database file #1: literatur/LS11Buchin.bib
-Warning--I didn't find a database entry for ""
-You've used 31 entries,
+Warning--entry type for "gendreau_handbook_2010" isn't style-file defined
+--line 2 of file literatur/LS11Buchin.bib
+Warning--entry type for "ropke_heuristic_2005" isn't style-file defined
+--line 952 of file literatur/LS11Buchin.bib
+Warning--I didn't find a database entry for "bastRoutePlanningTransportation2016"
+Warning--I didn't find a database entry for "dellingRoundBasedPublicTransit2015"
+Warning--I didn't find a database entry for "dellingTimeDependentSHARCRouting2011"
+Warning--I didn't find a database entry for "dellingCustomizableRoutePlanning2017"
+Warning--I didn't find a database entry for "gendreauHandbookMetaheuristics2010"
+Warning--I didn't find a database entry for "wangApplicationAntColony2014"
+Warning--I didn't find a database entry for "laporteClassicalHeuristicsCapacitated2002a"
+Warning--to sort, need author or key in gendreau_handbook_2010
+Warning--empty year in babaoglu_anthill_2002
+Warning--empty journal in biddle_psychological_1993
+Warning--empty year in biddle_psychological_1993
+Warning--empty journal in blondiau_economic_2016
+Warning--empty year in blondiau_economic_2016
+Warning--empty journal in braysy_vehicle_2005
+Warning--empty year in braysy_vehicle_2005
+Warning--empty year in buchin_tour4me_2022
+Warning--empty journal in cekin_psychological_2015
+Warning--empty year in cekin_psychological_2015
+Warning--empty journal in cherkassky_shortest_1996
+Warning--empty year in cherkassky_shortest_1996
+Warning--empty year in delling_engineering_2009
+Warning--empty journal in dorigo_ant_1996
+Warning--empty year in dorigo_ant_1996
+Warning--empty year in gemsa_efficient_2013
+Warning--empty journal in irnich_sequential_2006
+Warning--empty year in irnich_sequential_2006
+Warning--empty journal in lawler_branch-and-bound_1966
+Warning--empty year in lawler_branch-and-bound_1966
+Warning--empty journal in loepp_recommending_nodate
+Warning--empty year in loepp_recommending_nodate
+Warning--empty year in mueller_jogging_2007
+Warning--empty journal in nystoriak_cardiovascular_2018
+Warning--empty year in nystoriak_cardiovascular_2018
+Warning--empty year in obrien_jogging_2007
+Warning--empty journal in oja_health_2011
+Warning--empty year in oja_health_2011
+Warning--empty year in reinelt_traveling_2003
+Warning--empty journal in ruegsegger_health_2018
+Warning--empty year in ruegsegger_health_2018
+Warning--empty journal in sommer_shortest-path_2014
+Warning--empty year in sommer_shortest-path_2014
+Warning--empty journal in szabo_psychological_2013
+Warning--empty year in szabo_psychological_2013
+Warning--empty journal in vina_exercise_2012
+Warning--empty year in vina_exercise_2012
+Warning--empty year in wang_application_2014
+Warning--empty journal in wankel_psychological_1990
+Warning--empty year in wankel_psychological_1990
+Warning--empty journal in wayahdi_greedy_2021
+Warning--empty year in wayahdi_greedy_2021
+You've used 28 entries,
             2343 wiz_defined-function locations,
-            796 strings with 12890 characters,
-and the built_in function-call counts, 13164 in all, are:
-= -- 1379
-> -- 558
-< -- 10
-+ -- 219
-- -- 184
-* -- 1149
-:= -- 1998
-add.period$ -- 70
-call.type$ -- 31
-change.case$ -- 150
+            725 strings with 10566 characters,
+and the built_in function-call counts, 11464 in all, are:
+= -- 1168
+> -- 464
+< -- 7
++ -- 184
+- -- 152
+* -- 1002
+:= -- 1693
+add.period$ -- 76
+call.type$ -- 28
+change.case$ -- 129
 chr.to.int$ -- 0
-cite$ -- 31
-duplicate$ -- 547
-empty$ -- 1042
-format.name$ -- 184
-if$ -- 2923
+cite$ -- 71
+duplicate$ -- 466
+empty$ -- 928
+format.name$ -- 152
+if$ -- 2522
 int.to.chr$ -- 0
-int.to.str$ -- 31
-missing$ -- 49
-newline$ -- 126
-num.names$ -- 69
-pop$ -- 163
+int.to.str$ -- 28
+missing$ -- 43
+newline$ -- 128
+num.names$ -- 58
+pop$ -- 205
 preamble$ -- 1
-purify$ -- 150
+purify$ -- 129
 quote$ -- 0
-skip$ -- 430
+skip$ -- 366
 stack$ -- 0
-substring$ -- 838
-swap$ -- 213
-text.length$ -- 10
+substring$ -- 717
+swap$ -- 182
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 118
-warning$ -- 0
-while$ -- 126
-width$ -- 33
-write$ -- 332
-(There was 1 warning)
+type$ -- 110
+warning$ -- 43
+while$ -- 107
+width$ -- 30
+write$ -- 268
+(There were 52 warnings)
