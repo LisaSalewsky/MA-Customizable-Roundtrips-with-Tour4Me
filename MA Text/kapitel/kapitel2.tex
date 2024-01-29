@@ -74,27 +74,160 @@ Some of these meta-heuristic ideas that will be used in this thesis will be expl
 \subsection{Ant Colony}
 \label{subsec:antColonyBackground}
 
-Ant Colony is a meta-heuristic approach that is based on swarm intelligence \# TODO references. 
-It's name comes from the underlying principle which uses the same idea as biological ants, ant colonies and how they search food.
+Ant Colony is a meta-heuristic approach that is based on biological ants, ant colonies and how they search food.
 Real ants start off by walking around on random paths starting from their nest. 
 When they discover a food source, they pick up the food and walk back to their nest.
 On this way, they distribute a substance called pheromones.
 These can then be detected by other ants and indicate to them, that a path leads to a potentially good food source. 
 Other ants then are more likely to follow a path with more pheromone placed on it and will in turn lay down their pheromone as well, leading to an accumulation of these on good paths.
-Over time, the pheromones dissipate and when they aren't renewed, will evaporate completely, decreasing the attractiveness of the corresponding path \cite{dorigo_ant_1996}. 
+Over time, the pheromones dissipate and when they aren't renewed, will evaporate completely, decreasing the attractiveness of the corresponding path \cite{dorigo_ant_1996, gendreau_handbook_2010}. 
 
 Furthermore, pheromone distribution also inherently leads to using shorter paths. 
-When several ants have to choose between paths, they will first choose at random.
+When several ants have to choose between paths, they will first select at random.
 However, as soon as one ant discovers the food, turns around and distributes its pheromone on the way back, it increases the likelihood of it's path being taken.
 Here, the shorter paths will be first to receive more pheromones as the ants returning will be quicker.
-Due to the quicker accumulation, more ants will choose this shorter path and thus place even more pheromone on it, leading to a self-reinforcing loop that converges when all ants choose the best path only.
-Then, all worse paths will loose all their pheromone over time and leave the best result as the only remaining path \cite{dorigo_ant_1996}.
+Due to the faster accumulation, more ants will choose this shorter path and thus place even more pheromone on it, leading to a self-reinforcing loop that converges when all ants choose the best path only.
+Then, all worse paths will loose all their pheromone over time and leave the best result as the only remaining path \cite{dorigo_ant_1996, gendreau_handbook_2010}.
+
+To illustrate pheromone distribution, an example illustrates in figure \ref{fig:antSystemExampleIllustration} how real ants find food and establish the best path towards the source. 
+In part a on the left side, there are many ants that fun between two points A and E. 
+These could be the nest and an interesting food source.
+In part b in the middle, an obstacle has been added.
+This now leaves the ants with a choice, which path to follow. 
+In the beginning, the likelihood of picking either path will be around 50\%.
+While taking the path, the ants distribute pheromones on it. 
+On the shorter route, the ants will end up reaching the food source earlier, thus returning quicker than the ones who took the long path and distribute more pheromone on the shorter path.
+For the first few ants, there will be almost no change in the attractiveness of either path.
+However, the more ants take the short tour and return quicker, the more pheromone will accumulate on that path.
+This leads to a shift in the attractiveness, making the shorter path more likely to be chosen by later ants.
+These ants will in turn again increase the amount of pheromones placed, making the path even more attractive.
+So, the ants create a self-reinforcing loop of positive feedback through their pheromones which eventually leads to a state where all ants always choose the shorter option.
+
+
+\begin{figure}[H]
+	\begin{centering}
+		\includegraphics[width=0.8\textwidth]{bilder/antSystemExampleIllustration.png}
+		\caption{This figure shows an example of pheromone distribution with real ants. Taken from \textit{Ant System: An Optimization by a Colony of Cooperating Ants}\cite{dorigo_ant_1996}}
+		\label{fig:antSystemExampleIllustration}
+	\end{centering}
+\end{figure}
+
 
 This behavior can be replicated in virtual graphs for various routing problems.
-Ant system has been first introduced in 1990 by \# TODO find author.
-In his thesis, he describes how to use ants for solving the traveling salesman problem (TSP).
-This is different from the problem of finding a roundtrip with a certain length.
-However, in the paper, the author stresses the adaptability of ant system approaches \cite{dorigo_ant_1996}.
+Ant system has been first introduced in 1990 by Dorigo et al\cite{dorigo_ant_1996}.
+In the paper, the authors describe how to use ants for solving the traveling salesman problem (TSP).
+This is different from the question of finding a roundtrip with a certain length (plus additional user preferences).
+However, in the paper, they stress the adaptability of ant system approaches, showing both versatility and robustness on different example problems\cite{dorigo_ant_1996}.
+
+
+\subsection{Calculations}
+
+To transform the analogy of real ants into an algorithm, some formulas and calculations are needed.
+Ants are very simple agents. 
+They can only do two things:
+Pick the next node to move to and place pheromone on a path.
+They communicate with other ant agents through the pheromone trails, making it a decentralized way of communication without the need for a central agent.
+For the algorithm, a set amount of $m$ ants moves through the graph, tries to find a good tour and places pheromones on edges.
+Every ant has a defined amount of pheromone to place. 
+How much of it will be laid on a path can be calculated in several different ways. 
+Dorigo et al propose the following three ideas\cite{dorigo_ant_1996}:
+
+\begin{equation}\label{eq:antCycle}
+	\Delta\tau_{ij}^k = \begin{cases}
+			\frac{Q}{L_k} &\text{if (i,j) $\in$ tour described by $tabu_k(1)$} \\
+			0 &\text{otherwise}
+	\end{cases}	
+\end{equation}
+
+
+\begin{equation}\label{eq:antDensity}
+	\Delta\tau_{ij}^k = \begin{cases}
+	Q &\text{if the kth ant goes from i to j between time} \\
+	&\text{t to t+1} \\
+	0 &\text{otherwise}
+\end{cases}	
+\end{equation}
+
+
+\begin{equation}\label{eq:antQuantity}
+	\Delta\tau_{ij}^k = \begin{cases}
+	\frac{Q}{d_{ij}} &\text{if the kth ant goes from i to j between time} \\
+		&\text{to t+1} \\\
+	0 &\text{otherwise}
+\end{cases}	
+\end{equation}
+
+Here, equation \ref{eq:antCycle} is the default the authors used for solving the TSP.
+Q is a constant that has to be picked according to the problem in question.
+$L_k$ describes the length of the whole tour.
+This property makes sense for the TSP setting, but is relatively useless for the case of tours with a fixed length, as it will be the same value for every ant and every run made.
+In this case, where the user defines the length of the tour, $L_k$ will only scale the values picked for Q\cite{dorigo_ant_1996}.
+
+Equation \ref{eq:antDensity} only uses the constant Q to describe pheromone placement. 
+Here, neither the full tour length nor individual edge costs are taken into account. 
+Pheromone is placed evenly on all edges.
+This equates to a not-scaled version of equation \ref{eq:antCycle} with the given use-case of a set length for the tour\cite{dorigo_ant_1996}.
+
+The last equation \ref{eq:antQuantity} divides the constant by the length - or the cost - of each edge when it is used. 
+Doing this reduces the amount of pheromone placed on longer edges proportionally to shorter edges. 
+While this equation is not influenced directly by the fixed length, this property can still cause the equation to be less useful for tours with a specified length than for TSP.
+Since tours that are meant to cover a fixed distance are different from the TSP, where a shortest path that visits all selected cities is to be found, the last equation seems like the least promising candidate for useful pheromone distribution\cite{dorigo_ant_1996}.
+
+It is possible to define other ways to calculate the pheromone placement. 
+Which option turns out to be the best fitting one will be described in the evaluation chapter \ref{chapter:evaluation}.
+
+
+Using a suitable formula to calculate the pheromone distribution, this value can then be used to calculate the overall distributed pheromone for each edge $(i,j)$ that was placed by all ants during one iteration.
+This value is described by $\Delta\tau_{ij}$ as follows\cite{dorigo_ant_1996}:
+
+\begin{equation}\label{eq:deltaTau}
+	\Delta\tau_{ij} = \sum_{k=1}^{m} \Delta\tau_{ij}^k 
+\end{equation}
+
+This overall value can then be used to calculate the so called "insensity" of the placed pheromone trail.
+Since pheromones evaporate over time, this property has to be modeled as well. 
+To do this, a new parameter $\rho$ needs to be introduced. It describes how much of the pheromone stays on the trail between two time steps.
+So, the overall pheromone intensity can be described by
+
+
+\begin{equation}\label{eq:trailIntensity}
+	\tau_{ij}(t+n) = \rho \cdot \tau_{ij}(t)+\Delta\tau_{ij}^k 
+\end{equation}
+
+where $\tau_{ij}(t)$ is the previous pheromone intensity and t+n describes the next time step after one full tour was created in n steps\cite{dorigo_ant_1996}.
+
+Using these calculations, the pheromone intensity on all paths can be represented. 
+What's left is determining the probability with which ants will choose a certain edge over the other options.
+To do this, two more properties are needed: the visibility of an edge and a tabu-list (or rather a list of allowed nodes).
+The tabu-list contains all nodes that have been visited before.
+Since roundtrips should - per default - be round rather than the same path run in two directions, this property is needed to ensure no city is visited more than once.
+In chapter \ref{chapter:evaluation}, different configurations are tested to represent different shapes and allow for more options users can define. 
+Thus, for other shapes, this list is not needed.
+The visibility $\nu_{ij}^k$ is calculated using the length of the edge $d_{ij}$ as follows:
+
+\begin{equation}\label{eq:visibility}
+	\nu_{ij}^k = \frac{1}{d_{ij}}
+\end{equation}
+
+And the transition probability is given by
+
+\begin{equation}\label{eq:transitionProbability}
+	p_{ij}^k = \begin{cases}
+		\frac{[\tau_{ij}(t)]^{\alpha} \cdot [\nu_{ij}]^{\beta}}{\sum_{k \in allowed_k} [\tau_{ij}(t)]^{\alpha} \cdot [\nu_{ij}]^{\beta}} &\text{if $j \in allowed_k$ }\\
+		0 &\text{otherwise}
+	\end{cases}
+\end{equation}
+
+using all previously defined values to calculate visibility $\nu_{ij}^k$, trail intensity $\tau_{ij}$, pheromone distribution $\Delta\tau_{ij}$ and $\Delta\tau_{ij}^k$.
+Here, $\alpha$ and $\beta$ are parameters that influence the weight of visibility and trail intensity.
+Higher values of $\alpha$ increase the significance of the pheromones on the trail (setting $\alpha$ to 0 would lead to completely ignoring the pheromone placed) and higher values of $\beta$ increase the importance of the visibility of an edge (making longer edges less attractive as a result)\cite{dorigo_ant_1996}.
+These parameters will be experimented with and their influence will be evaluated in chapter \ref{chapter:evaluation}.
+
+In their paper, Dorigo et al suggest middling values for $\alpha$ and $\beta$ in a range of $[0.5,5]$.
+They furthermore stated that the best tour was achieved using $\rho = 0.5$ and $Q=100$.
+Overall, the results of experimenting with different parameter configurations showed that for very high or very low values of $\alpha$, no good results could be generated \cite{dorigo_ant_1996}.
+
+
 
 \# TODO add fomulas and desription how they help constructing paths
 \# TODO add how to use for my work
