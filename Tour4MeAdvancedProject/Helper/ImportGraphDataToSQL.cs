@@ -24,7 +24,7 @@ namespace Tour4MeAdvancedProject.Helper
         private static double centerLat = 0;
         private static double centerLon = 0;
         private static List<Node> VNodes;
-        private static List<Edge> VEdges;
+        private static readonly List<Edge> VEdges;
 
 
         public static void ReadDataFile ()
@@ -159,13 +159,6 @@ namespace Tour4MeAdvancedProject.Helper
 
                     _ = command.ExecuteNonQuery();
                 }
-                query = $"INSERT INTO GIdNode (GraphId, MaxLatLon, MinLatLon, CenterLatLon) VALUES ('{id}', @geography)";
-                using (SqlCommand command = new SqlCommand( query, connection ))
-                {
-                    _ = command.Parameters.Add( new SqlParameter( "@geography", System.Data.SqlDbType.Udt ) { UdtTypeName = "geography", Value = geography } );
-
-                    _ = command.ExecuteNonQuery();
-                }
             }
             finally
             {
@@ -294,16 +287,16 @@ namespace Tour4MeAdvancedProject.Helper
             {
                 connection.Close();
 
-                Edge edge = new Edge( edgeId, source, target, eCost );
+                //Edge edge = new Edge( edgeId, source, target, eCost );
 
-                VNodes[ edge.SourceNode.GraphNodeId ].Incident.Add( edge );
-                VNodes[ edge.TargetNode.GraphNodeId ].Incident.Add( edge );
+                //VNodes[ edge.SourceNode.GraphNodeId ].Incident.Add( edge );
+                //VNodes[ edge.TargetNode.GraphNodeId ].Incident.Add( edge );
 
-                if (VEdges == null)
-                {
-                    VEdges = new List<Edge>();
-                }
-                VEdges.Add( edge );
+                //if (VEdges == null)
+                //{
+                //    VEdges = new List<Edge>();
+                //}
+                //VEdges.Add( edge );
             }
         }
 

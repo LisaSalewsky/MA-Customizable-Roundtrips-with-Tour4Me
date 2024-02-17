@@ -72,10 +72,10 @@ namespace Tour4MeAdvancedProject.Solver
 
                         foreach (Edge v in pathSA.Edges)
                         {
-                            if (visited[ v.Id ] != visitedIndex)
+                            if (visited[ v.GraphId ] != visitedIndex)
                             {
                                 profit += v.Cost * v.Profit;
-                                visited[ v.Id ] = visitedIndex;
+                                visited[ v.GraphId ] = visitedIndex;
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
 
@@ -86,10 +86,10 @@ namespace Tour4MeAdvancedProject.Solver
 
                         foreach (Edge v in tPair.Item2.Edges)
                         {
-                            if (visited[ v.Id ] != visitedIndex)
+                            if (visited[ v.GraphId ] != visitedIndex)
                             {
                                 profit += v.Cost * v.Profit;
-                                visited[ v.Id ] = visitedIndex;
+                                visited[ v.GraphId ] = visitedIndex;
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
                             Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
@@ -102,10 +102,10 @@ namespace Tour4MeAdvancedProject.Solver
                         {
                             Edge v = pathSB.Edges[ i ];
 
-                            if (visited[ v.Id ] != visitedIndex)
+                            if (visited[ v.GraphId ] != visitedIndex)
                             {
                                 profit += v.Cost * v.Profit;
-                                visited[ v.Id ] = visitedIndex;
+                                visited[ v.GraphId ] = visitedIndex;
                             }
                             area += v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
                             Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );

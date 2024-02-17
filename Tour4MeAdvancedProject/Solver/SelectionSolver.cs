@@ -40,7 +40,7 @@ namespace Tour4MeAdvancedProject.Solver
                         continue;
                     }
 
-                    double prof = !visited[ e.Id ] ? e.Profit * e.Cost : -dis;
+                    double prof = !visited[ e.GraphId ] ? e.Profit * e.Cost : -dis;
 
                     if (prof > bestProfit)
                     {
@@ -55,7 +55,7 @@ namespace Tour4MeAdvancedProject.Solver
                 if (validCandidates)
                 {
                     P.Path.Add( bestEdge, bestNeigh, bestProfit, length );
-                    visited[ bestEdge.Id ] = true;
+                    visited[ bestEdge.GraphId ] = true;
                     length += bestEdge.Cost;
                     current = bestNeigh;
                 }

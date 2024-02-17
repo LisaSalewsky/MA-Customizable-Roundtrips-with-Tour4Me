@@ -4,7 +4,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 {
     public class Path
     {
-        private readonly int Id;
         public List<Edge> Edges { get; }
         public List<int> Visited { get; set; }
         public double Quality { get; set; }

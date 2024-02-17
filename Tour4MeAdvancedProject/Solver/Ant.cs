@@ -22,6 +22,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             //Solution = new List<Node>();
             SolutionEdges = new List<Edge>();
             PheromoneAmount = pheromoneAmount;
+            Random = new Random();
         }
 
         public Ant ( int pheromoneAmount, double alpha, double beta )
@@ -31,6 +32,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             PheromoneAmount = pheromoneAmount;
             Alpha = alpha;
             Beta = beta;
+            Random = new Random();
         }
 
 
@@ -40,6 +42,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// </summary>
         /// <param name="CurrentProblem">
         /// The problem instance containing the graph and necessary parameters for the tour.
+        /// </param>
+        /// <param name="usePenalty">
+        /// determines whether the ants should find out that closing the tour is better (usePenalty = true)
+        /// or we always enforce closing the tour (usePenalty = false).
         /// </param>
         /// <returns>
         /// A list of edges representing the tour taken by the ant. 
@@ -57,14 +63,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// <seealso cref="Edge"/>
         /// <seealso cref="Node"/>
         /// <seealso cref="AntColonyOptimizer"/>
-        public List<Edge> Tour ( Problem CurrentProblem )
+        public List<Edge> Tour ( Problem CurrentProblem, bool usePenalty )
         {
             Graph graph = CurrentProblem.Graph;
             int start = CurrentProblem.Start;
             List<Node> vNodes = graph.VNodes;
             Tuple<int, Edge>[] parent = new Tuple<int, Edge>[ vNodes.Count ];
 
-            List<Node> visitableNodes = graph.VNodes;
+            List<Node> visitableNodes = new List<Node>( graph.VNodes );
 
             //double[] dist = new double[vNodes.Count];
             //dist[start] = 0.0;
@@ -76,14 +82,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             //queue.Enqueue(0.0, new Tuple<int, double>(start, 0.0));
             List<int> queue = new List<int>() { start };
             List<int> visited = new List<int>();
-
-            Dictionary<Edge, float> edgeProbabilities = new Dictionary<Edge, float>();
+            Edge pickedEdge = null;
 
             double currentDistance = 0;
 
             // TODO: ensure we close our tour not going over the max length!
             while (queue.Count > 0)
             {
+                Dictionary<Edge, float> edgeProbabilities = new Dictionary<Edge, float>();
                 //(double currentDist, (int currentNode, double currentActual)) = queue.Dequeue();
                 int currentNode = queue.First();
                 _ = queue.Remove( currentNode );
@@ -93,9 +99,40 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 //    continue;
                 //}
                 // only look into edges where the opposite of currentNode wasn't visited yet
+                // one of the nodes has to be in visited (the one we are working from now)
+                // the other one may not be in visited
+                // so check, if either of the nodes is not yet in visited
                 List<Edge> allowed = vNodes[ currentNode ].Incident.FindAll( x =>
-                ( x.SourceNode.GraphNodeId == currentNode && !visited.Contains( x.TargetNode.GraphNodeId ) ) ||
-                ( x.TargetNode.GraphNodeId == currentNode && !visited.Contains( x.SourceNode.GraphNodeId ) ) );
+                 !visited.Contains( x.TargetNode.GraphNodeId ) || !visited.Contains( x.SourceNode.GraphNodeId ) );
+
+                // if we can't find a next node from the one we picked, 
+                if (allowed.Count == 0 && currentDistance < CurrentProblem.TargetDistance)
+                {
+                    if (usePenalty)
+                    {
+                        // scale trial intensity on edges accordingly for all edges where a node is visited twice
+                        double penaltyQuotient = 50;
+                        List<Edge> applyPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
+                        visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
+
+                        foreach (Edge edge in applyPenalty)
+                        {
+                            edge.TrailIntensity /= penaltyQuotient;
+                        }
+                        allowed = applyPenalty;
+                    }
+                    else
+                    {
+                        allowed = allowDoubleVisits( vNodes, currentNode );
+                        //if (pickedEdge != null)
+                        //{
+                        //    BackTrackToUsableSolution( pickedEdge, visited, visitableNodes, currentNode, out visited, out visitableNodes, out currentNode );
+                        //    queue.Add( currentNode );
+                        //    break;
+                        //}
+
+                    }
+                }
 
                 // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
                 float sumOfAllowed = 0;
@@ -111,15 +148,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 {
                     int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
 
-                    // TODO @Mart: does this actually provide a path of maximum target distance length?
-                    if (graph.ShortestPath( start, neighborId ) > CurrentProblem.TargetDistance - currentDistance - edge.Cost)
+
+                    if (!usePenalty && graph.ShortestPath( start, neighborId ) > CurrentProblem.TargetDistance - currentDistance - edge.Cost)
                     {
                         continue;
                     }
 
-                    currentDistance += edge.Cost;
 
-                    double edgeValue = edge.Cost * edge.TrailIntensity;
+                    //double edgeValue = edge.Cost * edge.TrailIntensity;
                     double edgeVisibility = 1 / edge.Cost;
 
                     // p_{ij}^k (used for choosing town to move to)
@@ -135,7 +171,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 // pick an edge according to edgeProbabilities and calculated probability
                 KeyValuePair<Edge, float> pickedPair = ChooseEdge( edgeProbabilities, probability );
-                Edge pickedEdge = pickedPair.Key;
+                pickedEdge = pickedPair.Key;
                 float pickedProbability = pickedPair.Value;
 
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
@@ -144,6 +180,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     // now choose next node based on probability
                     Node neighbor = pickedEdge.SourceNode.GraphNodeId == currentNode ? pickedEdge.TargetNode : pickedEdge.SourceNode;
                     int neighborId = neighbor.GraphNodeId;
+                    currentDistance += pickedEdge.Cost;
 
                     queue.Add( neighborId );
                     // once a node was visited, it cannot be visited again in this tour by the same ant
@@ -155,11 +192,42 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
                 else
                 {
-                    return null;
+                    return currentDistance < CurrentProblem.TargetDistance - 100 ? null : SolutionEdges;
                 }
             }
 
             return SolutionEdges;
+        }
+
+        private void BackTrackToUsableSolution ( Edge pickedEdge, List<int> visited, List<Node> visitableNodes, int currentNode, out List<int> fixedVisited, out List<Node> fixedVisitable, out int fixedCurrentNode )
+        {
+            fixedCurrentNode = -1;
+            fixedVisitable = null;
+            fixedVisited = null;
+            if (pickedEdge != null)
+            {
+                Node neighbor = pickedEdge.SourceNode.GraphNodeId == currentNode ? pickedEdge.TargetNode : pickedEdge.SourceNode;
+                int neighborId = neighbor.GraphNodeId;
+
+                // undo the changes made due to picking this edge
+                _ = visited.Remove( neighborId );
+                fixedVisited = visited;
+                visitableNodes.Add( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
+                fixedVisitable = visitableNodes;
+                _ = SolutionEdges.Remove( pickedEdge );
+
+                // make edge impossible to pick again
+                // setting trailIntensity to 0 makes the probability of this edge being picked 0
+                pickedEdge.TrailIntensity = 0;
+
+                Node current = pickedEdge.SourceNode.GraphNodeId == neighborId ? pickedEdge.TargetNode : pickedEdge.SourceNode;
+                fixedCurrentNode = current.GraphNodeId;
+            }
+        }
+
+        private List<Edge> allowDoubleVisits ( List<Node> vNodes, int currentNode )
+        {
+            return vNodes[ currentNode ].Incident;
         }
 
         /// <summary>
@@ -167,9 +235,24 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// newly placed pheromones.
         /// </summary>
         /// <param name="graph">The graph containing edges with pheromone trails and trail intensities.</param>
-        public void UpdatePheromoneTrail ( Graph graph, List<Edge> visited )
+        /// <param name="visited">contains a list of all edges the ant has visited for its solution.</param>
+        /// <param name="usePenalty">
+        /// determines whether the ants should find out that closing the tour is better (usePenalty = true)
+        /// or we always enforce closing the tour (usePenalty = false).
+        /// </param>
+        public void UpdatePheromoneTrail ( Graph graph, List<Edge> visited, bool usePenalty )
         {
             double evaporationRate = 0.9;
+
+            bool closedTour = visited.First().Equals( visited.Last() );
+            // a penalty of 1 doesn't change the graph
+            // higher penalties reduce the amount of pheromone placed
+            double penaltyQuotient = 1;
+
+            if (usePenalty && !closedTour)
+            {
+                penaltyQuotient = 100;
+            }
 
             foreach (Edge visitedEdge in visited)
             {
@@ -179,7 +262,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // trailIntensity contains the actual pheromone left on the trail
                 // evaporationRate descibes how much of the trail has evaporated during one tour
                 // pheromone contains the newly placed pheromone from the current ants (updated during tour)
-                edge.TrailIntensity = ( edge.TrailIntensity * evaporationRate ) + edge.Pheromone;
+                // scale this by a penalty if the ant didn't close the tour
+                edge.TrailIntensity = ( edge.TrailIntensity * evaporationRate ) + ( edge.Pheromone / penaltyQuotient );
             }
         }
 
@@ -187,9 +271,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// Generates a random choice based on given probabilities (float) and their respective edge id (int).
         /// </summary>
         /// <param name="probabilities">Array of probabilities for each choice.</param>
+        /// <param name="randomNumber"> the random number that was generated.</param>
         /// <returns>The randomly selected choice and its respective edge id.</returns>
         private KeyValuePair<Edge, float> ChooseEdge ( Dictionary<Edge, float> probabilities, float randomNumber )
         {
+            if (probabilities.Count == 1)
+            {
+                return probabilities.First();
+            }
             // start with percentage 0
             float sum = 0;
             // step through all possible neighbor edges

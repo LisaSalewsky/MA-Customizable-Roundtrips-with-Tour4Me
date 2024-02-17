@@ -130,7 +130,8 @@ namespace Tour4MeAdvancedProject
 
                     problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
                     _ = Guid.TryParse( "123E4567-E89B-12D3-A456-426614174001", out Guid guid );
-                    Problem problemTest = new Problem( guid, out string error );
+                    //Problem problemTest = new Problem( guid, out string error );
+                    string error = "";
                     if (error != "")
                     {
                         HttpContext currentContext = HttpContext.Current;
@@ -240,14 +241,15 @@ namespace Tour4MeAdvancedProject
                     }
                 case 2:
                     {
-                        //Jogger jogSolver = new Jogger();
-                        //status = jogSolver.Solve(problem);
-                        //if (status == SolveStatus.Unsolved)
-                        break;
-
                         //ILS solver = new ILS();
                         //status = solver.Solve(problem);
-                        //break;
+                        break;
+                    }
+                case 3:
+                    {
+                        AntSolver solver = new AntSolver();
+                        status = solver.Solve( problem );
+                        break;
                     }
             }
             Console.WriteLine( "end" );

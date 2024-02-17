@@ -60,17 +60,17 @@ namespace Tour4MeAdvancedProject.Solver
                 {
                     // calculate one Tour for the current Ant
                     // save the edges that form the solution path in solutionEdges
-                    List<Edge> solutionEdges = currentAnt.Tour( P );
+                    List<Edge> solutionEdges = currentAnt.Tour( P, true );
 
                     // now update the pheromone trail (trailInensity)
-                    currentAnt.UpdatePheromoneTrail( P.Graph, solutionEdges );
+                    currentAnt.UpdatePheromoneTrail( P.Graph, solutionEdges, true );
                 }
                 // reset all pheromone values set by ants
                 P.Graph.VEdges.ForEach( edge => edge.Pheromone = 0 );
             }
 
 
-            return SolveStatus.Unsolved;
+            return SolveStatus.Feasible;
         }
 
     }

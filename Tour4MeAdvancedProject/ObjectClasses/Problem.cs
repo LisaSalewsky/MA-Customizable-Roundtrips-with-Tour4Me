@@ -44,18 +44,18 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             AvoidTags = new HashSet<string>();
         }
 
-        public Problem ( Guid ProblemId, out string error )
-        {
-            error = "";
-            Id = ProblemId;
-            _ = Guid.TryParse( "123E4567-E89B-12D3-A456-426614174001", out Guid guid );
-            Graph = new Graph( guid, out string graphError );
-            Path = new Path();
-            Metadata = new List<string>();
-            PrefTags = new HashSet<string>();
-            AvoidTags = new HashSet<string>();
-            error += graphError;
-        }
+        //public Problem ( Guid ProblemId, out string error )
+        //{
+        //    error = "";
+        //    Id = ProblemId;
+        //    _ = Guid.TryParse( "123E4567-E89B-12D3-A456-426614174001", out Guid guid );
+        //    Graph = new Graph( guid, out string graphError );
+        //    Path = new Path();
+        //    Metadata = new List<string>();
+        //    PrefTags = new HashSet<string>();
+        //    AvoidTags = new HashSet<string>();
+        //    error += graphError;
+        //}
 
         public void FillShortestPath ( string filename )
         {
@@ -204,7 +204,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                bool reverse = Graph.VNodes[ node ].NodeId < Graph.VNodes[ edge.TargetNode.GraphNodeId ].NodeId;
+                bool reverse = node < edge.TargetNode.GraphNodeId;
                 if (!reverse)
                 {
                     edge.GeoLocations.Reverse();
@@ -250,7 +250,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                bool reverse = Graph.VNodes[ node ].NodeId < Graph.VNodes[ edge.TargetNode.GraphNodeId ].NodeId;
+                bool reverse = node < edge.TargetNode.GraphNodeId;
                 if (!reverse)
                 {
                     edge.GeoLocations.Reverse();
@@ -309,19 +309,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public double GetProfit ( Path path )
         {
-            path.Visited = new List<int>( Graph.VEdges.Count );
-
+            //path.Visited = new List<int>( Graph.VEdges.Count );
+            int[] visited = new int[ Graph.VEdges.Count ];
             double quality = 0.0;
 
             foreach (Edge edge in path.Edges)
             {
-                if (path.Visited[ edge.Id ] == 0)
+                if (visited[ edge.GraphId ] == 0)
                 {
                     quality += edge.Cost * edge.Profit;
-                    path.Visited[ edge.Id ]++;
+                    visited[ edge.GraphId ]++;
                 }
             }
-
+            //path.Visited = visited.ToList();
             return quality;
         }
 

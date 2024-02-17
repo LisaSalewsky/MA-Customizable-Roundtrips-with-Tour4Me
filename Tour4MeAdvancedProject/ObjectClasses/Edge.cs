@@ -9,6 +9,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         //private double preference;
 
         public Guid Id { get; set; }
+        public int GraphId { get; set; }
         public double ShoelaceForward { get; set; }
         public double ShoelaceBackward { get; set; }
         public bool Reversed { get; set; }
@@ -28,10 +29,27 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             GeoLocations = new List<Tuple<double, double>>();
         }
 
-        public Edge ( Node source, Node target, double nodeCost )
+        public Edge ( int edgeGraphId, Node source, Node target, double nodeCost )
         {
-            _ = int.TryParse( source.GraphNodeId.ToString() + target.GraphNodeId.ToString(), out int id );
-            Id = id;
+            byte[] sourceBytes = BitConverter.GetBytes( source.GraphNodeId );
+            byte[] targetBytes = BitConverter.GetBytes( target.GraphNodeId );
+
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse( sourceBytes );
+                Array.Reverse( targetBytes );
+            }
+            byte[] combinedBytes = new byte[ 16 ];
+            Buffer.BlockCopy( sourceBytes, 0, combinedBytes, 0, 4 );
+            Buffer.BlockCopy( targetBytes, 0, combinedBytes, 4, 4 );
+            for (int i = 8; i < 16; i++)
+            {
+                combinedBytes[ i ] = 0;
+            }
+            // Create a GUID from the concatenated byte array
+            Id = new Guid( combinedBytes );
+            GraphId = edgeGraphId;
+
             if (source.GraphNodeId < target.GraphNodeId)
             {
                 SourceNode = source;
@@ -47,7 +65,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Tags = new List<string>();
             GeoLocations = new List<Tuple<double, double>>();
         }
-        public Edge ( Guid id, Node source, Node target, double nodeCost ) : this( source, target, nodeCost )
+        public Edge ( Guid id, int graphId, Node source, Node target, double nodeCost ) : this( graphId, source, target, nodeCost )
         {
             Id = id;
         }
@@ -55,6 +73,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public Edge ( Edge e, bool reversed )
         {
             Id = e.Id;
+            GraphId = e.GraphId;
             SourceNode = e.SourceNode;
             TargetNode = e.TargetNode;
 

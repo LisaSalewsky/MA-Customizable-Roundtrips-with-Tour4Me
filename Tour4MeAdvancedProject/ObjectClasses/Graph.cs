@@ -42,7 +42,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             string connectError = "";
             try
             {
-                connectToDB( out connectError );
+                ConnectToDB( out connectError );
 
                 DBSqlCommand = new SqlCommand( "SELECT * from Graph WHERE Id='" + Id + "';", DBSqlConnection );
                 SqlDataAdapter DBSqldataAdapter = new SqlDataAdapter( DBSqlCommand );
@@ -88,7 +88,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             error += connectError;
         }
 
-        private void connectToDB ( out string error )
+        private void ConnectToDB ( out string error )
         {
             error = "";
             try
@@ -155,7 +155,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     else if (type == 'n')
                     {
                         string t = NextWord( ref str, ' ' );
-                        Guid id = Guid.Parse( NextWord( ref str, ' ' ) );
+                        long intermediate = long.Parse( NextWord( ref str, ' ' ) );
+                        byte[] longBytes = BitConverter.GetBytes( intermediate );
+                        byte[] guidBytes = new byte[ 16 ];
+                        Buffer.BlockCopy( longBytes, 0, guidBytes, 0, longBytes.Length );
+                        Guid id = new Guid( guidBytes );
+
                         double lat = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
                         double lon = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
 
@@ -169,8 +174,16 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     else if (type == 'e')
                     {
                         string t = NextWord( ref str, ' ' );
-                        Guid vId = Guid.Parse( NextWord( ref str, ' ' ) );
-                        Guid wId = Guid.Parse( NextWord( ref str, ' ' ) );
+                        long intermediateV = long.Parse( NextWord( ref str, ' ' ) );
+                        byte[] longBytesV = BitConverter.GetBytes( intermediateV );
+                        byte[] guidBytesV = new byte[ 16 ];
+                        Buffer.BlockCopy( longBytesV, 0, guidBytesV, 0, longBytesV.Length );
+                        Guid vId = new Guid( guidBytesV );
+                        long intermediateW = long.Parse( NextWord( ref str, ' ' ) );
+                        byte[] longBytesW = BitConverter.GetBytes( intermediateW );
+                        byte[] guidBytesW = new byte[ 16 ];
+                        Buffer.BlockCopy( longBytesW, 0, guidBytesW, 0, longBytesW.Length );
+                        Guid wId = new Guid( guidBytesW );
                         double cost = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
 
                         int sId = GIdNode[ vId ];
@@ -184,7 +197,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         }
 
 
-                        Edge edge = AddEdge( new Node( sId, vId, 0, 0 ), new Node( tId, wId, 0, 0 ), cost );
+                        Edge edge = AddEdge( cEdges, new Node( sId, vId, 0, 0 ), new Node( tId, wId, 0, 0 ), cost );
                         //Edge edge = AddEdge(cEdges, sId, tId, cost);
                         cEdges++;
 
@@ -230,14 +243,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
         }
 
-        public Edge AddEdge ( Node s, Node t, double cost )
+        public Edge AddEdge ( int edgeGraphId, Node s, Node t, double cost )
         {
             if (s.GraphNodeId > t.GraphNodeId)
             {
                 (t, s) = (s, t);
             }
 
-            Edge edge = new Edge( s, t, cost );
+            Edge edge = new Edge( edgeGraphId, s, t, cost );
 
             Node l = VNodes[ s.GraphNodeId ];
             Node r = VNodes[ t.GraphNodeId ];
