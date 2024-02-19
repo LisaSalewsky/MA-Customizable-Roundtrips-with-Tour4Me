@@ -2150,6 +2150,8 @@
     <Content Include="img\jogging-4211946-cropped.jpg" />
     <Content Include="img\jogging-4211946.jpg" />
     <Content Include="img\map-logo.png" />
+    <Content Include="imports\get_network.py" />
+    <Content Include="imports\keys.py" />
     <Content Include="input\grid-51.5731-51.2815-7.5305-7.0930.txt" />
     <Content Include="input\grid-51.5731-51.2815-7.5305-7.0930_B.txt" />
     <Content Include="input\grid-dor.txt" />
@@ -2260,6 +2262,7 @@
     <Content Include="fontawesome\webfonts\fa-v4compatibility.woff2" />
     <Content Include="img\map-logo.webp" />
     <Content Include=".editorconfig" />
+    <Content Include="imports\TestImports.ipynb" />
     <None Include="packages.config" />
     <Content Include="site.Master" />
     <None Include="Web.Debug.config">
