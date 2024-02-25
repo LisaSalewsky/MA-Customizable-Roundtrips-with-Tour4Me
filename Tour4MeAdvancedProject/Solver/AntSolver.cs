@@ -11,6 +11,7 @@ namespace Tour4MeAdvancedProject.Solver
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.5;
         public double Beta { get; set; } = 0.5;
+        public bool UsePenalty { get; set; } = true;
 
         public AntSolver () { }
 
@@ -47,28 +48,32 @@ namespace Tour4MeAdvancedProject.Solver
         /// </summary>
         public override SolveStatus Solve ( Problem P )
         {
+            UsePenalty = false;
             int pheromoneAmount = 1;
 
             for (int i = 0; i < NumberAnts; i++)
             {
                 Ants.Add( new Ant( pheromoneAmount ) );
             }
-
+            List<Edge> solutionEdges = new List<Edge>();
+            List<int> visitedNodes = new List<int>();
             for (int i = 0; i <= NumberTours; i++)
             {
                 foreach (Ant currentAnt in Ants)
                 {
                     // calculate one Tour for the current Ant
                     // save the edges that form the solution path in solutionEdges
-                    List<Edge> solutionEdges = currentAnt.Tour( P, true );
+                    (solutionEdges, visitedNodes) = currentAnt.Tour( P, UsePenalty );
 
                     // now update the pheromone trail (trailInensity)
-                    currentAnt.UpdatePheromoneTrail( P.Graph, solutionEdges, true );
+                    currentAnt.UpdatePheromoneTrail( P.Graph, solutionEdges, UsePenalty );
                 }
                 // reset all pheromone values set by ants
                 P.Graph.VEdges.ForEach( edge => edge.Pheromone = 0 );
             }
 
+
+            P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes ) );
 
             return SolveStatus.Feasible;
         }

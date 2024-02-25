@@ -649,7 +649,7 @@
 
                         var line = L.polyline(path, { color: colors[route_counter % colors.length], weight: 5 });
                         line = line.addTo(map);
-
+                        
                         document.getElementById("overlay").style.display = "none";
                         map.fitBounds(line.getBounds());
 

@@ -63,12 +63,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// <seealso cref="Edge"/>
         /// <seealso cref="Node"/>
         /// <seealso cref="AntColonyOptimizer"/>
-        public List<Edge> Tour ( Problem CurrentProblem, bool usePenalty )
+        public (List<Edge>, List<int>) Tour ( Problem CurrentProblem, bool usePenalty )
         {
+            SolutionEdges = new List<Edge>();
             Graph graph = CurrentProblem.Graph;
             int start = CurrentProblem.Start;
             List<Node> vNodes = graph.VNodes;
-            Tuple<int, Edge>[] parent = new Tuple<int, Edge>[ vNodes.Count ];
+            int parent = -1;
 
             List<Node> visitableNodes = new List<Node>( graph.VNodes );
 
@@ -85,6 +86,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Edge pickedEdge = null;
 
             double currentDistance = 0;
+            visited.Add( start );
 
             // TODO: ensure we close our tour not going over the max length!
             while (queue.Count > 0)
@@ -183,6 +185,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     currentDistance += pickedEdge.Cost;
 
                     queue.Add( neighborId );
+                    parent = currentNode;
                     // once a node was visited, it cannot be visited again in this tour by the same ant
                     visited.Add( neighborId );
                     _ = visitableNodes.Remove( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
@@ -192,11 +195,20 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
                 else
                 {
-                    return currentDistance < CurrentProblem.TargetDistance - 100 ? null : SolutionEdges;
+                    // if we need to close the loop since we cannot take any other neighbor:
+                    // close it using the shortest path from the remaining acceptable node
+                    List<Edge> edges = new List<Edge>();
+                    List<int> nodes = new List<int>();
+
+                    (edges, nodes) = graph.GetShortestPath( parent, start );
+
+                    double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );
+
+                    return (SolutionEdges.Concat( edges ).ToList(), visited.Concat( nodes ).ToList());
                 }
             }
 
-            return SolutionEdges;
+            return (SolutionEdges, visited);
         }
 
         private void BackTrackToUsableSolution ( Edge pickedEdge, List<int> visited, List<Node> visitableNodes, int currentNode, out List<int> fixedVisited, out List<Node> fixedVisitable, out int fixedCurrentNode )

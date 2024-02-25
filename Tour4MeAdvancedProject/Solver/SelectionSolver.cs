@@ -17,7 +17,7 @@ namespace Tour4MeAdvancedProject.Solver
             visited.AddRange( new bool[ P.Graph.VEdges.Count ] );
 
             int current = P.Start;
-            P.Path.Add( null, current, 0, 0 );
+            P.Path.Add( null, current, 0 );
 
             //Path endPath = new Path();
             double length = 0;
@@ -54,7 +54,7 @@ namespace Tour4MeAdvancedProject.Solver
 
                 if (validCandidates)
                 {
-                    P.Path.Add( bestEdge, bestNeigh, bestProfit, length );
+                    P.Path.Add( bestEdge, bestNeigh, bestProfit );
                     visited[ bestEdge.GraphId ] = true;
                     length += bestEdge.Cost;
                     current = bestNeigh;

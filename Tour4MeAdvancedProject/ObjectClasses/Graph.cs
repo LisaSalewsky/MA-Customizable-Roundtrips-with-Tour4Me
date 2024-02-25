@@ -250,10 +250,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 (t, s) = (s, t);
             }
 
-            Edge edge = new Edge( edgeGraphId, s, t, cost );
 
             Node l = VNodes[ s.GraphNodeId ];
             Node r = VNodes[ t.GraphNodeId ];
+            Edge edge = new Edge( edgeGraphId, l, r, cost );
 
             double yl = GetDistanceFromLatLon( l.Lat, l.Lon, MinLat, l.Lon ) * ( l.Lat < MinLat ? -1 : 1 );
             double xl = GetDistanceFromLatLon( l.Lat, l.Lon, l.Lat, MinLon ) * ( l.Lon < MinLon ? -1 : 1 );
@@ -558,6 +558,74 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
             }
             return double.MaxValue;
+        }
+
+        public (List<Edge>, List<int>) GetShortestPath ( int start, int end )
+        {
+            Dictionary<int, double> dist = new Dictionary<int, double>();
+            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
+            Dictionary<int, Edge> parentEdges = new Dictionary<int, Edge>();
+
+
+            dist[ start ] = 0.0;
+            queue.Enqueue( 0.0, new Tuple<int, double>( start, 0.0 ) );
+
+            while (queue.Count > 0)
+            {
+                (double, Tuple<int, double>) current = queue.Dequeue();
+                _ = current.Item1;
+                int currentNode = current.Item2.Item1;
+                double actual = current.Item2.Item2;
+
+                if (currentNode == end)
+                {
+                    List<Edge> path = new List<Edge>();
+                    List<int> pathNodes = new List<int>();
+                    int node = end;
+                    // walk through parent edges and build path
+                    while (node != start)
+                    {
+                        Edge parentEdge = parentEdges[ node ];
+                        path.Insert( 0, parentEdge );
+                        pathNodes.Insert( 0, node );
+                        node = parentEdge.SourceNode.GraphNodeId == node ? parentEdge.TargetNode.GraphNodeId : parentEdge.SourceNode.GraphNodeId;
+                    }
+                    return (path, pathNodes);
+                }
+
+                if (!dist.TryGetValue( currentNode, out double bestKnownDist ))
+                {
+                    dist[ currentNode ] = actual;
+                    bestKnownDist = actual;
+                }
+
+                if (bestKnownDist != actual)
+                {
+                    continue;
+                }
+
+                foreach (Edge edge in VNodes[ currentNode ].Incident)
+                {
+                    int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
+
+                    double newDistance = bestKnownDist + edge.Cost;
+
+                    if (!dist.TryGetValue( neighborId, out double currentNeighborDist ))
+                    {
+                        dist[ neighborId ] = double.MaxValue;
+                        currentNeighborDist = double.MaxValue;
+                    }
+
+                    if (newDistance < currentNeighborDist)
+                    {
+                        double heuristic = newDistance + GetDistanceFromLatLon( neighborId, end );
+                        queue.Enqueue( heuristic, new Tuple<int, double>( neighborId, newDistance ) );
+                        dist[ neighborId ] = newDistance;
+                        parentEdges[ neighborId ] = edge;
+                    }
+                }
+            }
+            return (new List<Edge>(), new List<int>());
         }
 
     }
