@@ -604,24 +604,29 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                foreach (Edge edge in VNodes[ currentNode ].Incident)
+                List<Edge> incident = VNodes[ currentNode ]?.Incident;
+
+                if (incident != null && incident.Count > 0)
                 {
-                    int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
-
-                    double newDistance = bestKnownDist + edge.Cost;
-
-                    if (!dist.TryGetValue( neighborId, out double currentNeighborDist ))
+                    foreach (Edge edge in incident)
                     {
-                        dist[ neighborId ] = double.MaxValue;
-                        currentNeighborDist = double.MaxValue;
-                    }
+                        int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
 
-                    if (newDistance < currentNeighborDist)
-                    {
-                        double heuristic = newDistance + GetDistanceFromLatLon( neighborId, end );
-                        queue.Enqueue( heuristic, new Tuple<int, double>( neighborId, newDistance ) );
-                        dist[ neighborId ] = newDistance;
-                        parentEdges[ neighborId ] = edge;
+                        double newDistance = bestKnownDist + edge.Cost;
+
+                        if (!dist.TryGetValue( neighborId, out double currentNeighborDist ))
+                        {
+                            dist[ neighborId ] = double.MaxValue;
+                            currentNeighborDist = double.MaxValue;
+                        }
+
+                        if (newDistance < currentNeighborDist)
+                        {
+                            double heuristic = newDistance + GetDistanceFromLatLon( neighborId, end );
+                            queue.Enqueue( heuristic, new Tuple<int, double>( neighborId, newDistance ) );
+                            dist[ neighborId ] = newDistance;
+                            parentEdges[ neighborId ] = edge;
+                        }
                     }
                 }
             }

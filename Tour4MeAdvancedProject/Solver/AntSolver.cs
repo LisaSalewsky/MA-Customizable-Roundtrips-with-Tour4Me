@@ -6,12 +6,15 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntSolver : Selection
     {
-        public int NumberTours { get; set; } = 1;
-        public int NumberAnts { get; set; } = 1;
+        public int NumberTours { get; set; } = 2;
+        public int NumberAnts { get; set; } = 10;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.5;
         public double Beta { get; set; } = 0.5;
+        public double EvaporationRate { get; set; } = 0.5;
         public bool UsePenalty { get; set; } = true;
+        public bool UseBacktracking { get; set; } = true;
+        public bool InclueAreaCoverage { get; set; } = true;
 
         public AntSolver () { }
 
@@ -48,8 +51,14 @@ namespace Tour4MeAdvancedProject.Solver
         /// </summary>
         public override SolveStatus Solve ( Problem P )
         {
-            UsePenalty = false;
+            UsePenalty = true;
+            UseBacktracking = false;
+            InclueAreaCoverage = true;
+            EvaporationRate = 0.6;
             int pheromoneAmount = 1;
+
+            PreprocessEdges( P );
+
 
             for (int i = 0; i < NumberAnts; i++)
             {
@@ -57,16 +66,16 @@ namespace Tour4MeAdvancedProject.Solver
             }
             List<Edge> solutionEdges = new List<Edge>();
             List<int> visitedNodes = new List<int>();
-            for (int i = 0; i <= NumberTours; i++)
+            for (int i = 0; i < NumberTours; i++)
             {
                 foreach (Ant currentAnt in Ants)
                 {
                     // calculate one Tour for the current Ant
                     // save the edges that form the solution path in solutionEdges
-                    (solutionEdges, visitedNodes) = currentAnt.Tour( P, UsePenalty );
+                    (solutionEdges, visitedNodes) = currentAnt.Tour( P, UsePenalty, UseBacktracking );
 
                     // now update the pheromone trail (trailInensity)
-                    currentAnt.UpdatePheromoneTrail( P.Graph, solutionEdges, UsePenalty );
+                    currentAnt.UpdatePheromoneTrail( P, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
                 }
                 // reset all pheromone values set by ants
                 P.Graph.VEdges.ForEach( edge => edge.Pheromone = 0 );
@@ -76,6 +85,38 @@ namespace Tour4MeAdvancedProject.Solver
             P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes ) );
 
             return SolveStatus.Feasible;
+        }
+
+
+        private void PreprocessEdges ( Problem P )
+        {
+            double increaseAmount = P.PrefTags.Count == 0 || P.EdgeProfitImportance == 0
+                ? 0
+                : 1 / ( P.PrefTags.Count * P.EdgeProfitImportance );
+            double decreaseAmount = P.AvoidTags.Count == 0 || P.EdgeProfitImportance == 0
+                ? 0
+                : 1 / ( P.AvoidTags.Count * P.EdgeProfitImportance );
+
+            foreach (Edge edge in P.Graph.VEdges)
+            {
+                foreach (string tag in P.PrefTags)
+                {
+                    if (edge.Tags.Contains( tag ))
+                    {
+                        edge.Pheromone += increaseAmount;
+                    }
+                }
+                foreach (string tag in P.AvoidTags)
+                {
+                    if (edge.Tags.Contains( tag ))
+                    {
+                        edge.Pheromone -= decreaseAmount;
+                    }
+                }
+                // don't allow negative pheromone values (for now) TODO maybe change this
+                edge.Pheromone = edge.Pheromone < 0 ? 0 : edge.Pheromone;
+            }
+
         }
 
     }

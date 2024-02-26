@@ -63,8 +63,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// <seealso cref="Edge"/>
         /// <seealso cref="Node"/>
         /// <seealso cref="AntColonyOptimizer"/>
-        public (List<Edge>, List<int>) Tour ( Problem CurrentProblem, bool usePenalty )
+        public (List<Edge>, List<int>) Tour ( Problem CurrentProblem, bool usePenalty, bool useBacktracking )
         {
+            #region intialize needed variables
             SolutionEdges = new List<Edge>();
             Graph graph = CurrentProblem.Graph;
             int start = CurrentProblem.Start;
@@ -87,8 +88,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             double currentDistance = 0;
             visited.Add( start );
+            #endregion
 
-            // TODO: ensure we close our tour not going over the max length!
+
             while (queue.Count > 0)
             {
                 Dictionary<Edge, float> edgeProbabilities = new Dictionary<Edge, float>();
@@ -96,10 +98,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 int currentNode = queue.First();
                 _ = queue.Remove( currentNode );
 
-                //if (currentDistance > CurrentProblem.TargetDistance)
-                //{
-                //    continue;
-                //}
+
                 // only look into edges where the opposite of currentNode wasn't visited yet
                 // one of the nodes has to be in visited (the one we are working from now)
                 // the other one may not be in visited
@@ -107,66 +106,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 List<Edge> allowed = vNodes[ currentNode ].Incident.FindAll( x =>
                  !visited.Contains( x.TargetNode.GraphNodeId ) || !visited.Contains( x.SourceNode.GraphNodeId ) );
 
-                // if we can't find a next node from the one we picked, 
-                if (allowed.Count == 0 && currentDistance < CurrentProblem.TargetDistance)
-                {
-                    if (usePenalty)
-                    {
-                        // scale trial intensity on edges accordingly for all edges where a node is visited twice
-                        double penaltyQuotient = 50;
-                        List<Edge> applyPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
-                        visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
+                FindAllowedPath( CurrentProblem, usePenalty, useBacktracking, vNodes, ref visitableNodes, ref visited, pickedEdge, currentDistance, ref currentNode, ref allowed );
 
-                        foreach (Edge edge in applyPenalty)
-                        {
-                            edge.TrailIntensity /= penaltyQuotient;
-                        }
-                        allowed = applyPenalty;
-                    }
-                    else
-                    {
-                        allowed = allowDoubleVisits( vNodes, currentNode );
-                        //if (pickedEdge != null)
-                        //{
-                        //    BackTrackToUsableSolution( pickedEdge, visited, visitableNodes, currentNode, out visited, out visitableNodes, out currentNode );
-                        //    queue.Add( currentNode );
-                        //    break;
-                        //}
-
-                    }
-                }
-
-                // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
-                float sumOfAllowed = 0;
-                foreach (Edge edge1 in allowed)
-                {
-                    float trailIntensityPowAlpha = (float)Math.Pow( edge1.TrailIntensity, Alpha );
-                    float visibilityPowBeta = (float)Math.Pow( 1 / edge1.Cost, Beta );
-
-                    sumOfAllowed += trailIntensityPowAlpha * visibilityPowBeta;
-                }
-
-                foreach (Edge edge in allowed)
-                {
-                    int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
-
-
-                    if (!usePenalty && graph.ShortestPath( start, neighborId ) > CurrentProblem.TargetDistance - currentDistance - edge.Cost)
-                    {
-                        continue;
-                    }
-
-
-                    //double edgeValue = edge.Cost * edge.TrailIntensity;
-                    double edgeVisibility = 1 / edge.Cost;
-
-                    // p_{ij}^k (used for choosing town to move to)
-                    float currentProbability = (float)( Math.Pow( edge.TrailIntensity, Alpha ) * Math.Pow( edgeVisibility, Beta ) / sumOfAllowed );
-                    edgeProbabilities.Add( edge, currentProbability );
-
-                    // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
-                    edge.Pheromone += PheromoneAmount / edge.Cost;
-                }
+                float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed );
+                CalculateNewPheromoneValues( CurrentProblem, usePenalty, graph, start, currentDistance, edgeProbabilities, currentNode, allowed, sumOfAllowed );
 
                 // randomly generate a random number between [0.0, 1.0) (excluding 1)
                 float probability = (float)Random.NextDouble();
@@ -179,36 +122,134 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
                 {
-                    // now choose next node based on probability
-                    Node neighbor = pickedEdge.SourceNode.GraphNodeId == currentNode ? pickedEdge.TargetNode : pickedEdge.SourceNode;
-                    int neighborId = neighbor.GraphNodeId;
-                    currentDistance += pickedEdge.Cost;
-
-                    queue.Add( neighborId );
-                    parent = currentNode;
-                    // once a node was visited, it cannot be visited again in this tour by the same ant
-                    visited.Add( neighborId );
-                    _ = visitableNodes.Remove( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
-
-                    // Add the picked edge to the solution path
-                    SolutionEdges.Add( pickedEdge );
+                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, pickedEdge, ref currentDistance, currentNode );
                 }
                 else
                 {
-                    // if we need to close the loop since we cannot take any other neighbor:
-                    // close it using the shortest path from the remaining acceptable node
-                    List<Edge> edges = new List<Edge>();
-                    List<int> nodes = new List<int>();
-
-                    (edges, nodes) = graph.GetShortestPath( parent, start );
-
-                    double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );
+                    CloseOffPath( graph, start, parent, out List<Edge> edges, out List<int> nodes );
 
                     return (SolutionEdges.Concat( edges ).ToList(), visited.Concat( nodes ).ToList());
                 }
             }
 
             return (SolutionEdges, visited);
+        }
+
+        private void FindAllowedPath ( Problem CurrentProblem, bool usePenalty, bool useBacktracking, List<Node> vNodes, ref List<Node> visitableNodes, ref List<int> visited, Edge pickedEdge, double currentDistance, ref int currentNode, ref List<Edge> allowed )
+        {
+
+            // if we can't find a next node from the one we picked, choose from the following options:
+            if (allowed.Count == 0 && currentDistance < CurrentProblem.TargetDistance)
+            {
+                // if we use a penalty, the ants will figure out what to do by themselves. Just update the trail intensity accordingly
+                if (usePenalty)
+                {
+                    allowed = ScaleTrailIntensity( vNodes, visited, currentNode );
+                }
+                // if not, two more options reamain
+                else if (useBacktracking)
+                {
+                    BackTrackToUsableSolution( pickedEdge, visited, visitableNodes, currentNode, out visited, out visitableNodes, out currentNode );
+                }
+                // if we want to use backtracking, just step backwards through the graph and remove edges that didn't result in a working solution
+                // otherwise, we allow for edges to be visited more than once, with exception of the edge we just came from
+                else
+                {
+                    allowed = vNodes[ currentNode ].Incident;
+
+                    if (pickedEdge != null)
+                    {
+                        _ = allowed.Remove( pickedEdge );
+                    }
+                }
+            }
+        }
+
+        private void CalculateNewPheromoneValues ( Problem CurrentProblem, bool usePenalty, Graph graph, int start, double currentDistance, Dictionary<Edge, float> edgeProbabilities, int currentNode, List<Edge> allowed, float sumOfAllowed )
+        {
+            foreach (Edge edge in allowed)
+            {
+                int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
+
+
+                if (!usePenalty && graph.ShortestPath( start, neighborId ) > CurrentProblem.TargetDistance - currentDistance - edge.Cost)
+                {
+                    continue;
+                }
+
+
+                //double edgeValue = edge.Cost * edge.TrailIntensity;
+                double edgeVisibility = 1 / edge.Cost;
+
+                // p_{ij}^k (used for choosing town to move to)
+                float currentProbability = (float)( Math.Pow( edge.TrailIntensity, Alpha ) * Math.Pow( edgeVisibility, Beta ) / sumOfAllowed );
+                edgeProbabilities.Add( edge, currentProbability );
+
+                // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
+                edge.Pheromone += PheromoneAmount / edge.Cost;
+            }
+        }
+
+        private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, List<int> visited, int currentNode )
+        {
+            List<Edge> allowed;
+            // scale trial intensity on edges accordingly for all edges where a node is visited twice
+            double penaltyQuotient = 50;
+            List<Edge> applyPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
+            visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
+
+            foreach (Edge edge in applyPenalty)
+            {
+                edge.TrailIntensity /= penaltyQuotient;
+            }
+            allowed = applyPenalty;
+            return allowed;
+        }
+
+        private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed )
+        {
+
+            // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
+            float sumOfAllowed = 0;
+            foreach (Edge edge1 in allowed)
+            {
+                float trailIntensityPowAlpha = (float)Math.Pow( edge1.TrailIntensity, Alpha );
+                float visibilityPowBeta = (float)Math.Pow( 1 / edge1.Cost, Beta );
+
+                sumOfAllowed += trailIntensityPowAlpha * visibilityPowBeta;
+            }
+
+            return sumOfAllowed;
+        }
+
+        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, List<int> visited, Edge pickedEdge, ref double currentDistance, int currentNode )
+        {
+            int parent;
+            // now choose next node based on probability
+            Node neighbor = pickedEdge.SourceNode.GraphNodeId == currentNode ? pickedEdge.TargetNode : pickedEdge.SourceNode;
+            int neighborId = neighbor.GraphNodeId;
+            currentDistance += pickedEdge.Cost;
+
+            queue.Add( neighborId );
+            parent = currentNode;
+            // once a node was visited, it cannot be visited again in this tour by the same ant
+            visited.Add( neighborId );
+            _ = visitableNodes.Remove( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
+
+            // Add the picked edge to the solution path
+            SolutionEdges.Add( pickedEdge );
+            return parent;
+        }
+
+        private void CloseOffPath ( Graph graph, int start, int parent, out List<Edge> edges, out List<int> nodes )
+        {
+            // if we need to close the loop since we cannot take any other neighbor:
+            // close it using the shortest path from the remaining acceptable node
+            edges = new List<Edge>();
+            nodes = new List<int>();
+            (edges, nodes) = graph.GetShortestPath( parent, start );
+
+            double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );
         }
 
         private void BackTrackToUsableSolution ( Edge pickedEdge, List<int> visited, List<Node> visitableNodes, int currentNode, out List<int> fixedVisited, out List<Node> fixedVisitable, out int fixedCurrentNode )
@@ -237,39 +278,64 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
         }
 
-        private List<Edge> allowDoubleVisits ( List<Node> vNodes, int currentNode )
-        {
-            return vNodes[ currentNode ].Incident;
-        }
 
         /// <summary>
         /// Updates the pheromone trail on edges in the graph based on evaporation and 
         /// newly placed pheromones.
         /// </summary>
-        /// <param name="graph">The graph containing edges with pheromone trails and trail intensities.</param>
+        /// <param name="problem">The graph containing edges with pheromone trails and trail intensities.</param>
         /// <param name="visited">contains a list of all edges the ant has visited for its solution.</param>
         /// <param name="usePenalty">
         /// determines whether the ants should find out that closing the tour is better (usePenalty = true)
         /// or we always enforce closing the tour (usePenalty = false).
         /// </param>
-        public void UpdatePheromoneTrail ( Graph graph, List<Edge> visited, bool usePenalty )
+        public void UpdatePheromoneTrail ( Problem problem, List<Edge> visited, double evaporation, bool usePenalty, bool inclueAreaCoverage )
         {
-            double evaporationRate = 0.9;
+            double evaporationRate = evaporation;
+
+            // default set to 1 because that means no addition or reduction of pheromone values to be added
+            double penaltyQuotient = 1;
 
             bool closedTour = visited.First().Equals( visited.Last() );
-            // a penalty of 1 doesn't change the graph
-            // higher penalties reduce the amount of pheromone placed
-            double penaltyQuotient = 1;
+            double sum = visited.Sum( x => x.Cost );
+
+            List<Edge> acceptableLentghEdges = new List<Edge>( visited );
+
+            while (sum > problem.TargetDistance)
+            {
+                // pick last edge of the path
+                Edge penaltyEdge = acceptableLentghEdges.Last();
+                // set trail intensity to 0 to make it as unattractive as possible for future runs
+                penaltyEdge.TrailIntensity = 0;
+
+                // remove last edge that added too much to the distance and re-calculate sum
+                _ = acceptableLentghEdges.Remove( penaltyEdge );
+                sum = acceptableLentghEdges.Sum( x => x.Cost );
+
+            }
 
             if (usePenalty && !closedTour)
             {
+                // if we didn't close the tour, use a high quotient as penalty
+                // this lowers the increase in the trail intensity heavily for future runs
                 penaltyQuotient = 100;
+            }
+
+            if (inclueAreaCoverage)
+            {
+                double area = 0;
+                foreach (Edge edge in visited)
+                {
+                    area += edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                }
+                // the bigger the area covered, the smaller our penalty needs to be
+                penaltyQuotient *= 1 / ( area * problem.CoveredAreaImportance );
             }
 
             foreach (Edge visitedEdge in visited)
             {
                 // update actual edge of the graph
-                Edge edge = graph.VEdges.Find( x => x.Id == visitedEdge.Id );
+                Edge edge = problem.Graph.VEdges.Find( x => x.Id == visitedEdge.Id );
 
                 // trailIntensity contains the actual pheromone left on the trail
                 // evaporationRate descibes how much of the trail has evaporated during one tour
