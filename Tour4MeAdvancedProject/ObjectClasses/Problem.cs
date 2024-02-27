@@ -44,6 +44,18 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             AvoidTags = new HashSet<string>();
         }
 
+        //public Problem ( double startLat, double startLon, double givenMaxLat, double givenMaxLon, double givenMinLat, double givenMinLon, double radius, string fileName )
+        public Problem ( double startLat, double startLon, double radius, string fileName )
+        {
+            //Graph = new Graph( startLat, startLon, givenMaxLat, givenMaxLon, givenMinLat, givenMinLon, radius, fileName );
+            Graph = new Graph( startLat, startLon, radius, fileName );
+            Path = new Path();
+            Metadata = new List<string>();
+            PrefTags = new HashSet<string>();
+            AvoidTags = new HashSet<string>();
+
+        }
+
         //public Problem ( Guid ProblemId, out string error )
         //{
         //    error = "";

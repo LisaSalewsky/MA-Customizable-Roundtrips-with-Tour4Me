@@ -23,6 +23,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Incident = new List<Edge>();
         }
 
+        public Node ( int graphId, Guid id, double lat, double lon, double elevation ) : this( graphId, id, lat, lon )
+        {
+            Elevation = elevation;
+        }
+
         public Node ()
         {
             // Default constructor
@@ -36,6 +41,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             return Math.Sqrt( ( latA * latA ) + ( lonA * lonA ) );
         }
+
 
         public double VecAngle ( Node n1, Node n2 )
         {

@@ -128,8 +128,10 @@ namespace Tour4MeAdvancedProject
                     string localPath = Uri.UnescapeDataString( uri.LocalPath );
 
 
-                    problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    //problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    problem = new Problem( latIn, lonIn, distIn / 2, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
                     _ = Guid.TryParse( "123E4567-E89B-12D3-A456-426614174001", out Guid guid );
+
                     //Problem problemTest = new Problem( guid, out string error );
                     string error = "";
                     if (error != "")
