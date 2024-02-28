@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using Tour4MeAdvancedProject.Helper;
 
-
 namespace Tour4MeAdvancedProject.ObjectClasses
 {
     public class Graph
@@ -246,7 +245,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public Graph ( double startLat, double startLon, double radius, string fileName )
         {
-
+            SqlServerTypes.Utilities.LoadNativeAssemblies( AppDomain.CurrentDomain.BaseDirectory );
             ConnectToDB( out string error );
             if (error != null && error != "")
             {
@@ -265,38 +264,44 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 //_ = CreateNodesFromDBMaxMinLatLon( givenMaxLat, givenMaxLon, givenMinLat, givenMinLon, cNodes, out _, out _ );
                 //CreateEdgesFromDBMaxMinLatLon( givenMaxLat, givenMaxLon, givenMinLat, givenMinLon, cEdges, out _, out _ );
 
-                CreateNodesAndEdgesFromDBCenterRadius( startLat, startLon, radius, cNodes, cEdges );
+
+                CreateNodesAndEdgesFromDBCenterRadius( startLat, startLon, radius, cNodes, cEdges, VNodes, GIdNode );
 
             }
         }
 
-        private void CreateNodesAndEdgesFromDBCenterRadius ( double startLat, double startLon, double radius, int cNodes, int cEdges )
+        private void CreateNodesAndEdgesFromDBCenterRadius ( double startLat, double startLon, double radius, int cNodes, int cEdges, List<Node> vNodes, Dictionary<Guid, int> gIdNodes )
         {
             // Define SQL query strings
             string nodesQuery = @"DECLARE @CenterPoint geography;" +
-            "SET @CenterPoint = geography::Point(@CenterLat, @CenterLon, 4326); -- Assuming the center point is in SRID 4326" +
+            "SET @CenterPoint = geography::Point(@CenterLat, @CenterLon, 4326);" +
 
-            "DECLARE @RadiusInMeters float = @Radius; -- Radius in meters" +
-            "SELECT *" +
-            "FROM Node" +
-            "WHERE Geolocation.STDistance(@CenterPoint) <= @RadiusInMeters;";
+            "DECLARE @RadiusInMeters float = @Radius;" +
+            "SELECT Id," +
+            "GeographyValues.Lat AS Latitude," +
+            "GeographyValues.Long AS Longitude," +
+            "Elevation " +
+            "FROM dbo.Node " +
+            "WHERE GeographyValues.STDistance(@CenterPoint) <= @RadiusInMeters;";
 
             string edgesQuery = @"DECLARE @CenterPoint geography;" +
-            "SET @CenterPoint = geography::Point(@CenterLat, @CenterLon, 4326); -- Assuming the center point is in SRID 4326" +
+            "SET @CenterPoint = geography::Point(@CenterLat, @CenterLon, 4326);" +
 
-            "DECLARE @RadiusInMeters float = @Radius; -- Radius in meters" +
+            "DECLARE @RadiusInMeters float = @Radius;" +
 
-            "SELECT *" +
-            "FROM Edge" +
-            "WHERE SourceNodeId IN (" +
-                "SELECT NodeId" +
-                "FROM Node" +
-                "WHERE Geolocation.STDistance(@CenterPoint) <= @RadiusInMeters" +
-            ")" +
-            "OR TargetNodeId IN (" +
-                "SELECT NodeId" +
-                "FROM Node" +
-                "WHERE Geolocation.STDistance(@CenterPoint) <= @RadiusInMeters); ";
+            "SELECT Id," +
+                "Tags," +
+                "Reversed," +
+                "OneWay," +
+                "Cost," +
+                "SourceNodeId," +
+                "TargetNodeId," +
+                "GeoLocations.STAsText() AS GeoLocationsText," +
+                "GeoLocations " +
+            "FROM dbo.Edge " +
+            "INNER JOIN dbo.IncidentEdges ie ON e.Id = ie.edgeId " +
+            "INNER JOIN dbo.Node n ON ie.NodeId = n.Id " +
+            "WHERE n.GeographyValues.STDistance( @CenterPoint ) <= @RadiusInMeters; ";
 
             // Define parameters
             _ = new SqlParameter( "@CenterLat", SqlDbType.Float )
@@ -309,10 +314,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             };
             _ = new SqlParameter( "@Radius", SqlDbType.Float )
             {
-                Value = radius
+                Value = (float)radius
             };
-            string query = "SELECT * FROM Node";
-            SqlCommand command = new SqlCommand( query, DBSqlConnection );
+
             // Execute nodes query
             SqlCommand nodesCommand = new SqlCommand( nodesQuery, DBSqlConnection );
             _ = nodesCommand.Parameters.AddWithValue( "@CenterLat", startLat );
@@ -326,7 +330,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             _ = edgesCommand.Parameters.AddWithValue( "@Radius", radius );
 
 
-            _ = CreateNodesFromReader( cNodes, command );
+            _ = CreateNodesFromReader( cNodes, nodesCommand, vNodes, gIdNodes );
             CreateEdgesFromReader( cEdges, edgesCommand );
         }
 
@@ -369,6 +373,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     Node source = VNodes.Find( x => x.NodeId == sourceId );
                     Node target = VNodes.Find( x => x.NodeId == targetId );
 
+                    if (!GIdNode.ContainsKey( sourceId ) || !GIdNode.ContainsKey( targetId ))
+                    {
+                        continue;
+                    }
                     int sId = GIdNode[ sourceId ];
                     int tId = GIdNode[ targetId ];
 
@@ -381,32 +389,35 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     Edge edge = AddEdge( cEdges, source, target, cost );
                     edge = new Edge( edge, tags, reversed, oneWay );
 
-                    SqlBytes geolocationBytes = reader.GetSqlBytes( reader.GetOrdinal( "Geolocation" ) );
-
-                    // Process the linestring (if present)
-                    if (!geolocationBytes.IsNull && geolocationBytes.Length > 0)
+                    string geoLocationsText = reader[ "GeoLocationsText" ].ToString();
+                    if (!string.IsNullOrEmpty( geoLocationsText ))
                     {
-                        SqlGeography sqlGeography = SqlGeography.STGeomFromWKB( new SqlBytes( (SqlBinary)geolocationBytes ), 4326 );
-
-                        // Convert SqlGeography to well-known text (WKT)
-                        string wkt = sqlGeography.STAsText().Value.ToString();
-                        wkt = wkt.Replace( "LINESTRING (", "" ).Replace( ")", "" );
-                        string[] points = wkt.Split( ',' );
-
-                        foreach (string point in points)
+                        try
                         {
-                            string[] coordinates = point.Trim().Split( ' ' );
-                            double longitude = double.Parse( coordinates[ 0 ] );
-                            double latitude = double.Parse( coordinates[ 1 ] );
+                            //SqlGeography geometry = SqlGeography.STLineFromText( new SqlChars( geoLocationsText ), 4326 );
 
-                            edge.GeoLocations.Add( new Tuple<double, double>( longitude, latitude ) );
+                            SqlGeography lineString = SqlGeography.STLineFromText( new SqlChars( geoLocationsText ), 4326 );
+                            for (int i = 1; i <= lineString.STNumPoints(); i++)
+                            {
+                                SqlGeography point = lineString.STPointN( i );
+                                double latitude = point.Lat.Value;
+                                double longitude = point.Long.Value;
+
+                                edge.GeoLocations.Add( new Tuple<double, double>( longitude, latitude ) );
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            string msg = ex.Message;
+                            Console.WriteLine( msg );
                         }
                     }
+
                 }
             }
         }
 
-        private int CreateNodesFromDBMaxMinLatLon ( double givenMaxLat, double givenMaxLon, double givenMinLat, double givenMinLon, int cNodes, out string sqlQuery, out SqlCommand command )
+        private int CreateNodesFromDBMaxMinLatLon ( double givenMaxLat, double givenMaxLon, double givenMinLat, double givenMinLon, int cNodes, List<Node> vNodes, Dictionary<Guid, int> gIdNodes, out string sqlQuery, out SqlCommand command )
         {
             sqlQuery = @"SELECT * FROM Nodes WHERE" +
                 "SpatialLocation.STLatitude() BETWEEN @MinLat AND @MaxLat " +
@@ -417,12 +428,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             _ = command.Parameters.AddWithValue( "@MinLon", givenMinLon );
             _ = command.Parameters.AddWithValue( "@MaxLon", givenMaxLon );
 
-            cNodes = CreateNodesFromReader( cNodes, command );
+            cNodes = CreateNodesFromReader( cNodes, command, vNodes, gIdNodes );
 
             return cNodes;
         }
 
-        private static int CreateNodesFromReader ( int cNodes, SqlCommand command )
+        private static int CreateNodesFromReader ( int cNodes, SqlCommand command, List<Node> vNodes, Dictionary<Guid, int> gIdNodes )
         {
 
             using (SqlDataReader reader = command.ExecuteReader())
@@ -431,19 +442,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 {
                     Guid nodeId = reader.GetGuid( reader.GetOrdinal( "Id" ) );
                     double elevation = (double)reader.GetDecimal( reader.GetOrdinal( "Elevation" ) );
-                    SqlBytes geographyBytes = reader.GetSqlBytes( reader.GetOrdinal( "GeographyValues" ) );
-                    if (!geographyBytes.IsNull && geographyBytes.Length > 0)
-                    {
-                        SqlGeography geography = SqlGeography.STGeomFromWKB( geographyBytes, 4326 ); // Assuming the data is in SRID 4326
+                    double latitude = reader.GetDouble( reader.GetOrdinal( "Latitude" ) );
+                    double longitude = reader.GetDouble( reader.GetOrdinal( "Longitude" ) );
 
 
-                        // Get latitude and longitude values from SqlGeometry
-                        double latitude = geography.Lat.Value;
-                        double longitude = geography.Long.Value;
+                    Node node = new Node( cNodes, nodeId, latitude, longitude, elevation );
+                    vNodes.Add( node );
+                    gIdNodes.Add( nodeId, cNodes );
 
-                        Node node = new Node( cNodes, nodeId, latitude, longitude, elevation );
-                        cNodes++;
-                    }
+                    cNodes++;
                 }
             }
 
