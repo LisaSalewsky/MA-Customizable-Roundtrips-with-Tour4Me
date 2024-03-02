@@ -51,11 +51,15 @@
                       <a class="nav-link" href="#">About Us</a>
                     </li>
                   </ul>
+            <asp:ContentPlaceHolder ID="SearchBarPlaceholder" runat="server">
+            </asp:ContentPlaceHolder>
       
                 </div>
 
             </nav>
         </div>
+
+        
 
         <!-- Main Content Placeholder -->
         <div>

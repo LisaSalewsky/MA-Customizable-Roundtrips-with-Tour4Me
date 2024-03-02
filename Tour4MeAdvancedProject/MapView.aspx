@@ -4,15 +4,17 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
      <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+     <link rel="stylesheet" href="css/site.css" asp-append-version="true" />
      <link rel="stylesheet" href="~/MyFirstApp.styles.css" asp-append-version="true" />
      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet-sidebar@0.2.0/src/L.Control.Sidebar.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script type="text/javascript">
         if (!MyGlobalVariables) {
             MyGlobalVariables = {};
@@ -23,8 +25,16 @@
 </asp:Content>
 
 
+
+<asp:Content ID="SearchBarPlaceholder" ContentPlaceHolderID="SearchBarPlaceholder" runat="server">
+
+
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceholder" runat="server">
-    
+
+
+
 <div id="overlay"
      style="position: fixed; display:none; width: 100%; height: 100%; top:0; left:0; background-color: rgba(0,0,0,0.2); z-index:2;">
     <div id="text"
@@ -35,108 +45,119 @@
 </div>
 
 
-<div id="map" style="height: 580px; z-index: 0;">
-</div>
+<div id="container">
+    <input type="checkbox" id="burgermenucheck"/>
+    <label for="burgermenucheck" id="menuToggle">
+        <i class =" fas fa-bars" id="btn"></i>
+        <i class =" fas fa-times" id="cancel"></i>
+    </label>
+    <div class="sidebar">
+        <header>Options</header>
+        <ul id="menu">
+            <li>Home</li>
+            <li>About</li>
+            <li>Info test name long longer longest</li>
+            <li>Contact</li>
+            <a href="https://erikterwan.com/" target="_blank"><li>Show me more</li></a>
+        </ul>
+    </div>
+
+    <section id="map">
+    </section>
+
     
-    
-    <div class="card" style="width: 400px; position:fixed; z-index: 1; top: 70px; right:20px;">
-        <div class="card-body" id="route_overview">
-            <h5 class="card-title">Computed Routes</h5>
 
-        </div>
-    </div>
+    <section id="inputs_bottom">
 
-<div style="width: 100%; margin: 60px auto 0; padding: 20px; bottom:0; background-color:rgba(255, 255, 255, 0.8); height: auto;">
+        <div class="input-group mb-3">
 
-    <div class="input-group mb-3">
-
-        <input type="text" id="distance" class="form-control" value="50" aria-label="Target Distance (m)">
-        <div class="input-group-append">
-            <button class="btn btn-secondary" disabled type="button">km</button>
-                <%--<button type="button" class="btn btn-primary" onclick="getPath()">Compute Path</button>--%>
-            <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" onClientClick="return false;"/>
-        </div>
-        <div>
-
-        </div>
-    </div>
-
-
-    <div class="btn-group" id="algoRadio">
-    </div>
-
-    <button type="button" class="btn btn-warning" data-bs-toggle="modal" style="position:absolute; right:20px"
-            data-bs-target="#settingsModal">
-        Open settings
-    </button>
-
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="false">
-    <div class="modal-dialog modal-lg ">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="settingsModalLabel">Settings</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <input type="text" id="distance" class="form-control" value="50" aria-label="Target Distance (m)">
+            <div class="input-group-append">
+                <button class="btn btn-secondary" disabled type="button">km</button>
+                    <%--<button type="button" class="btn btn-primary" onclick="getPath()">Compute Path</button>--%>
+                <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" onClientClick="return false;"/>
             </div>
-            <div class="modal-body">
-                <h5>Underlying map:</h5>
-                <div class="btn-group" style="display: block; ">
-                    <input type="radio" class="btn-check" name="mapType" value="b" id="backbone"
-                           autocomplete="off" />
-                    <label class="btn btn-outline-success" for="backbone">Backbone</label>
-                    <input type="radio" class="btn-check" name="mapType" value="o" id="osm" autocomplete="off"
-                           checked />
-                    <label class="btn btn-outline-success" for="osm">OSM</label>
-                </div>
-                <br>
-                <h5>Type of roads:</h5>
-                <div class="btn-group tagsHighway pre-scrollable"
-                     style="display: block; overflow-x: auto; white-space: nowrap;" id="tagButtonsHighway"></div>
-                <br>
-                <h5>Type of surfaces:</h5>
-                <div class="btn-group mr-2 tagsSurface pre-scrollable"
-                     style="display: block; overflow-x: auto; white-space: nowrap;" id="tagButtonsSurface"></div>
-                <br>
-                <h5>Running time (max 300s):</h5>
-                <div class="input-group">
-                    <input type="text" class="form-control" value="30" aria-label="Running Time" id="runningTime">
-                    <span class="input-group-text">seconds</span>
-                </div>
-                <br>
-                <h5>Quality Distribution:</h5>
-                <div class="row">
-                    <div class="col col-md-2">
-                        <label class="form-label">Edge Profit</label>
-                    </div>
-                    <div class="col col-md-9">
-                        <input type="range" class="form-range" oninput="changeRanges(this, 'coveredArea')"
-                               onchange="changeRanges(this, 'coveredArea')" min="0" max="100" id="edgeProfit">
-                    </div>
-                    <div class="col col-md-1">
-                        <label class="form-label" style="float: right;" id="edgeProfitLabel">100%</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col col-md-2">
-                        <label class="form-label">Covered Area</label>
-                    </div>
-                    <div class="col col-md-9">
-                        <input type="range" class="form-range" oninput="changeRanges(this, 'edgeProfit')"
-                               onchange="changeRanges(this, 'edgeProfit')" min="0" max="100" id="coveredArea">
-                    </div>
-                    <div class="col col-md-1">
-                        <label class="form-label" style="float: right;" id="coveredAreaLabel">100%</label>
-                    </div>
-                </div>
+            <div>
+
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+
+
+        <div class="btn-group" id="algoRadio">
+        </div>
+
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" style="position:absolute; right:20px"
+                data-bs-target="#settingsModal">
+            Open settings
+        </button>
+
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="false">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="settingsModalLabel">Settings</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Underlying map:</h5>
+                    <div class="btn-group" style="display: block; ">
+                        <input type="radio" class="btn-check" name="mapType" value="b" id="backbone"
+                               autocomplete="off" />
+                        <label class="btn btn-outline-success" for="backbone">Backbone</label>
+                        <input type="radio" class="btn-check" name="mapType" value="o" id="osm" autocomplete="off"
+                               checked />
+                        <label class="btn btn-outline-success" for="osm">OSM</label>
+                    </div>
+                    <br>
+                    <h5>Type of roads:</h5>
+                    <div class="btn-group tagsHighway pre-scrollable"
+                         style="display: block; overflow-x: auto; white-space: nowrap;" id="tagButtonsHighway"></div>
+                    <br>
+                    <h5>Type of surfaces:</h5>
+                    <div class="btn-group mr-2 tagsSurface pre-scrollable"
+                         style="display: block; overflow-x: auto; white-space: nowrap;" id="tagButtonsSurface"></div>
+                    <br>
+                    <h5>Running time (max 300s):</h5>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="30" aria-label="Running Time" id="runningTime">
+                        <span class="input-group-text">seconds</span>
+                    </div>
+                    <br>
+                    <h5>Quality Distribution:</h5>
+                    <div class="row">
+                        <div class="col col-md-2">
+                            <label class="form-label">Edge Profit</label>
+                        </div>
+                        <div class="col col-md-9">
+                            <input type="range" class="form-range" oninput="changeRanges(this, 'coveredArea')"
+                                   onchange="changeRanges(this, 'coveredArea')" min="0" max="100" id="edgeProfit">
+                        </div>
+                        <div class="col col-md-1">
+                            <label class="form-label" style="float: right;" id="edgeProfitLabel">100%</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-md-2">
+                            <label class="form-label">Covered Area</label>
+                        </div>
+                        <div class="col col-md-9">
+                            <input type="range" class="form-range" oninput="changeRanges(this, 'edgeProfit')"
+                                   onchange="changeRanges(this, 'edgeProfit')" min="0" max="100" id="coveredArea">
+                        </div>
+                        <div class="col col-md-1">
+                            <label class="form-label" style="float: right;" id="coveredAreaLabel">100%</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     
 
@@ -159,7 +180,22 @@
             </div>
         </div>
     </div>
+</div>
     
+    <script>
+        const checkbox = document.getElementById('check');
+        const btn = document.getElementById('btn');
+        const cancel = document.getElementById('cancel');
+
+        btn.addEventListener('click', function () {
+            checkbox.checked = !checkbox.checked; // Toggle the checkbox state
+        });
+
+        cancel.addEventListener('click', function () {
+            checkbox.checked = false; // Set checkbox state to unchecked
+        });
+    </script>
+
 
     <script>
         var map = L.map('map').setView([0, 0], 13);
@@ -168,6 +204,22 @@
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
+        L.Control.geocoder({
+            defaultMarkGeocode: false
+        })
+            .on('markgeocode', function (e) {
+                if (marker) {
+                    map.removeLayer(marker);
+                    marker.setLatLng(new L.LatLng(e.geocode.center.lat, e.geocode.center.lng), { draggable: 'true' });
+                    marker.addTo(map);
+                    map.panTo(new L.LatLng(e.geocode.center.lat, e.geocode.center.lng))
+                    centered = true;
+                } else {
+                    marker = L.marker(new L.LatLng(e.geocode.center.lat, e.geocode.center.lng), { draggable: 'true' }).addTo(map);
+                    map.panTo(new L.LatLng(e.geocode.center.lat, e.geocode.center.lng))
+                    centered = true;
+                }
+            }).addTo(map);
 
 
         var marker;
@@ -209,7 +261,7 @@
         var centered = false;
 
 
-        setTimeout(function () { map.invalidateSize(true) }, 10);
+        setTimeout(function () { map.invalidateSize(true) }, .1);
 
         navigator.geolocation.watchPosition(success, error);
 
@@ -243,6 +295,7 @@
                 var position = marker.getLatLng();
                 marker.setLatLng(new L.LatLng(position.lat, position.lng), { draggable: 'true' });
                 map.panTo(new L.LatLng(position.lat, position.lng))
+                centered = true;
             });
             marker.addTo(map)
 
@@ -272,6 +325,7 @@
             center_lat = e.latlng.lat;
             center_lon = e.latlng.lng;
             map.panTo(new L.LatLng(center_lat, center_lon))
+            centered = true;
 
             var marker_lat = marker.getLatLng().lat;
             var marker_lon = marker.getLatLng().lng;
@@ -366,32 +420,32 @@
 
                 marker = L.marker([center_lat, center_lon], { draggable: 'true' }).addTo(map);
 
-                outer_box = L.polygon(
-                    [[[900, -1800],
-                    [900, 1800],
-                    [-900, 1800],
-                    [-900, -1800]], // outer ring
-                    [[abs_min_lat - lat_pad, abs_min_lon - lon_pad],
-                    [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
-                    [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
-                    [abs_max_lat + lat_pad, abs_min_lon - lon_pad]] // actual cutout polygon
-                    ], { interactive: true, color: 'black', weight: "0", fillOpacity: 0.08 }).addTo(map);
+                //outer_box = L.polygon(
+                //    [[[900, -1800],
+                //    [900, 1800],
+                //    [-900, 1800],
+                //    [-900, -1800]], // outer ring
+                //    [[abs_min_lat - lat_pad, abs_min_lon - lon_pad],
+                //    [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
+                //    [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
+                //    [abs_max_lat + lat_pad, abs_min_lon - lon_pad]] // actual cutout polygon
+                //    ], { interactive: true, color: 'black', weight: "0", fillOpacity: 0.08 }).addTo(map);
 
-                inner_box = L.polygon(
-                    [[abs_min_lat - lat_pad, abs_min_lon - lon_pad],
-                    [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
-                    [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
-                    [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
-                    ], { weight: "0", fillOpacity: 0 }).addTo(map);
+                //inner_box = L.polygon(
+                //    [[abs_min_lat - lat_pad, abs_min_lon - lon_pad],
+                //    [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
+                //    [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
+                //    [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
+                //    ], { weight: "0", fillOpacity: 0 }).addTo(map);
 
 
-                outer_box.on('click', function (e) {
-                    outer_box.setStyle({ color: "red", fillOpacity: 0.15 });
-                });
+                //outer_box.on('click', function (e) {
+                //    outer_box.setStyle({ color: "red", fillOpacity: 0.15 });
+                //});
 
-                inner_box.on('click', function (e) {
-                    outer_box.setStyle({ color: "black", fillOpacity: 0.08 });
-                });
+                //inner_box.on('click', function (e) {
+                //    outer_box.setStyle({ color: "black", fillOpacity: 0.08 });
+                //});
 
                 map.on('click', onClick);
 

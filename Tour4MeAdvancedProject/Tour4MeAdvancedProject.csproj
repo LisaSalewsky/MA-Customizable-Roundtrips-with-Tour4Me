@@ -80,6 +80,7 @@
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="bootstrap\js\popper.min.js" />
     <Content Include="css\customstyleMap.css" />
+    <Content Include="css\site.css" />
     <Content Include="datatables\css\jquery.dataTables.min.css" />
     <Content Include="datatables\js\jquery.dataTables.min.js" />
     <Content Include="fontawesome\css\all.css" />
