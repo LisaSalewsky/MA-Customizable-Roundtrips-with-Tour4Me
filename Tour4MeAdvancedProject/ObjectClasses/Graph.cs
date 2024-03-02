@@ -254,7 +254,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
             else
             {
-
+                CenterLat = startLat;
+                CenterLon = startLon;
 
                 VNodes = new List<Node>();
                 VEdges = new List<Edge>();
@@ -289,7 +290,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             "DECLARE @RadiusInMeters float = @Radius;" +
 
-            "SELECT Id," +
+            "SELECT e.Id," +
                 "Tags," +
                 "Reversed," +
                 "OneWay," +
@@ -298,7 +299,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 "TargetNodeId," +
                 "GeoLocations.STAsText() AS GeoLocationsText," +
                 "GeoLocations " +
-            "FROM dbo.Edge " +
+            "FROM dbo.Edge e " +
             "INNER JOIN dbo.IncidentEdges ie ON e.Id = ie.edgeId " +
             "INNER JOIN dbo.Node n ON ie.NodeId = n.Id " +
             "WHERE n.GeographyValues.STDistance( @CenterPoint ) <= @RadiusInMeters; ";
