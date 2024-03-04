@@ -3,9 +3,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
-     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
      <link rel="stylesheet" href="css/site.css" asp-append-version="true" />
-     <link rel="stylesheet" href="~/MyFirstApp.styles.css" asp-append-version="true" />
+     <%--<link rel="stylesheet" href="~/MyFirstApp.styles.css" asp-append-version="true" />--%>
      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
      <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
 
@@ -26,7 +26,7 @@
 
 
 
-<asp:Content ID="SearchBarPlaceholder" ContentPlaceHolderID="SearchBarPlaceholder" runat="server">
+<asp:Content ID="SearchBarPlaceholder" ContentPlaceHolderID="SearchBarPlaceholder" runat="server"> 
 
 
 </asp:Content>
@@ -53,13 +53,104 @@
     </label>
     <div class="sidebar">
         <header>Options</header>
-        <ul id="menu">
-            <li>Home</li>
+        <form>
+            <div class="form-group row"> 
+                <div class="form-group col-md-4">
+                    <label for="activity">Activity</label> 
+                </div>
+                <div class="form-group col-sm-7">
+                    <select id="activity" name="activity"  class="form-control form-control-sm">
+                        <option value="select"> Select</option>
+                        <option value="running"> Running</option>
+                        <option value="cycling"> Cycling</option>
+                        <option value="hiking"> Hiking</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4">
+                    <label for="algorithm">Algorithm</label> 
+                </div>
+                <div class="form-group col-sm-7">
+                    <select id="algorithm" name="algorithm"  class="form-control form-control-sm">
+                        <option value="greedy"> Greedy</option>
+                        <option value="mincost"> minCost</option>
+                        <option value="ils"> ILS</option>
+                        <option value="ant"> Ant</option>
+                        <option value="genetic"> Genetic</option>
+                    </select>
+                </div>                
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4">
+                  <label for="length">Length</label>
+                </div>
+                <div class="form-group col-sm-7">
+                  <input type="text" class="form-control" id="length"> km
+                </div>
+            </div>
+            <div class="form-group row">
+                
+            </div>
+            <div class="form-group row">
+                
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4">
+                    <label for="surroundings">Surroundings</label> 
+                </div>
+                <div class="form-group col-sm-7">
+                    <select id="surroundings" name="surroundings"  class="form-control form-control-sm">
+                        <option value="select"> Select</option>
+                        <option value="park"> Park</option>
+                        <option value="forest"> Forest</option>
+                        <option value="mountains"> Mountains</option>
+                        <option value="beach"> Beach</option>
+                        <option value="city"> City</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4">
+                  <label for="elevation">Elevation</label>
+                </div>
+                <div class="form-group col-sm-7">
+                  <input type="text" class="form-control" id="elevation"> %
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4">
+                    <label for="shape">Tour shape</label> 
+                </div>
+                <div class="form-group col-sm-7">
+                    <select id="shape" name="shape"  class="form-control form-control-sm">
+                        <option value="select"> Select</option>
+                        <option value="round"> Round</option>
+                        <option value="uturn"> U-Turn</option>
+                        <option value="complex"> Complex</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Sign in</button>
+                </div>
+            </div>
+
+        </form>
+<%--        <ul id="menu">
+            <li><label for="activity">Activity</label> 
+                <select id="activity" name="activity">
+                    <option value="select"> Select</option>
+                    <option value="running"> Running</option>
+                    <option value="cycling"> Cycling</option>
+                    <option value="hiking"> Hiking</option>
+                </select></li>
             <li>About</li>
             <li>Info test name long longer longest</li>
             <li>Contact</li>
             <a href="https://erikterwan.com/" target="_blank"><li>Show me more</li></a>
-        </ul>
+        </ul>--%>
     </div>
 
     <section id="map">
@@ -70,6 +161,21 @@
     <section id="inputs_bottom">
 
         <div class="input-group mb-3">
+        <form>
+            <div class="form-group row"> 
+                <div class="form-group col-md-4">
+                    <label for="activitys">Activity</label> 
+                </div>
+                <div class="form-group col-sm-7">
+                    <select id="activitys" name="activitys"  class="form-control form-control-sm">
+                        <option value="select"> Select</option>
+                        <option value="running"> Running</option>
+                        <option value="cycling"> Cycling</option>
+                        <option value="hiking"> Hiking</option>
+                    </select>
+                </div>
+            </div>
+            </form>
 
             <input type="text" id="distance" class="form-control" value="50" aria-label="Target Distance (m)">
             <div class="input-group-append">
