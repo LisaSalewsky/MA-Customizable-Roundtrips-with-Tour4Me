@@ -4,10 +4,11 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
-     <link rel="stylesheet" href="css/site.css" asp-append-version="true" />
-     <%--<link rel="stylesheet" href="~/MyFirstApp.styles.css" asp-append-version="true" />--%>
-     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/site.css" asp-append-version="true" />
+    <%--<link rel="stylesheet" href="~/MyFirstApp.styles.css" asp-append-version="true" />--%>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     
@@ -47,19 +48,21 @@
 
 <div id="container">
     <input type="checkbox" id="burgermenucheck"/>
-    <label for="burgermenucheck" id="menuToggle">
+    <label for="burgermenucheck" id="menu-toggle">
         <i class =" fas fa-bars" id="btn"></i>
-        <i class =" fas fa-times" id="cancel"></i>
     </label>
     <div class="sidebar">
         <header>Options</header>
+        <label for="burgermenucheck" id="menu-toggle">
+          <i class =" fas fa-times" id="cancel"></i>
+        </label>
         <form>
-            <div class="form-group row"> 
-                <div class="form-group col-md-4">
-                    <label for="activity">Activity</label> 
+            <div class="form-group row first-row"> 
+                <div class="form-group col-md-4 label-no-padding ">
+                    <label  class="label-no-padding"  for="activity">Activity <i class="fas fa-info-circle icon-blue"></i></label> 
                 </div>
-                <div class="form-group col-sm-7">
-                    <select id="activity" name="activity"  class="form-control form-control-sm">
+                <div class="form-group col-sm-7  label-no-padding">
+                    <select id="activity" name="activity"  class="form-control form-control-sm sidemenu-elements">
                         <option value="select"> Select</option>
                         <option value="running"> Running</option>
                         <option value="cycling"> Cycling</option>
@@ -68,11 +71,11 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4">
-                    <label for="algorithm">Algorithm</label> 
+                <div class="form-group col-md-4 label-no-padding">
+                    <label class="label-no-padding" for="algorithm">Algorithm <i class="fas fa-info-circle icon-blue"></i></label> 
                 </div>
-                <div class="form-group col-sm-7">
-                    <select id="algorithm" name="algorithm"  class="form-control form-control-sm">
+                <div class="form-group col-sm-7  label-no-padding">
+                    <select id="algorithm" name="algorithm"  class="form-control form-control-sm sidemenu-elements">
                         <option value="greedy"> Greedy</option>
                         <option value="mincost"> minCost</option>
                         <option value="ils"> ILS</option>
@@ -81,26 +84,45 @@
                     </select>
                 </div>                
             </div>
-            <div class="form-group row">
-                <div class="form-group col-md-4">
-                  <label for="length">Length</label>
+            <div class="form-group row label-no-padding">
+                <div class="form-group col-md-4 label-no-padding">
+                  <label class="label-no-padding" for="length">Length <i class="fas fa-info-circle icon-blue"></i></label>
                 </div>
-                <div class="form-group col-sm-7">
-                  <input type="text" class="form-control" id="length"> km
+                <div class="form-group col-sm-7  label-no-padding">
+                  <input type="text" class="form-control sidemenu-elements" id="length">
+                </div>
+                <div class="form-group col-md-1 label-no-padding">
+                  km
                 </div>
             </div>
             <div class="form-group row">
-                
-            </div>
-            <div class="form-group row">
-                
-            </div>
-            <div class="form-group row">
-                <div class="form-group col-md-4">
-                    <label for="surroundings">Surroundings</label> 
+                <div class="form-group col-md-4 label-no-padding">
+                    <label class="label-no-padding" for="pathType">Path type <i class="fas fa-info-circle icon-blue"></i></label> 
                 </div>
-                <div class="form-group col-sm-7">
-                    <select id="surroundings" name="surroundings"  class="form-control form-control-sm">
+                <div class="form-group col-sm-7 label-no-padding">
+                    <div class="btn-group tagsSurface flex-wrap sidemenu-btn" id="tagButtonsSurface">
+
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4 label-no-padding">
+                    <label class="label-no-padding" for="surface">Surface <i class="fas fa-info-circle icon-blue"></i></label> 
+                </div>
+                <div class="form-group col-sm-7 label-no-padding">
+                    <div class="btn-group tagsHighway flex-wrap sidemenu-btn" id="tagButtonsHighway">
+
+                    </div>
+                </div>
+                               
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4 label-no-padding">
+                    <label for="surroundings">Surroundings <i class="fas fa-info-circle icon-blue"></i></label> 
+                </div>
+                <div class="form-group col-sm-7 label-no-padding">
+                    <select id="surroundings" name="surroundings"  class="form-control form-control-sm sidemenu-elements">
                         <option value="select"> Select</option>
                         <option value="park"> Park</option>
                         <option value="forest"> Forest</option>
@@ -111,19 +133,22 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4">
-                  <label for="elevation">Elevation</label>
+                <div class="form-group col-md-4 label-no-padding">
+                  <label for="elevation">Elevation <i class="fas fa-info-circle icon-blue"></i></label>
                 </div>
-                <div class="form-group col-sm-7">
-                  <input type="text" class="form-control" id="elevation"> %
+                <div class="form-group col-sm-7 label-no-padding">
+                  <input type="text" class="form-control sidemenu-elements" id="elevation">
+                </div>
+                <div class="form-group col-md-1 label-no-padding">
+                  %
                 </div>
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4">
-                    <label for="shape">Tour shape</label> 
+                <div class="form-group col-md-4 label-no-padding">
+                    <label for="shape">Tour shape <i class="fas fa-info-circle icon-blue"></i></label> 
                 </div>
-                <div class="form-group col-sm-7">
-                    <select id="shape" name="shape"  class="form-control form-control-sm">
+                <div class="form-group col-sm-7 label-no-padding">
+                    <select id="shape" name="shape"  class="form-control form-control-sm sidemenu-elements">
                         <option value="select"> Select</option>
                         <option value="round"> Round</option>
                         <option value="uturn"> U-Turn</option>
@@ -131,57 +156,27 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group row">
-                <div class="col-sm-10">
-                  <button type="submit" class="btn btn-primary">Sign in</button>
+            <div class="form-group row btn-row">
+                <div class="col-sm-12" id="btn-row">
+                    <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" onClientClick="return false;"/>
                 </div>
             </div>
 
         </form>
-<%--        <ul id="menu">
-            <li><label for="activity">Activity</label> 
-                <select id="activity" name="activity">
-                    <option value="select"> Select</option>
-                    <option value="running"> Running</option>
-                    <option value="cycling"> Cycling</option>
-                    <option value="hiking"> Hiking</option>
-                </select></li>
-            <li>About</li>
-            <li>Info test name long longer longest</li>
-            <li>Contact</li>
-            <a href="https://erikterwan.com/" target="_blank"><li>Show me more</li></a>
-        </ul>--%>
     </div>
+
 
     <section id="map">
     </section>
-
+    <br>
     
-
     <section id="inputs_bottom">
 
         <div class="input-group mb-3">
-        <form>
-            <div class="form-group row"> 
-                <div class="form-group col-md-4">
-                    <label for="activitys">Activity</label> 
-                </div>
-                <div class="form-group col-sm-7">
-                    <select id="activitys" name="activitys"  class="form-control form-control-sm">
-                        <option value="select"> Select</option>
-                        <option value="running"> Running</option>
-                        <option value="cycling"> Cycling</option>
-                        <option value="hiking"> Hiking</option>
-                    </select>
-                </div>
-            </div>
-            </form>
 
             <input type="text" id="distance" class="form-control" value="50" aria-label="Target Distance (m)">
             <div class="input-group-append">
                 <button class="btn btn-secondary" disabled type="button">km</button>
-                    <%--<button type="button" class="btn btn-primary" onclick="getPath()">Compute Path</button>--%>
-                <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" onClientClick="return false;"/>
             </div>
             <div>
 
@@ -218,14 +213,14 @@
                         <label class="btn btn-outline-success" for="osm">OSM</label>
                     </div>
                     <br>
-                    <h5>Type of roads:</h5>
+                 <%--   <h5>Type of roads:</h5>
                     <div class="btn-group tagsHighway pre-scrollable"
                          style="display: block; overflow-x: auto; white-space: nowrap;" id="tagButtonsHighway"></div>
                     <br>
                     <h5>Type of surfaces:</h5>
                     <div class="btn-group mr-2 tagsSurface pre-scrollable"
                          style="display: block; overflow-x: auto; white-space: nowrap;" id="tagButtonsSurface"></div>
-                    <br>
+                    <br>--%>
                     <h5>Running time (max 300s):</h5>
                     <div class="input-group">
                         <input type="text" class="form-control" value="30" aria-label="Running Time" id="runningTime">
@@ -287,7 +282,8 @@
         </div>
     </div>
 </div>
-    
+
+
     <script>
         const checkbox = document.getElementById('check');
         const btn = document.getElementById('btn');
@@ -564,7 +560,7 @@
 
                     const key_val_keys = Object.keys(tag);
 
-                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-success desire\" id=\"highway" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
+                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-success desire sidemenu-elements\" id=\"highway" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
                 });
 
                 tagsSurface.forEach(tag => {
@@ -573,7 +569,7 @@
 
                     const key_val_keys = Object.keys(tag);
 
-                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-secondary neutral\" id=\"surface" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
+                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-secondary neutral sidemenu-elements\" id=\"surface" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
                 });
 
 
@@ -591,7 +587,7 @@
 
                     const radioInput = document.createElement("input");
                     radioInput.type = "radio";
-                    radioInput.className = "btn-check";
+                    radioInput.className = "btn-check sidemenu-elements";
                     radioInput.name = "algorithm";
                     radioInput.value = algorithm.Key;
                     radioInput.id = "algo" + algorithm.Key;

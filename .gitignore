@@ -9,7 +9,7 @@ node_modules/
 **/.vs/
 **/appsettings.Development.json
 **/wwwroot/
-
+cache/
 
 *.obj
 *.exe

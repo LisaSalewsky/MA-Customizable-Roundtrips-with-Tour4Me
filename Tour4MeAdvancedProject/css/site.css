@@ -1,0 +1,230 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    color: #cdcdcd;
+    font-family: "Avenir Next", "Avenir", sans-serif;
+    list-style: none;
+    text-decoration: none;
+}
+
+
+#container {
+    position: relative;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background: #6cf;
+}
+
+.sidebar {
+    position: absolute;
+    overflow-y: scroll;
+    left: -420px;
+    width: 420px;
+    height: 100%;
+    background: darkslategray;
+    transition: all 0.5s ease;
+    z-index: 2;
+    min-height: 580px;
+}
+
+.sidebar header {
+    position: absolute;
+    font-size: 22px;
+    left: -420px;
+    width: 420px;
+    color: whitesmoke;
+    text-align: center;
+    line-height: 2;
+    background: darkslategray;
+    user-select: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    transition: all 0.5s ease;
+    z-index: 3;
+}
+
+
+.sidebar .form-group.row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    line-height: 1.2;
+    font-size: 15px;
+    color: white;
+    padding-left: 40px;
+    box-sizing: border-box;
+    border-bottom: 1px solid black;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.4s;
+}
+
+.sidebar ul{
+    padding-left: 0;
+}
+
+.first-row{
+    margin-top: 50px;
+}
+
+/*ul li:hover {
+    padding-left: 50px;
+}
+
+.sidebar ul a i {
+    margin-right: 16px;
+}
+*/
+#burgermenucheck {
+    display: none;
+}
+
+label {
+    display: unset;
+}
+
+
+label #btn, label #cancel {
+    top: calc(var(--map-top));
+    left: 60px;
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    color: whitesmoke;
+    border-radius: 3px;
+    transition: all 0.5s;
+    z-index: 3;
+    background: darkslategray;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+label #btn {
+    position: absolute;
+    color: whitesmoke;
+    padding: 6px 12px;
+    transition: all 0.5s;
+}
+
+label #cancel {
+    position: relative;
+    left: 347px;
+    height: auto;
+    font-size: 36px;
+    color: whitesmoke;
+    padding: 4px 9px;
+    transition: all .5s ease;
+}
+
+
+#burgermenucheck:checked ~ .sidebar {
+   left: 0;
+}
+
+#burgermenucheck:checked ~ .sidebar header {
+    margin-left: 0px;
+    left: 0;
+}
+
+#burgermenucheck:checked ~ label #btn {
+    left: 250px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#burgermenucheck:checked ~ label #cancel {
+    /*position: sticky;*/
+    top: calc(var(--map-top) + 55px);
+    left: 365px;
+}
+
+
+section {
+    transition: all 0.5s;
+    margin-left: 0;
+    /*flex: 1;*/
+}
+
+:root {
+    /*--map-top: 12px;*/ 
+    --map-top: 11px;
+}
+
+#map {
+    height:70vh;
+    max-height: 1800px;
+    z-index: 0;
+}
+
+#inputs_bottom {
+    position: inherit;
+    width: 100%;
+    top: calc(100% + 60px);
+    padding: 20px;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    height: auto;
+    transition: all .5s;
+}
+
+
+#burgermenucheck:checked ~ section {
+    margin-left: 420px;
+}
+
+.sidebar form div div select {
+    width: 10em;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    background-color: slategray;
+    color: darkslategray;
+    padding: 4px;
+    border-radius: 9px;
+}
+
+.icon-blue {
+    color: deepskyblue;
+}
+
+.btn-blue {
+    background-color: deepskyblue;
+}
+
+.tour-submit-btn {
+    margin-top: auto;
+    margin-left: auto;
+}
+
+#btn-row {
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: none;
+    border-top: none;
+}
+
+.label-no-padding {
+    padding-left: 5px;
+    padding-right: 0;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidemenu-elements {
+    height: 28px;
+    font-size: 13px;
+    border-radius: 0.25em !important;
+    margin-right: 5px;
+}
+
+.sidemenu-btn {
+    font-size: 15px;
+    align-items: center;
+}
