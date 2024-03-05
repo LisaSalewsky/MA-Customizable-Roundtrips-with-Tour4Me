@@ -150,6 +150,7 @@ label #cancel {
 section {
     transition: all 0.5s;
     margin-left: 0;
+    width: auto;
     /*flex: 1;*/
 }
 
@@ -166,7 +167,7 @@ section {
 
 #inputs_bottom {
     position: inherit;
-    width: 100%;
+    width: auto;
     top: calc(100% + 60px);
     padding: 20px;
     bottom: 0;
@@ -192,6 +193,26 @@ section {
 
 .icon-blue {
     color: deepskyblue;
+    &:hover {
+        color: whitesmoke;
+        .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translate(-50%, -150%);
+        }
+
+    }
+}
+
+
+.info-icon-i {
+    .tooltip {
+        background: green;
+        color: currentColor;
+        &:after {
+            border-top-color: red;
+        }
+    }
 }
 
 .btn-blue {
@@ -218,7 +239,7 @@ section {
 }
 
 .sidemenu-elements {
-    height: 28px;
+    height: 30px;
     font-size: 13px;
     border-radius: 0.25em !important;
     margin-right: 5px;
@@ -227,4 +248,73 @@ section {
 .sidemenu-btn {
     font-size: 15px;
     align-items: center;
+}
+
+.tooltip:hover:after {
+    /*background: #333;*/
+    background: slategray;
+    border-radius: 5px;
+    bottom: 26px;
+    color: whitesmoke;
+    content: attr(title);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 220px;
+}
+/*.tooltip {
+    display: inline;
+    position: relative;
+    background: slategray;
+    color: whitesmoke;
+
+    &:after{
+        border-top-color: green;
+    }
+}*/
+/*
+.tooltip:hover:before {
+    border: solid;
+    border-color: #333 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 20px;
+    background: slategray;
+    left: 50%;
+    position: absolute;
+    z-index: 99;
+}*/
+
+
+
+/* Tooltips */
+.tooltip {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    padding: 0.8rem 1rem;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    text-transform: uppercase;
+    transform: translate(-50%, -100%);
+    transition: all 0.3s ease;
+    z-index: 1;
+    &:after
+
+{
+    display: block;
+    position: absolute;
+    bottom: 1px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    content: "";
+    border: solid;
+    border-width: 10px 10px 0 10px;
+    border-color: transparent;
+    transform: translate(-50%, 100%);
 }

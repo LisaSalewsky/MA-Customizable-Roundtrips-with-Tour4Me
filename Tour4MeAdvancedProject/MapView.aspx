@@ -59,7 +59,12 @@
         <form>
             <div class="form-group row first-row"> 
                 <div class="form-group col-md-4 label-no-padding ">
-                    <label  class="label-no-padding"  for="activity">Activity <i class="fas fa-info-circle icon-blue"></i></label> 
+                    <label  class="label-no-padding"  for="activity">Activity 
+                        <a class="info-icon-i">
+                            <i class="fas fa-info-circle icon-blue"></i>
+                            <div class="tooltip">Pre-selects possibly wanted values based on selected activity</div>
+                        </a>
+                    </label> 
                 </div>
                 <div class="form-group col-sm-7  label-no-padding">
                     <select id="activity" name="activity"  class="form-control form-control-sm sidemenu-elements">
