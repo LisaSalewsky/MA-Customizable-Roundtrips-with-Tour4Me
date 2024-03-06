@@ -61,6 +61,11 @@ namespace Tour4MeAdvancedProject
             Response.Write( "<script>alert('Testing');</script>" );
         }
 
+        protected void ExportTourButton1_Click ( object sender, EventArgs e )
+        {
+
+        }
+
         [WebMethod]
         public static List<Tuple<string, List<object>>> GetPath ( double latIn, double lonIn )
         {

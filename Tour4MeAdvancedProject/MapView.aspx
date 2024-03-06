@@ -25,13 +25,6 @@
 
 </asp:Content>
 
-
-
-<asp:Content ID="SearchBarPlaceholder" ContentPlaceHolderID="SearchBarPlaceholder" runat="server"> 
-
-
-</asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceholder" runat="server">
 
 
@@ -48,22 +41,20 @@
 
 <div id="container">
     <input type="checkbox" id="burgermenucheck"/>
-    <label for="burgermenucheck" id="menu-toggle">
+    <label for="burgermenucheck" id="menu-toggle-btn">
         <i class =" fas fa-bars" id="btn"></i>
     </label>
     <div class="sidebar">
         <header>Options</header>
-        <label for="burgermenucheck" id="menu-toggle">
+        <label for="burgermenucheck" id="menu-toggle-cancel">
           <i class =" fas fa-times" id="cancel"></i>
         </label>
         <form>
             <div class="form-group row first-row"> 
-                <div class="form-group col-md-4 label-no-padding ">
-                    <label  class="label-no-padding"  for="activity">Activity 
-                        <a class="info-icon-i">
-                            <i class="fas fa-info-circle icon-blue"></i>
-                            <div class="tooltip">Pre-selects possibly wanted values based on selected activity</div>
-                        </a>
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label"  for="activity">Activity 
+                        <span class="tooltip">Pre-selects possibly wanted values based on selected activity</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
                 <div class="form-group col-sm-7  label-no-padding">
@@ -76,22 +67,23 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4 label-no-padding">
-                    <label class="label-no-padding" for="algorithm">Algorithm <i class="fas fa-info-circle icon-blue"></i></label> 
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label"  for="algorithm">Algorithm 
+                        <span class="tooltip">Select algorithm to compute tour (can affect tour quality and runtime)</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
                 </div>
                 <div class="form-group col-sm-7  label-no-padding">
                     <select id="algorithm" name="algorithm"  class="form-control form-control-sm sidemenu-elements">
-                        <option value="greedy"> Greedy</option>
-                        <option value="mincost"> minCost</option>
-                        <option value="ils"> ILS</option>
-                        <option value="ant"> Ant</option>
-                        <option value="genetic"> Genetic</option>
                     </select>
                 </div>                
             </div>
             <div class="form-group row label-no-padding">
-                <div class="form-group col-md-4 label-no-padding">
-                  <label class="label-no-padding" for="length">Length <i class="fas fa-info-circle icon-blue"></i></label>
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="length">Length
+                        <span class="tooltip">Choose maximum length the generated tour should have (the result will be close to this selected length but never longer)</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
                 </div>
                 <div class="form-group col-sm-7  label-no-padding">
                   <input type="text" class="form-control sidemenu-elements" id="length">
@@ -101,8 +93,11 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4 label-no-padding">
-                    <label class="label-no-padding" for="pathType">Path type <i class="fas fa-info-circle icon-blue"></i></label> 
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="surface">Surface
+                        <span class="tooltip">Surface describes properies of the ground. You can select (positive, green/ negative, red) and deselect (transparent)</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
                     <div class="btn-group tagsSurface flex-wrap sidemenu-btn" id="tagButtonsSurface">
@@ -112,8 +107,11 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4 label-no-padding">
-                    <label class="label-no-padding" for="surface">Surface <i class="fas fa-info-circle icon-blue"></i></label> 
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="pathType">Path type 
+                        <span class="tooltip">Path types describe kinds of paths. They relate to a classification like "highway" or paths only meant for cycling</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
                     <div class="btn-group tagsHighway flex-wrap sidemenu-btn" id="tagButtonsHighway">
@@ -123,8 +121,11 @@
                                
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4 label-no-padding">
-                    <label for="surroundings">Surroundings <i class="fas fa-info-circle icon-blue"></i></label> 
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="surroundings">Surroundings 
+                        <span class="tooltip">The surroundings describe the kind of area you want to visit. After choosing a category, you can select (positive, green/ negative, red) and deselect (transparent)</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
                     <select id="surroundings" name="surroundings"  class="form-control form-control-sm sidemenu-elements">
@@ -138,8 +139,11 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4 label-no-padding">
-                  <label for="elevation">Elevation <i class="fas fa-info-circle icon-blue"></i></label>
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="elevation">Elevation
+                        <span class="tooltip">Elevation describes the maximum steepness any part of the path may have. This does not differentiate between uphill or downhill.</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
                   <input type="text" class="form-control sidemenu-elements" id="elevation">
@@ -149,8 +153,11 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="form-group col-md-4 label-no-padding">
-                    <label for="shape">Tour shape <i class="fas fa-info-circle icon-blue"></i></label> 
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="shape">Tour shape
+                        <span class="tooltip">The tour shape describes how you would like the final tour to be: as round as possible, one path with a U-turn at the end or a complex path with possibly many turns and crossings</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
                     <select id="shape" name="shape"  class="form-control form-control-sm sidemenu-elements">
@@ -159,6 +166,51 @@
                         <option value="uturn"> U-Turn</option>
                         <option value="complex"> Complex</option>
                     </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="runningTime">Running time
+                        <span class="tooltip">Choose a maximum time (10-300) for the algorithms to run. Small values might lead to no results for some algorithms</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
+                </div>
+                <div class="form-group col-sm-6 label-no-padding">
+                    <input type="range" class="form-range form-control sidemenu-elements" oninput="changeRangeRunningTime(this, 'runningTime')"
+                                   onchange="changeRangeRunningTime(this, 'runningTime')" min="10" max="300" id="runningTime">
+                </div>
+                <div class="col col-md-1">
+                    <label class="form-label out-label" id="runningTimeLabel">30s</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="edgeProfit">Edge Profit
+                        <span class="tooltip"></span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
+                </div>
+                <div class="form-group col-sm-6 label-no-padding">
+                    <input type="range" class="form-range form-control sidemenu-elements" oninput="changeRanges(this, 'coveredArea')"
+                                   onchange="changeRanges(this, 'coveredArea')" min="0" max="100" id="edgeProfit">
+                </div>
+                <div class="col col-md-1">
+                    <label class="form-label out-label" id="edgeProfitLabel">100%</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="coveredArea">Covered Area
+                        <span class="tooltip"></span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
+                </div>
+                <div class="form-group col-sm-6 label-no-padding">
+                    <input type="range" class="form-range form-control sidemenu-elements" oninput="changeRanges(this, 'edgeProfit')"
+                                   onchange="changeRanges(this, 'edgeProfit')" min="0" max="100" id="coveredArea">
+                </div>
+                <div class="col col-md-1">
+                    <label class="form-label out-label"  id="coveredAreaLabel">100%</label>
                 </div>
             </div>
             <div class="form-group row btn-row">
@@ -170,102 +222,141 @@
         </form>
     </div>
 
-
     <section id="map">
     </section>
-    <br>
     
     <section id="inputs_bottom">
+        <header>Route information</header>
+        <form>
+             <div class="form-group row first-row">
+                 <details>
+                     <summary>Tour 1</summary>
+                     <div class="form-group row output-info-box">
 
-        <div class="input-group mb-3">
+                       <div class="form-group column left">
+                           <div class="form-group row">
+                                <div class="form-group col-md-5">
+                                    <label class="routeInfoOutputLabels" for="lengthOut">Overall length
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-6 out-label">
+                                     <label id="lengthOut">test</label>
+                                </div>
+                                <div class="form-group col-md-1">
+                                  km
+                                </div>
+                            </div>
+                           <div class="form-group row">
+                                <div class="form-group col-md-5">
+                                    <label  class="routeInfoOutputLabels" for="elevationUpOut">Elevation uphill
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-6 out-label">
+                                     <label id="elevationUpOut"></label>
+                                </div>
+                                <div class="form-group col-md-1">
+                                  %
+                                </div>
+                            </div>
+                           <div class="form-group row">
+                                <div class="form-group col-md-5">
+                                    <label  class="routeInfoOutputLabels" for="elevationDownOut">Elevation downhill
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-6 out-label">
+                                     <label id="elevationDownOut"></label>
+                                </div>
+                                <div class="form-group col-md-1">
+                                  %
+                                </div>
+                            </div>
+                           <div class="form-group row">
+                                <div class="form-group col-md-5">
+                                    <label  class="routeInfoOutputLabels" for="turnsOut">Number of turns
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-6 out-label">
+                                     <label id="turnsOut"></label>
+                                </div>
+                            </div>
+                      </div>
+                        <div class="form-group column middle">
 
-            <input type="text" id="distance" class="form-control" value="50" aria-label="Target Distance (m)">
-            <div class="input-group-append">
-                <button class="btn btn-secondary" disabled type="button">km</button>
-            </div>
-            <div>
-
-            </div>
-        </div>
-
-
-        <div class="btn-group" id="algoRadio">
-        </div>
-
-        <button type="button" class="btn btn-warning" data-bs-toggle="modal" style="position:absolute; right:20px"
-                data-bs-target="#settingsModal">
-            Open settings
-        </button>
+                       </div>
+                       
+                       <div class="form-group column right">
+                           <div class="form-group row">
+                                <div class="form-group col-md-4">
+                                    <label class="routeInfoOutputLabels" for="pathTypesOut">Path types
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-7">
+                                     <label id="pathTypesOut">test</label>
+                                </div>
+                            </div>
+                           <div class="form-group row">
+                                <div class="form-group col-md-4">
+                                    <label  class="routeInfoOutputLabels" for="surfacesOut">Surfaces
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-7 out-label">
+                                     <label id="surfacesOut"></label>
+                                </div>
+                            </div>
+                           <div class="form-group row">
+                                <div class="form-group col-md-4">
+                                    <label  class="routeInfoOutputLabels" for="mainSurroundingsOut">Main surroundings
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-7 out-label">
+                                     <label id="mainSurroundingsOut"></label>
+                                </div>
+                            </div>
+                           <div class="form-group row">
+                                <div class="form-group col-md-4">
+                                    <label  class="routeInfoOutputLabels" for="shapeOut">Shape
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-7 out-label">
+                                     <label id="shapeOut"></label>
+                                </div>
+                            </div>
+                            <div class="form-group row out-label">
+                                <div class="form-group col-md-11">
+                                    <asp:Button ID="ExportTourButton1" class="btn btn-yellow" runat="server" Text="Export Tour" onClientClick="return false;"/>
+                                </div>
+                            </div>
+                      </div>
+                    </div> 
+                </details>
+            </div> 
+            
+            <div class="form-group row first-row">
+                <details>
+                    <summary>Tour 2</summary>
+                        <div class="form-group column left">
+                             <div class="form-group row">
+                                  <div class="form-group col-md-4">
+                                      <label  class="" for="lengthOut2">Length
+                                      </label>
+                                  </div>
+                                  <div class="form-group col-md-7 out-label">
+                                       <label id="lengthOut2">test</label>
+                                  </div>
+                                  <div class="form-group col-md-1">
+                                    km
+                                  </div>
+                              </div>
+                        </div>
+                        <div class="form-group column middle">
+                        </div>
+                        <div class="form-group column right">
+                        </div>
+               </details>   
+            </div> 
+        </form>
 
     </section>
-
-    <!-- Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="false">
-        <div class="modal-dialog modal-lg ">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="settingsModalLabel">Settings</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h5>Underlying map:</h5>
-                    <div class="btn-group" style="display: block; ">
-                        <input type="radio" class="btn-check" name="mapType" value="b" id="backbone"
-                               autocomplete="off" />
-                        <label class="btn btn-outline-success" for="backbone">Backbone</label>
-                        <input type="radio" class="btn-check" name="mapType" value="o" id="osm" autocomplete="off"
-                               checked />
-                        <label class="btn btn-outline-success" for="osm">OSM</label>
-                    </div>
-                    <br>
-                 <%--   <h5>Type of roads:</h5>
-                    <div class="btn-group tagsHighway pre-scrollable"
-                         style="display: block; overflow-x: auto; white-space: nowrap;" id="tagButtonsHighway"></div>
-                    <br>
-                    <h5>Type of surfaces:</h5>
-                    <div class="btn-group mr-2 tagsSurface pre-scrollable"
-                         style="display: block; overflow-x: auto; white-space: nowrap;" id="tagButtonsSurface"></div>
-                    <br>--%>
-                    <h5>Running time (max 300s):</h5>
-                    <div class="input-group">
-                        <input type="text" class="form-control" value="30" aria-label="Running Time" id="runningTime">
-                        <span class="input-group-text">seconds</span>
-                    </div>
-                    <br>
-                    <h5>Quality Distribution:</h5>
-                    <div class="row">
-                        <div class="col col-md-2">
-                            <label class="form-label">Edge Profit</label>
-                        </div>
-                        <div class="col col-md-9">
-                            <input type="range" class="form-range" oninput="changeRanges(this, 'coveredArea')"
-                                   onchange="changeRanges(this, 'coveredArea')" min="0" max="100" id="edgeProfit">
-                        </div>
-                        <div class="col col-md-1">
-                            <label class="form-label" style="float: right;" id="edgeProfitLabel">100%</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col col-md-2">
-                            <label class="form-label">Covered Area</label>
-                        </div>
-                        <div class="col col-md-9">
-                            <input type="range" class="form-range" oninput="changeRanges(this, 'edgeProfit')"
-                                   onchange="changeRanges(this, 'edgeProfit')" min="0" max="100" id="coveredArea">
-                        </div>
-                        <div class="col col-md-1">
-                            <label class="form-label" style="float: right;" id="coveredAreaLabel">100%</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    
 
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="false">
         <div class="modal-dialog modal-lg ">
@@ -286,8 +377,14 @@
             </div>
         </div>
     </div>
-</div>
 
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                placement: 'bottom'
+            });
+        });
+    </script>
 
     <script>
         const checkbox = document.getElementById('check');
@@ -565,7 +662,7 @@
 
                     const key_val_keys = Object.keys(tag);
 
-                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-success desire sidemenu-elements\" id=\"highway" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
+                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-green desire sidemenu-elements\" id=\"highway" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
                 });
 
                 tagsSurface.forEach(tag => {
@@ -574,11 +671,13 @@
 
                     const key_val_keys = Object.keys(tag);
 
-                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-secondary neutral sidemenu-elements\" id=\"surface" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
+                    tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surface" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
                 });
 
 
                 algosRadio = document.getElementById("algoRadio");
+
+                algosSelect = document.getElementById("algorithm");
 
                 algos.forEach(algorithm => {
 
@@ -590,50 +689,53 @@
                 //    console.log(algorithm[key_val_keys[1]] + " Button created")
                 //});
 
-                    const radioInput = document.createElement("input");
-                    radioInput.type = "radio";
-                    radioInput.className = "btn-check sidemenu-elements";
-                    radioInput.name = "algorithm";
-                    radioInput.value = algorithm.Key;
-                    radioInput.id = "algo" + algorithm.Key;
-                    radioInput.autocomplete = "off";
-                    radioInput.checked = algorithm.Key === 1; // Set checked based on some condition
+                    //const radioInput = document.createElement("input");
+                    //radioInput.type = "radio";
+                    //radioInput.className = "btn-check sidemenu-elements";
+                    //radioInput.name = "algorithm";
+                    //radioInput.value = algorithm.Key;
+                    //radioInput.id = "algo" + algorithm.Key;
+                    //radioInput.autocomplete = "off";
+                    //radioInput.checked = algorithm.Key === 1; // Set checked based on some condition
 
-                    const label = document.createElement("label");
-                    label.className = "btn btn-primary";
-                    label.htmlFor = "algo" + algorithm.Key;
-                    label.textContent = algorithm.Value;
+                    //const label = document.createElement("label");
+                    //label.className = "btn btn-primary";
+                    //label.htmlFor = "algo" + algorithm.Key;
+                    //label.textContent = algorithm.Value;
 
-                    algosRadio.appendChild(radioInput);
-                    algosRadio.appendChild(label);
+                    //algosRadio.appendChild(radioInput);
+                    //algosRadio.appendChild(label);
 
-                    // Add event listener to each radio button
-                    radioInput.addEventListener("change", function () {
-                        console.log(algorithm.Value + " Button clicked");
-                        // Add your logic here for handling the change event
-                    });
+                    //// Add event listener to each radio button
+                    //radioInput.addEventListener("change", function () {
+                    //    console.log(algorithm.Value + " Button clicked");
+                    //    // Add your logic here for handling the change event
+                    //});
+
+                    algosSelect.options[algosSelect.options.length] = new Option(algorithm.Value, algorithm.Key);
+
                 });
 
 
                 $(".btn-group > .btn-cycle").click(function () {
                     if ($(this).hasClass("neutral")) {
                         $(this).removeClass("neutral");
-                        $(this).removeClass("btn-outline-secondary");
+                        $(this).removeClass("btn-outline-neutral");
 
                         $(this).addClass("desire");
-                        $(this).addClass("btn-success");
+                        $(this).addClass("btn-green");
                     } else if ($(this).hasClass("desire")) {
                         $(this).removeClass("desire");
-                        $(this).removeClass("btn-success");
+                        $(this).removeClass("btn-green");
 
                         $(this).addClass("avoid");
-                        $(this).addClass("btn-danger");
+                        $(this).addClass("btn-red");
                     } else if ($(this).hasClass("avoid")) {
                         $(this).removeClass("desire"); edgeProfit
-                        $(this).removeClass("btn-danger");
+                        $(this).removeClass("btn-red");
 
                         $(this).addClass("neutral");
-                        $(this).addClass("btn-outline-secondary");
+                        $(this).addClass("btn-outline-neutral");
                     }
                 });
 
@@ -663,11 +765,20 @@
             targetLabel.innerHTML = (100 - current.value) + "%"
         }
 
+
+        function changeRangeRunningTime(current, target) {
+            label = document.getElementById(current.id + "Label")
+            label.innerHTML = (current.value) + "s"
+
+            document.getElementById(target).value = current.value;
+
+        }
+
         $("#<%= GetPathButton.ClientID %>").click(function getPath() {
 
             var lat = marker.getLatLng()["lat"];
             var lon = marker.getLatLng()["lng"];
-            var dis = document.getElementById("distance").value * 1000;
+            var dis = document.getElementById("length").value * 1000;
 
             $.ajax({
                 type: 'POST',
@@ -748,10 +859,10 @@
             });
 
 
-            var algorithm = document.querySelector('input[name="algorithm"]:checked').value;
+            var algorithm = document.querySelector('select[name="algorithm"]').value;
 
-            var mapType = document.querySelector('input[name="mapType"]:checked').value;
-            console.log(mapType);
+            //var mapType = document.querySelector('input[name="mapType"]:checked').value;
+            //console.log(mapType);
 
 
             var runningTime = document.getElementById("runningTime").value;
@@ -759,7 +870,7 @@
             var edgeProfit = document.getElementById("edgeProfit").value / 100;
             var coveredArea = document.getElementById("coveredArea").value / 100;
 
-            document.getElementById("overlay").style.display = "block";
+            //document.getElementById("overlay").style.display = "block";
 
             function createKeyValuePairArray(pairList) {
                 return pairList.map(pair => ((pair[key_val_keys[0]], pair[key_val_keys[1]] )));

@@ -1,18 +1,65 @@
-﻿.footerlinks{
-    color: #ffffff;
+﻿:root {
+    --map-top: 11px;
+    --primary-bg-color: #C1A67A;
+    --primary-text-color: black;
+    --dark-bg-color: #3B5032;
+    --secondary-dark-bg-color: #766548;
+    --highlight-color: #7FA743;
+    --lighter-highlight-color: #CFCFCF;
+}
+
+#form1 {
+    background: var(--lighter-highlight-color);
+}
+
+#header-nav {
+    background-color: var(--dark-bg-color);
+    color: whitesmoke;
+}
+
+#header-nav a {
+    background-color: var(--dark-bg-color);
+    color: whitesmoke;
+}
+
+#header-nav a:hover {
+    color: var(--highlight-color);
+}
+
+#header-nav img {
+    vertical-align: central;
+    height: 30px;
+    width: 40px;
+}
+
+#header-nav .inactive:hover{
+    color: whitesmoke;
+   pointer-events: none;
+   cursor: default;
+}
+
+.footerlinks {
+    color: whitesmoke;
     text-decoration: none !important;
 }
 
 .footerlinks:hover{
-    color: cornflowerblue;
+    color: var(--highlight-color);
+}
+
+ footer {
+    width: 100%;
+}
+ footer, .container:after {
+    height: 20px;
 }
 
 #footer1 {
-    background: slategray;
+    background: var(--primary-bg-color);
 }
 
 #footer2 {
-    background: darkslategray;
+    background: var(--secondary-dark-bg-color);
 }
 
 
