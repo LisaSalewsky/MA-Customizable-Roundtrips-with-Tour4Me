@@ -228,7 +228,7 @@
     <section id="inputs_bottom">
         <header>Route information</header>
         <form>
-             <div class="form-group row first-row">
+             <div id="route_overview" class="form-group row first-row">
                  <details>
                      <summary>Tour 1</summary>
                      <div class="form-group row output-info-box">
@@ -919,6 +919,18 @@
                         console.log("Tour success" + result.d.success);
                         var path = JSON.parse(result.d.path);
 
+                        var last10Points = path.slice(-10);
+
+                        // Define different colors for markers
+                        var colors = ['blue', 'green', 'orange', 'purple', 'pink', 'cyan', 'magenta', 'yellow', 'brown', 'gray'];
+
+                        // Create markers for the last 10 points
+                        for (var i = 0; i < last10Points.length; i++) {
+                            var color = colors[i % colors.length];
+                            L.marker(last10Points[i]).addTo(map);
+                        }
+
+
                         var line = L.polyline(path, { color: colors[route_counter % colors.length], weight: 5 });
                         line = line.addTo(map);
                         
@@ -956,13 +968,13 @@
                             + "        </div>"
                             + "    </div>"
 
-                        $('[data-toggle="tooltip"]').tooltip({
-                            trigger: 'hover'
-                        })
+                        //$('[data-toggle="tooltip"]').tooltip({
+                        //    trigger: 'hover'
+                        //})
 
-                        $('[data-toggle="tooltip"]').on('click', function () {
-                            $(this).tooltip('hide')
-                        })
+                        //$('[data-toggle="tooltip"]').on('click', function () {
+                        //    $(this).tooltip('hide')
+                        //})
 
                         route_counter += 1;
 

@@ -6,17 +6,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
     public class Path
     {
         public List<Edge> Edges { get; }
-        public List<int> Visited { get; set; }
+        public HashSet<int> Visited { get; set; }
         public double Quality { get; set; }
         public double Length { get; set; }
 
         public Path ()
         {
             Edges = new List<Edge>();
-            Visited = new List<int>();
+            Visited = new HashSet<int>();
         }
 
-        public Path ( List<Edge> edges, List<int> visited, double quality )
+        public Path ( List<Edge> edges, HashSet<int> visited, double quality )
         {
             Edges = edges;
             Visited = visited;
@@ -24,7 +24,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Length = edges.Sum( x => x.Cost );
         }
 
-        public Path ( List<Edge> edges, List<int> visited, double quality, double length )
+        public Path ( List<Edge> edges, HashSet<int> visited, double quality, double length )
         {
             Edges = edges;
             Visited = visited;
@@ -40,7 +40,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 Quality += newProfit;
                 Length += addEdge.Cost;
             }
-            Visited.Add( neighbor );
+            _ = Visited.Add( neighbor );
         }
     }
 }

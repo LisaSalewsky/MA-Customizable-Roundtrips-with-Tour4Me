@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
@@ -123,7 +124,7 @@ namespace Tour4MeAdvancedProject.Solver
                         if (quality > bestQuality)
                         {
                             bestQuality = quality;
-                            CurrentProblem.Path = new Path( finalEdges, finalPath, quality, length );
+                            CurrentProblem.Path = new Path( finalEdges, finalPath.ToHashSet(), quality, length );
                         }
                     }
                 }

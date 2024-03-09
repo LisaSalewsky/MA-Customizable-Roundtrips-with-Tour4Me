@@ -63,7 +63,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// <seealso cref="Edge"/>
         /// <seealso cref="Node"/>
         /// <seealso cref="AntColonyOptimizer"/>
-        public (List<Edge>, List<int>) Tour ( Problem CurrentProblem, bool usePenalty, bool useBacktracking )
+        public (List<Edge>, HashSet<int>) Tour ( Problem CurrentProblem, bool usePenalty, bool useBacktracking )
         {
             #region intialize needed variables
             SolutionEdges = new List<Edge>();
@@ -80,14 +80,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double[] actDist = new double[ vNodes.Count ];
             actDist[ start ] = 0.0;
 
+            double profit = 0;
+            double area = 0;
+
             //PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
             //queue.Enqueue(0.0, new Tuple<int, double>(start, 0.0));
             List<int> queue = new List<int>() { start };
-            List<int> visited = new List<int>();
+            HashSet<int> visited = new HashSet<int>();
             Edge pickedEdge = null;
 
             double currentDistance = 0;
-            visited.Add( start );
+            _ = visited.Add( start );
             #endregion
 
 
@@ -108,8 +111,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 FindAllowedPath( CurrentProblem, usePenalty, useBacktracking, vNodes, ref visitableNodes, ref visited, pickedEdge, currentDistance, ref currentNode, ref allowed );
 
-                float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed );
-                CalculateNewPheromoneValues( CurrentProblem, usePenalty, graph, start, currentDistance, edgeProbabilities, currentNode, allowed, sumOfAllowed );
+                float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed, vNodes, visited, currentNode );
+                CalculateNewPheromoneValues( CurrentProblem, usePenalty, vNodes, visited, currentDistance, edgeProbabilities, vNodes[ currentNode ], allowed, sumOfAllowed, profit, area, out profit, out area );
 
                 // randomly generate a random number between [0.0, 1.0) (excluding 1)
                 float probability = (float)Random.NextDouble();
@@ -123,19 +126,20 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 if (pickedEdge != null && pickedProbability > 0)
                 {
                     parent = AddEdgeAndContinue( visitableNodes, queue, visited, pickedEdge, ref currentDistance, currentNode );
+
                 }
                 else
                 {
                     CloseOffPath( graph, start, parent, out List<Edge> edges, out List<int> nodes );
 
-                    return (SolutionEdges.Concat( edges ).ToList(), visited.Concat( nodes ).ToList());
+                    return (SolutionEdges.Concat( edges ).ToList(), visited.Concat( nodes ).ToHashSet());
                 }
             }
 
             return (SolutionEdges, visited);
         }
 
-        private void FindAllowedPath ( Problem CurrentProblem, bool usePenalty, bool useBacktracking, List<Node> vNodes, ref List<Node> visitableNodes, ref List<int> visited, Edge pickedEdge, double currentDistance, ref int currentNode, ref List<Edge> allowed )
+        private void FindAllowedPath ( Problem CurrentProblem, bool usePenalty, bool useBacktracking, List<Node> vNodes, ref List<Node> visitableNodes, ref HashSet<int> visited, Edge pickedEdge, double currentDistance, ref int currentNode, ref List<Edge> allowed )
         {
 
             // if we can't find a next node from the one we picked, choose from the following options:
@@ -165,56 +169,75 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
         }
 
-        private void CalculateNewPheromoneValues ( Problem CurrentProblem, bool usePenalty, Graph graph, int start, double currentDistance, Dictionary<Edge, float> edgeProbabilities, int currentNode, List<Edge> allowed, float sumOfAllowed )
+        private void CalculateNewPheromoneValues ( Problem CurrentProblem, bool usePenalty, List<Node> vNodes, HashSet<int> visited, double currentDistance, Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed, float sumOfAllowed, double profit, double area, out double profitOut, out double areaOut )
         {
+            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId );
+            profitOut = profit;
+            areaOut = area;
+
+            double newProfit = profit;
+            double newArea = area;
             foreach (Edge edge in allowed)
             {
-                int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
+                Node neighbor = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
 
-
-                if (!usePenalty && graph.ShortestPath( start, neighborId ) > CurrentProblem.TargetDistance - currentDistance - edge.Cost)
+                if (neighbor.ShortestDistance == 0)
                 {
-                    continue;
+                    neighbor.ShortestDistance = CurrentProblem.Graph.ShortestPath( CurrentProblem.Start, neighbor.GraphNodeId );
                 }
 
+                if (usePenalty || neighbor.ShortestDistance < CurrentProblem.TargetDistance - currentDistance - edge.Cost)
+                {
+                    newProfit = profit + ( edge.Cost * edge.Profit );
+                    newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
 
-                //double edgeValue = edge.Cost * edge.TrailIntensity;
-                double edgeVisibility = 1 / edge.Cost;
+                    edge.Quality = CurrentProblem.GetQuality( newProfit, newArea );
 
-                // p_{ij}^k (used for choosing town to move to)
-                float currentProbability = (float)( Math.Pow( edge.TrailIntensity, Alpha ) * Math.Pow( edgeVisibility, Beta ) / sumOfAllowed );
-                edgeProbabilities.Add( edge, currentProbability );
+                    //double edgeValue = edge.Cost * edge.TrailIntensity;
+                    double edgeVisibility = 1 / edge.Cost;
 
-                // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
-                edge.Pheromone += PheromoneAmount / edge.Cost;
+                    // p_{ij}^k (used for choosing town to move to)
+                    float currentProbability = (float)( Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha ) * Math.Pow( edgeVisibility, Beta ) / sumOfAllowed );
+                    edgeProbabilities.Add( edge, currentProbability );
+
+                    // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
+                    edge.Pheromone += PheromoneAmount * edge.Profit;
+                }
             }
+            profitOut = newProfit;
+            areaOut = newArea;
         }
 
-        private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, List<int> visited, int currentNode )
+        private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode )
         {
-            List<Edge> allowed;
             // scale trial intensity on edges accordingly for all edges where a node is visited twice
             double penaltyQuotient = 50;
             List<Edge> applyPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
             visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
+            List<Edge> allowed = new List<Edge>( vNodes[ currentNode ].Incident );
 
             foreach (Edge edge in applyPenalty)
             {
-                edge.TrailIntensity /= penaltyQuotient;
+                // create new list of edges with applied penalties
+                Edge newEdge = new Edge( edge, edge.Reversed );
+                newEdge.TrailIntensity /= penaltyQuotient;
+                _ = allowed.Remove( edge );
+                allowed.Add( newEdge );
             }
-            allowed = applyPenalty;
+            //allowed = applyPenalty;
             return allowed;
         }
 
-        private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed )
+        private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed, List<Node> vNodes, HashSet<int> visited, int currentNode )
         {
 
+            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode );
             // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
             float sumOfAllowed = 0;
-            foreach (Edge edge1 in allowed)
+            foreach (Edge edge in allowed)
             {
-                float trailIntensityPowAlpha = (float)Math.Pow( edge1.TrailIntensity, Alpha );
-                float visibilityPowBeta = (float)Math.Pow( 1 / edge1.Cost, Beta );
+                float trailIntensityPowAlpha = (float)Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha );
+                float visibilityPowBeta = (float)Math.Pow( 1 / edge.Cost, Beta );
 
                 sumOfAllowed += trailIntensityPowAlpha * visibilityPowBeta;
             }
@@ -222,7 +245,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return sumOfAllowed;
         }
 
-        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, List<int> visited, Edge pickedEdge, ref double currentDistance, int currentNode )
+        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, HashSet<int> visited, Edge pickedEdge, ref double currentDistance, int currentNode )
         {
             int parent;
             // now choose next node based on probability
@@ -233,7 +256,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             queue.Add( neighborId );
             parent = currentNode;
             // once a node was visited, it cannot be visited again in this tour by the same ant
-            visited.Add( neighborId );
+            _ = visited.Add( neighborId );
             _ = visitableNodes.Remove( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
 
             // Add the picked edge to the solution path
@@ -252,7 +275,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );
         }
 
-        private void BackTrackToUsableSolution ( Edge pickedEdge, List<int> visited, List<Node> visitableNodes, int currentNode, out List<int> fixedVisited, out List<Node> fixedVisitable, out int fixedCurrentNode )
+        private void BackTrackToUsableSolution ( Edge pickedEdge, HashSet<int> visited, List<Node> visitableNodes, int currentNode, out HashSet<int> fixedVisited, out List<Node> fixedVisitable, out int fixedCurrentNode )
         {
             fixedCurrentNode = -1;
             fixedVisitable = null;
@@ -329,7 +352,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     area += edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward;
                 }
                 // the bigger the area covered, the smaller our penalty needs to be
-                penaltyQuotient *= 1 / ( area * problem.CoveredAreaImportance );
+                penaltyQuotient *= 1 / area * problem.CoveredAreaImportance;
             }
 
             foreach (Edge visitedEdge in visited)

@@ -208,8 +208,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 _ = outputString.Append( $"        [{Graph.VNodes[ node ].Lat},{Graph.VNodes[ node ].Lon}], " +
                     $"\n" );
 
-                Edge edge = Graph.GetEdge( node, Path.Visited.ElementAtOrDefault(
-                    Path.Visited.IndexOf( node ) + 1 ) );
+                Edge edge = Graph.GetEdge( node, Path.Visited.ToList().ElementAtOrDefault(
+                    Path.Visited.ToList().IndexOf( node ) + 1 ) );
 
                 if (edge == null)
                 {

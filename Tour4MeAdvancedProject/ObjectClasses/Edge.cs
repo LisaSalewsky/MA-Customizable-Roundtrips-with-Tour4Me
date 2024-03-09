@@ -23,6 +23,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double TrailIntensity { get; set; } = 1;
         public double Cost { get; set; }
         public double Profit { get; set; } = 0;
+        public double Quality { get; set; } = 0;
 
         public Edge ()
         {

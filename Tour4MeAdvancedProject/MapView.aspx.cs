@@ -295,6 +295,7 @@ namespace Tour4MeAdvancedProject
                                          " (theoretical upper bound: " +
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
+                    problem.Metadata.Add( "Length: " + problem.Path.Length );
                     result.Add( "success", "200" );
                     foreach (KeyValuePair<string, string> kv in problem.OutputToResultString())
                     {
