@@ -137,6 +137,12 @@
                         <option value="city"> City</option>
                     </select>
                 </div>
+                <div class="form-group col-sm-7 label-no-padding">
+                    <div class="btn-group tagsSurroundings flex-wrap sidemenu-btn" id="tagButtonsSurroundings">
+
+                    </div>
+                    <br>
+                </div>
             </div>
             <div class="form-group row">
                 <div class="form-group col-md-4 label-no-padding wrapper">
@@ -472,7 +478,6 @@
 
         function success(pos) {
             console.log("success");
-            ////////console.log($("#<%= GetPathButton.ClientID %>");
 
             var lat = pos.coords.latitude;
             var lng = pos.coords.longitude;
@@ -502,9 +507,6 @@
                 centered = true;
             });
             marker.addTo(map)
-
-
-            // Set map focus to current user position
 
         }
 
@@ -543,8 +545,6 @@
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function (result) {
-                    // center_lat = result["center_lat"];
-                    // center_lon = result["center_lon"];
                     console.log('Made first ajax call!')
 
                 },
@@ -556,10 +556,6 @@
 
         };
 
-
-        // $(document).ready(function () {
-
-        // var center_lat, center_lon;
         var max_lat, min_lat, max_lon, min_lon;
 
         console.log(window.location.search);
@@ -568,93 +564,26 @@
         map.on('click', onClick);
 
 
-        //but = document.getElementById("switcherDor");
-        //if (urlParams.has("map")) {
-        //    if (urlParams.get("map") == "sea") {
-        //        but = document.getElementById("switcherSea");
-        //        selectedMap = "sea";
-
-        //        abs_min_lat = lat_sea;
-        //        abs_max_lat = abs_min_lat + lat_gran;
-        //        lat_gran = 0.5 / 2
-        //        lat_pad = 0.5 / 4
-
-        //        abs_min_lon = lon_sea;
-        //        abs_max_lon = abs_min_lon + lon_gran;
-
-        //        lon_gran = 0.75 / 2
-        //        lon_pad = 0.75 / 4;
-
-        //        center_lat = (abs_max_lat + abs_min_lat) / 2;
-        //        center_lon = (abs_max_lon + abs_min_lon) / 2;
-        //    }
-        //}
-
-        //but.setAttribute("aria-disabled", "true");
-        //but.classList.add("disabled");
-
-
         $.ajax({
             type: 'POST',
             url: "MapView.aspx/RenderGraph",
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success: function (result) {
-                // center_lat = result["center_lat"];
-                // center_lon = result["center_lon"];
-
                 tagsHighway = result.d.highway;
                 tagsSurface = result.d.surface;
+
+                var surroundingsClass = document.getElementById("surroundings").value;
+                tagsSurroundings = surroundingsClass == "select" ? "" : result.d.surroundings[surroundingsClass];
                 algos = result.d.algorithms;
 
-                //map = L.map('map').setView([center_lat, center_lon], 14);
-
-                //var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-                //    maxZoom: 25,
-                //    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-                //        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                //    id: 'mapbox/streets-v11',
-                //    tileSize: 512,
-                //    zoomOffset: -1
-                //}).addTo(map);
-
-                // var polyline = L.polyline(path, {color: 'red'}).addTo(map);
-
-                // zoom the map to the polyline
-
                 marker = L.marker([center_lat, center_lon], { draggable: 'true' }).addTo(map);
-
-                //outer_box = L.polygon(
-                //    [[[900, -1800],
-                //    [900, 1800],
-                //    [-900, 1800],
-                //    [-900, -1800]], // outer ring
-                //    [[abs_min_lat - lat_pad, abs_min_lon - lon_pad],
-                //    [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
-                //    [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
-                //    [abs_max_lat + lat_pad, abs_min_lon - lon_pad]] // actual cutout polygon
-                //    ], { interactive: true, color: 'black', weight: "0", fillOpacity: 0.08 }).addTo(map);
-
-                //inner_box = L.polygon(
-                //    [[abs_min_lat - lat_pad, abs_min_lon - lon_pad],
-                //    [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
-                //    [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
-                //    [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
-                //    ], { weight: "0", fillOpacity: 0 }).addTo(map);
-
-
-                //outer_box.on('click', function (e) {
-                //    outer_box.setStyle({ color: "red", fillOpacity: 0.15 });
-                //});
-
-                //inner_box.on('click', function (e) {
-                //    outer_box.setStyle({ color: "black", fillOpacity: 0.08 });
-                //});
 
                 map.on('click', onClick);
 
                 tagButtonsHighway = document.getElementById("tagButtonsHighway");
                 tagButtonsSurface = document.getElementById("tagButtonsSurface");
+                tagButtonsSurroundings = document.getElementById("tagButtonsSurroundings");
 
                 tagsHighway.forEach(tag => {
 
@@ -664,6 +593,7 @@
 
                     tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-green desire sidemenu-elements\" id=\"highway" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
                 });
+
 
                 tagsSurface.forEach(tag => {
                     
@@ -675,42 +605,31 @@
                 });
 
 
-                algosRadio = document.getElementById("algoRadio");
+                tagsSurroundings.forEach(tag => {
+                    // Assuming 'Surroundings' is accessible as a property of the global object
+                    var surroundingType = Surroundings[tag.value];
+                    var innerValues = Object.keys(surroundingType).map(key => surroundingType[key]);
+                    innerValues.forEach(innerValue => {
+                        tagButtonsSurface.innerHTML += "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surrounding" + innerValue + "\">" + innerValue + "</label>";
+                    });
+                });
+
+                //tagsSurroundings.forEach(outerTag => {
+                //    outerTag.foreach(tag => {
+
+                //        tagButtons = tagButtonsSurroundings;
+
+                //        const key_val_keys = Object.keys(tag);
+
+                //        tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surroundings" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
+                //    })
+                //});
+
+
 
                 algosSelect = document.getElementById("algorithm");
 
                 algos.forEach(algorithm => {
-
-                //    const key_val_keys = Object.keys(algorithm);
-
-                //    algosRadio.innerHTML += "<input type=\"radio\" class=\"btn-check\" name=\"algorithm\" value=" + algorithm[key_val_keys[0]] + " id=\"" + algorithm[key_val_keys[1]] + "\" autocomplete=\"off\" " + (algorithm[key_val_keys[0]] == 1 ? "checked" : "") + "/>";
-                //    algosRadio.innerHTML += "<label class=\"btn btn-primary\" for=\"" + algorithm[key_val_keys[0]] + "\">" + algorithm[key_val_keys[1]] + "</label>";
-
-                //    console.log(algorithm[key_val_keys[1]] + " Button created")
-                //});
-
-                    //const radioInput = document.createElement("input");
-                    //radioInput.type = "radio";
-                    //radioInput.className = "btn-check sidemenu-elements";
-                    //radioInput.name = "algorithm";
-                    //radioInput.value = algorithm.Key;
-                    //radioInput.id = "algo" + algorithm.Key;
-                    //radioInput.autocomplete = "off";
-                    //radioInput.checked = algorithm.Key === 1; // Set checked based on some condition
-
-                    //const label = document.createElement("label");
-                    //label.className = "btn btn-primary";
-                    //label.htmlFor = "algo" + algorithm.Key;
-                    //label.textContent = algorithm.Value;
-
-                    //algosRadio.appendChild(radioInput);
-                    //algosRadio.appendChild(label);
-
-                    //// Add event listener to each radio button
-                    //radioInput.addEventListener("change", function () {
-                    //    console.log(algorithm.Value + " Button clicked");
-                    //    // Add your logic here for handling the change event
-                    //});
 
                     algosSelect.options[algosSelect.options.length] = new Option(algorithm.Value, algorithm.Key);
 
@@ -749,10 +668,6 @@
             }
         })
 
-
-        // });
-
-
         function changeRanges(current, target) {
             label = document.getElementById(current.id + "Label")
             label.innerHTML = (current.value) + "%"
@@ -779,6 +694,7 @@
             var lat = marker.getLatLng()["lat"];
             var lon = marker.getLatLng()["lng"];
             var dis = document.getElementById("length").value * 1000;
+            var elevation= document.getElementById("elevation").value ;
 
             $.ajax({
                 type: 'POST',
@@ -797,27 +713,6 @@
                     max_lon = result["max_lon"];
                     min_lon = result["min_lon"];
 
-                    //if (inner_box) {
-                    //    inner_box.remove(map);
-                    //}
-
-                    //inner_box = l.polygon(
-                    //    [
-                    //        [
-                    //            [abs_min_lat - lat_pad, abs_min_lon - lon_pad],
-                    //            [abs_min_lat - lat_pad, abs_max_lon + lon_pad],
-                    //            [abs_max_lat + lat_pad, abs_max_lon + lon_pad],
-                    //            [abs_max_lat + lat_pad, abs_min_lon - lon_pad]
-                    //        ],
-                    //        [
-                    //            [min_lat, min_lon],
-                    //            [min_lat, max_lon],
-                    //            [max_lat, max_lon],
-                    //            [max_lat, min_lon]
-                    //        ]
-                    //    ],
-                    //    { interactive: false, color: 'yellow' })
-                    //    .addto(map);
                 },
                 error: function (xhr, status) {
                     console.log("get path error")
@@ -858,19 +753,26 @@
                 }
             });
 
+            tagsSurroundings.forEach(tag => {
+                tag_button = document.getElementById("surroundings" + tag[key_val_keys[0]]);
+                if (tag_button.classList.contains("neutral")) {
+                    tag[key_val_keys[1]] += ",n";
+                } else if (tag_button.classList.contains("desire")) {
+                    tag[key_val_keys[1]] += ",d";
+                } else if (tag_button.classList.contains("avoid")) {
+                    tag[key_val_keys[1]] += ",a";
+                }
+            });b
+
 
             var algorithm = document.querySelector('select[name="algorithm"]').value;
-
-            //var mapType = document.querySelector('input[name="mapType"]:checked').value;
-            //console.log(mapType);
-
 
             var runningTime = document.getElementById("runningTime").value;
 
             var edgeProfit = document.getElementById("edgeProfit").value / 100;
             var coveredArea = document.getElementById("coveredArea").value / 100;
 
-            //document.getElementById("overlay").style.display = "block";
+            var elevation = document.getElementById("elevation").value;
 
             function createKeyValuePairArray(pairList) {
                 return pairList.map(pair => ((pair[key_val_keys[0]], pair[key_val_keys[1]] )));
@@ -881,6 +783,8 @@
                 lonIn: lon,
                 distIn: dis,
                 algoIn: algorithm,
+                elevationIn: elevation,
+                surroundingsIn: createKeyValuePairArray(tagsSurroundings),
                 tagsHIn: createKeyValuePairArray(tagsHighway),
                 tagsSIn: createKeyValuePairArray(tagsSurface),
                 runningTimeIn: runningTime,
@@ -967,14 +871,6 @@
                             + "                title=\"Delete Route\">D</button>"
                             + "        </div>"
                             + "    </div>"
-
-                        //$('[data-toggle="tooltip"]').tooltip({
-                        //    trigger: 'hover'
-                        //})
-
-                        //$('[data-toggle="tooltip"]').on('click', function () {
-                        //    $(this).tooltip('hide')
-                        //})
 
                         route_counter += 1;
 

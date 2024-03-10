@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
+using Tour4MeAdvancedProject.Helper;
 using Tour4MeAdvancedProject.ObjectClasses;
 using Tour4MeAdvancedProject.Solver;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
@@ -348,6 +349,25 @@ namespace Tour4MeAdvancedProject
             .Select( ( value, index ) => new KeyValuePair<int, string>( index, value.ToString() ) )
             .ToList();
             result.Add( "algorithms", algoList );
+
+
+
+            //List<KeyValuePair<Surroundings.SurroundingType, string[]>> surroundingsData = Enum.GetValues( typeof( Surroundings.SurroundingType ) )
+            //.Cast<Surroundings.SurroundingType>()
+            //.Select( ( value, index ) => new KeyValuePair<Surroundings.SurroundingType, string[]>( value, value.ToString() ) )
+            //.ToList();
+
+            List<KeyValuePair<Surroundings.SurroundingType, string[]>> surroundingsList = Surroundings.Values
+            .Select( pair => new KeyValuePair<Surroundings.SurroundingType, string[]>( pair.Key, pair.Value ) )
+            .ToList();
+            List<KeyValuePair<int, string>> formattedSurroundingsList = Surroundings.Values
+            .Select( ( pair, index ) => new KeyValuePair<int, string>(
+                index,
+                $"{pair.Key}: {string.Join( ", ", pair.Value )}" ) )
+            .ToList();
+
+            result.Add( "surroundings", formattedSurroundingsList );
+
 
             return result;
         }
