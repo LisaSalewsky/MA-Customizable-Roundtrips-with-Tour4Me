@@ -26,20 +26,16 @@ namespace Tour4MeAdvancedProject
 
         private static Tuple<double, double> MarkerLatLon;
         private static readonly bool Zoomed = true;
-        // OuterBox: List(List(Lat,Lon)) = List((minmin(LatLon), minmax(LatLon), maxmax(LatLon), maxmin(LatLon))
         private static readonly List<List<Tuple<double, double>>> OuterBox = new List<List<Tuple<double, double>>>() { };
-        // InnerBox: List(List(Lat,Lon)) = List((minmin(LatLon), minmax(LatLon), maxmax(LatLon), maxmin(LatLon))
         private static readonly List<List<Tuple<double, double>>> InnerBox = new List<List<Tuple<double, double>>>() { };
 
         private static readonly double LatGran = 0.5 / 4;
         private static readonly double LatPad = 0.5 / 6;
         private static readonly double AbsMinLat = LAT_DOR;
-        //private static double AbsMaxLat = AbsMinLat + LatGran;
 
         private static readonly double LonGran = 0.75 / 4;
         private static readonly double LonPad = 0.75 / 6;
         private static readonly double AbsMinLon = LON_DOR;
-        //private static double AbsMaxLon = AbsMinLon + LonGran;
         private static readonly string[] COLORS = { "red", "green", "blue", "maroon", "purple", "lime", "navy" };
 
         private readonly string SelectedMap = "dor";
@@ -48,9 +44,6 @@ namespace Tour4MeAdvancedProject
 
         // StoredRoutes: List(RouteID, Path)
         private readonly List<Tuple<int, List<int>>> Stored_routes = new List<Tuple<int, List<int>>>();
-
-        //private double CenterLat = 51.489808;
-        //private double CenterLon = 7.406319;
 
 
         protected void Page_Load ( object sender, EventArgs e )
@@ -76,16 +69,18 @@ namespace Tour4MeAdvancedProject
 
         [WebMethod]
         public static Dictionary<string, string> Tour ( double latIn, double lonIn, double distIn,
-                                                                string algoIn, string[] tagsHIn, List<string> tagsSIn,
-                                                                string runningTimeIn, double edgeProfitIn, double coveredAreaIn
-                                                                )
+                                                        string algoIn, string elevationIn, string descentIn,
+                                                        string surroundingsIn, string[] tagsHIn, List<string> tagsSIn,
+                                                        string tourShapeIn,
+                                                        string runningTimeIn, double edgeProfitIn, double coveredAreaIn
+                                                        )
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
 
 
             DateTime init_time_1 = DateTime.Now;
 
-            double lat, lon, distance, runningTime, edgeProfitImportance, coveredAreaImportance;
+            double lat, lon, distance, elevation, descent, runningTime, edgeProfitImportance, coveredAreaImportance;
             int algorithm;
             string filename;
 
@@ -94,6 +89,8 @@ namespace Tour4MeAdvancedProject
             distance = distIn;
             algorithm = Convert.ToInt32( algoIn );
             runningTime = Convert.ToDouble( runningTimeIn );
+            elevation = Convert.ToDouble( elevationIn );
+            descent = Convert.ToDouble( descentIn );
 
             runningTime = runningTime < 5 * 60 ? runningTime : 5 * 60;
 
@@ -194,7 +191,27 @@ namespace Tour4MeAdvancedProject
                     Console.WriteLine( tagName );
                 }
             }
+            string[] typeAndValues = surroundingsIn.Split( ':' );
+            _ = Enum.TryParse( typeAndValues[ 0 ], true, out Surroundings.SurroundingType surroundingType );
+            Console.WriteLine( surroundingType );
 
+            string[] surroundingValues = typeAndValues[ 1 ].Split( ';' );
+
+            for (int i = 0; i < surroundingValues.Length; i++)
+            {
+                string[] tagsNameDesireChoice = surroundingValues[ i ].Split( ',' );
+                string desireChoice = tagsNameDesireChoice[ 1 ];
+                string tagName = tagsNameDesireChoice[ 0 ];
+                if (desireChoice == "d")
+                {
+                    _ = problem.PrefTags.Add( tagName );
+                }
+                else if (desireChoice == "a")
+                {
+                    _ = problem.AvoidTags.Add( tagName );
+                    Console.WriteLine( tagName );
+                }
+            }
 
             double best_distance = 1000000000000;
             Node start = null;
@@ -218,8 +235,36 @@ namespace Tour4MeAdvancedProject
             }
 
             problem.RunningTime = runningTime;
-            problem.EdgeProfitImportance = edgeProfitImportance;
-            problem.CoveredAreaImportance = coveredAreaImportance;
+
+            _ = Enum.TryParse( tourShapeIn, true, out TourShape tourShape );
+
+            switch (tourShape)
+            {
+                // for a U-Turn, we only need to consider edge profit
+                case TourShape.UTurn:
+                    problem.EdgeProfitImportance = 1;
+                    problem.CoveredAreaImportance = 0;
+                    break;
+                // for round tours, covered area is very important, edge profit not so much
+                case TourShape.Round:
+                    problem.EdgeProfitImportance = 0.2;
+                    problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance;
+                    break;
+                // for complex tours, we prioritize edge profit but try not to generate a U-Turn either 
+                case TourShape.Complex:
+                    problem.EdgeProfitImportance = 0.8;
+                    problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance;
+                    break;
+                // custom tour shapes allow the user to select the values themselves
+                case TourShape.Custom:
+                default:
+                    problem.EdgeProfitImportance = edgeProfitImportance;
+                    problem.CoveredAreaImportance = coveredAreaImportance;
+                    break;
+            }
+
+            problem.MaxElevation = elevation;
+            problem.MaxDescent = descent;
 
             problem.Path.Visited.Clear();
             problem.Quality = -1;
@@ -237,25 +282,36 @@ namespace Tour4MeAdvancedProject
             {
                 case 0:
                     {
+                        // Greedy
                         SelectionSolver solver = new SelectionSolver();
                         status = solver.Solve( problem );
                         break;
                     }
                 case 1:
                     {
+                        // minCost
                         JoggerSolver solver = new JoggerSolver();
                         status = solver.Solve( problem );
                         break;
                     }
                 case 2:
                     {
+                        // ILS
                         //ILS solver = new ILS();
                         //status = solver.Solve(problem);
                         break;
                     }
                 case 3:
                     {
+                        // Ant
                         AntSolver solver = new AntSolver();
+                        status = solver.Solve( problem );
+                        break;
+                    }
+                case 4:
+                    {
+                        // Genetic
+                        GeneticSolver solver = new GeneticSolver();
                         status = solver.Solve( problem );
                         break;
                     }
@@ -350,12 +406,11 @@ namespace Tour4MeAdvancedProject
             .ToList();
             result.Add( "algorithms", algoList );
 
-
-
-            //List<KeyValuePair<Surroundings.SurroundingType, string[]>> surroundingsData = Enum.GetValues( typeof( Surroundings.SurroundingType ) )
-            //.Cast<Surroundings.SurroundingType>()
-            //.Select( ( value, index ) => new KeyValuePair<Surroundings.SurroundingType, string[]>( value, value.ToString() ) )
-            //.ToList();
+            List<KeyValuePair<int, string>> shapeList = Enum.GetValues( typeof( TourShape ) )
+            .Cast<TourShape>()
+            .Select( ( value, index ) => new KeyValuePair<int, string>( index, value.ToString() ) )
+            .ToList();
+            result.Add( "shapes", shapeList );
 
             List<KeyValuePair<Surroundings.SurroundingType, string[]>> surroundingsList = Surroundings.Values
             .Select( pair => new KeyValuePair<Surroundings.SurroundingType, string[]>( pair.Key, pair.Value ) )

@@ -17,9 +17,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script type="text/javascript">
-        if (!MyGlobalVariables) {
-            MyGlobalVariables = {};
-        }
+        //if (!MyGlobalVariables) {
+        //    MyGlobalVariables = {};
+        //}
         //MyGlobalVariables.MapUrl = "@Url.Action("Map")";
     </script>
 
@@ -128,14 +128,12 @@
                     </label> 
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
-                    <select id="surroundings" name="surroundings"  class="form-control form-control-sm sidemenu-elements">
-                        <option value="select"> Select</option>
-                        <option value="park"> Park</option>
-                        <option value="forest"> Forest</option>
-                        <option value="mountains"> Mountains</option>
-                        <option value="beach"> Beach</option>
-                        <option value="city"> City</option>
+                    <select id="surroundings" name="surroundings"  class="form-control form-control-sm sidemenu-elements" 
+                        onselect="changeSurroundingsButtonSelection(this.value)" onchange="changeSurroundingsButtonSelection(this.value)">
+                        <option value="Select"> Select</option>
                     </select>
+                </div>
+                <div class="form-group col-md-4 label-no-padding wrapper">
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
                     <div class="btn-group tagsSurroundings flex-wrap sidemenu-btn" id="tagButtonsSurroundings">
@@ -147,12 +145,26 @@
             <div class="form-group row">
                 <div class="form-group col-md-4 label-no-padding wrapper">
                     <label  class="label-no-padding icon-label" for="elevation">Elevation
-                        <span class="tooltip">Elevation describes the maximum steepness any part of the path may have. This does not differentiate between uphill or downhill.</span>
+                        <span class="tooltip">Elevation describes the overall maximum elevation the path may have.</span>
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
                   <input type="text" class="form-control sidemenu-elements" id="elevation">
+                </div>
+                <div class="form-group col-md-1 label-no-padding">
+                  %
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-4 label-no-padding wrapper">
+                    <label  class="label-no-padding icon-label" for="descent">Descent
+                        <span class="tooltip">Descent describes the maximum steepness any part of the path may have. This does differentiate between uphill and downhill, descent measuring strictly downhill.</span>
+                        <span><i class="fas fa-info-circle icon-blue" ></i></span>
+                    </label> 
+                </div>
+                <div class="form-group col-sm-7 label-no-padding">
+                  <input type="text" class="form-control sidemenu-elements" id="descent">
                 </div>
                 <div class="form-group col-md-1 label-no-padding">
                   %
@@ -168,9 +180,6 @@
                 <div class="form-group col-sm-7 label-no-padding">
                     <select id="shape" name="shape"  class="form-control form-control-sm sidemenu-elements">
                         <option value="select"> Select</option>
-                        <option value="round"> Round</option>
-                        <option value="uturn"> U-Turn</option>
-                        <option value="complex"> Complex</option>
                     </select>
                 </div>
             </div>
@@ -385,11 +394,11 @@
     </div>
 
     <script>
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip({
-                placement: 'bottom'
-            });
-        });
+        //$(document).ready(function () {
+        //    $('[data-toggle="tooltip"]').tooltip({
+        //        placement: 'bottom'
+        //    });
+        //});
     </script>
 
     <script>
@@ -564,6 +573,70 @@
         map.on('click', onClick);
 
 
+
+        function changeSurroundingsButtonSelection(newSelection) {
+
+
+            i = 0;
+            tagsSurroundings.forEach(tag => {
+
+                secondTagButtons = tagButtonsSurroundings;
+                const button = document.getElementById("surroundings" + i);
+
+                if (button) {
+
+                    let newClasses = "btn-outline-neutral neutral";
+                    button.className = "btn btn-cycle " + newClasses + " sidemenu-elements";
+                }
+
+                const toFind = "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surroundings" + i + "\">" + tag + "</label>";
+
+                const startIndex = secondTagButtons.innerHTML.indexOf(toFind);
+                var trimmedHTML = secondTagButtons.innerHTML;
+                if (startIndex !== -1) {
+                    const endIndex = startIndex + toFind.length;
+                    trimmedHTML = secondTagButtons.innerHTML.substring(0, startIndex) + secondTagButtons.innerHTML.substring(endIndex);
+                }
+                secondTagButtons.innerHTML = trimmedHTML;
+                i++;
+            });
+
+            tagsSurroundings = getSurroundingsByOverallValue(overallTagsSurroundings, newSelection);
+
+            i = 0;
+            tagsSurroundings.forEach(tag => {
+
+                secondTagButtons = tagButtonsSurroundings;
+
+                secondTagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surroundings" + i + "\">" + tag + "</label>";
+
+                i++;
+            });
+
+            $(document).off("click", ".btn-group.tagsSurroundings .btn-cycle").on("click", ".btn-group.tagsSurroundings .btn-cycle", function () {
+                if ($(this).hasClass("neutral")) {
+                    $(this).removeClass("neutral");
+                    $(this).removeClass("btn-outline-neutral");
+
+                    $(this).addClass("desire");
+                    $(this).addClass("btn-green");
+                } else if ($(this).hasClass("desire")) {
+                    $(this).removeClass("desire");
+                    $(this).removeClass("btn-green");
+
+                    $(this).addClass("avoid");
+                    $(this).addClass("btn-red");
+                } else if ($(this).hasClass("avoid")) {
+                    $(this).removeClass("avoid");
+                    $(this).removeClass("btn-red");
+
+                    $(this).addClass("neutral");
+                    $(this).addClass("btn-outline-neutral");
+                }
+            });
+
+        }
+
         $.ajax({
             type: 'POST',
             url: "MapView.aspx/RenderGraph",
@@ -572,10 +645,24 @@
             success: function (result) {
                 tagsHighway = result.d.highway;
                 tagsSurface = result.d.surface;
+                overallTagsSurroundings = result.d.surroundings;
+
+                surroundingsSelect = document.getElementById("surroundings");
+
+                overallTagsSurroundings.forEach(tagCategory => {
+
+                    const pair = tagCategory.Value.split(':');
+                    const outerType = pair[0].trim();
+                    surroundingsSelect.options[surroundingsSelect.options.length] = new Option(outerType, outerType);
+
+                });
+
+
 
                 var surroundingsClass = document.getElementById("surroundings").value;
-                tagsSurroundings = surroundingsClass == "select" ? "" : result.d.surroundings[surroundingsClass];
+                tagsSurroundings = getSurroundingsByOverallValue(result.d.surroundings, surroundingsClass);
                 algos = result.d.algorithms;
+                shape = result.d.shapes;
 
                 marker = L.marker([center_lat, center_lon], { draggable: 'true' }).addTo(map);
 
@@ -604,28 +691,14 @@
                     tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surface" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
                 });
 
-
+                var i = 0;
                 tagsSurroundings.forEach(tag => {
-                    // Assuming 'Surroundings' is accessible as a property of the global object
-                    var surroundingType = Surroundings[tag.value];
-                    var innerValues = Object.keys(surroundingType).map(key => surroundingType[key]);
-                    innerValues.forEach(innerValue => {
-                        tagButtonsSurface.innerHTML += "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surrounding" + innerValue + "\">" + innerValue + "</label>";
-                    });
+
+                    secondTagButtons = tagButtonsSurroundings;
+                    secondTagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surroundings" + i + "\">" + tag + "</label>";
+
+                    i++;
                 });
-
-                //tagsSurroundings.forEach(outerTag => {
-                //    outerTag.foreach(tag => {
-
-                //        tagButtons = tagButtonsSurroundings;
-
-                //        const key_val_keys = Object.keys(tag);
-
-                //        tagButtons.innerHTML += "<label class=\"btn btn-cycle btn-outline-neutral neutral sidemenu-elements\" id=\"surroundings" + tag[key_val_keys[0]] + "\">" + tag[key_val_keys[1]] + "</label>"
-                //    })
-                //});
-
-
 
                 algosSelect = document.getElementById("algorithm");
 
@@ -634,6 +707,17 @@
                     algosSelect.options[algosSelect.options.length] = new Option(algorithm.Value, algorithm.Key);
 
                 });
+
+                
+                shapeSelect = document.getElementById("shape");
+
+                algos.forEach(algorithm => {
+
+                    shapeSelect.options[shapeSelect.options.length] = new Option(shape.Value, shape.Key);
+
+                });
+
+
 
 
                 $(".btn-group > .btn-cycle").click(function () {
@@ -668,6 +752,24 @@
             }
         })
 
+        function getSurroundingsByOverallValue(surroundingsArray, surroundingsClass) {
+
+            for (let i = 0; i < surroundingsArray.length; i++) {
+                const pair = surroundingsArray[i].Value.split(':');
+                const outerType = pair[0].trim();
+                const innerTypes = pair[1].trim().split(',');
+
+                // Check if surroundingsClass matches outerType
+                if (outerType === surroundingsClass) {
+                    // Remove single quotes from inner types and return as array
+                    const cleanedInnerTypes = innerTypes.map(type => type.trim().replace(/'/g, ''));
+                    return cleanedInnerTypes;
+                }
+            }
+            // If no match found, return an empty array
+            return [];
+        }
+
         function changeRanges(current, target) {
             label = document.getElementById(current.id + "Label")
             label.innerHTML = (current.value) + "%"
@@ -688,6 +790,7 @@
             document.getElementById(target).value = current.value;
 
         }
+
 
         $("#<%= GetPathButton.ClientID %>").click(function getPath() {
 
@@ -753,26 +856,35 @@
                 }
             });
 
+            var i = 0;
+            var surroundingString = "";
             tagsSurroundings.forEach(tag => {
-                tag_button = document.getElementById("surroundings" + tag[key_val_keys[0]]);
+                tag_button = document.getElementById("surroundings" + i);
                 if (tag_button.classList.contains("neutral")) {
-                    tag[key_val_keys[1]] += ",n";
+                    surroundingString += tag + ",n;";
                 } else if (tag_button.classList.contains("desire")) {
-                    tag[key_val_keys[1]] += ",d";
+                    surroundingString += tag + ",d;";
                 } else if (tag_button.classList.contains("avoid")) {
-                    tag[key_val_keys[1]] += ",a";
+                    surroundingString += tag + ",a;";
                 }
-            });b
 
+                i++;
+            });
+
+            var surroundingType = document.querySelector('select[name="surroundings"]').value;
+            tagsSurroundings = surroundingType + ": " + surroundingString;
 
             var algorithm = document.querySelector('select[name="algorithm"]').value;
 
             var runningTime = document.getElementById("runningTime").value;
 
+            var tourShape = document.getElementById("shape").value;
+
             var edgeProfit = document.getElementById("edgeProfit").value / 100;
             var coveredArea = document.getElementById("coveredArea").value / 100;
 
             var elevation = document.getElementById("elevation").value;
+            var descent = document.getElementById("descent").value;
 
             function createKeyValuePairArray(pairList) {
                 return pairList.map(pair => ((pair[key_val_keys[0]], pair[key_val_keys[1]] )));
@@ -784,22 +896,15 @@
                 distIn: dis,
                 algoIn: algorithm,
                 elevationIn: elevation,
-                surroundingsIn: createKeyValuePairArray(tagsSurroundings),
+                descentIn: descent,
+                surroundingsIn: tagsSurroundings,
                 tagsHIn: createKeyValuePairArray(tagsHighway),
                 tagsSIn: createKeyValuePairArray(tagsSurface),
+                tourShapeIn: tourShape,
                 runningTimeIn: runningTime,
                 edgeProfitIn: edgeProfit,
                 coveredAreaIn: coveredArea
             };
-
-            const testKVPair = createKeyValuePairArray(tagsHighway);
-            console.log(testKVPair.key);
-            console.log(testKVPair.value);
-            console.log(createKeyValuePairArray(tagsSurface)); 
-
-            console.log(tagsHighway.map(pair => ((pair[key_val_keys[0]], pair[key_val_keys[1]] ))));
-            console.log(tagsSurface.map(pair => ({ Key: pair[key_val_keys[0]], Value: pair[key_val_keys[1]] }))); 
-
 
             // Custom serialization for KeyValuePair
             dataToSend = JSON.parse(JSON.stringify(dataToSend, (key, value) => {

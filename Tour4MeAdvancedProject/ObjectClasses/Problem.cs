@@ -22,6 +22,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public HashSet<string> PrefTags { get; set; }
         public HashSet<string> AvoidTags { get; set; }
         public double MaxElevation { get; set; }
+        public double MaxDescent { get; set; }
         public Graph Graph { get; set; }
         public Graph Backbone { get; set; }
         public double RunningTime { get; set; }

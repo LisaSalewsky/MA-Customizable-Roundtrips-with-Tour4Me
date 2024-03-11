@@ -33,7 +33,7 @@ namespace Tour4MeAdvancedProject.Helper
             minCost,
             ILS,
             AntColony,
-            SimulatedAnnealing,
+            //SimulatedAnnealing,
             Genetic
         }
 
@@ -43,6 +43,14 @@ namespace Tour4MeAdvancedProject.Helper
             Optimal,
             Feasible,
             Timeout
+        }
+
+        public enum TourShape
+        {
+            Round,
+            UTurn,
+            Complex,
+            Custom
         }
 
     }
@@ -64,13 +72,13 @@ namespace Tour4MeAdvancedProject.Helper
         }
         public static Dictionary<SurroundingType, string[]> Values = new Dictionary<SurroundingType, string[]>
         {
-            { SurroundingType.Forest, new[] { "wood", "forest", "scrub", "heath", "tree_row", "tree", "coppice", "tree_group", "grove", "orchard" } },
-            { SurroundingType.CoastalArea, new[] { "coastline", "beach", "sand", "dune", "shoal", "reef", "bay", "cape", "spit", "cliff", "rock" } },
-            { SurroundingType.Mountains, new[] { "peak", "ridge", "hill", "fell ", "tundra ", "saddle", "valley", "cliff", "scree", "glacier", "moraine" } },
-            { SurroundingType.Grassland, new[] { "grass", "grassland", "meadow", "pasture" } },
-            { SurroundingType.City, new[] { "residential", "apartments", "houses", "residential_area", "park", "playground", "recreation_ground", "greenfield" } },
-            { SurroundingType.WaterFeatures, new[] { "spring", "hot_spring", "geyser", "water"} },
-            { SurroundingType.Others, new[] { "bare_rock", "sink" } }
+            { SurroundingType.Forest, new[] { "Coppice", "Forest", "Grove", "Heath", "Orchard", "Scrub", "Tree", "Tree Group", "Tree row", "Wood" } },
+            { SurroundingType.CoastalArea, new[] { "Bay", "Beach", "Cape", "Cliff", "Coastline", "Dune", "Reef", "Rock", "Sand", "Shoal", "Spit" } },
+            { SurroundingType.Mountains, new[] { "Cliff", "Fell", "Glacier", "Hill", "Moraine", "Peak", "Ridge", "Scree", "Saddle", "Tundra", "Valley" } },
+            { SurroundingType.Grassland, new[] { "Grass", "Grassland", "Meadow", "Pasture" } },
+            { SurroundingType.City, new[] { "Apartments", "Greenfield", "Houses", "Park", "Playground", "Recreation ground", "Residential", "Residential area" } },
+            { SurroundingType.WaterFeatures, new[] { "Geyser", "Hot spring", "Spring", "Water" } },
+            { SurroundingType.Others, new[] { "Bare rock", "Sink"  } }
         };
     }
 }
