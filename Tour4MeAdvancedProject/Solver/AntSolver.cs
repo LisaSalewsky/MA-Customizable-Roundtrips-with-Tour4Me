@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using Tour4MeAdvancedProject.ObjectClasses;
@@ -90,7 +89,7 @@ namespace Tour4MeAdvancedProject.Solver
 
 
             HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
-            HashSet<PathType> addedPathTypes = new HashSet<PathType>();
+            HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
 
             foreach (Edge edge in solutionEdges)
             {
@@ -101,7 +100,7 @@ namespace Tour4MeAdvancedProject.Solver
                     {
                         _ = addedSurfaceTags.Add( surfaceTag );
                     }
-                    if (Enum.TryParse<PathType>( currentTag, true, out PathType pathType ))
+                    if (Enum.TryParse<HighwayTag>( currentTag, true, out HighwayTag pathType ))
                     {
                         _ = addedPathTypes.Add( pathType );
                     }

@@ -197,7 +197,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         }
 
 
-                        Edge edge = AddEdge( cEdges, new Node( sId, vId, 0, 0 ), new Node( tId, wId, 0, 0 ), cost );
+                        Edge edge = AddEdge( cEdges, new Node( sId, vId, 0, 0 ), new Node( tId, wId, 0, 0 ), cost, new List<string>(), false, false );
                         //Edge edge = AddEdge(cEdges, sId, tId, cost);
                         cEdges++;
 
@@ -389,8 +389,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     }
 
 
-                    Edge edge = AddEdge( cEdges, source, target, cost );
-                    edge = new Edge( edge, tags, reversed, oneWay );
+                    Edge edge = AddEdge( cEdges, source, target, cost, tags, reversed, oneWay );
+                    //edge = new Edge( edge );
 
                     object geoLocsVal = reader[ "GeoLocationsText" ];
 
@@ -463,7 +463,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return cNodes;
         }
 
-        public Edge AddEdge ( int edgeGraphId, Node s, Node t, double cost )
+        public Edge AddEdge ( int edgeGraphId, Node s, Node t, double cost, List<string> tags, bool reversed, bool oneWay )
         {
             if (s.GraphNodeId > t.GraphNodeId)
             {
@@ -483,6 +483,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             edge.ShoelaceForward = ( yl + yr ) * ( xl - xr );
             edge.ShoelaceBackward = ( yr + yl ) * ( xr - xl );
+
+            edge.Tags = tags;
+            edge.Reversed = reversed;
+            edge.OneWay = oneWay;
 
             AddEdge( edge );
             return edge;

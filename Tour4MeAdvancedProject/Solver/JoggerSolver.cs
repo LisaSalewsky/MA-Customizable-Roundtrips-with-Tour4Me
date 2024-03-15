@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
@@ -35,7 +34,7 @@ namespace Tour4MeAdvancedProject.Solver
             int index = 0;
 
             HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
-            HashSet<PathType> addedPathTypes = new HashSet<PathType>();
+            HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
 
             foreach (Tuple<int, Path> pair in sRing)
             {
@@ -93,7 +92,7 @@ namespace Tour4MeAdvancedProject.Solver
                                 {
                                     _ = addedSurfaceTags.Add( surfaceTag );
                                 }
-                                if (Enum.TryParse<PathType>( currentTag, true, out PathType pathType ))
+                                if (Enum.TryParse<HighwayTag>( currentTag, true, out HighwayTag pathType ))
                                 {
                                     _ = addedPathTypes.Add( pathType );
                                 }
@@ -120,7 +119,7 @@ namespace Tour4MeAdvancedProject.Solver
                                 {
                                     _ = addedSurfaceTags.Add( surfaceTag );
                                 }
-                                if (Enum.TryParse<PathType>( currentTag, true, out PathType pathType ))
+                                if (Enum.TryParse<HighwayTag>( currentTag, true, out HighwayTag pathType ))
                                 {
                                     _ = addedPathTypes.Add( pathType );
                                 }
@@ -149,7 +148,7 @@ namespace Tour4MeAdvancedProject.Solver
                                 {
                                     _ = addedSurfaceTags.Add( surfaceTag );
                                 }
-                                if (Enum.TryParse<PathType>( currentTag, true, out PathType pathType ))
+                                if (Enum.TryParse<HighwayTag>( currentTag, true, out HighwayTag pathType ))
                                 {
                                     _ = addedPathTypes.Add( pathType );
                                 }
