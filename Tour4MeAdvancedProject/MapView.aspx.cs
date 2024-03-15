@@ -89,8 +89,8 @@ namespace Tour4MeAdvancedProject
             distance = distIn;
             algorithm = Convert.ToInt32( algoIn );
             runningTime = Convert.ToDouble( runningTimeIn );
-            elevation = Convert.ToDouble( elevationIn );
-            descent = Convert.ToDouble( descentIn );
+            elevation = elevationIn == "" ? 0 : Convert.ToDouble( elevationIn );
+            descent = descentIn == "" ? 0 : Convert.ToDouble( descentIn );
 
             runningTime = runningTime < 5 * 60 ? runningTime : 5 * 60;
 
@@ -132,7 +132,7 @@ namespace Tour4MeAdvancedProject
 
 
                     //problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
-                    problem = new Problem( latIn, lonIn, distIn / 2, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    problem = new Problem( latIn, lonIn, distIn * 3 / 4, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
                     _ = Guid.TryParse( "123E4567-E89B-12D3-A456-426614174001", out Guid guid );
 
                     //Problem problemTest = new Problem( guid, out string error );
@@ -197,19 +197,22 @@ namespace Tour4MeAdvancedProject
 
             string[] surroundingValues = typeAndValues[ 1 ].Split( ';' );
 
-            for (int i = 0; i < surroundingValues.Length; i++)
+            if (surroundingValues != null && surroundingValues[ 0 ] != " ")
             {
-                string[] tagsNameDesireChoice = surroundingValues[ i ].Split( ',' );
-                string desireChoice = tagsNameDesireChoice[ 1 ];
-                string tagName = tagsNameDesireChoice[ 0 ];
-                if (desireChoice == "d")
+                for (int i = 0; i < surroundingValues.Length; i++)
                 {
-                    _ = problem.PrefTags.Add( tagName );
-                }
-                else if (desireChoice == "a")
-                {
-                    _ = problem.AvoidTags.Add( tagName );
-                    Console.WriteLine( tagName );
+                    string[] tagsNameDesireChoice = surroundingValues[ i ].Split( ',' );
+                    string desireChoice = tagsNameDesireChoice[ 1 ];
+                    string tagName = tagsNameDesireChoice[ 0 ];
+                    if (desireChoice == "d")
+                    {
+                        _ = problem.PrefTags.Add( tagName );
+                    }
+                    else if (desireChoice == "a")
+                    {
+                        _ = problem.AvoidTags.Add( tagName );
+                        Console.WriteLine( tagName );
+                    }
                 }
             }
 
@@ -353,6 +356,11 @@ namespace Tour4MeAdvancedProject
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
                     problem.Metadata.Add( "Length: " + problem.Path.Length );
+                    problem.Metadata.Add( "Elevation: " + problem.Path.Elevation );
+                    problem.Metadata.Add( "Steepness: " + problem.Path.Steepness );
+                    problem.Metadata.Add( "Surroundings: " + problem.Path.SurroundingTags );
+                    problem.Metadata.Add( "Path Types: " + problem.Path.PathTypes );
+                    problem.Metadata.Add( "Surfaces: " + problem.Path.Surfaces );
                     result.Add( "success", "200" );
                     foreach (KeyValuePair<string, string> kv in problem.OutputToResultString())
                     {

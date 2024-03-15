@@ -9,6 +9,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public HashSet<int> Visited { get; set; }
         public double Quality { get; set; }
         public double Length { get; set; }
+        public double Elevation { get; set; } = 100;
+        public double Steepness { get; set; } = 100;
+        public string SurroundingTags { get; set; } = "surroundigns test";
+        public string PathTypes { get; set; }
+        public string Surfaces { get; set; }
 
         public Path ()
         {

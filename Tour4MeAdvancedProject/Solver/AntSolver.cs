@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using Tour4MeAdvancedProject.ObjectClasses;
@@ -86,6 +88,31 @@ namespace Tour4MeAdvancedProject.Solver
 
             P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes.ToList() ) );
 
+
+            HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
+            HashSet<PathType> addedPathTypes = new HashSet<PathType>();
+
+            foreach (Edge edge in solutionEdges)
+            {
+                for (int i = 0; i < edge.Tags.Count; i++)
+                {
+                    string currentTag = edge.Tags[ i ];
+                    if (Enum.TryParse<SurfaceTag>( currentTag, true, out SurfaceTag surfaceTag ))
+                    {
+                        _ = addedSurfaceTags.Add( surfaceTag );
+                    }
+                    if (Enum.TryParse<PathType>( currentTag, true, out PathType pathType ))
+                    {
+                        _ = addedPathTypes.Add( pathType );
+                    }
+
+                }
+
+            }
+            P.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
+            P.Path.PathTypes = string.Join( ", ", addedPathTypes );
+
+
             return SolveStatus.Feasible;
         }
 
@@ -99,10 +126,19 @@ namespace Tour4MeAdvancedProject.Solver
                 ? 0
                 : 1 / ( P.AvoidTags.Count * P.EdgeProfitImportance );
 
-            HashSet<int> visitedNodes = new HashSet<int>();
+            //HashSet<int> visitedNodes = new HashSet<int>();
 
             _ = Parallel.ForEach( P.Graph.VEdges, edge =>
             {
+                //if (edge.SourceNode.ShortestDistance == 0)
+                //{
+                //    edge.SourceNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.SourceNode.GraphNodeId );
+                //}
+                //if (edge.TargetNode.ShortestDistance == 0)
+                //{
+                //    edge.TargetNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.TargetNode.GraphNodeId );
+                //}
+
                 foreach (string tag in edge.Tags)
                 {
                     if (P.PrefTags.Contains( tag ))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
@@ -32,6 +33,9 @@ namespace Tour4MeAdvancedProject.Solver
             int visitedIndex = 0;
 
             int index = 0;
+
+            HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
+            HashSet<PathType> addedPathTypes = new HashSet<PathType>();
 
             foreach (Tuple<int, Path> pair in sRing)
             {
@@ -82,6 +86,19 @@ namespace Tour4MeAdvancedProject.Solver
 
                             finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
+                            for (int i = 0; i < v.Tags.Count; i++)
+                            {
+                                string currentTag = v.Tags[ i ];
+                                if (Enum.TryParse<SurfaceTag>( currentTag, true, out SurfaceTag surfaceTag ))
+                                {
+                                    _ = addedSurfaceTags.Add( surfaceTag );
+                                }
+                                if (Enum.TryParse<PathType>( currentTag, true, out PathType pathType ))
+                                {
+                                    _ = addedPathTypes.Add( pathType );
+                                }
+
+                            }
                             length += v.Cost;
                         }
 
@@ -96,6 +113,19 @@ namespace Tour4MeAdvancedProject.Solver
                             Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
+                            for (int i = 0; i < v.Tags.Count; i++)
+                            {
+                                string currentTag = v.Tags[ i ];
+                                if (Enum.TryParse<SurfaceTag>( currentTag, true, out SurfaceTag surfaceTag ))
+                                {
+                                    _ = addedSurfaceTags.Add( surfaceTag );
+                                }
+                                if (Enum.TryParse<PathType>( currentTag, true, out PathType pathType ))
+                                {
+                                    _ = addedPathTypes.Add( pathType );
+                                }
+
+                            }
                             length += v.Cost;
                         }
 
@@ -112,6 +142,19 @@ namespace Tour4MeAdvancedProject.Solver
                             Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
+                            for (int j = 0; j < v.Tags.Count; j++)
+                            {
+                                string currentTag = v.Tags[ j ];
+                                if (Enum.TryParse<SurfaceTag>( currentTag, true, out SurfaceTag surfaceTag ))
+                                {
+                                    _ = addedSurfaceTags.Add( surfaceTag );
+                                }
+                                if (Enum.TryParse<PathType>( currentTag, true, out PathType pathType ))
+                                {
+                                    _ = addedPathTypes.Add( pathType );
+                                }
+
+                            }
                             length += v.Cost;
                         }
 
@@ -129,6 +172,9 @@ namespace Tour4MeAdvancedProject.Solver
                     }
                 }
             }
+
+            CurrentProblem.Path.PathTypes = string.Join( ", ", addedPathTypes );
+            CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
 
             return bestQuality == -1 ? SolveStatus.Unsolved : SolveStatus.Feasible;
         }

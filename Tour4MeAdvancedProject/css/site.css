@@ -53,8 +53,15 @@
 
 
     .label-no-padding {
-        padding-left: 5px;
-        padding-right: 0;
+        padding-left: 2px;
+        padding-right: 5px;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .text-label-small{
+        margin-left: -15px;
+        padding-right: 5px;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
     }
@@ -116,7 +123,43 @@
 
 
 /* ------------------------------------------------- Bottom inputs styling ------------------------------------------------- */
-    
+
+    .collapsible {
+        background-color: var(--dark-bg-color);
+        color: whitesmoke;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .active-collapsible, .collapsible:hover {
+        background-color: mix( var(--dark-bg-color), black, 15%);
+    }
+
+    .collapsible:after {
+        content: '\25bc';
+        color: white;
+        font-weight: bold;
+        float: right;
+        margin-left: 5px;
+    }
+
+    .active-collapsible:after {
+        content: "\25b2";
+    }
+
+    .info-content {
+        padding: 0 18px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        /*background-color: #f1f1f1;*/
+        overflow-y: scroll;
+    }
 
     #inputs_bottom {
         position: inherit;
@@ -223,8 +266,8 @@
     .sidebar {
         position: absolute;
         overflow-y: scroll;
-        left: -420px;
-        width: 420px;
+        left: -450px;
+        width: 450px;
         height: 100%;
         background: var(--dark-bg-color);
         transition: all 0.5s ease;
@@ -235,8 +278,8 @@
     .sidebar header {
         position: absolute;
         font-size: 22px;
-        left: -420px;
-        width: 420px;
+        left: -450px;
+        width: 450px;
         color: whitesmoke;
         text-align: center;
         line-height: 2;

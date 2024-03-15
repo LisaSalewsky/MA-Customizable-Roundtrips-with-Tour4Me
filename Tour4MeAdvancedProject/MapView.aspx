@@ -57,7 +57,7 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-7  label-no-padding">
+                <div class="form-group col-sm-8  label-no-padding">
                     <select id="activity" name="activity"  class="form-control form-control-sm sidemenu-elements">
                         <option value="select"> Select</option>
                         <option value="running"> Running</option>
@@ -73,7 +73,7 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-7  label-no-padding">
+                <div class="form-group col-sm-8 label-no-padding">
                     <select id="algorithm" name="algorithm"  class="form-control form-control-sm sidemenu-elements">
                     </select>
                 </div>                
@@ -88,7 +88,7 @@
                 <div class="form-group col-sm-7  label-no-padding">
                   <input type="text" class="form-control sidemenu-elements" id="length">
                 </div>
-                <div class="form-group col-md-1 label-no-padding">
+                <div class="form-group col-md-1 text-label-small">
                   km
                 </div>
             </div>
@@ -99,7 +99,7 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-7 label-no-padding">
+                <div class="form-group col-sm-8 label-no-padding">
                     <div class="btn-group tagsSurface flex-wrap sidemenu-btn" id="tagButtonsSurface">
 
                     </div>
@@ -113,7 +113,7 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-7 label-no-padding">
+                <div class="form-group col-sm-8 label-no-padding">
                     <div class="btn-group tagsHighway flex-wrap sidemenu-btn" id="tagButtonsHighway">
 
                     </div>
@@ -127,7 +127,7 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-7 label-no-padding">
+                <div class="form-group col-sm-8 label-no-padding">
                     <select id="surroundings" name="surroundings"  class="form-control form-control-sm sidemenu-elements" 
                         onselect="changeSurroundingsButtonSelection(this.value)" onchange="changeSurroundingsButtonSelection(this.value)">
                         <option value="Select"> Select</option>
@@ -135,7 +135,7 @@
                 </div>
                 <div class="form-group col-md-4 label-no-padding wrapper">
                 </div>
-                <div class="form-group col-sm-7 label-no-padding">
+                <div class="form-group col-sm-8 label-no-padding">
                     <div class="btn-group tagsSurroundings flex-wrap sidemenu-btn" id="tagButtonsSurroundings">
 
                     </div>
@@ -145,20 +145,20 @@
             <div class="form-group row">
                 <div class="form-group col-md-4 label-no-padding wrapper">
                     <label  class="label-no-padding icon-label" for="elevation">Elevation
-                        <span class="tooltip">Elevation describes the overall maximum elevation the path may have.</span>
+                        <span class="tooltip">Elevation describes the overall maximum elevation the path may have on any 100m part. It is measured in meters (vertically) per 100m (horizontally).</span>
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
                 <div class="form-group col-sm-7 label-no-padding">
-                  <input type="text" class="form-control sidemenu-elements" id="elevation">
+                    <input type="text" class="form-control sidemenu-elements" id="elevation">
                 </div>
-                <div class="form-group col-md-1 label-no-padding">
-                  %
+                <div class="form-group col-sm-1 text-label-small">
+                    m/100m
                 </div>
             </div>
             <div class="form-group row">
                 <div class="form-group col-md-4 label-no-padding wrapper">
-                    <label  class="label-no-padding icon-label" for="descent">Descent
+                    <label  class="label-no-padding icon-label" for="descent">Steepness
                         <span class="tooltip">Descent describes the maximum steepness any part of the path may have. This does differentiate between uphill and downhill, descent measuring strictly downhill.</span>
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
@@ -166,7 +166,7 @@
                 <div class="form-group col-sm-7 label-no-padding">
                   <input type="text" class="form-control sidemenu-elements" id="descent">
                 </div>
-                <div class="form-group col-md-1 label-no-padding">
+                <div class="form-group col-sm-1 text-label-small">
                   %
                 </div>
             </div>
@@ -177,7 +177,7 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-7 label-no-padding">
+                <div class="form-group col-sm-8 label-no-padding">
                     <select id="shape" name="shape"  class="form-control form-control-sm sidemenu-elements">
                         <option value="select"> Select</option>
                     </select>
@@ -190,12 +190,12 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-6 label-no-padding">
+                <div class="form-group col-sm-7 label-no-padding">
                     <input type="range" class="form-range form-control sidemenu-elements" oninput="changeRangeRunningTime(this, 'runningTime')"
                                    onchange="changeRangeRunningTime(this, 'runningTime')" min="10" max="300" id="runningTime">
                 </div>
                 <div class="col col-md-1">
-                    <label class="form-label out-label" id="runningTimeLabel">30s</label>
+                    <label class="form-label text-label-small" id="runningTimeLabel">30s</label>
                 </div>
             </div>
             <div class="form-group row">
@@ -205,12 +205,12 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-6 label-no-padding">
+                <div class="form-group col-sm-7 label-no-padding">
                     <input type="range" class="form-range form-control sidemenu-elements" oninput="changeRanges(this, 'coveredArea')"
                                    onchange="changeRanges(this, 'coveredArea')" min="0" max="100" id="edgeProfit">
                 </div>
                 <div class="col col-md-1">
-                    <label class="form-label out-label" id="edgeProfitLabel">100%</label>
+                    <label class="form-label text-label-small" id="edgeProfitLabel">100%</label>
                 </div>
             </div>
             <div class="form-group row">
@@ -220,12 +220,12 @@
                         <span><i class="fas fa-info-circle icon-blue" ></i></span>
                     </label> 
                 </div>
-                <div class="form-group col-sm-6 label-no-padding">
+                <div class="form-group col-sm-7 label-no-padding">
                     <input type="range" class="form-range form-control sidemenu-elements" oninput="changeRanges(this, 'edgeProfit')"
                                    onchange="changeRanges(this, 'edgeProfit')" min="0" max="100" id="coveredArea">
                 </div>
                 <div class="col col-md-1">
-                    <label class="form-label out-label"  id="coveredAreaLabel">100%</label>
+                    <label class="form-label text-label-small"  id="coveredAreaLabel">100%</label>
                 </div>
             </div>
             <div class="form-group row btn-row">
@@ -241,134 +241,136 @@
     </section>
     
     <section id="inputs_bottom">
-        <header>Route information</header>
         <form>
-             <div id="route_overview" class="form-group row first-row">
-                 <details>
-                     <summary>Tour 1</summary>
-                     <div class="form-group row output-info-box">
+            <button class="collapsible">Route information</button>
+            <div class ="info-content">
+                 <div id="route_overview" class="form-group row first-row">
+                     <%--<details open>
+                         <summary>Tour 1</summary>
+                         <div class="form-group row output-info-box">
 
-                       <div class="form-group column left">
-                           <div class="form-group row">
-                                <div class="form-group col-md-5">
-                                    <label class="routeInfoOutputLabels" for="lengthOut">Overall length
-                                    </label>
+                           <div class="form-group column left">
+                               <div class="form-group row">
+                                    <div class="form-group col-md-5">
+                                        <label class="routeInfoOutputLabels" for="lengthOut">Overall length
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-6 out-label">
+                                         <label id="lengthOut">test</label>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                      km
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6 out-label">
-                                     <label id="lengthOut">test</label>
+                               <div class="form-group row">
+                                    <div class="form-group col-md-5">
+                                        <label  class="routeInfoOutputLabels" for="elevationUpOut">Elevation uphill
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-6 out-label">
+                                         <label id="elevationUpOut"></label>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                      %
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-1">
-                                  km
+                               <div class="form-group row">
+                                    <div class="form-group col-md-5">
+                                        <label  class="routeInfoOutputLabels" for="elevationDownOut">Elevation downhill
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-6 out-label">
+                                         <label id="elevationDownOut"></label>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                      %
+                                    </div>
                                 </div>
-                            </div>
-                           <div class="form-group row">
-                                <div class="form-group col-md-5">
-                                    <label  class="routeInfoOutputLabels" for="elevationUpOut">Elevation uphill
-                                    </label>
+                               <div class="form-group row">
+                                    <div class="form-group col-md-5">
+                                        <label  class="routeInfoOutputLabels" for="turnsOut">Number of turns
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-6 out-label">
+                                         <label id="turnsOut"></label>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6 out-label">
-                                     <label id="elevationUpOut"></label>
-                                </div>
-                                <div class="form-group col-md-1">
-                                  %
-                                </div>
-                            </div>
-                           <div class="form-group row">
-                                <div class="form-group col-md-5">
-                                    <label  class="routeInfoOutputLabels" for="elevationDownOut">Elevation downhill
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-6 out-label">
-                                     <label id="elevationDownOut"></label>
-                                </div>
-                                <div class="form-group col-md-1">
-                                  %
-                                </div>
-                            </div>
-                           <div class="form-group row">
-                                <div class="form-group col-md-5">
-                                    <label  class="routeInfoOutputLabels" for="turnsOut">Number of turns
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-6 out-label">
-                                     <label id="turnsOut"></label>
-                                </div>
-                            </div>
-                      </div>
-                        <div class="form-group column middle">
+                          </div>
+                            <div class="form-group column middle">
 
-                       </div>
+                           </div>
                        
-                       <div class="form-group column right">
-                           <div class="form-group row">
-                                <div class="form-group col-md-4">
-                                    <label class="routeInfoOutputLabels" for="pathTypesOut">Path types
-                                    </label>
+                           <div class="form-group column right">
+                               <div class="form-group row">
+                                    <div class="form-group col-md-4">
+                                        <label class="routeInfoOutputLabels" for="pathTypesOut">Path types
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-7">
+                                         <label id="pathTypesOut">test</label>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-7">
-                                     <label id="pathTypesOut">test</label>
+                               <div class="form-group row">
+                                    <div class="form-group col-md-4">
+                                        <label  class="routeInfoOutputLabels" for="surfacesOut">Surfaces
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-7 out-label">
+                                         <label id="surfacesOut"></label>
+                                    </div>
                                 </div>
-                            </div>
-                           <div class="form-group row">
-                                <div class="form-group col-md-4">
-                                    <label  class="routeInfoOutputLabels" for="surfacesOut">Surfaces
-                                    </label>
+                               <div class="form-group row">
+                                    <div class="form-group col-md-4">
+                                        <label  class="routeInfoOutputLabels" for="mainSurroundingsOut">Main surroundings
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-7 out-label">
+                                         <label id="mainSurroundingsOut"></label>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-7 out-label">
-                                     <label id="surfacesOut"></label>
+                               <div class="form-group row">
+                                    <div class="form-group col-md-4">
+                                        <label  class="routeInfoOutputLabels" for="shapeOut">Shape
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-7 out-label">
+                                         <label id="shapeOut"></label>
+                                    </div>
                                 </div>
-                            </div>
-                           <div class="form-group row">
-                                <div class="form-group col-md-4">
-                                    <label  class="routeInfoOutputLabels" for="mainSurroundingsOut">Main surroundings
-                                    </label>
+                                <div class="form-group row out-label">
+                                    <div class="form-group col-md-11">
+                                        <asp:Button ID="ExportTourButton1" class="btn btn-yellow" runat="server" Text="Export Tour" onClientClick="return false;"/>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-7 out-label">
-                                     <label id="mainSurroundingsOut"></label>
-                                </div>
-                            </div>
-                           <div class="form-group row">
-                                <div class="form-group col-md-4">
-                                    <label  class="routeInfoOutputLabels" for="shapeOut">Shape
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-7 out-label">
-                                     <label id="shapeOut"></label>
-                                </div>
-                            </div>
-                            <div class="form-group row out-label">
-                                <div class="form-group col-md-11">
-                                    <asp:Button ID="ExportTourButton1" class="btn btn-yellow" runat="server" Text="Export Tour" onClientClick="return false;"/>
-                                </div>
-                            </div>
-                      </div>
-                    </div> 
-                </details>
-            </div> 
+                          </div>
+                        </div> 
+                    </details>
+                </div> 
             
-            <div class="form-group row first-row">
-                <details>
-                    <summary>Tour 2</summary>
-                        <div class="form-group column left">
-                             <div class="form-group row">
-                                  <div class="form-group col-md-4">
-                                      <label  class="" for="lengthOut2">Length
-                                      </label>
+                <div class="form-group row first-row">
+                    <details>
+                        <summary>Tour 2</summary>
+                            <div class="form-group column left">
+                                 <div class="form-group row">
+                                      <div class="form-group col-md-4">
+                                          <label  class="" for="lengthOut2">Length
+                                          </label>
+                                      </div>
+                                      <div class="form-group col-md-7 out-label">
+                                           <label id="lengthOut2">test</label>
+                                      </div>
+                                      <div class="form-group col-md-1">
+                                        km
+                                      </div>
                                   </div>
-                                  <div class="form-group col-md-7 out-label">
-                                       <label id="lengthOut2">test</label>
-                                  </div>
-                                  <div class="form-group col-md-1">
-                                    km
-                                  </div>
-                              </div>
-                        </div>
-                        <div class="form-group column middle">
-                        </div>
-                        <div class="form-group column right">
-                        </div>
-               </details>   
-            </div> 
+                            </div>
+                            <div class="form-group column middle">
+                            </div>
+                            <div class="form-group column right">
+                            </div>
+                   </details>   --%>
+                </div> 
+            </div>
         </form>
 
     </section>
@@ -394,11 +396,28 @@
     </div>
 
     <script>
-        //$(document).ready(function () {
-        //    $('[data-toggle="tooltip"]').tooltip({
-        //        placement: 'bottom'
-        //    });
-        //});
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function (event) {
+                event.preventDefault();
+                this.classList.toggle("active-collapsible");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    // Temporarily open the <details> to measure its height
+                    var wasOpen = content.hasAttribute("open");
+                    content.setAttribute("open", "true");
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    // Reset the open state to its original value
+                    if (!wasOpen) {
+                        content.removeAttribute("open");
+                    }
+                }
+            });
+        }
     </script>
 
     <script>
@@ -858,18 +877,20 @@
 
             var i = 0;
             var surroundingString = "";
-            tagsSurroundings.forEach(tag => {
-                tag_button = document.getElementById("surroundings" + i);
-                if (tag_button.classList.contains("neutral")) {
-                    surroundingString += tag + ",n;";
-                } else if (tag_button.classList.contains("desire")) {
-                    surroundingString += tag + ",d;";
-                } else if (tag_button.classList.contains("avoid")) {
-                    surroundingString += tag + ",a;";
-                }
+            if (tagsSurroundings != "Select: ") {
+                tagsSurroundings.forEach(tag => {
+                    tag_button = document.getElementById("surroundings" + i);
+                    if (tag_button.classList.contains("neutral")) {
+                        surroundingString += tag + ",n;";
+                    } else if (tag_button.classList.contains("desire")) {
+                        surroundingString += tag + ",d;";
+                    } else if (tag_button.classList.contains("avoid")) {
+                        surroundingString += tag + ",a;";
+                    }
 
-                i++;
-            });
+                    i++;
+                });
+            }
 
             var surroundingType = document.querySelector('select[name="surroundings"]').value;
             tagsSurroundings = surroundingType + ": " + surroundingString;
@@ -950,32 +971,152 @@
 
                         m_body = document.getElementById("metadata-body");
 
+                        var parsedMetadata = {};
+
                         m_body.innerHTML = ""
                         metadata.forEach(element => {
                             m_body.innerHTML += "<p>" + element + "</p>\n";
+                            // Split each string at the colon
+                            var parts = element.split(": ");
+                            // Extract the keyword and value
+                            var keyword = parts[0].trim();
+                            var value = parts.slice(1).join(": "); // Rejoin the parts in case the value contains colons
+                            // Add the keyword-value pair to the parsedData object
+                            parsedMetadata[keyword] = value;
                         });
+
 
                         stored_routes.push({ 'route_id': route_counter, 'line': line, 'path': path, 'metadata': metadata })
 
                         html_routes = document.getElementById("route_overview");
+                        open_string = route_counter == 0 ? "open" : "";
 
-                        html_routes.innerHTML += "     <div class=\"input-group mb-3\" id=\"d" + route_counter + "\">"
-                            + "        <div class=\"input-group-prepend\">"
-                            + "            <button class=\"btn btn-warning\" route_id=\"" + route_counter + "\" onclick=\"toggleRoute(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
-                            + "                title=\"Toggle Selected Route\">T</button>"
-                            + "            <button class=\"btn btn-secondary\" route_id=\"" + route_counter + "\" data-bs-toggle=\"modal\" data-bs-target=\"#infoModal\" onclick=\"showInfo(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
-                            + "                title=\"Display Route Information\">I</button>"
-                            + "        </div>"
+                        html_routes.innerHTML += " <details " + open_string + ">"
+                            + "  <summary> Tour " + route_counter + "</summary>"
+                            + "      <div class=\"form-group row output-info-box\">"
                             + ""
-                            + "        <input type=\"text\" class=\"form-control\" id=\"r" + route_counter + "\" style=\"color:" + colors[route_counter % colors.length] + "\" value=\"Route " + route_counter + "\">"
+                            + "          <div class=\"form-group column left\">"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-5\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"lengthOut\">Overall length"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-6 out-label\">"
+                            + "                      <label id=\"lengthOut" + route_counter + "\">" + parsedMetadata["Length"] + " " 
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-1\">"
+                            + "                      km"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-5\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"elevationUpOut\">Elevation uphill"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-6 out-label\">"
+                            + "                      <label id=\"elevationUpOut" + route_counter + "\">" + parsedMetadata["Elevation"] + " " 
+                                + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-1\">"
+                            + "                      %"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-5\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"elevationDownOut\">Elevation downhill"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-6 out-label\">"
+                            + "                      <label id=\"elevationDownOut" + route_counter + "\">" + parsedMetadata["Steepness"] + " " 
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-1\">"
+                            + "                      %"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-5\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"turnsOut\">Number of turns"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-6 out-label\">"
+                            + "                      <label id=\"turnsOut" + route_counter + "\"></label>"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "          </div>"
+                            + "          <div class=\"form-group column middle\">"
                             + ""
-                            + "        <div class=\"input-group-append\">"
-                            + "            <button class=\"btn btn-success\" route_id=\"" + route_counter + "\" onclick=\"toGPX(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
-                            + "                title=\"Export Route to GPX\">E</button>"
-                            + "            <button class=\"btn btn-danger\" route_id=\"" + route_counter + "\" onclick=\"deleteRoute(this)\"  data-toggle=\"tooltip\" data-placement=\"bottom\""
-                            + "                title=\"Delete Route\">D</button>"
-                            + "        </div>"
-                            + "    </div>"
+                            + "          </div>"
+                            + ""
+                            + "          <div class=\"form-group column right\">"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-4\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"pathTypesOut\">Path types"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-7\">"
+                            + "                      <label id=\"pathTypesOut" + route_counter + "\">" + parsedMetadata["Path Types"] + " " 
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-4\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"surfacesOut\">Surfaces"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-7 out-label\">"
+                            + "                      <label id=\"surfacesOut" + route_counter + "\">" + parsedMetadata["Surfaces"] + " " 
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-4\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"mainSurroundingsOut\">Main surroundings"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-7 out-label\">"
+                            + "                      <label id=\"mainSurroundingsOut" + route_counter + "\">" + parsedMetadata["Surroundings"] + " " 
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-4\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"shapeOut\">Shape"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-7 out-label\">"
+                            + "                      <label id=\"shapeOut" + route_counter + "\">" //+ parsedMetadata["Elevation"] +
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row out-label\">"
+                            + "                  <div class=\"form-group col-md-11\">"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "          </div>"
+                            + "      </div> "
+                            + "    </details > ";
+
+
+
+                        //html_routes.innerHTML += "     <div class=\"input-group mb-3\" id=\"d" + route_counter + "\">"
+                        //    + "        <div class=\"input-group-prepend\">"
+                        //    + "            <button class=\"btn btn-warning\" route_id=\"" + route_counter + "\" onclick=\"toggleRoute(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
+                        //    + "                title=\"Toggle Selected Route\">T</button>"
+                        //    + "            <button class=\"btn btn-secondary\" route_id=\"" + route_counter + "\" data-bs-toggle=\"modal\" data-bs-target=\"#infoModal\" onclick=\"showInfo(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
+                        //    + "                title=\"Display Route Information\">I</button>"
+                        //    + "        </div>"
+                        //    + ""
+                        //    + "        <input type=\"text\" class=\"form-control\" id=\"r" + route_counter + "\" style=\"color:" + colors[route_counter % colors.length] + "\" value=\"Route " + route_counter + "\">"
+                        //    + ""
+                        //    + "        <div class=\"input-group-append\">"
+                        //    + "            <button class=\"btn btn-success\" route_id=\"" + route_counter + "\" onclick=\"toGPX(this)\" data-toggle=\"tooltip\" data-placement=\"bottom\""
+                        //    + "                title=\"Export Route to GPX\">E</button>"
+                        //    + "            <button class=\"btn btn-danger\" route_id=\"" + route_counter + "\" onclick=\"deleteRoute(this)\"  data-toggle=\"tooltip\" data-placement=\"bottom\""
+                        //    + "                title=\"Delete Route\">D</button>"
+                        //    + "        </div>"
+                        //    + "    </div>"
 
                         route_counter += 1;
 

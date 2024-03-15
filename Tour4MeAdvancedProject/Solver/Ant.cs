@@ -107,7 +107,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // the other one may not be in visited
                 // so check, if either of the nodes is not yet in visited
                 List<Edge> allowed = vNodes[ currentNode ].Incident.FindAll( x =>
-                 !visited.Contains( x.TargetNode.GraphNodeId ) || !visited.Contains( x.SourceNode.GraphNodeId ) );
+                 ( !visited.Contains( x.TargetNode.GraphNodeId ) || !visited.Contains( x.SourceNode.GraphNodeId ) ) &&
+                 ( Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / 100 <= CurrentProblem.MaxDescent ) );
 
                 FindAllowedPath( CurrentProblem, usePenalty, useBacktracking, vNodes, ref visitableNodes, ref visited, pickedEdge, currentDistance, ref currentNode, ref allowed );
 

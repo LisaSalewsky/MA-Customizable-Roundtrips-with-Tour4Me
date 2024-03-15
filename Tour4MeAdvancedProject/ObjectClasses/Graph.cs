@@ -361,6 +361,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             using (SqlDataReader reader = command.ExecuteReader())
             {
+                //_ = Parallel.ForEach( ParallelizingIterator.IterateUntilFalse( () => reader.Read() ), z =>
                 while (reader.Read())
                 {
                     Guid edgeId = reader.GetGuid( reader.GetOrdinal( "Id" ) );
@@ -383,6 +384,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                     if (EdgeExists( sId, tId ))
                     {
+                        //return;
                         continue;
                     }
 
@@ -390,7 +392,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     Edge edge = AddEdge( cEdges, source, target, cost );
                     edge = new Edge( edge, tags, reversed, oneWay );
 
-                    string geoLocationsText = reader[ "GeoLocationsText" ].ToString();
+                    object geoLocsVal = reader[ "GeoLocationsText" ];
+
+                    string geoLocationsText = geoLocsVal != null ? geoLocsVal.ToString() : "";
                     if (!string.IsNullOrEmpty( geoLocationsText ))
                     {
                         try
@@ -415,6 +419,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     }
 
                 }
+                //);
             }
         }
 
