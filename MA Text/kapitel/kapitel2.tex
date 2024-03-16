@@ -3,34 +3,66 @@
 \label{chapter:fundamentals}
 
 As stated in the \href{chapter:introduction}{introduction}, most routing algorithms focus on shortest paths between two or more points.
-Many of those have been reviewed in several different surveys \cite{madkour_survey_2017, wayahdi_greedy_2021}.
-Additionally, there have been many more heuristic approaches, like local search variants \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} or different neighborhood based ideas \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005}.
-Much research has been done and is still ongoing for these kinds of problems, stemming from the fact that many routing problems (for example the traveling salesman problem (TSP) \cite{gendreau_handbook_2010} or the vehicle routing problem \cite{braysy_vehicle_2005, irnich_sequential_2006}) are NP-hard \cite{reinelt_traveling_2003}. 
+Many of those have been reviewed in several different surveys (see for example \cite{madkour_survey_2017, wayahdi_greedy_2021}).
+Additionally, there have been many more heuristic approaches, like local search variants \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} or different neighborhood based ideas \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} that offer faster results in exchange for not necessarily finding the one best solution, but only close approximations.
+Much research has been done and is still ongoing for these kinds of problems, stemming from the fact that many graph routing problems (for example the traveling salesman problem (TSP) \cite{gendreau_handbook_2010} or the vehicle routing problem \cite{braysy_vehicle_2005, irnich_sequential_2006}) are NP-hard \cite{reinelt_traveling_2003}.
+ 
 Furthermore, finding a shortest path is important in various parts of daily life.
-Whether it is the best way to get to work or to a supermarket by car or bike, a good way to minimize travel time by bus or any other trip from one place to another.
-Additionally, shortest paths are not limited to real-world networks but can also prove useful for social networks or any form of digital network. \cite{madkour_survey_2017}
+Whether it is about discovering the best (shortest, quickest, most convenient) way to get to work or to a supermarket by car or bike, a good way to minimize travel time by bus or any other trip from one place to another.
+The examples for shortest path problems are numerous.
+Additionally, shortest paths are not limited to real-world networks but can also prove useful for social networks or any form of digital network.
+Here, different algorithms can help calculating friend networks or support the routing of data through virtual networks. \cite{madkour_survey_2017}
 
 \section{Shortest Path algorithms}
 \label{sec:shortestPath}
 
-For calculating shortest path trips from one starting point s to a destination d, several different approaches can be used.
-This problem has been well-studied and still continues to advance in terms of quality of the returned paths as well as in optimizing the running time of algorithms.
-Thus, the number of ideas to solve it is enormous. 
+Shortest path algorithms have been studied extensively for many years.
+In 1994, Deo and Pang created an overview tree for different types of shortest path subclasses to give a better overview how to systematically classify a certain question into one of these categories.
+The tree is visualized in figure \ref{fig:shortestPathTaxonomy}.
+This visualization gives a first idea of how complex the shortest path problem can be and how many different types of questions arise in different networks and with different goals. \cite{deo_shortest-path_1984}
 
-Generally most shortest path problems are in one of two categories: they are either single-source shortest paths (SSSP) or all-pairs shortest paths(APSP).
-The first only uses a starting point and tries to find the one shortest path between it and all other vertices.
-The second aims to find shortest paths between all vertices of a graph, which can be necessary for transportation networks and similar use cases. 
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\linewidth]{bilder/shortest path variants tree (Shortest-path algorithms Taxonomy and annotation).png}
+	\caption{This image shows a conceptual tree of different variations of shortest path algorithms, taken from \cite{deo_shortest-path_1984}}
+	\label{fig:shortestPathTaxonomy}	
+\end{figure}
+
+Since the shortest path problem has been well-studied and still continues to advance in terms of the quality of the returned paths as well as in optimizing the running time of algorithms, the number of approaches to solve it is enormous.
+The above tree offers a systematic approach to classify problems and most fall into one of two categories: they are either single-source shortest paths (SSSP, on the leftmost branch the two bottom left items) or all-pairs shortest paths(APSP, on the leftmost branch the two bottom right items) \cite{madkour_survey_2017}.
+The first  - SSSP - only uses one single starting point and tries to find the one shortest path between it and one or all other vertices.
+The second aims to find shortest paths between all vertices of a graph - starting from a specified vertex or from every vertex to every other, which can be necessary for transportation networks and similar use cases. 
 Aside from these two categories, many more can be found to describe and sort types of approaches. 
-Madkour et al propose a taxonomy to help classify the different algorithms into specific categories. \cite{madkour_survey_2017} 
+Madkour et al propose a different taxonomy than Deo and Pang did (see \cite{deo_shortest-path_1984} and figure \ref{fig:shortestPathTaxonomy}) to help classify the different algorithms into specific categories. \cite{madkour_survey_2017} 
 
 Which of these algorithms performs best is typically dependent on the type of graph it is being used on, the graph's structure and the specific problem to be solved. 
-A graph can be categorized as planar or not, directed or undirected, weighted or not (and carry only non-negative weights or allow negative ones as well), they can contain cycles or be acyclic and many more. 
+A graph can be categorized as planar or not, directed or undirected, weighted or not, and carry only non-negative weights or allow negative ones as well, they can contain cycles or be acyclic and many more. 
 These different types determine which algorithms can be used as well as which will return better results.
+Some algorithms like Dijkstra can - without modifications - only be used on a specific type of graph. 
+In this case, the graph needs to have only non negative edges.
+Others are modified versions, created specifically to fix problems like graphs with negative edges. 
 
 \subsection{Single Source Shortest Paths}
+Following the classification graph, on the bottom left, there is a class \glqq single-source\grqq, which envelops one to one and one to all.
+This class describes all problems that have a single source node and - following the respective parent nodes - have a usual path length, are unconstrained and find a singular short path that is not an approximation.
+These kinds of problems have common use cases in many daily routing problems. 
+One to one paths are already described in this chapter's introduction - finding shortest paths to a specified destination \cite{sanders_shortest_2019}.
+One to all paths can be useful for cases like fire departments or the police that might need a map of quickest routes for every place in their jurisdiction \cite{sanders_shortest_2019}.
+
+For these, many algorithms have been developed over time, trying to solve more types of problems. 
+Some algorithms are for undirected graphs (for example Dijkstra \cite{wayahdi_greedy_2021}), some for directed graphs with non-negative weights or with arbitrary weights but without negative cycles (like Bellman-Ford-Moore \cite{cherkassky_shortest_1996}).
+The respective lists are long and for many more specific cases, there are even more specific algorithms \cite{deo_shortest-path_1984, madkour_survey_2017}. 
+
 
 
 \subsection{All Pairs Shortest Paths}
+The path on the left of the classification graph also shows the class \glqq all nodes are sources\grqq, which encompasses the all to one and all to all cases. 
+In these lie all problems where it is necessary to build paths from every node to either a single destination or to all other nodes.
+As with single source shortest paths, this branch also describes paths that have a usual length, are unconstrained and give the respective best shortest path for every pair of nodes. 
+All to one path calculations can be useful in scenarios where an accident happens and out of all available emergency vehicles, the ones with the shortest paths have to be determined \cite{khamayseh_efficient_2015}.
+For all to all paths, many traffic-load calculation problems come to mind. 
+For example cases where trains have to be distributed along the rail network \cite{curtis_rewire_2012}.
 
 
 \subsection{Heuristic Approaches}
@@ -42,7 +74,7 @@ In many cases where it would take too much time or space to find the actual opti
 
 For these, several different ideas have been formed. 
 These can then be categorized into construction heuristics, improvement heuristics and meta-heuristics \cite{ropke_heuristic_2005}.
-Sometimes, a fourth category for two-phase heuristics is included as well (see \cite{laporteClassicalHeuristicsCapacitated2002a}).
+Sometimes, a fourth category for two-phase heuristics is included as well (see \cite{}).
 
 \#TODO is this correct for heuristics in general? The paper refers to heuristics for VRP
 
@@ -51,7 +83,7 @@ They typically don't have a separate improvement phase.
 Improvement heuristics try to improve an already existing solution.
 They perform improvement steps several times until a specified boundary is reached.
 These boundaries can be e.g. a time limit or reaching the threshold for a good enough approximation.
-(Iterative) Local Search and Neighborhoods are examples of improvement heuristics that can be used to reach a more optimized solution. \cite{laporteClassicalHeuristicsCapacitated2002a, ropke_heuristic_2005}
+(Iterative) Local Search and Neighborhoods are examples of improvement heuristics that can be used to reach a more optimized solution. \cite{laporte_5_2002, ropke_heuristic_2005}
 
 
 
@@ -80,14 +112,14 @@ When they discover a food source, they pick up the food and walk back to their n
 On this way, they distribute a substance called pheromones.
 These can then be detected by other ants and indicate to them, that a path leads to a potentially good food source. 
 Other ants then are more likely to follow a path with more pheromone placed on it and will in turn lay down their pheromone as well, leading to an accumulation of these on good paths.
-Over time, the pheromones dissipate and when they aren't renewed, will evaporate completely, decreasing the attractiveness of the corresponding path \cite{dorigo_ant_1996, gendreau_handbook_2010}. 
+Over time, the pheromones dissipate and when they aren't renewed, will evaporate completely, decreasing the attractiveness of the corresponding path \cite{gendreau_handbook_2010, dorigo_ant_1996}. 
 
 Furthermore, pheromone distribution also inherently leads to using shorter paths. 
 When several ants have to choose between paths, they will first select at random.
 However, as soon as one ant discovers the food, turns around and distributes its pheromone on the way back, it increases the likelihood of it's path being taken.
 Here, the shorter paths will be first to receive more pheromones as the ants returning will be quicker.
 Due to the faster accumulation, more ants will choose this shorter path and thus place even more pheromone on it, leading to a self-reinforcing loop that converges when all ants choose the best path only.
-Then, all worse paths will loose all their pheromone over time and leave the best result as the only remaining path \cite{dorigo_ant_1996, gendreau_handbook_2010}.
+Then, all worse paths will loose all their pheromone over time and leave the best result as the only remaining path \cite{gendreau_handbook_2010, dorigo_ant_1996}.
 
 To illustrate pheromone distribution, an example illustrates in figure \ref{fig:antSystemExampleIllustration} how real ants find food and establish the best path towards the source. 
 In part a on the left side, there are many ants that fun between two points A and E. 

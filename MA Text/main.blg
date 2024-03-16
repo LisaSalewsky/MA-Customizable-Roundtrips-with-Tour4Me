@@ -27,13 +27,7 @@ Warning--entry type for "gendreau_handbook_2010" isn't style-file defined
 --line 2 of file literatur/LS11Buchin.bib
 Warning--entry type for "ropke_heuristic_2005" isn't style-file defined
 --line 952 of file literatur/LS11Buchin.bib
-Warning--I didn't find a database entry for "bastRoutePlanningTransportation2016"
-Warning--I didn't find a database entry for "dellingRoundBasedPublicTransit2015"
-Warning--I didn't find a database entry for "dellingTimeDependentSHARCRouting2011"
-Warning--I didn't find a database entry for "dellingCustomizableRoutePlanning2017"
-Warning--I didn't find a database entry for "gendreauHandbookMetaheuristics2010"
-Warning--I didn't find a database entry for "wangApplicationAntColony2014"
-Warning--I didn't find a database entry for "laporteClassicalHeuristicsCapacitated2002a"
+Warning--I didn't find a database entry for ""
 Warning--to sort, need author or key in gendreau_handbook_2010
 Warning--empty year in babaoglu_anthill_2002
 Warning--empty journal in biddle_psychological_1993
@@ -47,12 +41,24 @@ Warning--empty journal in cekin_psychological_2015
 Warning--empty year in cekin_psychological_2015
 Warning--empty journal in cherkassky_shortest_1996
 Warning--empty year in cherkassky_shortest_1996
+Warning--empty year in curtis_rewire_2012
+Warning--empty journal in delling_time-dependent_2011
+Warning--empty year in delling_time-dependent_2011
+Warning--empty journal in delling_customizable_2017
+Warning--empty year in delling_customizable_2017
+Warning--empty journal in delling_round-based_2015
+Warning--empty year in delling_round-based_2015
 Warning--empty year in delling_engineering_2009
+Warning--empty journal in deo_shortest-path_1984
+Warning--empty year in deo_shortest-path_1984
 Warning--empty journal in dorigo_ant_1996
 Warning--empty year in dorigo_ant_1996
 Warning--empty year in gemsa_efficient_2013
 Warning--empty journal in irnich_sequential_2006
 Warning--empty year in irnich_sequential_2006
+Warning--empty journal in khamayseh_efficient_2015
+Warning--empty year in khamayseh_efficient_2015
+Warning--empty year in laporte_5_2002
 Warning--empty journal in lawler_branch-and-bound_1966
 Warning--empty year in lawler_branch-and-bound_1966
 Warning--empty journal in loepp_recommending_nodate
@@ -66,6 +72,7 @@ Warning--empty year in oja_health_2011
 Warning--empty year in reinelt_traveling_2003
 Warning--empty journal in ruegsegger_health_2018
 Warning--empty year in ruegsegger_health_2018
+Warning--empty year in sanders_shortest_2019
 Warning--empty journal in sommer_shortest-path_2014
 Warning--empty year in sommer_shortest-path_2014
 Warning--empty journal in szabo_psychological_2013
@@ -77,45 +84,45 @@ Warning--empty journal in wankel_psychological_1990
 Warning--empty year in wankel_psychological_1990
 Warning--empty journal in wayahdi_greedy_2021
 Warning--empty year in wayahdi_greedy_2021
-You've used 28 entries,
+You've used 37 entries,
             2343 wiz_defined-function locations,
-            725 strings with 10566 characters,
-and the built_in function-call counts, 11464 in all, are:
-= -- 1168
-> -- 464
-< -- 7
-+ -- 184
-- -- 152
-* -- 1002
-:= -- 1693
-add.period$ -- 76
-call.type$ -- 28
-change.case$ -- 129
+            758 strings with 11763 characters,
+and the built_in function-call counts, 15623 in all, are:
+= -- 1583
+> -- 659
+< -- 10
++ -- 260
+- -- 218
+* -- 1378
+:= -- 2301
+add.period$ -- 100
+call.type$ -- 37
+change.case$ -- 178
 chr.to.int$ -- 0
-cite$ -- 71
-duplicate$ -- 466
-empty$ -- 928
-format.name$ -- 152
-if$ -- 2522
+cite$ -- 93
+duplicate$ -- 639
+empty$ -- 1248
+format.name$ -- 218
+if$ -- 3435
 int.to.chr$ -- 0
-int.to.str$ -- 28
-missing$ -- 43
-newline$ -- 128
-num.names$ -- 58
-pop$ -- 205
+int.to.str$ -- 37
+missing$ -- 56
+newline$ -- 167
+num.names$ -- 78
+pop$ -- 280
 preamble$ -- 1
-purify$ -- 129
+purify$ -- 178
 quote$ -- 0
-skip$ -- 366
+skip$ -- 501
 stack$ -- 0
-substring$ -- 717
-swap$ -- 182
-text.length$ -- 7
+substring$ -- 961
+swap$ -- 260
+text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 110
-warning$ -- 43
-while$ -- 107
-width$ -- 30
-write$ -- 268
-(There were 52 warnings)
+type$ -- 146
+warning$ -- 56
+while$ -- 143
+width$ -- 39
+write$ -- 353
+(There were 59 warnings)
