@@ -3,17 +3,23 @@
 \label{chapter:implementedChanges}
 
 This work extends Tour4Me, which is an application written in C++ and HTML. 
-The implemented interface uses C\# as its programming language to enable easy porting of the webapplication to a desktop or mobile application.
+The implemented interface uses C\# as its programming language to enable easy porting of the web application to a desktop or mobile application.
 To improve the query times, a spatial database was added. 
 Reasons for and positive effects of this decision are described in the following section.
 
 Furthermore, not only the language and data access was changed.
 New options and parameters to improve the customizability of preferences for a generated tour were added as well.
-These changes had to be incorporated into an upgraded frontend design (see sections \ref{subsec:interfaceAndFrontendChanges} and \ref{sec:parameterChanges}) as well as into the backend and all solvers (see section \ref{sec:algorithmicChanges}). 
+These changes had to be incorporated into an upgraded front end design (see sections \ref{subsec:interfaceAndFrontendChanges} and \ref{sec:parameterChanges}) as well as into the back end and all solvers (see section \ref{sec:algorithmicChanges}). 
 
 
 \section{Application}
 \label{sec:application}
+
+To include the various changes, the whole application was changed.
+The Open Street Map (OSM) data are downloaded and stored in a database.
+The graph for calculating the roundtrips is thus build from the new database.
+Furthermore, the whole design of the front end was changed to improve the overview and general user experience as well as to allow for the addition of new customization options.
+Lastly, the algorithms to choose from have been extended by two additional meta-heuristic approaches.
 
 \subsection{New Architecture}
 \label{sec:newArchitecture}
@@ -21,29 +27,28 @@ These changes had to be incorporated into an upgraded frontend design (see secti
 For the new application, the architecture had to be re-structured.
 An illustration of the new design is shown in figure \ref{fig:architecture}.
 Instead of reading the data for the graph from a static .txt file, which contains all the nodes and edges for Dortmund, a database is used to manage the nodes, edges, their additional information and the relationships between them. 
-It can be filled with the data needed by using an import python script that creates an osmnx-graoh \#TODO add all references for a user specified location. 
+It can be filled with the data needed by using an import python script that creates an osmnx-graph\footnote{\url{https://osmnx.readthedocs.io/en/stable/}, last accessed: \today}\footnote{\url{https://networkx.org/}, last accessed: \today}\footnote{\url{https://wiki.openstreetmap.org}, last accessed: \today}\footnote{\url{https://wiki.openstreetmap.org/wiki/Main_Page}, last accessed: \today} add all references for a user specified location. 
 From this graph, the nodes and edges can be extracted alongside their additional information.
-For the current use case, nodes are stored with their ID, which is transformed into a uuid, their latitude and longitude coordinates as well as their elevation profile and tags of the surroundings they are placed in.
-The elevation data has to be accquired from a different source than osm, since they do not use a height profile. 
+For the current use case, nodes are stored with their OSM-ID, which is transformed into a UUID, their latitude and longitude coordinates as well as their elevation profile and tags of the surroundings they are placed in.
+The elevation data has to be acquired from a different source than OSM, since they do not use a height profile. 
 A few open source providers were available, but ultimately, Open-Elevation\footnote{\url{https://open-elevation.com/}, last accessed: \today} was used. 
 
-Since most open source providers have a limited bandwidth to supply users with data based on their api-calls, the opportunity to use a locally hosted version that Open-Elevation offered was very important to assure usability.
+Since most open source providers have a limited bandwidth to supply users with data based on their API-calls, the opportunity to use a locally hosted version that Open-Elevation offered was very important to assure usability.
 When using the python script to create and fill the database and its tables, the Open-Elevation data needs to be available.
 A local docker container with the respective data can be used to access the needed information without being bound to the servers and their throughput boundaries.
 
-The used database is Microsoft SQL Server Management Studio, because it can handle spatial data, supports spatial queries and works well in combination with the C\# implementation.
+The used database is Microsoft SQL Server Management Studio\footnote{\url{https://learn.microsoft.com/en-us/sql/sql-server/sql-docs-navigation-guide?view=sql-server-ver16}, last accessed: \today}, because it can handle spatial data, supports spatial queries and works well in combination with the C\# implementation.
 
-The backend is written in C\#, as it allows for the opportunity to also create a mobile- or desktop application in addtion to the web application that already exists (see \ref{sec:futureWork}).
-Furthermore, it allows for using SQL queries and filtering using the LINQ ??? \# TODO find doku etc.
+The back end is written in C\#\footnote{\url{https://learn.microsoft.com/en-us/dotnet/csharp/}, last accessed: \today}, as it allows for the opportunity to also create a mobile- or desktop application in addition to the web application that already exists (see \ref{sec:futureWork}).
+Furthermore, it allows for using SQL queries and filtering using LINQ for easy runtime database querying\footnote{\url{https://docs.telerik.com/devtools/aspnet-ajax/controls/grid/asp.net-3.5-features/linq-to-sql---binding-and-automatic-crud-operations}, last accessed: \today}.
 
-The frontend is implemented using HTML, CSS, JavaScript and C\# code behind. 
-Here, the base-styling is done using bootstrap, but additional custom CSS is added to create a nature-based color palette (\#TODO references to color therory stuff?) as well as several effects for the side and bottom menus.
-To realise the communication between frontend and backend, ajax queries are used.
 
-The map is a leaflet visualization that shows Open Street Map data.
+The front end is implemented using HTML\footnote{\url{https://devdocs.io/html/}, last accessed: \today}, CSS\footnote{\url{https://devdocs.io/css/}, last accessed: \today}, JavaScript\footnote{\url{https://devdocs.io/javascript/}, last accessed: \today} and C\# code behind. 
+Here, the base-styling is done using bootstrap\footnote{\url{https://getbootstrap.com/docs/4.3/getting-started/introduction/}, last accessed: \today}, but additional custom CSS is added to create a nature-based color palette (\#TODO references to color theory stuff?) as well as several effects for the side and bottom menus.
+To realize the communication between front end and back end, Ajax-queries\footnote{\url{https://api.jquery.com/category/ajax/}. last accessed: \today} are used.
+
+The map is a leaflet\footnote{\url{https://leafletjs.com/}, last accessed: \today} visualization that shows Open Street Map data.
 It allows to set markers, add a search bar, create polygons - which are used to illustrate the generated routes - and offers an open source map view. 
-
-
 
 
 \begin{figure}[H]
@@ -52,22 +57,33 @@ It allows to set markers, add a search bar, create polygons - which are used to 
 	\label{fig:architecture}
 \end{figure}
 
+In the above visualization, the whole application, its distinct parts and features are illustrated. 
+The front end is realized as a web application, running in the browser but can also be customized to be executable as a mobile or desktop application (see \ref{sec:futureWork}).
+Here, the map is visualized using leaflet. 
+In this map, it is possible to set the marker to the current location - if the permission to access the data is granted.
+However it is also possible to simply search for a specific address, to drag and drop the marker on the map or to scroll the map and select a position by clicking on it. 
+Furthermore, the visualization of the calculated tours is also realized using the map and a polygon built from the respective points.
+
+In addition to the main feature - the map - the front end also contains two menus:
+One holding the parameters the user can use to customize the tours according to their preferences and the information menu containing a report of the core data of the calculated path that is being visualized. 
+A more detailed description of the front end design, concept sketches and the final implementation are outlined in subsection \ref{subsec:interfaceAndFrontendChanges}.
+
 \subsection{Database}
 \label{subsection:database}
 
-\subsection{Interface and Frontend changes}
+\subsection{Interface and Front end changes}
 \label{subsec:interfaceAndFrontendChanges}
 
 \begin{figure}[H]
 	\includegraphics[width=0.9\linewidth]{bilder/Concept new Frontend design.png}
-	\caption{Design concept for the frontend view, including descriptions for drop-downs and pop-ups}
+	\caption{Design concept for the front end view, including descriptions for drop-downs and pop-ups}
 	\label{fig:frontendConcept}
 \end{figure}
 
 
 \begin{figure}[H]
 	\includegraphics[width=0.9\linewidth]{bilder/Concept burger menu and stats hidden.png}
-	\caption{Design concept for the frontend view with all menus folded}
+	\caption{Design concept for the front end view with all menus folded}
 	\label{fig:frontendConceptMenusClosed}
 \end{figure}
 
@@ -76,14 +92,14 @@ It allows to set markers, add a search bar, create polygons - which are used to 
 	\begin{subfigure}[t]{0.49\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{bilder/Concept closeup activity, algorithm.png}
-		\caption{Design concept for the frontend view, closeup of activity and algorithm dropdowns}
+		\caption{Design concept for the front end view, closeup of activity and algorithm dropdowns}
 		\label{fig:frontendConceptCloseupDropdowns}	
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.49\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{bilder/Concept closeup surroundings, tour shape.png}
-		\caption{Design concept for the frontend view, closeup of a surrounding and Tour shape}
+		\caption{Design concept for the front end view, closeup of a surrounding and Tour shape}
 		\label{fig:frontendConceptCloseupButtons}		
 	\end{subfigure}
 \end{figure}
@@ -91,7 +107,7 @@ It allows to set markers, add a search bar, create polygons - which are used to 
 
 \begin{figure}[H]
 	\includegraphics[width=0.9\linewidth]{bilder/Concept closeup tour stats, elevation profile.png}
-	\caption{Design concept for the frontend view, closeup of the results view}
+	\caption{Design concept for the front end view, closeup of the results view}
 	\label{fig:frontendConceptResultsCloseup}
 \end{figure}
 

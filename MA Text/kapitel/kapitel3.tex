@@ -18,7 +18,7 @@ All gathered information are collected from exploring the functionality of the t
 
 The tool which this thesis will be based off, Tour4Me\footnote{http://tour4me.cs.tu-dortmund.de/} \cite{buchin_tour4me_2022}, incorporates many of these points in its web interface. 
 It is possible to choose the preferred ground type as well as make selections about preferred route types.
-Furthermore, the user can also mark certain types as unpreferrable (rather than just keeping them neutral or preferring them).
+Furthermore, the user can also mark certain types as undesirable(rather than just keeping them neutral or preferring them).
 This allows for much more customization.
 What the tool does not incorporate yet is the option to make selections about the preferred elevation or route complexity.
 However, the route can be optimized for a circular route when using the covered area of the tour. 
@@ -87,7 +87,7 @@ It does have a few features to show more information about the route like showin
 Apparently it can also show route difficulty for the United States, however even when creating a route in the United States, no result was shown. 
 RouteLoops also does not actually create loops but rather picks a route that has high value (for example with a river in a park) and lets the user run along that path, turn around at the end and run back the same way.
 
-To crate a roundtrip, some "waypoints" are created. 
+To crate a roundtrip, some \glqq waypoints\grqq{} are created. 
 These can be removed or more can be added in when editing the tour.
 Between the waypoints, it seems like a shortest path is tried 
 
@@ -101,73 +101,117 @@ Furthermore, it is not possible to specify directly what type of underground or 
 
 The problem of calculating good running roundtrips is not new.
 In addition to the commercial applications, there also are research papers on this subject.
-One of these papers is "Efficient Computation of Jogging Routes" \cite{gemsa_efficient_2013}, presents two ideas to handle the new routing problem which the authors labeled "Jogging Problem".
+One of these papers is \glqq Efficient Computation of Jogging Routes\grqq \cite{gemsa_efficient_2013} and presents two ideas to handle the new routing problem which the authors labeled \glqq Jogging Problem\grqq .
 It is split up into two variants: 
-One being the simple version, that only aims to build a cycle that contains the starting point s and has the desired length.
+One being the simple version, that only aims to build a cycle that contains the starting point \textit{s} and has the desired length.
 The other is a more complex version, that allows for some flexibility regarding the length of the final tour during optimization. 
-Hence, it is named "Relaxed Jogging Problem". 
+Hence, it is named \glqq Relaxed Jogging Problem\grqq . 
 This relaxation allows to take more factors into account to also optimize for the resulting shape, the area surrounding the tour and/or the simplicity of the path \cite{gemsa_efficient_2013}. 
 
 The second problem is chosen as the one to optimize, since it enables the addition of other conditions than just the length of a tour.
 For this, two different ideas are proposed.
-The first approach - "Greedy Faces" - is based on extending previous cycles.
-It starts with a cycle containing the starting point s that can be selected by the user. 
+The first approach - \glqq Greedy Faces\grqq - is based on the idea of extending previous cycles.
+It starts with a cycle containing the starting point \textit{s} that can be selected by the user. 
 This roundtrip then can be extended to gradually approach the user specified length. 
-The second algorithm was named "Partial Shortest Paths" and uses via-vertices.
+The second algorithm was named \glqq Partial Shortest Paths\grqq{} and uses via-vertices.
 These are a number of new points that can be connected with shortest paths.
 When the via-vertices are connected with each other and the start, they form a roundtrip \cite{gemsa_efficient_2013}.
-
-\#TODO maybe stop the description here already
 
 
 For both algorithms, the authors measure the badness of paths, the number of edges that are shared as well as the number of turns.
 The badness is used to take the additional constraints into account. 
-To reduce the possibility of having a roundtrip which turns at the end and uses all paths twice, the shared edges have to be minimized.
-The number of turns corresponds to the complexity of the tour and is measured by a percentage of a full u-turn \cite{gemsa_efficient_2013}. 
+To reduce the possibility of having a roundtrip which turns at the end and uses all paths twice - which would effectively form a simple U-Turn tour - the number of shared edges has to be minimized.
+The number of turns corresponds to the complexity of the tour and is measured by a percentage of doing a full U-Turn (turning by 180 degrees). 
+They define the angle between two edges as a \textit{turn} if it is more than 15 degrees (and equal to or less than 180 degrees).
+These turns can then be used to determine the complexity of a tour:
+More turns equaling a more complex tour \cite{gemsa_efficient_2013}.
 
-\#TODO how often do I need to reference the paper?
 
 
 \paragraph{Greedy Faces}
 
-Greedy Faces is built from an already existing circle by extending it.
-For this, blocks outside the tour that are adjacent to the current path are used.
-The previous circle encloses the chosen block and thus extends the previous route. 
+Greedy Faces is built from an already existing path by extending it.
+For this, blocks outside the given tour that are adjacent to the current path are used.
+The previous cycle then is changed so that it encloses the chosen block and thus extends the previous route. 
 New blocks are picked until the desired length is reached.
 To ensure only blocks that correspond to faces are picked, a preprocessing phase is introduced that identifies faces of the graph.
 During this step, first, dead-ends are removed, so the resulting graph will be two-connected.
 Faces then are defined by the edges that surround them. 
 While identifying all faces, a dual graph $G^{\star} = (V^{\star},E^{\star})$ for $G = (V,E)$ is built as well.
 
-The Greedy Faces algorithm then works on the dual graph $G^{\star}$, selects a face f from $V^{\star}$ which has a surrounding path that contains the starting point s. 
-Then, a Breadth First Search Tree T is built, starting at f, until the desired length (a relaxed version $(1 + \varepsilon) L$) is exceeded.
-The resulting tour will be a simple path iff all vertices in V without the ones in T are connected and contain s.
-The final jogging path can be extracted by taking the cut edges between the tree T and the remaining vertices.
-This always forms a circle and thus builds a roundtrip.
+The Greedy Faces algorithm then works on the dual graph $G^{\star}$, selects a face \textit{f} from $V^{\star}$ which has a surrounding path that contains the starting point \textit{s}. 
+Then, a Breadth First Search Tree \textit{T} is built, starting at \textit{f}, until the desired length (a relaxed version $(1 + \varepsilon) L$) is exceeded.
+The resulting tour will be a simple path iff all vertices in \textit{V} without the ones in \textit{T} are connected and contain \textit{s}.
+The final jogging path can be extracted by taking the cut edges between the tree \textit{T} and the remaining vertices.
+This always forms a cycle and thus builds a roundtrip.
 
 For building a path which optimizes all constraints, the three introduced measures for badness, number of shared edges and the number of turns are used.
-The badness function is incorporated into a different force function which can assign positive and negative badness values to edges.
-Furthermore, the force function uses the cost of the face and a vector $\vec{d} = \vec{p} - \vec{C}(f)$ which is built from the geometric center $\vec{C}(f)$ of a face to any point $\vec{p}$
+The badness function is incorporated into a different force function $\varphi (f,p) = \frac{(\text{bad}(f)-0.5)l(f)}{|\vec{d}|^2} \cdot \frac{\vec{d}}{|\vec{d}|}$ which can assign positive and negative badness values to edges.
+Furthermore, the force function uses the cost of the face and a vector $\vec{d} = \vec{p} - \vec{C}(f)$ which is built from the geometric center $\vec{C}(f)$ of a face to any point $\vec{p}$. 
+This force vector can then be used to calculate the best next edge for extending the current path by maximizing $\varphi(g) cos (\measuredangle (\varphi(g), C(f) - C(P)))$, measuring the angle between the directed force vector and the geometric center point \textit{C(P)} of the path that has been built so far.
+The force vector is used in the Breadth First Search but it doesn't have to be the only criteria.
+An extension to include other measures like roundness or complexity can be created as well. \cite{gemsa_efficient_2013}
  
 
-
 After the tour has been created, it will be smoothed to reduce the complexity.
+This is done by building a subset (always including \textit{s}) of the nodes contained in the created path and computing shortest paths between all vertex pairs in this subset. 
+Concatenating them will then return a smoothed path.
+This approach is extended to again take badness into account as to not create a bad final path because of the smoothing step. \cite{gemsa_efficient_2013}
 
+The greedy faces algorithm does extend an initial cycle, but it has no guarantees on the length of the final returned path.
+It can deviate without constraints from the original user specification, resulting in paths that can be way too short or way too long. \cite{gemsa_efficient_2013}
 
 \paragraph{Partial Shortest Paths}
 
+Since Greedy Faces cannot give any guarantees, the authors pursued a second approach to calculating results that are ensured to deviate at most by a small $\epsilon$.
+The partial shortest paths are based on a set of via-vertices and named by the number of intermediate points created. 
+In the paper, 2-via-routes and 3-via-routes are presented.
 
+For two intermediate points, three shortest paths have to be calculated.
+These furthermore have to have a length of $\frac{1}{3} L \pm \varepsilon$, building a triangle.
+Again, the shortest path calculation used will also consider the badness of the edges when selecting them.
+Optimizing this metric will return a set of feasible candidate paths that are \glqq nice\grqq{} - as the authors describe this property - and create a ring around the starting point.
 
+From this point, another ring with a diameter of $\frac{1}{3} L \pm \varepsilon$ is calculated from every vertex within the first ring.
+All elements that are within the intersection of both rings are valid candidates for the third point to be selected. 
+The final path is created by picking the tour with a minimal badness from all feasible combinations of \textit{s} and the two other selected vertices. \cite{gemsa_efficient_2013}
+
+The three point variant 3-via-routes is an extension to improve the smoothness around the two selected vertices for building the initial triangle. 
+The algorithm then builds the ring around the starting point as in the first version but with a narrower radius of $\frac{1}{4} L \pm \varepsilon$.
+Then, an even narrower ring is created, using a new parameter $\alpha \in [0.5,1]$ as a condition for the radius of the new ring: $\frac{\alpha}{3} L \pm \varepsilon$.
+The value of $\alpha$ and a new point \textit{m} in the middle of the created path control the smoothness around the two other vertices.
+
+From the two triangle points \textit{u} and \textit{v}, new points \textit{u'} and \textit{v'} within the narrower ring are obtained by following the shortest path trees. 
+Then, new rings around these vertices are calculated, using a radius of  $\frac{2-\alpha}{4} L \pm \varepsilon$ to ensure a distance of  $\frac{1}{2} L \pm \varepsilon$ for all vertices within each of these rings.
+This results in a ring containing possible middle vertices.
+Then, for all pairs \textit{u'} and \textit{v'}, the intersection of their respective rings can be built and all middle vertices that will yield a smooth path for the two triangle points \textit{u} and \textit{v} will be selected as middle point candidates.
+Finally, the path along the vertices that has minimum badness will be returned as the result. \cite{gemsa_efficient_2013}
 
 
 \paragraph{Computational Complexity}
 
 Aside from introducing two methods to calculate roundtrip tours for running, this paper also presents a proof for the computational complexity of their Simple and Relaxed Jogging Problems.
-The authors show NP hardness by reduction of Hamiltonian Cycle to the optimization problem corresponding to their original problems.
+The authors show NP hardness by reduction of Hamiltonian Cycle to the optimization problem corresponding to their original problems.\cite{gemsa_efficient_2013}
 
  \# TODO add the actual proof?
 
-\# TODO other jogging route paper
+
+\paragraph{Other running related research}
+Aside from the few concretely related papers and applications, some general research regarding running with technology has been done.
+Jensen and Mueller focus on the usage of interactive technologies that can be used to monitor or enhance the performance of athletes.
+They are especially interested in how to improve these gadgets and apps to make them more usable. 
+In their paper, they discuss the current state of different technologies and propose the following three questions as ideas on what aspects to focus for further improvement:
+\glqq How to interact\grqq , which focuses mainly on the question how interaction with any app or gadget can be designed so it won't hinder the actual activity of running.
+\glqq What information \grqq , aiming at improving the types of information that are presented to the user while running (for example to change the running style mid run).
+And \glqq When to assist\grqq , which addresses the timing aspect of any kind of assistance during a workout. 
+They strive to find suggestions on what to focus when trying to produce apps or gear for runners.
+
+Other papers like \cite{loepp_recommending_nodate} by Loepp and Ziegler used the Partial Shortest Paths algorithm from \cite{gemsa_efficient_2013} to build a recommendation based app.
+However, they tried to incorporate more criteria, for example elevation or surroundings, allowing users to pick from a variety of options when generating personalized tours. 
+Furthermore, the authors added a feature to use routes of other users, but their following survey revealed that no user was interested in that particular feature.
+The customized tours that could be generated were received well, perceived as having high quality and the difficulty was seen as low by the users.
+This app is only a prototype and was never fully expanded into a full fledged product.
+Currently, it runs on Android smartphones only. 
 
 
 
@@ -191,7 +235,7 @@ The authors show NP hardness by reduction of Hamiltonian Cycle to the optimizati
 Aside from Tour4Me, RouteLoops and RouteYou, another prototype for running route recommendations has been developed.
 In the corresponding paper\cite{loepp_recommending_nodate}, the authors express the problems with existing apps, some of which have already been identified in the introduction of the two websites (see \ref{subsec:routeLoopsrouteYou}).
 They also stress, that most research either concentrates on shortest paths or - if it is research and app development specifically for running - on the assistance with the training itself rather than finding a good route.
-Apps like \textit{Runtastic}\footnote{\url{https://www.runtastic.com/}}, \textit{Sprtractive}\footnote{\url{http://sportractive.com/}} or \textit{Strava}\footnote{\url{https://www.strava.com}} are designed to help runners track the tours they already ran. 
+Apps like \textit{Runtastic}\footnote{\url{https://www.runtastic.com/}}, \textit{Sportractive}\footnote{\url{http://sportractive.com/}} or \textit{Strava}\footnote{\url{https://www.strava.com}} are designed to help runners track the tours they already ran. 
 They measure pace, position, height meters and several other stats to then be able to present the user feedback of the run they've done. 
 Planning a route is not one of the features these apps offer.
 And even apps that are meant to assist with the training and which create a plan like \textit{Trainingpeaks}\footnote{\url{https://www.trainingpeaks.com/}} or \textit{SportTracks}\footnote{\url{https://sporttracks.mobi/}} do not offer a feature to create routes or roundtrips with a set of preferences\cite{loepp_recommending_nodate}.

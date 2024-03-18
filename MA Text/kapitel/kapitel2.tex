@@ -17,7 +17,7 @@ Here, different algorithms can help calculating friend networks or support the r
 \label{sec:shortestPath}
 
 Shortest path algorithms have been studied extensively for many years.
-In 1994, Deo and Pang created an overview tree for different types of shortest path subclasses to give a better overview how to systematically classify a certain question into one of these categories.
+In 1994, Deo and Pang created an overview tree for different types of shortest path sub-classes to give a better overview how to systematically classify a certain question into one of these categories.
 The tree is visualized in figure \ref{fig:shortestPathTaxonomy}.
 This visualization gives a first idea of how complex the shortest path problem can be and how many different types of questions arise in different networks and with different goals. \cite{deo_shortest-path_1984}
 
@@ -152,7 +152,7 @@ This is different from the question of finding a roundtrip with a certain length
 However, in the paper, they stress the adaptability of ant system approaches, showing both versatility and robustness on different example problems\cite{dorigo_ant_1996}.
 
 
-\subsection{Calculations}
+\subsubsection{Calculations}
 
 To transform the analogy of real ants into an algorithm, some formulas and calculations are needed.
 Ants are very simple agents. 
@@ -216,7 +216,7 @@ This value is described by $\Delta\tau_{ij}$ as follows\cite{dorigo_ant_1996}:
 	\Delta\tau_{ij} = \sum_{k=1}^{m} \Delta\tau_{ij}^k 
 \end{equation}
 
-This overall value can then be used to calculate the so called "insensity" of the placed pheromone trail.
+This overall value can then be used to calculate the so called \glqq intensity\grqq{} of the placed pheromone trail.
 Since pheromones evaporate over time, this property has to be modeled as well. 
 To do this, a new parameter $\rho$ needs to be introduced. It describes how much of the pheromone stays on the trail between two time steps.
 So, the overall pheromone intensity can be described by
