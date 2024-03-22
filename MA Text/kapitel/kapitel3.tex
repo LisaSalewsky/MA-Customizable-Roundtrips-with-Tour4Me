@@ -1,49 +1,49 @@
 % kapitel2.tex
-\chapter{Related Work}
-\label{chapter:relatedWork}
+\section{Related Work}
+\label{sec:relatedWork}
 
 
-Much research has been done for shortest path algorithms and their optimization, however, for the - more complicated \cite{gemsa_efficient_2013} - problem of finding a round trip with additional conditions, not much work has been done yet.
+Much research has been done for shortest path algorithms and their optimization, however, for the - more complicated \cite{gemsa_efficient_2013} - problem of finding a round trip with several further conditions, not much work has been done yet.
 While there are a few tools that can be used to calculate round trips, most of them only focus on cycling or create a very limited set of trips that do not satisfy the needs of most people, or both. 
-Some examples for these tools are RouteLoops \footnote{https://www.routeloops.com/} and RouteYou \footnote{https://www.routeyou.com} which both do not allow for much customization of preferences. 
+Some examples for these tools are RouteLoops\footnote{\url{https://www.routeloops.com/}, last accessed: 22.03.2024} and RouteYou \footnote{\url{https://www.routeyou.com}, last accessed: 22.03.2024} which both do not allow for much customization of preferences. 
 
 Adding new options for user inputs that enable a higher degree of customization can vastly improve the usability of a tool. 
 The usefulness is not only determined by the implemented algorithms, but also by the interface, the data used, and the selection options presented to the user. 
 
-As both RouteLoops and RouteYou are commercial programs, it was not possible to obtain the necessary details about any used algorithms, heuristics, meta-heuristics or even the language they used for programming these solutions.
-All gathered information are collected from exploring the functionality of the two tools by hand and reading both the general information and the FAQ pages provided by the websites. 
+As both RouteLoops and RouteYou are commercial programs, it was not possible to obtain any details about used algorithms, heuristics, meta-heuristics or even the language they used for programming these solutions.
+All gathered information are collected from exploring the functionality of the two tools by hand and reading both the general information and the FAQ pages provided by the websites (for further reading see \ref{subsubsec:routeLoopsrouteYou}). 
 
-\section{Tour4Me}
-\label{sec:Tour4Me}
+\subsection{Tour4Me}
+\label{subsec:Tour4Me}
 
-The tool which this thesis will be based off, Tour4Me\footnote{http://tour4me.cs.tu-dortmund.de/} \cite{buchin_tour4me_2022}, incorporates many of these points in its web interface. 
-It is possible to choose the preferred ground type as well as make selections about preferred route types.
-Furthermore, the user can also mark certain types as undesirable(rather than just keeping them neutral or preferring them).
+The tool which this thesis will be based off, Tour4Me\footnote{http://tour4me.cs.tu-dortmund.de/} \cite{buchin_tour4me_2022}, incorporates some of the mentioned customization options in its web interface. 
+It is possible to choose the favored ground type as well as make selections about preferred route types.
+Furthermore, the user can also mark certain types as undesirable (rather than just keeping them neutral or marking them as preferable).
 This allows for much more customization.
 What the tool does not incorporate yet is the option to make selections about the preferred elevation or route complexity.
-However, the route can be optimized for a circular route when using the covered area of the tour. 
+However, the tour can be optimized for a circular route when calculating and maximizing the covered area of the tour. 
 
 %Currently, Tour4Me does not work for all starting points and or lengths selected by the user.
 %It uses different approaches and some cannot calculate results.
 %Sometimes, it works to allow for a longer computing time but sometimes, no route can be found at all.
 %The goal is to add more options that will be able to return results for most or - optimally - all starting points, lengths and user customizations.
 
-It implements a solution for the "touring problem", which is used to describe the task of finding appealing and ideally interesting roundtrips.
+It implements a solution for the \glqq touring problem\grqq , which is used to describe the task of finding appealing and ideally interesting roundtrips.
 To achieve an optimal solution, two factors are taken into consideration.
 First is the total profit, that can be collected within the given length restriction for the tour.
 Second is an additional quality function that assures for a relatively round tour by maximizing the area that is surrounded by the created roundtrip.
 Tour4Me presents a selection of four different algorithms to calculate the tour as well as some additional customization options.
-The offered choices include a Greedy Selection approach, Integer Linear Programming, MinCost with Waypoints, a shortest paths variant, and Iterative Local Search \cite{buchin_tour4me_2022}. 
+The offered choices include a Greedy Selection approach, Integer Linear Programming, MinCost with Waypoints - a shortest paths variant - and Iterative Local Search \cite{buchin_tour4me_2022}. 
 
 The Greedy Selection is the simplest algorithm which only ensures that the chosen route is a roundtrip.
-It builds it's path by iterating over the valid edges and picking the most profitable of these until the cycle is finished or no candidate is left.
-A valid edge is determined by checking whether the start- and endpoint s can still be reached if that edge is picked next \cite{buchin_tour4me_2022}.
+It builds its path by iterating over the valid edges and picking the most profitable of these until the cycle is finished or no candidate is left.
+A valid edge is determined by checking whether the start- and endpoint \textit{s} can still be reached if that selected edge is picked next \cite{buchin_tour4me_2022}.
 
 
 For Integer Linear Programming, the touring problem must be stated in an appropriate form.
 To do so, a single instance can be encoded as $\mathcal{I}(G, w, \pi, B, v_0)$, containing the Graph $G$, edge costs $w$, the profit function $\pi$, the budget (length restrictions) $B$ and the starting (and end-) point $v_0$.
 Given this encoding, cycles $P=(v_0,...,v_i,...,v_0)$, which are always at most of length L, can be built.
-For the current definition, a few additional variables an be introduced to encode whether or not an edge is part of a solution (and how many times it occurs), whether or not an edge is the k-th edge of the solution and whether or not a vertex is the k-th vertex of a solution. 
+For the current definition, a few additional variables can be introduced to encode whether or not an edge is part of a solution (and how many times it occurs), whether or not an edge is the k-th edge of the solution and whether or not a vertex is the k-th vertex of a solution. 
 Using these, constraints can be built to describe the desired behavior of the algorithm \cite{buchin_tour4me_2022}.
 
 The MinCost algorithm needs the waypoints because it is typically meant to solve shortest path problems. 
@@ -51,11 +51,12 @@ Thus it would always choose not leaving the starting position without the added 
 Even though this algorithm is not originally meant to solve roundtrip problems, it takes into account the cost and profits of edges to create a solution tour, which makes it more suited to the task than simple greedy search.
 To create an optimized tour, the inefficiency of paths has to be measured. 
 This is done by calculating the quotient of the edge costs and the profit the edge yields. 
-Using this inefficiency, a ring of candidate points $R_s$ surrounding the start-point s can be calculated.
+Using this inefficiency, a ring of candidate points $R_s$ surrounding the start-point \textit{s} can be calculated.
 All points that are part of this ring have a shortest path distance of at most $\pi$.
 From these, new rings $R_r$ with the same requirements can be calculated. 
 The solution path is then obtained through intersecting the sets of all circles and selecting all those that intersect with $R_s$.
-To ensure the highest profit tour is returned, all possible combinations are calculated and the optimum is returned\cite{buchin_tour4me_2022}.
+To ensure the highest profit tour is returned, all possible combinations are calculated and the optimum is returned\cite{buchin_tour4me_2022}. 
+Further details can be found in the original paper \cite{gemsa_efficient_2013}, which offers a Greedy Faces approach as well as two variants for the Partial Shortest Paths algorithm, of which the 2-via-routes option was implemented in Tour4Me.
 
 Building from this solution, the Iterative Local Search can be applied to improve the found tours.
 From the returned roundtrip, the algorithm removes partial paths $P$ from the current best solution $S$ and tries to iteratively add new parts that improve the solution profit while always staying within the given budget ($B-w(\frac{S}{P})$).
@@ -66,21 +67,21 @@ $p$ is reset when the starting point is reached by the removal step.
 $l$ is reset when the maximum length for the solution is reached.
 The best solution is improved constantly until the user selected time limit is reached \cite{buchin_tour4me_2022}.
 
-\#TODO add more citations --> see Tour4Me paper
+\#TODO add more citations? --> see Tour4Me paper
 
-\section{Roundtrip paths}
-\label{sec:Roudtrip}
+\subsection{Roundtrip paths}
+\label{subsec:Roudtrip}
 As already stated above, existing tools leave out certain data like elevation or path types.
-This impacts the quality of the created routes for users or even user groups. 
+This impacts the quality of the created routes for users or even whole user groups. 
 For example, people who prefer running with little to no elevation can end up with a route that takes them uphill through a park for half of the route.
-Which still may be a good choice for other users - joggers who prefer more challenging routes or people who want to hike and enjoy ascending.
-However, others could prefer running through the city over a park when the elevation matches their preferences better in the city.
+While this still may be a good choice for other users - joggers who prefer more challenging routes or people who want to hike and enjoy ascending - this can be undesirable for beginners.
+Some people could prefer running through the city over running through a park when the elevation matches their preferences better in the city.
 For these users, the created route would be highly unfavorable, even though it matches other constraints for what is considered a nice roundtrip.
 Therefore, it can be crucial to the usefulness of an app to give the user as many options to customize as possible. 
 
 
-\subsection{RouteLoops \& RouteYou}
-\label{subsec:routeLoopsrouteYou}
+\subsubsection{RouteLoops \& RouteYou}
+\label{subsubsec:routeLoopsrouteYou}
 RouteLoops has two text fields for entering the starting point and the length of the trip.
 Aside from that, no real customization is possible.
 It does have a few features to show more information about the route like showing distance markers or elevation, however, these can not be used as inputs to get a route with - for example - as little elevation as possible.
@@ -96,12 +97,12 @@ Here, the roundtrips are more round than with RouteLoops, but again, elevation o
 Also, while both do offer the possibility to edit the returned roundtrip, this editing changes the length of the route arbitrarily.
 Furthermore, it is not possible to specify directly what type of underground or surroundings etc. are preferred. 
 
-\subsection{Computing Running Routes}
-\label{subsec:runningRoutes}
+\subsubsection{Computing Running Routes}
+\label{subsubsec:runningRoutes}
 
 The problem of calculating good running roundtrips is not new.
 In addition to the commercial applications, there also are research papers on this subject.
-One of these papers is \glqq Efficient Computation of Jogging Routes\grqq \cite{gemsa_efficient_2013} and presents two ideas to handle the new routing problem which the authors labeled \glqq Jogging Problem\grqq .
+One of these papers is \glqq Efficient Computation of Jogging Routes\grqq \cite{gemsa_efficient_2013} which presents two ideas to handle the new routing problem the authors labeled \glqq Jogging Problem\grqq .
 It is split up into two variants: 
 One being the simple version, that only aims to build a cycle that contains the starting point \textit{s} and has the desired length.
 The other is a more complex version, that allows for some flexibility regarding the length of the final tour during optimization. 
@@ -122,17 +123,20 @@ For both algorithms, the authors measure the badness of paths, the number of edg
 The badness is used to take the additional constraints into account. 
 To reduce the possibility of having a roundtrip which turns at the end and uses all paths twice - which would effectively form a simple U-Turn tour - the number of shared edges has to be minimized.
 The number of turns corresponds to the complexity of the tour and is measured by a percentage of doing a full U-Turn (turning by 180 degrees). 
-They define the angle between two edges as a \textit{turn} if it is more than 15 degrees (and equal to or less than 180 degrees).
+They define the angle between two edges as a \textit{turn} if it is larger than 15 degrees (and equal to or less than 180 degrees).
 These turns can then be used to determine the complexity of a tour:
-More turns equaling a more complex tour \cite{gemsa_efficient_2013}.
+More turns meaning a more complex tour \cite{gemsa_efficient_2013}.
 
+The ideas presented in this paper are also used by Thomas Pajor in his dissertation \glqq Algorithm Engineeering for Realistic Journey Planning in Transportation Networks\grqq \cite{pajor_algorithm_2013}, where he talks about Computation of Jogging Routes. In his last chapter, he describes details about the algorithms and mainly focusses on Greedy Faces and Partial Shortest Paths as well.
+
+\# TODO is this too detailed with the following paragraphs? Should I shorten this by removing greedy faces and partial shortest paths?
 
 
 \paragraph{Greedy Faces}
 
 Greedy Faces is built from an already existing path by extending it.
 For this, blocks outside the given tour that are adjacent to the current path are used.
-The previous cycle then is changed so that it encloses the chosen block and thus extends the previous route. 
+The previous cycle then is changed so that it encloses the chosen block and thus extends the preceding route. 
 New blocks are picked until the desired length is reached.
 To ensure only blocks that correspond to faces are picked, a preprocessing phase is introduced that identifies faces of the graph.
 During this step, first, dead-ends are removed, so the resulting graph will be two-connected.
@@ -161,9 +165,10 @@ This approach is extended to again take badness into account as to not create a 
 The greedy faces algorithm does extend an initial cycle, but it has no guarantees on the length of the final returned path.
 It can deviate without constraints from the original user specification, resulting in paths that can be way too short or way too long. \cite{gemsa_efficient_2013}
 
+
 \paragraph{Partial Shortest Paths}
 
-Since Greedy Faces cannot give any guarantees, the authors pursued a second approach to calculating results that are ensured to deviate at most by a small $\epsilon$.
+Since Greedy Faces cannot give any guarantees, the authors pursued a second approach to calculating results that are ensured to deviate at most by a small $\varepsilon$.
 The partial shortest paths are based on a set of via-vertices and named by the number of intermediate points created. 
 In the paper, 2-via-routes and 3-via-routes are presented.
 
@@ -185,7 +190,12 @@ From the two triangle points \textit{u} and \textit{v}, new points \textit{u'} a
 Then, new rings around these vertices are calculated, using a radius of  $\frac{2-\alpha}{4} L \pm \varepsilon$ to ensure a distance of  $\frac{1}{2} L \pm \varepsilon$ for all vertices within each of these rings.
 This results in a ring containing possible middle vertices.
 Then, for all pairs \textit{u'} and \textit{v'}, the intersection of their respective rings can be built and all middle vertices that will yield a smooth path for the two triangle points \textit{u} and \textit{v} will be selected as middle point candidates.
-Finally, the path along the vertices that has minimum badness will be returned as the result. \cite{gemsa_efficient_2013}
+Finally, the path along the vertices that has minimum badness will be returned as the result. \cite{gemsa_efficient_2013, pajor_algorithm_2013}
+
+Both, the Greedy Faces as well as the Partial Shortest Paths offer a solution to the roundtrip problem.
+They also allow for customization of the tour using different constraints. 
+This is why the Partial Shortest Paths approach is already used as one available option in Tour4Me. 
+The constraints and parameters that can be used to influence properties of the tour offer fewer customization options than it is planned for this thesis. \# TODO do I have to specify what is different from my approach for every paper I mention here?
 
 
 \paragraph{Computational Complexity}
@@ -219,21 +229,55 @@ Currently, it runs on Android smartphones only.
 
 
 
-\subsection{Computing Cycling Routes}
-\label{subsec:cyclingRoutes}
-\# TODO cycling paper Tour4Me
+\subsubsection{Computing Cycling Routes}
+\label{subsubsec:cyclingRoutes}
+As for running, there are some papers discussing ideas for generating cycling tours.
+Ehrgott et al. discuss a bi-objective model that takes travel time and \glqq suitability for cycling\grqq{} into account.
+This suitability is defined as a combined measure of objective factors. 
+These contain for example the volume and speed of traffic on the roads, which can impact the safety of these path segments. 
+But elevation and steepness of the terrain and similar values are taken into account.
+They all are accumulated into the one measure of suitability, so that there are only two values to optimize at the same time. \cite{ehrgott_bi-objective_2012} 
 
-\# TODO other cycling paper
+The authors do offer a solution for the fact that many of the values can have a different importance for every person. 
+While some people might not want hilly routes at all, others could enjoy the challenge they propose. 
+Because of this, they chose to offer a choice set of several alternative routes, from which the user can pick the one that works best for their preferences. \cite{ehrgott_bi-objective_2012}
+
+This approach does take several different factors into account, but does not offer any means to influence their importance on the generated routes beforehand.
+Furthermore, the presented ideas are focused on shortest path applications, not on roundtrips.
+
+Verbeeck et al. do concentrate on cycle trips in their paper. 
+They build a \glqq cycle trip planning problem (CTPP)\grqq{} as a different version of the arc orienteering problem. 
+The initial idea is to use a meta-heuristic approach of Iterated Local Search (ILS) to build roundtrips that optimize the profit of the trip.
+Since the arc orienteering problem is already NP-hard and the CTPP is even more complex, attempting to solve it with an analytic, exact algorithm will not be feasible in terms of time constraints. 
+Because of this, the authors developed two approaches - a branch-and-cut algorithm and a meta-heuristic method - to try and solve their CTPP quickly. 
+The branch-and-cut approach turned out to return results on smaller sets, but will be too slow for larger problem space instances. \cite{verbeeck_extension_2014}
+
+Therefore, they developed the ILS approach which can be split up into three phases:
+The initialization, the improvement and the selection.
+During the initialization gathers a first set of possible solutions by using the insert move that aims to find a path with the highest score.
+It starts with every arc that leaves the starting point and builds a maximum-profit path until it obtains a feasible solution.
+This step is done for all possible starting points, so several solutions are created.
+These are then optimized in the improvement phase. 
+To do so, a part of the solution is removed during every iteration.
+Then the newly constructed gap - between the two nodes where path was removed - is closed using the same insert move from the initialization, thus improving the previous solution.
+This then iterates over the whole tour until the removal encounters the end vertex (which is equivalent to the start vertex) again. \cite{verbeeck_extension_2014}
+
+Using this approach, the authors can create a path within the given time constraints, build a roundtrip, ensure that it's length lies between a maximum and minimum value and optimize it's profit.
+They also stated that their ideas can be used as \glqq building blocks\grqq{} for further development.
+A thing they stress is the fact that vertices can be visited multiple times (except the start vertex), however arcs and (if existent) their complements cannot. 
+Thus they enforce trips to not take the same paths twice. \cite{verbeeck_extension_2014}
+
+They did several benchmark tests for their implementations, but the code is not available.
+Furthermore, there does not seem to be any way to try out the existing implementation and assess how many parameters are used, which of them can be changed and how much customization is possible.
+The fact that the authors do not allow passing an arc twice also limits the options to select a preferred tour shape that might include those that simply run one way and have a U-Turn at the end. 
 
 
 
-
-
-\section{Apps that assist with sports}
-\label{sec:runningApps}
+\subsection{Apps that assist with sports}
+\label{subsec:runningApps}
 
 Aside from Tour4Me, RouteLoops and RouteYou, another prototype for running route recommendations has been developed.
-In the corresponding paper\cite{loepp_recommending_nodate}, the authors express the problems with existing apps, some of which have already been identified in the introduction of the two websites (see \ref{subsec:routeLoopsrouteYou}).
+In the corresponding paper\cite{loepp_recommending_nodate}, the authors express the problems with existing apps, some of which have already been identified in the introduction of the two websites (see \ref{subsubsec:routeLoopsrouteYou}).
 They also stress, that most research either concentrates on shortest paths or - if it is research and app development specifically for running - on the assistance with the training itself rather than finding a good route.
 Apps like \textit{Runtastic}\footnote{\url{https://www.runtastic.com/}}, \textit{Sportractive}\footnote{\url{http://sportractive.com/}} or \textit{Strava}\footnote{\url{https://www.strava.com}} are designed to help runners track the tours they already ran. 
 They measure pace, position, height meters and several other stats to then be able to present the user feedback of the run they've done. 
@@ -244,4 +288,19 @@ A German app that is meant to provide suitable routes for a variety of different
 However, it relies only on tours other users have planned and added. No customization or route creation is offered here. 
 As the authors of the paper "Recommending Running Routes: Framework and Demonstrator"\cite{loepp_recommending_nodate} pointed out in their user study, it is very important to take user preferences into account. 
 No participant of the study decided to try out a route another member had recorded, which further stresses the importance of personalized route generation\cite{loepp_recommending_nodate}.
+
+\subsection{Other tour optimization ideas}
+\label{subsec:otherTourOptimization}
+
+Aside from approaches to calculate good roundtrips and the various sports-assisting apps and technology, there is another point that can be related to generating desirable tours.
+Some papers discuss the question of how to find scenic routes, what aspects impact how appealing a route is and how the availability of more panoramic routes can influence the decisions of users.
+To gain some understanding of what is considered scenic and what features can lead users to take longer tours into account, the authors created a route choice model.
+This showed the shortest path from a source to a destination and additionally a set of routes that were longer (considering their length or the travel-time or both), but had more scenic view along it.
+These points that were considered panoramic were gathered from a set of geo-tagged photos and from travel blogs. \cite{alivand_analyzing_2015}
+
+From their experiments, users were happy to take detours that were on average 90\% longer than the fastest tour.
+This shows how important the view and surroundings can be when the goal is not only to be quick, but also takes different subjective parameters into account.
+The paper focused on touristic trips from a start to a specific destination, but their findings can easily be translated to other modes of travel, including roundtrips. \cite{alivand_analyzing_2015}
+
+
 

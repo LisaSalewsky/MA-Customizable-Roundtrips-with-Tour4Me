@@ -44,7 +44,7 @@ In this case, the graph needs to have only non negative edges.
 Others are modified versions, created specifically to fix problems like graphs with negative edges. 
 
 \subsection{Single Source Shortest Paths}
-Following the classification graph, on the bottom left, there is a class \glqq single-source\grqq, which envelops one to one and one to all.
+Following the classification graph (see \ref{fig:shortestPathTaxonomy}), on the bottom left, there is a class \glqq single-source\grqq, which envelops one to one and one to all paths.
 This class describes all problems that have a single source node and - following the respective parent nodes - have a usual path length, are unconstrained and find a singular short path that is not an approximation.
 These kinds of problems have common use cases in many daily routing problems. 
 One to one paths are already described in this chapter's introduction - finding shortest paths to a specified destination \cite{sanders_shortest_2019}.
@@ -99,7 +99,7 @@ Classical heuristics oftentimes carry the inherent risk of only finding a local 
 To reduce this risk, higher level approaches are necessary.
 These can include using several neighborhood structures to broaden the search space or entirely new concepts like the Ant Colony approach or Genetic Algorithms. \cite{gendreau_handbook_2010}
 
-Some of these meta-heuristic ideas that will be used in this thesis will be explained in the following subsections.
+The meta-heuristic ideas that will be used in this thesis will be explained in the following subsections.
 
 
 
@@ -122,9 +122,9 @@ Due to the faster accumulation, more ants will choose this shorter path and thus
 Then, all worse paths will loose all their pheromone over time and leave the best result as the only remaining path \cite{gendreau_handbook_2010, dorigo_ant_1996}.
 
 To illustrate pheromone distribution, an example illustrates in figure \ref{fig:antSystemExampleIllustration} how real ants find food and establish the best path towards the source. 
-In part a on the left side, there are many ants that fun between two points A and E. 
+In part \textbf{a} on the left side, there are many ants that run between two points A and E. 
 These could be the nest and an interesting food source.
-In part b in the middle, an obstacle has been added.
+In part \textbf{b} in the middle, an obstacle has been added.
 This now leaves the ants with a choice, which path to follow. 
 In the beginning, the likelihood of picking either path will be around 50\%.
 While taking the path, the ants distribute pheromones on it. 

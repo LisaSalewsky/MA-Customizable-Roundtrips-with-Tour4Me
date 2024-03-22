@@ -3,6 +3,12 @@
 \bibitem{gendreau_handbook_2010}
 {\em Handbook of Metaheuristics}.
 
+\bibitem{alivand_analyzing_2015}
+{\sc Alivand, Majid}, {\sc Hartwig Hochmair} \btxandlong{}\ {\sc
+  Sivaramakrishnan Srinivasan}: {\em Analyzing how travelers choose scenic
+  routes using route choice models}.
+\newblock 50:41--52.
+
 \bibitem{babaoglu_anthill_2002}
 {\sc Babaoglu, O.}, {\sc H.~Meling} \btxandlong{}\ {\sc A.~Montresor}: {\em
   Anthill: a framework for the development of agent-based peer-to-peer
@@ -99,6 +105,13 @@
   system: optimization by a colony of cooperating agents}.
 \newblock 26(1):29--41.
 
+\bibitem{ehrgott_bi-objective_2012}
+{\sc Ehrgott, Matthias}, {\sc Judith Y.~T. Wang}, {\sc Andrea Raith}
+  \btxandlong{}\ {\sc Chris van Houtte}: {\em A bi-objective cyclist route
+  choice model}.
+\newblock 46(4):652--663.
+\newblock Number: 4.
+
 \bibitem{gemsa_efficient_2013}
 {\sc Gemsa, Andreas}, {\sc Thomas Pajor}, {\sc Dorothea Wagner} \btxandlong{}\
   {\sc Tobias Zündorf}: {\em Efficient Computation of Jogging Routes}.
@@ -170,6 +183,10 @@
 \newblock Number: 4 \_eprint:
   https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1600-0838.2011.01299.x.
 
+\bibitem{pajor_algorithm_2013}
+{\sc Pajor, Thomas}: {\em Algorithm Engineering for Realistic Journey Planning
+  in Transportation Networks}.
+
 \bibitem{reinelt_traveling_2003}
 {\sc Reinelt, Gerhard}: {\em The Traveling Salesman: Computational Solutions
   for {TSP} Applications}.
@@ -205,6 +222,12 @@
 \newblock 18(3):251--261.
 \newblock Number: 3 Publisher: Taylor \& Francis \_eprint:
   https://doi.org/10.1080/13548506.2012.701755.
+
+\bibitem{verbeeck_extension_2014}
+{\sc Verbeeck, C.}, {\sc P.~Vansteenwegen} \btxandlong{}\ {\sc E.-H. Aghezzaf}:
+  {\em An extension of the arc orienteering problem and its application to
+  cycle trip planning}.
+\newblock 68:64--78.
 
 \bibitem{vina_exercise_2012}
 {\sc Vina, J}, {\sc F~Sanchis-Gomar}, {\sc V~Martinez-Bello} \btxandlong{}\

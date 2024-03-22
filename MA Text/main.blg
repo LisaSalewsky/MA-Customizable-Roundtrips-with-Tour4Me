@@ -25,10 +25,14 @@ A level-1 auxiliary file: kapitel/erklaerung.aux
 Database file #1: literatur/LS11Buchin.bib
 Warning--entry type for "gendreau_handbook_2010" isn't style-file defined
 --line 2 of file literatur/LS11Buchin.bib
+Warning--entry type for "pajor_algorithm_2013" isn't style-file defined
+--line 300 of file literatur/LS11Buchin.bib
 Warning--entry type for "ropke_heuristic_2005" isn't style-file defined
 --line 952 of file literatur/LS11Buchin.bib
 Warning--I didn't find a database entry for ""
 Warning--to sort, need author or key in gendreau_handbook_2010
+Warning--empty journal in alivand_analyzing_2015
+Warning--empty year in alivand_analyzing_2015
 Warning--empty year in babaoglu_anthill_2002
 Warning--empty journal in biddle_psychological_1993
 Warning--empty year in biddle_psychological_1993
@@ -53,6 +57,8 @@ Warning--empty journal in deo_shortest-path_1984
 Warning--empty year in deo_shortest-path_1984
 Warning--empty journal in dorigo_ant_1996
 Warning--empty year in dorigo_ant_1996
+Warning--empty journal in ehrgott_bi-objective_2012
+Warning--empty year in ehrgott_bi-objective_2012
 Warning--empty year in gemsa_efficient_2013
 Warning--empty journal in irnich_sequential_2006
 Warning--empty year in irnich_sequential_2006
@@ -77,6 +83,8 @@ Warning--empty journal in sommer_shortest-path_2014
 Warning--empty year in sommer_shortest-path_2014
 Warning--empty journal in szabo_psychological_2013
 Warning--empty year in szabo_psychological_2013
+Warning--empty journal in verbeeck_extension_2014
+Warning--empty year in verbeeck_extension_2014
 Warning--empty journal in vina_exercise_2012
 Warning--empty year in vina_exercise_2012
 Warning--empty year in wang_application_2014
@@ -84,45 +92,45 @@ Warning--empty journal in wankel_psychological_1990
 Warning--empty year in wankel_psychological_1990
 Warning--empty journal in wayahdi_greedy_2021
 Warning--empty year in wayahdi_greedy_2021
-You've used 37 entries,
+You've used 41 entries,
             2343 wiz_defined-function locations,
-            758 strings with 11763 characters,
-and the built_in function-call counts, 15623 in all, are:
-= -- 1583
-> -- 659
+            775 strings with 12370 characters,
+and the built_in function-call counts, 17068 in all, are:
+= -- 1726
+> -- 725
 < -- 10
-+ -- 260
-- -- 218
-* -- 1378
-:= -- 2301
-add.period$ -- 100
-call.type$ -- 37
-change.case$ -- 178
++ -- 288
+- -- 240
+* -- 1507
+:= -- 2523
+add.period$ -- 108
+call.type$ -- 41
+change.case$ -- 197
 chr.to.int$ -- 0
-cite$ -- 93
-duplicate$ -- 639
-empty$ -- 1248
-format.name$ -- 218
-if$ -- 3435
+cite$ -- 103
+duplicate$ -- 691
+empty$ -- 1361
+format.name$ -- 240
+if$ -- 3742
 int.to.chr$ -- 0
-int.to.str$ -- 37
-missing$ -- 56
-newline$ -- 167
-num.names$ -- 78
-pop$ -- 280
+int.to.str$ -- 41
+missing$ -- 62
+newline$ -- 183
+num.names$ -- 86
+pop$ -- 309
 preamble$ -- 1
-purify$ -- 178
+purify$ -- 197
 quote$ -- 0
-skip$ -- 501
+skip$ -- 546
 stack$ -- 0
-substring$ -- 961
-swap$ -- 260
+substring$ -- 1046
+swap$ -- 276
 text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 146
-warning$ -- 56
-while$ -- 143
-width$ -- 39
-write$ -- 353
-(There were 59 warnings)
+type$ -- 162
+warning$ -- 62
+while$ -- 157
+width$ -- 43
+write$ -- 385
+(There were 66 warnings)
