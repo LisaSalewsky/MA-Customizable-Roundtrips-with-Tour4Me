@@ -364,16 +364,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 //_ = Parallel.ForEach( ParallelizingIterator.IterateUntilFalse( () => reader.Read() ), z =>
                 while (reader.Read())
                 {
-                    Guid edgeId = reader.GetGuid( reader.GetOrdinal( "Id" ) );
+                    _ = reader.GetGuid( reader.GetOrdinal( "Id" ) );
+                    _ = reader.GetGuid( 0 );
                     Guid sourceId = reader.GetGuid( reader.GetOrdinal( "SourceNodeId" ) );
                     Guid targetId = reader.GetGuid( reader.GetOrdinal( "TargetNodeId" ) );
                     List<string> tags = reader.GetString( reader.GetOrdinal( "Tags" ) ).Split( ',' ).ToList();
                     bool reversed = reader.GetBoolean( reader.GetOrdinal( "Reversed" ) );
                     bool oneWay = reader.GetBoolean( reader.GetOrdinal( "OneWay" ) );
                     double cost = (double)reader.GetDecimal( reader.GetOrdinal( "Cost" ) );
-
-                    Node source = VNodes.Find( x => x.NodeId == sourceId );
-                    Node target = VNodes.Find( x => x.NodeId == targetId );
 
                     if (!GIdNode.ContainsKey( sourceId ) || !GIdNode.ContainsKey( targetId ))
                     {
@@ -387,6 +385,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         //return;
                         continue;
                     }
+
+                    Node source = VNodes[ sId ];
+                    Node target = VNodes[ tId ];
+
 
 
                     Edge edge = AddEdge( cEdges, source, target, cost, tags, reversed, oneWay );
@@ -726,6 +728,64 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return deg * ( Math.PI / 180 );
         }
 
+        private int MinDistance ( double[] dist, bool[] sptSet )
+        {
+            // Initialize min value
+            double min = double.MaxValue;
+            int min_index = -1;
+
+            for (int v = 0; v < VNodes.Count; v++)
+            {
+                if (sptSet[ v ] == false && dist[ v ] <= min)
+                {
+                    min = dist[ v ];
+                    min_index = v;
+                }
+            }
+
+            return min_index;
+        }
+        public void CalculateShortestDistances ( int start )
+        {
+            double[] dist = new double[ VNodes.Count ];
+            double[] queue = new double[ VNodes.Count ];
+            bool[] sptSet = new bool[ VNodes.Count ];
+
+            for (int i = 0; i < VNodes.Count; i++)
+            {
+                dist[ i ] = int.MaxValue;
+                sptSet[ i ] = false;
+            }
+
+
+            dist[ start ] = 0.0;
+            VNodes[ start ].ShortestDistance = 0.0;
+            queue[ start ] = 0.0;
+
+            for (int count = 0; count < VNodes.Count - 1; count++)
+            {
+                int u = MinDistance( dist, sptSet );
+                sptSet[ u ] = true;
+                for (int v = 0; v < VNodes.Count; v++)
+                {
+                    if (!sptSet[ v ] && dist[ u ] != int.MaxValue)
+                    {
+                        Node cur = VNodes[ u ];
+                        Node neighbor = VNodes[ v ];
+
+                        double potShortst = cur.ShortestDistance + dist[ v ];
+                        if (cur.Incident
+                            .Where( e => e.SourceNode.GraphNodeId == v || e.TargetNode.GraphNodeId == v ).Count() > 0
+                            && neighbor.ShortestDistance > potShortst)
+                        {
+                            neighbor.ShortestDistance = potShortst;
+                        }
+                    }
+                }
+            }
+
+        }
+
         public double ShortestPath ( int start, int end )
         {
             Dictionary<int, double> dist = new Dictionary<int, double>();
@@ -853,7 +913,37 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
             return (new List<Edge>(), new List<int>());
         }
+        public (List<Edge> path, List<int> pathNodes) DijkstraShortestPath ( int start, int end )
+        {
+            List<Edge> path = new List<Edge>();
+            List<int> pathNodes = new List<int>();
 
+            int currentNode = end;
+            while (currentNode != start)
+            {
+                Node currentNodeObj = VNodes.Find( n => n.GraphNodeId == currentNode );
+                double shortestDist = currentNodeObj.ShortestDistance;
+                int prevNode = -1;
+                foreach (Edge edge in currentNodeObj.Incident)
+                {
+                    int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
+                    if (shortestDist == VNodes.Find( n => n.GraphNodeId == neighborId ).ShortestDistance + edge.Cost)
+                    {
+                        prevNode = neighborId;
+                        path.Insert( 0, edge );
+                        break;
+                    }
+                }
+                if (prevNode == -1)
+                {
+                    // No valid previous node found
+                    break;
+                }
+                pathNodes.Insert( 0, currentNode );
+                currentNode = prevNode;
+            }
+            return (path, pathNodes);
+        }
     }
 
 }

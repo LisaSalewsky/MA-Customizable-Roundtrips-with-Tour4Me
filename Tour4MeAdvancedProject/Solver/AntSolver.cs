@@ -10,7 +10,7 @@ namespace Tour4MeAdvancedProject.Solver
     public class AntSolver : Selection
     {
         public int NumberTours { get; set; } = 2;
-        public int NumberAnts { get; set; } = 100;
+        public int NumberAnts { get; set; } = 1;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
         public double Beta { get; set; } = 0.7;
@@ -68,7 +68,7 @@ namespace Tour4MeAdvancedProject.Solver
                 Ants.Add( new Ant( pheromoneAmount ) );
             }
             List<Edge> solutionEdges = new List<Edge>();
-            HashSet<int> visitedNodes = new HashSet<int>();
+            List<int> visitedNodes = new List<int>();
             for (int i = 0; i < NumberTours; i++)
             {
                 _ = Parallel.ForEach( Ants, currentAnt =>
@@ -126,17 +126,18 @@ namespace Tour4MeAdvancedProject.Solver
                 : 1 / ( P.AvoidTags.Count * P.EdgeProfitImportance );
 
             //HashSet<int> visitedNodes = new HashSet<int>();
+            P.Graph.CalculateShortestDistances( P.Start );
 
             _ = Parallel.ForEach( P.Graph.VEdges, edge =>
             {
-                //if (edge.SourceNode.ShortestDistance == 0)
-                //{
-                //    edge.SourceNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.SourceNode.GraphNodeId );
-                //}
-                //if (edge.TargetNode.ShortestDistance == 0)
-                //{
-                //    edge.TargetNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.TargetNode.GraphNodeId );
-                //}
+                if (edge.SourceNode.ShortestDistance == 0)
+                {
+                    edge.SourceNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.SourceNode.GraphNodeId );
+                }
+                if (edge.TargetNode.ShortestDistance == 0)
+                {
+                    edge.TargetNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.TargetNode.GraphNodeId );
+                }
 
                 foreach (string tag in edge.Tags)
                 {

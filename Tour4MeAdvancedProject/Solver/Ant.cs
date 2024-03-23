@@ -63,7 +63,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// <seealso cref="Edge"/>
         /// <seealso cref="Node"/>
         /// <seealso cref="AntColonyOptimizer"/>
-        public (List<Edge>, HashSet<int>) Tour ( Problem CurrentProblem, bool usePenalty, bool useBacktracking )
+        public (List<Edge>, List<int>) Tour ( Problem CurrentProblem, bool usePenalty, bool useBacktracking )
         {
             #region intialize needed variables
             SolutionEdges = new List<Edge>();
@@ -87,10 +87,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             //queue.Enqueue(0.0, new Tuple<int, double>(start, 0.0));
             List<int> queue = new List<int>() { start };
             HashSet<int> visited = new HashSet<int>();
+            List<int> solutionVisited = new List<int>();
             Edge pickedEdge = null;
 
             double currentDistance = 0;
             _ = visited.Add( start );
+            solutionVisited.Add( start );
             #endregion
 
 
@@ -126,18 +128,18 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
                 {
-                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, pickedEdge, ref currentDistance, currentNode );
+                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, solutionVisited, pickedEdge, ref currentDistance, currentNode );
 
                 }
                 else
                 {
                     CloseOffPath( graph, start, parent, out List<Edge> edges, out List<int> nodes );
 
-                    return (SolutionEdges.Concat( edges ).ToList(), visited.Concat( nodes ).ToHashSet());
+                    return (SolutionEdges.Concat( edges ).ToList(), solutionVisited.Concat( nodes ).ToList());
                 }
             }
 
-            return (SolutionEdges, visited);
+            return (SolutionEdges, solutionVisited);
         }
 
         private void FindAllowedPath ( Problem CurrentProblem, bool usePenalty, bool useBacktracking, List<Node> vNodes, ref List<Node> visitableNodes, ref HashSet<int> visited, Edge pickedEdge, double currentDistance, ref int currentNode, ref List<Edge> allowed )
@@ -246,7 +248,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return sumOfAllowed;
         }
 
-        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, HashSet<int> visited, Edge pickedEdge, ref double currentDistance, int currentNode )
+        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref double currentDistance, int currentNode )
         {
             int parent;
             // now choose next node based on probability
@@ -258,6 +260,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             parent = currentNode;
             // once a node was visited, it cannot be visited again in this tour by the same ant
             _ = visited.Add( neighborId );
+            solutionVisited.Add( neighborId );
             _ = visitableNodes.Remove( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
 
             // Add the picked edge to the solution path
@@ -271,7 +274,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             // close it using the shortest path from the remaining acceptable node
             edges = new List<Edge>();
             nodes = new List<int>();
-            (edges, nodes) = graph.GetShortestPath( parent, start );
+            //(edges, nodes) = graph.GetShortestPath( parent, start );
+            (edges, nodes) = graph.DijkstraShortestPath( start, parent );
+            edges.Reverse();
+            nodes.Reverse();
 
             double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );
         }
