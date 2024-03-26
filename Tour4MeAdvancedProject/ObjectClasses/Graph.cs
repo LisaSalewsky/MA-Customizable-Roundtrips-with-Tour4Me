@@ -281,7 +281,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             "SELECT Id," +
             "GeographyValues.Lat AS Latitude," +
             "GeographyValues.Long AS Longitude," +
-            "Elevation " +
+            "Elevation," +
+            "Surroundings " +
             "FROM dbo.Node " +
             "WHERE GeographyValues.STDistance(@CenterPoint) <= @RadiusInMeters;";
 
@@ -368,7 +369,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     _ = reader.GetGuid( 0 );
                     Guid sourceId = reader.GetGuid( reader.GetOrdinal( "SourceNodeId" ) );
                     Guid targetId = reader.GetGuid( reader.GetOrdinal( "TargetNodeId" ) );
-                    List<string> tags = reader.GetString( reader.GetOrdinal( "Tags" ) ).Split( ',' ).ToList();
+                    int idxTags = reader.GetOrdinal( "Tags" );
+                    List<string> tags = new List<string>();
+                    if (!reader.IsDBNull( idxTags ))
+                    {
+                        tags = reader.GetString( idxTags )?.Split( ',' ).ToList();
+                    }
                     bool reversed = reader.GetBoolean( reader.GetOrdinal( "Reversed" ) );
                     bool oneWay = reader.GetBoolean( reader.GetOrdinal( "OneWay" ) );
                     double cost = (double)reader.GetDecimal( reader.GetOrdinal( "Cost" ) );
@@ -453,6 +459,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     double latitude = reader.GetDouble( reader.GetOrdinal( "Latitude" ) );
                     double longitude = reader.GetDouble( reader.GetOrdinal( "Longitude" ) );
 
+                    int idxSurroundings = reader.GetOrdinal( "Surroundings" );
+                    List<string> tags = new List<string>();
+                    if (!reader.IsDBNull( idxSurroundings ))
+                    {
+                        tags = reader.GetString( idxSurroundings )?.Split( ',' ).ToList();
+                    }
+
 
                     Node node = new Node( cNodes, nodeId, latitude, longitude, elevation );
                     vNodes.Add( node );
@@ -475,6 +488,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             Node l = VNodes[ s.GraphNodeId ];
             Node r = VNodes[ t.GraphNodeId ];
+
+            HashSet<string> surroundings = l.Suroundings.Concat( r.Suroundings ).ToHashSet();
+            if (surroundings.Count > 0)
+            {
+                tags = tags.Concat( surroundings ).ToList();
+            }
+
+
             Edge edge = new Edge( edgeGraphId, new Tuple<Node, Node>( l, r ), cost );
 
             double yl = GetDistanceFromLatLon( l.Lat, l.Lon, MinLat, l.Lon ) * ( l.Lat < MinLat ? -1 : 1 );
@@ -785,6 +806,59 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
 
         }
+        public void InitializeShortestPath ( int start )
+        {
+            Dictionary<int, double> dist = new Dictionary<int, double>();
+            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
+
+
+            dist[ start ] = 0.0;
+            queue.Enqueue( 0.0, new Tuple<int, double>( start, 0.0 ) );
+
+            while (queue.Count > 0)
+            {
+                (double, Tuple<int, double>) current = queue.Dequeue();
+                _ = current.Item1;
+                int currentNode = current.Item2.Item1;
+                double actual = current.Item2.Item2;
+
+
+                if (!dist.TryGetValue( currentNode, out double bestKnownDist ))
+                {
+                    dist[ currentNode ] = actual;
+                    bestKnownDist = actual;
+                }
+
+                if (bestKnownDist != actual)
+                {
+                    continue;
+                }
+
+
+                foreach (Edge edge in VNodes[ currentNode ].Incident)
+                {
+                    Node neighbor = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode : edge.SourceNode;
+                    int neighborId = neighbor.GraphNodeId;
+
+                    double newDistance = bestKnownDist + edge.Cost;
+
+                    if (!dist.TryGetValue( neighborId, out double currentNeighborDist ))
+                    {
+                        dist[ neighborId ] = double.MaxValue;
+                        currentNeighborDist = double.MaxValue;
+                    }
+
+                    if (newDistance < currentNeighborDist)
+                    {
+                        double heuristic = newDistance + GetDistanceFromLatLon( start, neighborId );
+                        queue.Enqueue( heuristic, new Tuple<int, double>( neighborId, newDistance ) );
+                        dist[ neighborId ] = newDistance;
+                        neighbor.ShortestDistance = newDistance;
+                    }
+                }
+            }
+        }
+
 
         public double ShortestPath ( int start, int end )
         {
@@ -919,15 +993,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             List<int> pathNodes = new List<int>();
 
             int currentNode = end;
-            while (currentNode != start)
+            do
             {
-                Node currentNodeObj = VNodes.Find( n => n.GraphNodeId == currentNode );
+                Node currentNodeObj = VNodes[ currentNode ];
                 double shortestDist = currentNodeObj.ShortestDistance;
                 int prevNode = -1;
                 foreach (Edge edge in currentNodeObj.Incident)
                 {
                     int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
-                    if (shortestDist == VNodes.Find( n => n.GraphNodeId == neighborId ).ShortestDistance + edge.Cost)
+                    if (shortestDist == VNodes[ neighborId ].ShortestDistance + edge.Cost)
                     {
                         prevNode = neighborId;
                         path.Insert( 0, edge );
@@ -942,6 +1016,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 pathNodes.Insert( 0, currentNode );
                 currentNode = prevNode;
             }
+            while (currentNode != start);
             return (path, pathNodes);
         }
     }

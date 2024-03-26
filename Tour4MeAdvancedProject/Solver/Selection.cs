@@ -10,7 +10,7 @@ namespace Tour4MeAdvancedProject.Solver
 
         public Selection () { }
 
-        public virtual SolveStatus Solve ( Problem p )
+        public virtual SolveStatus Solve ( ref Problem p )
         {
             return SolveStatus.Unsolved;
         }

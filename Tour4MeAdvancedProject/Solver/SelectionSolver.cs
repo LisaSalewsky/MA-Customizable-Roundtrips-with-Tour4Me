@@ -11,7 +11,7 @@ namespace Tour4MeAdvancedProject.Solver
     {
         public SelectionSolver () { }
 
-        public override SolveStatus Solve ( Problem P )
+        public override SolveStatus Solve ( ref Problem P )
         {
             List<bool> visited = new List<bool>();
             visited.AddRange( new bool[ P.Graph.VEdges.Count ] );

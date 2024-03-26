@@ -10,7 +10,7 @@ namespace Tour4MeAdvancedProject.Solver
 
 
 
-        public override SolveStatus Solve ( Problem P )
+        public override SolveStatus Solve ( ref Problem P )
         {
 
 

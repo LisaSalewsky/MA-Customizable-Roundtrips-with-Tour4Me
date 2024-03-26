@@ -11,7 +11,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double Length { get; set; }
         public double Elevation { get; set; } = 100;
         public double Steepness { get; set; } = 100;
-        public string SurroundingTags { get; set; } = "surroundigns test";
+        public double CoveredArea { get; set; }
+        public string SurroundingTags { get; set; }
         public string PathTypes { get; set; }
         public string Surfaces { get; set; }
 
@@ -21,7 +22,21 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Visited = new List<int>();
         }
 
-        public Path ( List<Edge> edges, List<int> visited, double quality )
+        public Path ( Path p )
+        {
+            Edges = p.Edges;
+            Visited = p.Visited;
+            Length = p.Length;
+            Elevation = p.Elevation;
+            Steepness = p.Steepness;
+            CoveredArea = p.CoveredArea;
+            SurroundingTags = p.SurroundingTags;
+            PathTypes = p.PathTypes;
+            Surfaces = p.Surfaces;
+
+        }
+
+        public Path ( List<Edge> edges, List<int> visited, double quality, Path p ) : this( p )
         {
             Edges = edges;
             Visited = visited;

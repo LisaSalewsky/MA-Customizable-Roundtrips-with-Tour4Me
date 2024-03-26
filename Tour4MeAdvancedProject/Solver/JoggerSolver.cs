@@ -12,7 +12,7 @@ namespace Tour4MeAdvancedProject.Solver
     {
         public JoggerSolver () { }
 
-        public override SolveStatus Solve ( Problem CurrentProblem )
+        public override SolveStatus Solve ( ref Problem CurrentProblem )
         {
             double initRingSize = 5;
             double tempRingSize = 1000;

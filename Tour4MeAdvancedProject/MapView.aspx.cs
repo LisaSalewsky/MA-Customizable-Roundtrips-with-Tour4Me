@@ -69,10 +69,10 @@ namespace Tour4MeAdvancedProject
 
         [WebMethod]
         public static Dictionary<string, string> Tour ( double latIn, double lonIn, double distIn,
-                                                        string algoIn, string elevationIn, string descentIn,
+                                                        string algoIn, string elevationIn, string steepnessIn,
                                                         string surroundingsIn, string[] tagsHIn, List<string> tagsSIn,
-                                                        string tourShapeIn,
-                                                        string runningTimeIn, double edgeProfitIn, double coveredAreaIn
+                                                        string tourShapeIn, string runningTimeIn,
+                                                        double edgeProfitIn, double coveredAreaIn, double elevationImportanceIn
                                                         )
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
@@ -80,7 +80,7 @@ namespace Tour4MeAdvancedProject
 
             DateTime init_time_1 = DateTime.Now;
 
-            double lat, lon, distance, elevation, descent, runningTime, edgeProfitImportance, coveredAreaImportance;
+            double lat, lon, distance, elevation, steepness, runningTime, edgeProfitImportance, coveredAreaImportance, elevationImportance;
             int algorithm;
             string filename;
 
@@ -90,12 +90,13 @@ namespace Tour4MeAdvancedProject
             algorithm = Convert.ToInt32( algoIn );
             runningTime = Convert.ToDouble( runningTimeIn );
             elevation = elevationIn == "" ? 0 : Convert.ToDouble( elevationIn );
-            descent = descentIn == "" ? 0 : Convert.ToDouble( descentIn );
+            steepness = steepnessIn == "" ? 0 : Convert.ToDouble( steepnessIn );
 
             runningTime = runningTime < 5 * 60 ? runningTime : 5 * 60;
 
             edgeProfitImportance = edgeProfitIn;
             coveredAreaImportance = coveredAreaIn;
+            elevationImportance = elevationImportanceIn;
 
 
             //double min_lat = lat - (lat - AbsMinLat) % LatGran - LatPad;
@@ -199,7 +200,7 @@ namespace Tour4MeAdvancedProject
 
             if (surroundingValues != null && surroundingValues[ 0 ] != " ")
             {
-                for (int i = 0; i < surroundingValues.Length; i++)
+                for (int i = 0; i < surroundingValues.Length - 1; i++)
                 {
                     string[] tagsNameDesireChoice = surroundingValues[ i ].Split( ',' );
                     string desireChoice = tagsNameDesireChoice[ 1 ];
@@ -245,17 +246,20 @@ namespace Tour4MeAdvancedProject
             {
                 // for a U-Turn, we only need to consider edge profit
                 case TourShape.UTurn:
-                    problem.EdgeProfitImportance = 1;
+                    problem.EdgeProfitImportance = 0.5;
                     problem.CoveredAreaImportance = 0;
+                    problem.ElevationImportance = 0.5;
                     break;
                 // for round tours, covered area is very important, edge profit not so much
                 case TourShape.Round:
-                    problem.EdgeProfitImportance = 0.2;
-                    problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance;
+                    problem.EdgeProfitImportance = 0.1;
+                    problem.ElevationImportance = 0.1;
+                    problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance - problem.ElevationImportance;
                     break;
                 // for complex tours, we prioritize edge profit but try not to generate a U-Turn either 
                 case TourShape.Complex:
-                    problem.EdgeProfitImportance = 0.8;
+                    problem.EdgeProfitImportance = 0.4;
+                    problem.ElevationImportance = 0.4;
                     problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance;
                     break;
                 // custom tour shapes allow the user to select the values themselves
@@ -263,11 +267,12 @@ namespace Tour4MeAdvancedProject
                 default:
                     problem.EdgeProfitImportance = edgeProfitImportance;
                     problem.CoveredAreaImportance = coveredAreaImportance;
+                    problem.ElevationImportance = elevationImportance;
                     break;
             }
 
             problem.MaxElevation = elevation;
-            problem.MaxDescent = descent;
+            problem.MaxSteepness = steepness;
 
             problem.Path.Visited.Clear();
             problem.Quality = -1;
@@ -287,35 +292,35 @@ namespace Tour4MeAdvancedProject
                     {
                         // Greedy
                         SelectionSolver solver = new SelectionSolver();
-                        status = solver.Solve( problem );
+                        status = solver.Solve( ref problem );
                         break;
                     }
                 case 1:
                     {
                         // minCost
                         JoggerSolver solver = new JoggerSolver();
-                        status = solver.Solve( problem );
+                        status = solver.Solve( ref problem );
                         break;
                     }
                 case 2:
                     {
                         // ILS
                         //ILS solver = new ILS();
-                        //status = solver.Solve(problem);
+                        //status = solver.Solve( ref problem);
                         break;
                     }
                 case 3:
                     {
                         // Ant
                         AntSolver solver = new AntSolver();
-                        status = solver.Solve( problem );
+                        status = solver.Solve( ref problem );
                         break;
                     }
                 case 4:
                     {
                         // Genetic
                         GeneticSolver solver = new GeneticSolver();
-                        status = solver.Solve( problem );
+                        status = solver.Solve( ref problem );
                         break;
                     }
             }
@@ -358,9 +363,10 @@ namespace Tour4MeAdvancedProject
                     problem.Metadata.Add( "Length: " + problem.Path.Length );
                     problem.Metadata.Add( "Elevation: " + problem.Path.Elevation );
                     problem.Metadata.Add( "Steepness: " + problem.Path.Steepness );
-                    problem.Metadata.Add( "Surroundings: " + problem.Path.SurroundingTags );
-                    problem.Metadata.Add( "Path Types: " + problem.Path.PathTypes );
-                    problem.Metadata.Add( "Surfaces: " + problem.Path.Surfaces );
+                    problem.Metadata.Add( "Surroundings: " + ( problem.Path.SurroundingTags.Length == 0 ? "None available" : problem.Path.SurroundingTags ) );
+                    problem.Metadata.Add( "Path Types: " + ( problem.Path.PathTypes.Length == 0 ? "None available" : problem.Path.PathTypes ) );
+                    problem.Metadata.Add( "Surfaces: " + ( problem.Path.Surfaces.Length == 0 ? "None available" : problem.Path.Surfaces ) );
+                    problem.Metadata.Add( "Shape: " + problem.Path.CoveredArea );
                     result.Add( "success", "200" );
                     foreach (KeyValuePair<string, string> kv in problem.OutputToResultString())
                     {

@@ -22,12 +22,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public HashSet<string> PrefTags { get; set; }
         public HashSet<string> AvoidTags { get; set; }
         public double MaxElevation { get; set; }
-        public double MaxDescent { get; set; }
+        public double MaxSteepness { get; set; }
         public Graph Graph { get; set; }
         public Graph Backbone { get; set; }
         public double RunningTime { get; set; }
         public double EdgeProfitImportance { get; set; }
         public double CoveredAreaImportance { get; set; }
+        public double ElevationImportance { get; set; }
         public List<List<double>> ShortestPath { get; set; }
 
         public Path Path { get; set; }
@@ -249,6 +250,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
             StringBuilder outputString = new StringBuilder( "[" );
+            Path.Visited.Add( Path.Visited.ElementAt( 0 ) );
 
             for (int i = 0; i < Path.Visited.Count() - 1; i++)
             {
@@ -256,6 +258,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}],",
                     Graph.VNodes[ node ].Lat, Graph.VNodes[ node ].Lon );
 
+
+                // todo check if i can use solution edges instead
                 Edge edge = Graph.GetEdge( node, Path.Visited.ElementAt( i + 1 ) );
 
                 if (edge == null)
@@ -263,12 +267,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                bool reverse = node < edge.TargetNode.GraphNodeId;
-                if (!reverse)
+                bool reverse = node != edge.SourceNode.GraphNodeId;
+                List<Tuple<double, double>> locationList = new List<Tuple<double, double>>( edge.GeoLocations );
+                if (reverse)
                 {
-                    edge.GeoLocations.Reverse();
+                    locationList.Reverse();
+                    //edge.GeoLocations.Reverse();
                 }
-                foreach ((double lat, double lon) in edge.GeoLocations)
+                foreach ((double lat, double lon) in locationList)
                 {
                     _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}],",
                         lat, lon );

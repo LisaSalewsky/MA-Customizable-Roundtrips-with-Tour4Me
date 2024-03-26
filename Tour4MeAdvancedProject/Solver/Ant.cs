@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 namespace Tour4MeAdvancedProject.ObjectClasses
 {
     public class Ant
@@ -63,7 +62,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// <seealso cref="Edge"/>
         /// <seealso cref="Node"/>
         /// <seealso cref="AntColonyOptimizer"/>
-        public (List<Edge>, List<int>) Tour ( Problem CurrentProblem, bool usePenalty, bool useBacktracking )
+        public (List<Edge>, List<int>) Tour ( ref Problem CurrentProblem, bool usePenalty, bool useBacktracking )
         {
             #region intialize needed variables
             SolutionEdges = new List<Edge>();
@@ -95,6 +94,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             solutionVisited.Add( start );
             #endregion
 
+            // Define the seed
+            //System.Diagnostics.Debug.WriteLine( "--------------------------------------" );
+            // Initialize the Random object with the seed
+            //Random random = new Random( 123 );
+
+            double currentPathsMaxSteepness = 0;
 
             while (queue.Count > 0)
             {
@@ -108,18 +113,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // one of the nodes has to be in visited (the one we are working from now)
                 // the other one may not be in visited
                 // so check, if either of the nodes is not yet in visited
+                double maxAllowedSteepness = CurrentProblem.MaxSteepness;
                 List<Edge> allowed = vNodes[ currentNode ].Incident.FindAll( x =>
                  ( !visited.Contains( x.TargetNode.GraphNodeId ) || !visited.Contains( x.SourceNode.GraphNodeId ) ) &&
-                 ( Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / 100 <= CurrentProblem.MaxDescent ) );
+                 ( Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / 100 <= maxAllowedSteepness ) );
 
                 FindAllowedPath( CurrentProblem, usePenalty, useBacktracking, vNodes, ref visitableNodes, ref visited, pickedEdge, currentDistance, ref currentNode, ref allowed );
 
-                float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed, vNodes, visited, currentNode );
+                float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed, vNodes, visited, currentNode, ref CurrentProblem );
                 CalculateNewPheromoneValues( CurrentProblem, usePenalty, vNodes, visited, currentDistance, edgeProbabilities, vNodes[ currentNode ], allowed, sumOfAllowed, profit, area, out profit, out area );
+                CurrentProblem.Path.CoveredArea = area;
 
                 // randomly generate a random number between [0.0, 1.0) (excluding 1)
                 float probability = (float)Random.NextDouble();
-
                 // pick an edge according to edgeProbabilities and calculated probability
                 KeyValuePair<Edge, float> pickedPair = ChooseEdge( edgeProbabilities, probability );
                 pickedEdge = pickedPair.Key;
@@ -128,17 +134,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
                 {
-                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, solutionVisited, pickedEdge, ref currentDistance, currentNode );
+                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, solutionVisited, pickedEdge, ref currentPathsMaxSteepness, ref CurrentProblem, ref currentDistance, currentNode );
 
                 }
                 else
                 {
-                    CloseOffPath( graph, start, parent, out List<Edge> edges, out List<int> nodes );
+                    CloseOffPath( graph, start, parent, currentPathsMaxSteepness, CurrentProblem, out List<Edge> edges, out List<int> nodes );
 
+                    CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
                     return (SolutionEdges.Concat( edges ).ToList(), solutionVisited.Concat( nodes ).ToList());
                 }
             }
 
+            CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
             return (SolutionEdges, solutionVisited);
         }
 
@@ -151,7 +159,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we use a penalty, the ants will figure out what to do by themselves. Just update the trail intensity accordingly
                 if (usePenalty)
                 {
-                    allowed = ScaleTrailIntensity( vNodes, visited, currentNode );
+                    allowed = ScaleTrailIntensity( vNodes, visited, currentNode, ref CurrentProblem );
                 }
                 // if not, two more options reamain
                 else if (useBacktracking)
@@ -174,7 +182,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         private void CalculateNewPheromoneValues ( Problem CurrentProblem, bool usePenalty, List<Node> vNodes, HashSet<int> visited, double currentDistance, Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed, float sumOfAllowed, double profit, double area, out double profitOut, out double areaOut )
         {
-            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId );
+            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId, ref CurrentProblem );
             profitOut = profit;
             areaOut = area;
 
@@ -184,10 +192,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 Node neighbor = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
 
-                if (neighbor.ShortestDistance == 0)
-                {
-                    neighbor.ShortestDistance = CurrentProblem.Graph.ShortestPath( CurrentProblem.Start, neighbor.GraphNodeId );
-                }
+                //if (neighbor.ShortestDistance == 0)
+                //{
+                //    neighbor.ShortestDistance = CurrentProblem.Graph.ShortestPath( CurrentProblem.Start, neighbor.GraphNodeId );
+                //}
 
                 if (usePenalty || neighbor.ShortestDistance < CurrentProblem.TargetDistance - currentDistance - edge.Cost)
                 {
@@ -211,15 +219,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             areaOut = newArea;
         }
 
-        private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode )
+        private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode, ref Problem currentProblem )
         {
             // scale trial intensity on edges accordingly for all edges where a node is visited twice
             double penaltyQuotient = 50;
-            List<Edge> applyPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
+            List<Edge> applyDoubleVisitPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
             visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
+
+            double maxSteepness = currentProblem.MaxSteepness;
+            List<Edge> applyElevationPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
+            Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / 100 > maxSteepness );
             List<Edge> allowed = new List<Edge>( vNodes[ currentNode ].Incident );
 
-            foreach (Edge edge in applyPenalty)
+            foreach (Edge edge in applyDoubleVisitPenalty)
             {
                 // create new list of edges with applied penalties
                 Edge newEdge = new Edge( edge, edge.Reversed );
@@ -227,14 +239,23 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 _ = allowed.Remove( edge );
                 allowed.Add( newEdge );
             }
+
+            foreach (Edge edge in applyElevationPenalty)
+            {
+                Edge newEdge = new Edge( edge, edge.Reversed );
+                newEdge.TrailIntensity /= penaltyQuotient * currentProblem.ElevationImportance;
+                _ = allowed.Remove( edge );
+                allowed.Add( newEdge );
+            }
+
             //allowed = applyPenalty;
             return allowed;
         }
 
-        private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed, List<Node> vNodes, HashSet<int> visited, int currentNode )
+        private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed, List<Node> vNodes, HashSet<int> visited, int currentNode, ref Problem currentProblem )
         {
 
-            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode );
+            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode, ref currentProblem );
             // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
             float sumOfAllowed = 0;
             foreach (Edge edge in allowed)
@@ -248,7 +269,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return sumOfAllowed;
         }
 
-        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref double currentDistance, int currentNode )
+        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref double maxSteepness, ref Problem currentProblem, ref double currentDistance, int currentNode )
         {
             int parent;
             // now choose next node based on probability
@@ -265,10 +286,20 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             // Add the picked edge to the solution path
             SolutionEdges.Add( pickedEdge );
+
+            double elevationDiff = Math.Abs( pickedEdge.SourceNode.Elevation - pickedEdge.TargetNode.Elevation );
+
+            if (elevationDiff / pickedEdge.Cost > maxSteepness)
+            {
+                maxSteepness = elevationDiff / pickedEdge.Cost * 100;
+            }
+
+            currentProblem.Path.Elevation += elevationDiff;
+
             return parent;
         }
 
-        private void CloseOffPath ( Graph graph, int start, int parent, out List<Edge> edges, out List<int> nodes )
+        private void CloseOffPath ( Graph graph, int start, int parent, double maxSteepness, Problem currentProblem, out List<Edge> edges, out List<int> nodes )
         {
             // if we need to close the loop since we cannot take any other neighbor:
             // close it using the shortest path from the remaining acceptable node
@@ -278,6 +309,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             (edges, nodes) = graph.DijkstraShortestPath( start, parent );
             edges.Reverse();
             nodes.Reverse();
+
+            foreach (Edge edge in edges)
+            {
+
+                double elevationDiff = Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation );
+
+                if (elevationDiff / edge.Cost > maxSteepness)
+                {
+                    maxSteepness = elevationDiff / edge.Cost / 100;
+                }
+
+                currentProblem.Path.Elevation += elevationDiff;
+            }
 
             double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );
         }
@@ -336,7 +380,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // pick last edge of the path
                 Edge penaltyEdge = acceptableLentghEdges.Last();
                 // set trail intensity to 0 to make it as unattractive as possible for future runs
-                penaltyEdge.TrailIntensity = 0;
+                penaltyEdge.TrailIntensity = 0.1;
 
                 // remove last edge that added too much to the distance and re-calculate sum
                 _ = acceptableLentghEdges.Remove( penaltyEdge );

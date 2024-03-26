@@ -13,6 +13,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public Guid NodeId { get; set; }
         public int GraphNodeId { get; set; }
         public List<Edge> Incident { get; set; }
+        public HashSet<string> Suroundings { get; set; } = new HashSet<string>();
         public double ShortestDistance { get; set; }
 
         public Node ( int graphId, Guid id, double nodeLat, double nodeLon )

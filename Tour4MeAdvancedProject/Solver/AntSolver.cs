@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tour4MeAdvancedProject.Helper;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
@@ -10,7 +11,7 @@ namespace Tour4MeAdvancedProject.Solver
     public class AntSolver : Selection
     {
         public int NumberTours { get; set; } = 2;
-        public int NumberAnts { get; set; } = 1;
+        public int NumberAnts { get; set; } = 10;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
         public double Beta { get; set; } = 0.7;
@@ -52,7 +53,7 @@ namespace Tour4MeAdvancedProject.Solver
         /// <seealso cref="Edge"/>
         /// <seealso cref="AntColonyOptimizer"/>
         /// </summary>
-        public override SolveStatus Solve ( Problem P )
+        public override SolveStatus Solve ( ref Problem P )
         {
             UsePenalty = true;
             UseBacktracking = false;
@@ -69,27 +70,31 @@ namespace Tour4MeAdvancedProject.Solver
             }
             List<Edge> solutionEdges = new List<Edge>();
             List<int> visitedNodes = new List<int>();
+
+            Problem tempProblem = P;
             for (int i = 0; i < NumberTours; i++)
             {
                 _ = Parallel.ForEach( Ants, currentAnt =>
                 {
                     // calculate one Tour for the current Ant
                     // save the edges that form the solution path in solutionEdges
-                    (solutionEdges, visitedNodes) = currentAnt.Tour( P, UsePenalty, UseBacktracking );
+                    (solutionEdges, visitedNodes) = currentAnt.Tour( ref tempProblem, UsePenalty, UseBacktracking );
 
                     // now update the pheromone trail (trailInensity)
-                    currentAnt.UpdatePheromoneTrail( P, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
+                    currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
                 } );
                 // reset all pheromone values set by ants
                 P.Graph.VEdges.ForEach( edge => edge.Pheromone = 0 );
             }
 
+            P = tempProblem;
 
-            P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes.ToList() ) );
+            P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes.ToList() ), P.Path );
 
 
             HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
             HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
+            HashSet<string> addedSurroundings = new HashSet<string>();
 
             foreach (Edge edge in solutionEdges)
             {
@@ -104,13 +109,29 @@ namespace Tour4MeAdvancedProject.Solver
                     {
                         _ = addedPathTypes.Add( pathType );
                     }
+                    bool tagFound = false;
+                    foreach (string[] tagsArray in Surroundings.Values.Values)
+                    {
+                        if (tagsArray.Contains( currentTag ))
+                        {
+                            tagFound = true;
+                            // Tag found in one of the arrays
+                            break;
+                        }
+                    }
+
+                    if (tagFound)
+                    {
+                        _ = addedSurroundings.Add( currentTag );
+                    }
 
                 }
 
             }
             P.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
             P.Path.PathTypes = string.Join( ", ", addedPathTypes );
-
+            P.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
+            P.Path.Elevation = P.Path.Elevation / 2;
 
             return SolveStatus.Feasible;
         }
@@ -126,18 +147,19 @@ namespace Tour4MeAdvancedProject.Solver
                 : 1 / ( P.AvoidTags.Count * P.EdgeProfitImportance );
 
             //HashSet<int> visitedNodes = new HashSet<int>();
-            P.Graph.CalculateShortestDistances( P.Start );
+            //P.Graph.CalculateShortestDistances( P.Start );
+            P.Graph.InitializeShortestPath( P.Start );
 
             _ = Parallel.ForEach( P.Graph.VEdges, edge =>
             {
-                if (edge.SourceNode.ShortestDistance == 0)
-                {
-                    edge.SourceNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.SourceNode.GraphNodeId );
-                }
-                if (edge.TargetNode.ShortestDistance == 0)
-                {
-                    edge.TargetNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.TargetNode.GraphNodeId );
-                }
+                //    if (edge.SourceNode.ShortestDistance == 0)
+                //    {
+                //        edge.SourceNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.SourceNode.GraphNodeId );
+                //    }
+                //    if (edge.TargetNode.ShortestDistance == 0)
+                //    {
+                //        edge.TargetNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.TargetNode.GraphNodeId );
+                //    }
 
                 foreach (string tag in edge.Tags)
                 {
