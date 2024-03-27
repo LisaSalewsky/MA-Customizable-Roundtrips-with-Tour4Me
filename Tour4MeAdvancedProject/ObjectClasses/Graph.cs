@@ -398,6 +398,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
 
                     Edge edge = AddEdge( cEdges, source, target, cost, tags, reversed, oneWay );
+                    cEdges++;
                     //edge = new Edge( edge );
 
                     object geoLocsVal = reader[ "GeoLocationsText" ];
@@ -508,7 +509,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             edge.ShoelaceBackward = ( yr + yl ) * ( xr - xl );
 
             edge.Tags = tags;
-            edge.Reversed = reversed;
+            edge.Reversed = edge.ShoelaceForward < 0;
             edge.OneWay = oneWay;
 
             AddEdge( edge );
@@ -567,7 +568,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
             Tuple<int, Edge>[] parent = new Tuple<int, Edge>[ VNodes.Count ];
-            List<int> neighbors = new List<int>();
             dist[ sourceNode ] = 0.0;
             actDist[ sourceNode ] = 0.0;
 
@@ -598,8 +598,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-
-                neighbors.Add( VNodes[ currentNode ].Incident.Count );
 
                 foreach (Edge edge in VNodes[ currentNode ].Incident)
                 {

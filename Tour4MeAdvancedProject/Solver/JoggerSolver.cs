@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using Tour4MeAdvancedProject.Helper;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
@@ -34,6 +34,10 @@ namespace Tour4MeAdvancedProject.Solver
 
             HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
             HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
+            HashSet<string> addedSurroundings = new HashSet<string>();
+            double currentPathsMaxSteepness = 0;
+            double currentElevationDiff = 0;
+            double length = 0;
 
             foreach (Tuple<int, Path> pair in sRing)
             {
@@ -71,7 +75,6 @@ namespace Tour4MeAdvancedProject.Solver
                         double area = 0;
                         List<int> finalPath = new List<int>();
                         List<Edge> finalEdges = new List<Edge>();
-                        double length = 0;
 
                         foreach (Edge v in pathSA.Edges)
                         {
@@ -84,20 +87,6 @@ namespace Tour4MeAdvancedProject.Solver
 
                             finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
-                            for (int i = 0; i < v.Tags.Count; i++)
-                            {
-                                string currentTag = v.Tags[ i ];
-                                if (Enum.TryParse<SurfaceTag>( currentTag, true, out SurfaceTag surfaceTag ))
-                                {
-                                    _ = addedSurfaceTags.Add( surfaceTag );
-                                }
-                                if (Enum.TryParse<HighwayTag>( currentTag, true, out HighwayTag pathType ))
-                                {
-                                    _ = addedPathTypes.Add( pathType );
-                                }
-
-                            }
-                            length += v.Cost;
                         }
 
                         foreach (Edge v in tPair.Item2.Edges)
@@ -108,23 +97,9 @@ namespace Tour4MeAdvancedProject.Solver
                                 visited[ v.GraphId ] = visitedIndex;
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
-                            Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
+                            //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
-                            for (int i = 0; i < v.Tags.Count; i++)
-                            {
-                                string currentTag = v.Tags[ i ];
-                                if (Enum.TryParse<SurfaceTag>( currentTag, true, out SurfaceTag surfaceTag ))
-                                {
-                                    _ = addedSurfaceTags.Add( surfaceTag );
-                                }
-                                if (Enum.TryParse<HighwayTag>( currentTag, true, out HighwayTag pathType ))
-                                {
-                                    _ = addedPathTypes.Add( pathType );
-                                }
-
-                            }
-                            length += v.Cost;
                         }
 
                         for (int i = pathSB.Edges.Count - 1; i >= 0; i--)
@@ -136,27 +111,13 @@ namespace Tour4MeAdvancedProject.Solver
                                 profit += v.Cost * v.Profit;
                                 visited[ v.GraphId ] = visitedIndex;
                             }
-                            area += v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
-                            Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
-                            finalPath.Add( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
+                            area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
+                            //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
+                            finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
-                            for (int j = 0; j < v.Tags.Count; j++)
-                            {
-                                string currentTag = v.Tags[ j ];
-                                if (Enum.TryParse<SurfaceTag>( currentTag, true, out SurfaceTag surfaceTag ))
-                                {
-                                    _ = addedSurfaceTags.Add( surfaceTag );
-                                }
-                                if (Enum.TryParse<HighwayTag>( currentTag, true, out HighwayTag pathType ))
-                                {
-                                    _ = addedPathTypes.Add( pathType );
-                                }
-
-                            }
-                            length += v.Cost;
                         }
 
-                        Debug.Assert( CurrentProblem.Graph.GetEdge( finalPath[ finalPath.Count - 1 ], finalPath[ 0 ] ) != null );
+                        //Debug.Assert( CurrentProblem.Graph.GetEdge( finalPath[ finalPath.Count - 1 ], finalPath[ 0 ] ) != null );
 
                         finalPath.Add( finalPath[ 0 ] );
 
@@ -167,15 +128,35 @@ namespace Tour4MeAdvancedProject.Solver
                             bestQuality = quality;
                             CurrentProblem.Path = new Path( finalEdges, finalPath, quality, length );
                         }
+                        CurrentProblem.Path.CoveredArea = area;
                     }
                 }
             }
 
+            //_ = Parallel.ForEach( CurrentProblem.Path.Edges, e =>
+            foreach (Edge e in CurrentProblem.Path.Edges)
+            {
+
+                for (int j = 0; j < e.Tags.Count; j++)
+                {
+                    string currentTag = e.Tags[ j ];
+                    Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
+                }
+                Utils.CalculateElevationDiffAndSteepness( e, ref currentPathsMaxSteepness, ref currentElevationDiff );
+                length += e.Cost;
+            }
+            //);
+
+            CurrentProblem.Path.Steepness = currentPathsMaxSteepness / 2;
+            CurrentProblem.Path.Elevation = currentElevationDiff;
+
             CurrentProblem.Path.PathTypes = string.Join( ", ", addedPathTypes );
             CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
+            CurrentProblem.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
 
             return bestQuality == -1 ? SolveStatus.Unsolved : SolveStatus.Feasible;
         }
+
     }
 
 }

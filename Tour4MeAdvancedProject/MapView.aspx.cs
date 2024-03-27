@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -132,8 +133,8 @@ namespace Tour4MeAdvancedProject
                     string localPath = Uri.UnescapeDataString( uri.LocalPath );
 
 
-                    //problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
-                    problem = new Problem( latIn, lonIn, distIn * 3 / 4, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    //problem = new Problem( latIn, lonIn, distIn * 3 / 4, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
                     _ = Guid.TryParse( "123E4567-E89B-12D3-A456-426614174001", out Guid guid );
 
                     //Problem problemTest = new Problem( guid, out string error );
@@ -439,6 +440,96 @@ namespace Tour4MeAdvancedProject
 
 
             return result;
+        }
+
+        [WebMethod]
+        public static List<string> DrawGraph ( double latIn, double lonIn, double distIn )
+        {
+            List<string> result = new List<string>();
+            double lat, lon, distance;
+
+            lat = latIn;
+            lon = lonIn;
+            distance = distIn;
+
+            StringBuilder stream = new StringBuilder();
+
+            string filename = stream.AppendFormat( "grid-dor" ).ToString();
+
+            FileInfo f = new FileInfo( filename );
+            if (f.Exists)
+            {
+                result.Add( "error: Grid was not found 404 " );
+                return result;
+            }
+
+            Problem problem;
+            {
+                try
+                {
+
+                    string path = Path.GetDirectoryName( Path.GetDirectoryName( Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase ) ) );
+                    Uri uri = new Uri( path );
+                    string localPath = Uri.UnescapeDataString( uri.LocalPath );
+
+
+                    //problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    problem = new Problem( latIn, lonIn, distIn * 3 / 4, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    _ = Guid.TryParse( "123E4567-E89B-12D3-A456-426614174001", out Guid guid );
+
+                    //Problem problemTest = new Problem( guid, out string error );
+                    string error = "";
+                    if (error != "")
+                    {
+                        HttpContext currentContext = HttpContext.Current;
+
+                        if (currentContext != null)
+                        {
+                            // Access the Response property
+                            HttpResponse response = currentContext.Response;
+
+                            response.Write( error );
+                        }
+                    }
+                    Console.WriteLine( $"Got request: lat {lat}, lon {lon}, dis {distance}" );
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine( "Something went wrong whilst loading the graph " + e.Message );
+                    result.Add( "error: Something went wrong whilst loading the graph 404 " );
+                    return result;
+                }
+            }
+
+            StringBuilder outputString = new StringBuilder();
+
+            foreach (Edge e in problem.Graph.VEdges)
+            {
+                _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[[{0:F6},{1:F6}],",
+                    e.SourceNode.Lat, e.SourceNode.Lon );
+
+                bool reverse = e.GeoLocations != null && e.GeoLocations.Count > 0 && ( e.SourceNode.Lat != e.GeoLocations.First().Item1 || e.SourceNode.Lon != e.GeoLocations.First().Item2 );
+                List<Tuple<double, double>> locationList = new List<Tuple<double, double>>( e.GeoLocations );
+
+                if (reverse)
+                {
+                    locationList.Reverse();
+                    //edge.GeoLocations.Reverse();
+                }
+                foreach ((double locationsLat, double locationsLon) in locationList)
+                {
+                    _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}],",
+                        locationsLat, locationsLon );
+                }
+                _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}]]/",
+                    e.TargetNode.Lat, e.TargetNode.Lon );
+
+            }
+
+            result.Add( outputString.ToString().Substring( 0, outputString.Length - 1 ) );
+
+            return result;
+
         }
 
     }

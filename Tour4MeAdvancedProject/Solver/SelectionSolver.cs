@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tour4MeAdvancedProject.Helper;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
@@ -18,6 +19,13 @@ namespace Tour4MeAdvancedProject.Solver
 
             int current = P.Start;
             P.Path.Add( null, current, 0 );
+
+            HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
+            HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
+            HashSet<string> addedSurroundings = new HashSet<string>();
+            double currentPathsMaxSteepness = 0;
+            double currentElevationDiff = 0;
+
 
             //Path endPath = new Path();
             double length = 0;
@@ -44,17 +52,23 @@ namespace Tour4MeAdvancedProject.Solver
 
                     if (prof > bestProfit)
                     {
-                        bestProfit = e.Profit;
+                        bestProfit = prof;
                         bestNeigh = neigh;
                         bestEdge = e;
                         validCandidates = true;
-                        length += e.Cost;
                     }
                 }
+                bestProfit = bestEdge != null ? bestEdge.Profit * bestEdge.Cost : bestProfit;
 
                 if (validCandidates)
                 {
                     P.Path.Add( bestEdge, bestNeigh, bestProfit );
+                    foreach (string currentTag in bestEdge.Tags)
+                    {
+                        Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
+                    }
+                    Utils.CalculateElevationDiffAndSteepness( bestEdge, ref currentPathsMaxSteepness, ref currentElevationDiff );
+
                     visited[ bestEdge.GraphId ] = true;
                     length += bestEdge.Cost;
                     current = bestNeigh;
@@ -62,6 +76,13 @@ namespace Tour4MeAdvancedProject.Solver
             }
 
             Console.WriteLine( length );
+            P.Path.Steepness = currentPathsMaxSteepness / 2;
+            P.Path.Elevation = currentElevationDiff;
+
+            P.Path.PathTypes = string.Join( ", ", addedPathTypes );
+            P.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
+            P.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
+
             return SolveStatus.Feasible;
         }
     }

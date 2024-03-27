@@ -243,7 +243,10 @@
                 </div>
             </div>
             <div class="form-group row btn-row">
-                <div class="col-sm-12" id="btn-row">
+                <div class="col-sm-6" >
+                    <asp:Button ID="DrawGraphButton" class="btn btn-primary" runat="server" Text="Show Graph" onClientClick="return false;"/>
+                </div>
+                <div class="col-sm-6" id="btn-row">
                     <asp:Button ID="GetPathButton" class="btn btn-primary" runat="server" Text="Compute Path" onClientClick="return false;"/>
                 </div>
             </div>
@@ -909,13 +912,8 @@
                         var last10Points = path.slice(-10);
 
                         // Define different colors for markers
-                        var colors = ['blue', 'green', 'orange', 'purple', 'pink', 'cyan', 'magenta', 'yellow', 'brown', 'gray'];
+                        var colors = ['var(--btn-info-color)', 'var(--highlight-color)', 'var(--warning-color)', 'purple', 'pink', 'cyan', 'magenta', 'yellow', 'brown', 'gray'];
 
-                        // Create markers for the last 10 points
-                        for (var i = 0; i < last10Points.length; i++) {
-                            var color = colors[i % colors.length];
-                            L.marker(last10Points[i]).addTo(map);
-                        }
 
 
                         var line = L.polyline(path, { color: colors[route_counter % colors.length], weight: 5 });
@@ -947,9 +945,10 @@
 
                         html_routes = document.getElementById("route_overview");
                         open_string = route_counter == 0 ? "open" : "";
+                        color = colors[route_counter % colors.length];
 
                         html_routes.innerHTML += " <details " + open_string + ">"
-                            + "  <summary> Tour " + route_counter + "</summary>"
+                            + "  <summary> <i class=\"fa-solid fa-route\" style=\"color: " + color + ";\"></i> Tour " + (route_counter + 1) + "</summary>"
                             + "      <div class=\"form-group row output-info-box\">"
                             + ""
                             + "          <div class=\"form-group column left\">"
@@ -1091,7 +1090,7 @@
                     if (xhr.status == 504) {
                         alert("Computation did not find a solution with the given time bound, please increase the running time (settings) and try again.");
                     } else if (xhr.status == 503) {
-                        alert("There are to many requests to handle yours right now, please try again later!");
+                        alert("There are too many requests to handle yours right now, please try again later!");
                     } else {
                         alert("Failed to calculate a route!");
                     }
@@ -1110,6 +1109,57 @@
                 }
             }
         }
+
+
+
+        $("#<%= DrawGraphButton.ClientID %>").click(function drawGraph() {
+
+            var lat = marker.getLatLng()["lat"];
+            var lon = marker.getLatLng()["lng"];
+            var dis = document.getElementById("length").value * 1000;
+
+
+            var dataToSend = {
+                latIn: lat,
+                lonIn: lon,
+                distIn: dis,
+            };
+
+            // Custom serialization for KeyValuePair
+            dataToSend = JSON.parse(JSON.stringify(dataToSend, (key, value) => {
+                if (value instanceof Object && value.hasOwnProperty('key') && value.hasOwnProperty('value')) {
+                    return { key: value.key, value: value.value };
+                }
+                return value;
+            }));
+
+
+            console.log(JSON.stringify(dataToSend));
+
+
+            $.ajax({
+                type: 'POST',
+                url: "MapView.aspx/DrawGraph",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(dataToSend),
+                dataType: 'json',
+                success: function (result) {
+                    result.d[0].split('/').forEach(path => {
+
+                        var parsedPath = JSON.parse(path);
+
+                        var line = L.polyline(parsedPath, { color: 'var(--btn-info-color)', weight: 5 });
+                        line = line.addTo(map);
+
+                    });
+
+                },
+                error: function (xhr, status) {
+                    document.getElementById("overlay").style.display = "none";
+                    alert("Failed to calculate the graph!");
+                }
+            })
+        });
 
     </script>
 

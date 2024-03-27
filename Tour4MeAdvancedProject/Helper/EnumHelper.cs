@@ -33,6 +33,7 @@ namespace Tour4MeAdvancedProject.Helper
             minCost,
             ILS,
             AntColony,
+            AntMinCost,
             //SimulatedAnnealing,
             Genetic
         }

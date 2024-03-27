@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tour4MeAdvancedProject.Helper;
@@ -101,29 +100,7 @@ namespace Tour4MeAdvancedProject.Solver
                 for (int i = 0; i < edge.Tags.Count; i++)
                 {
                     string currentTag = edge.Tags[ i ];
-                    if (Enum.TryParse<SurfaceTag>( currentTag, true, out SurfaceTag surfaceTag ))
-                    {
-                        _ = addedSurfaceTags.Add( surfaceTag );
-                    }
-                    if (Enum.TryParse<HighwayTag>( currentTag, true, out HighwayTag pathType ))
-                    {
-                        _ = addedPathTypes.Add( pathType );
-                    }
-                    bool tagFound = false;
-                    foreach (string[] tagsArray in Surroundings.Values.Values)
-                    {
-                        if (tagsArray.Contains( currentTag ))
-                        {
-                            tagFound = true;
-                            // Tag found in one of the arrays
-                            break;
-                        }
-                    }
-
-                    if (tagFound)
-                    {
-                        _ = addedSurroundings.Add( currentTag );
-                    }
+                    Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
 
                 }
 

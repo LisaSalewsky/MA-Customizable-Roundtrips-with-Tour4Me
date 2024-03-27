@@ -2205,6 +2205,7 @@
     <Compile Include="Helper\GraphColumnsEnumHelper.cs" />
     <Compile Include="Helper\ImportGraphDataToSQL.cs" />
     <Compile Include="Helper\ParallelizingIterator.cs" />
+    <Compile Include="Helper\Utils.cs" />
     <Compile Include="homepage.aspx.cs">
       <DependentUpon>homepage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
