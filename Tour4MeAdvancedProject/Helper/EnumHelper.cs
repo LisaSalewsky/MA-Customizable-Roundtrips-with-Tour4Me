@@ -34,6 +34,7 @@ namespace Tour4MeAdvancedProject.Helper
             ILS,
             AntColony,
             AntMinCost,
+            AntGreedy,
             //SimulatedAnnealing,
             Genetic
         }

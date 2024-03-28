@@ -73,6 +73,7 @@ namespace Tour4MeAdvancedProject.Solver
             Problem tempProblem = P;
             for (int i = 0; i < NumberTours; i++)
             {
+                //foreach (Ant currentAnt in Ants)
                 _ = Parallel.ForEach( Ants, currentAnt =>
                 {
                     // calculate one Tour for the current Ant
@@ -81,7 +82,8 @@ namespace Tour4MeAdvancedProject.Solver
 
                     // now update the pheromone trail (trailInensity)
                     currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
-                } );
+                }
+            );
                 // reset all pheromone values set by ants
                 P.Graph.VEdges.ForEach( edge => edge.Pheromone = 0 );
             }
