@@ -2168,6 +2168,7 @@
     <Content Include="fontawesome\svgs\solid\yen-sign.svg" />
     <Content Include="fontawesome\svgs\solid\yin-yang.svg" />
     <Content Include="fontawesome\svgs\solid\z.svg" />
+    <Content Include="Helper\PathParameterTestPage.asmx" />
     <Content Include="homepage.aspx" />
     <Content Include="img\girl-3832331.jpg" />
     <Content Include="img\jog-3789342-cropped.jpg" />
@@ -2205,6 +2206,9 @@
     <Compile Include="Helper\GraphColumnsEnumHelper.cs" />
     <Compile Include="Helper\ImportGraphDataToSQL.cs" />
     <Compile Include="Helper\ParallelizingIterator.cs" />
+    <Compile Include="Helper\PathParameterTest.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Helper\Utils.cs" />
     <Compile Include="homepage.aspx.cs">
       <DependentUpon>homepage.aspx</DependentUpon>
@@ -2243,6 +2247,7 @@
       <DependentUpon>MapContent.aspx</DependentUpon>
     </Compile>
     <Compile Include="Solver\AntCombined.cs" />
+    <Compile Include="Solver\SimmulatedAnnealingSolver.cs" />
     <Compile Include="Solver\GeneticSolver.cs" />
     <Compile Include="Solver\AntSolver.cs" />
     <Compile Include="Solver\SelectionSolver.cs" />

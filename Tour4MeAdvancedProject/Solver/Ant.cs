@@ -254,7 +254,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             foreach (Edge edge in applyElevationPenalty)
             {
                 Edge newEdge = new Edge( edge, edge.Reversed );
-                newEdge.TrailIntensity /= currentProblem.ElevationImportance == 0 ? 1 : penaltyQuotient * currentProblem.ElevationImportance;
+                newEdge.TrailIntensity /= currentProblem.ElevationImportance == 0 ? 1 : penaltyQuotient * ( 1 / currentProblem.ElevationImportance );
                 _ = allowed.Remove( edge );
                 allowed.Add( newEdge );
             }

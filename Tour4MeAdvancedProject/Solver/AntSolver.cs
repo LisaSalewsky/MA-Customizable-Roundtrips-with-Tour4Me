@@ -58,7 +58,7 @@ namespace Tour4MeAdvancedProject.Solver
             UseBacktracking = false;
             InclueAreaCoverage = true;
             EvaporationRate = 0.6;
-            int pheromoneAmount = 1;
+            int pheromoneAmount = 10;
 
             PreprocessEdges( P );
 
@@ -152,7 +152,7 @@ namespace Tour4MeAdvancedProject.Solver
                     }
                 }
                 // don't allow negative pheromone values (for now) TODO maybe change this
-                edge.Pheromone = edge.Pheromone < 0 ? 0 : edge.Pheromone;
+                edge.TrailIntensity = edge.Pheromone < 0 ? 0 : edge.Pheromone;
             } );
 
         }

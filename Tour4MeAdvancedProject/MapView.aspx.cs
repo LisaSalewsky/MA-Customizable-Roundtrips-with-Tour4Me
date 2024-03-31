@@ -333,6 +333,13 @@ namespace Tour4MeAdvancedProject
                     }
                 case 6:
                     {
+                        // Simmulated Annealing
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem );
+                        break;
+                    }
+                case 7:
+                    {
                         // Genetic
                         GeneticSolver solver = new GeneticSolver();
                         status = solver.Solve( ref problem );
