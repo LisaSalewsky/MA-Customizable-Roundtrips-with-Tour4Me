@@ -216,55 +216,59 @@ namespace Tour4MeAdvancedProject.Helper
             Console.WriteLine( "start" );
 
             Color[] colors = GenerateColors( numberPaths );
+            int numRuns = 8;
 
             for (int i = 1; i <= numberPaths; i++)
             {
                 double alpha = i / numberPaths;
                 double beta = 1 - alpha;
-                AntSolver solver = new AntSolver( 2, 100, alpha, beta );
-                SolveStatus status = solver.Solve( ref problem );
-                Console.WriteLine( "end" );
 
-                string result = "";
-                switch (status)
+                _ = jsonBuilder.Append( "    {\n" );
+                _ = jsonBuilder.Append( "    \"tour\": \"Tour " + i + "\",\n" );
+                _ = jsonBuilder.Append( "    \"runs\": [\n" );
+                for (int j = 1; j <= numRuns; j++)
                 {
-                    case SolveStatus.Optimal:
-                        problem.Metadata.Add( "Profit: " + problem.GetProfit( problem.Path ) +
-                                             " (theoretical upper bound: " + problem.TargetDistance + ")" );
-                        problem.Metadata.Add( "Area: " + Math.Abs( problem.GetArea( problem.Path ) ) +
-                                             " (theoretical upper bound: " +
-                                             ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
-                                              ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
-                        foreach (KeyValuePair<string, string> kv in GenerateOutputString( problem ))
-                        {
-                            if (kv.Key == "path")
+                    AntSolver solver = new AntSolver( 2, 100, alpha, beta );
+                    SolveStatus status = solver.Solve( ref problem );
+                    Console.WriteLine( "end" );
+
+                    string result = "";
+                    switch (status)
+                    {
+                        case SolveStatus.Optimal:
+                            foreach (KeyValuePair<string, string> kv in GenerateOutputString( problem ))
+                            {
+                                if (kv.Key == "path")
+                                {
+                                    result = kv.Value;
+                                }
+                            }
+                            _ = jsonBuilder.Append( "    {\n" );
+                            _ = jsonBuilder.Append( "    \"run\": \"Run " + j + "\",\n" );
+                            _ = jsonBuilder.Append( "    \"values\": " + result + ",\n" );
+                            _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+
+                            _ = j == numRuns ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+
+                            break;
+                        case SolveStatus.Feasible:
+                            foreach (KeyValuePair<string, string> kv in GenerateOutputString( problem ))
                             {
                                 result = kv.Value;
                             }
-                        }
-                        _ = jsonBuilder.Append( "    {\n" );
-                        _ = jsonBuilder.Append( "    \"tour\": \"Tour" + i + "\",\n" );
-                        _ = jsonBuilder.Append( "    \"values\": " + result + ",\n" );
-                        _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
-                        _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+                            _ = jsonBuilder.Append( "    {\n" );
+                            _ = jsonBuilder.Append( "    \"run\": \"Run " + i + "\",\n" );
+                            _ = jsonBuilder.Append( "    \"values\": \"" + result + "\",\n" );
+                            _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
 
-                        _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
-                        break;
-                    case SolveStatus.Feasible:
-                        foreach (KeyValuePair<string, string> kv in GenerateOutputString( problem ))
-                        {
-                            result = kv.Value;
-                        }
-                        _ = jsonBuilder.Append( "    {\n" );
-                        _ = jsonBuilder.Append( "    \"tour\": \"Tour" + i + "\",\n" );
-                        _ = jsonBuilder.Append( "    \"values\": \"" + result + "\",\n" );
-                        _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
-                        _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+                            _ = j == numRuns ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
 
-                        _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
-                        break;
+                            break;
+                    }
                 }
-
+                _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
             }
             return jsonBuilder.ToString();
         }

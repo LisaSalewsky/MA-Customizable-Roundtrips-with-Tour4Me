@@ -9,8 +9,8 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntSolver : Selection
     {
-        public int NumberTours { get; set; } = 2;
-        public int NumberAnts { get; set; } = 10;
+        public int NumberTours { get; set; } = 4;
+        public int NumberAnts { get; set; } = 100;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
         public double Beta { get; set; } = 0.7;
@@ -57,7 +57,7 @@ namespace Tour4MeAdvancedProject.Solver
             UsePenalty = true;
             UseBacktracking = false;
             InclueAreaCoverage = true;
-            EvaporationRate = 0.6;
+            EvaporationRate = 0.4;
             int pheromoneAmount = 10;
 
             PreprocessEdges( P );
@@ -85,7 +85,7 @@ namespace Tour4MeAdvancedProject.Solver
                 }
             );
                 // reset all pheromone values set by ants
-                P.Graph.VEdges.ForEach( edge => edge.Pheromone = 0 );
+                P.Graph.VEdges.ForEach( edge => edge.Pheromone = 1 );
             }
 
             P = tempProblem;

@@ -393,13 +393,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             if (inclueAreaCoverage)
             {
-                double area = 0;
+                double quality = 0;
                 foreach (Edge edge in visited)
                 {
-                    area += edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                    quality += edge.Quality;
                 }
                 // the bigger the area covered, the smaller our penalty needs to be
-                penaltyQuotient *= 1 / area * problem.CoveredAreaImportance;
+                penaltyQuotient *= problem.CoveredAreaImportance * problem.Path.CoveredArea / ( Math.PI * problem.TargetDistance * problem.TargetDistance );
             }
 
             foreach (Edge visitedEdge in visited)
