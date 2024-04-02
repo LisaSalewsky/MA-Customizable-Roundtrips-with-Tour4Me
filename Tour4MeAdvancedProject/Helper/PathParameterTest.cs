@@ -228,7 +228,7 @@ namespace Tour4MeAdvancedProject.Helper
                 _ = jsonBuilder.Append( "    \"runs\": [\n" );
                 for (int j = 1; j <= numRuns; j++)
                 {
-                    AntSolver solver = new AntSolver( 2, 100, alpha, beta );
+                    AntSolver solver = new AntSolver( 5, 1, alpha, beta );
                     SolveStatus status = solver.Solve( ref problem );
                     Console.WriteLine( "end" );
 

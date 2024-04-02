@@ -267,7 +267,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                bool reverse = node != edge.SourceNode.GraphNodeId;
+                bool reverse = edge.GeoLocations != null &&
+                    edge.GeoLocations.Count > 0 &&
+                    ( Graph.VNodes[ node ].Lat != edge.GeoLocations.First().Item1 ||
+                    Graph.VNodes[ node ].Lon != edge.GeoLocations.First().Item2 );
                 List<Tuple<double, double>> locationList = new List<Tuple<double, double>>( edge.GeoLocations );
                 if (reverse)
                 {

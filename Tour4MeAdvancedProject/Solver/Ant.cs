@@ -125,7 +125,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 FindAllowedPath( ref CurrentProblem, usePenalty, useBacktracking, vNodes, ref visitableNodes, ref visited, pickedEdge, currentDistance, ref currentNode, ref allowed, ref currentElevationDiff );
 
-                float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed, vNodes, visited, currentNode, ref CurrentProblem, ref currentElevationDiff );
+                float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed, vNodes, visited, currentNode, profit, area, ref CurrentProblem, ref currentElevationDiff );
                 CalculateNewPheromoneValues( ref CurrentProblem, ref currentElevationDiff, usePenalty, vNodes, visited, currentDistance, edgeProbabilities, vNodes[ currentNode ], allowed, sumOfAllowed, profit, area, out profit, out area );
                 CurrentProblem.Path.CoveredArea = area;
 
@@ -205,16 +205,18 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 if (usePenalty || neighbor.ShortestDistance < CurrentProblem.TargetDistance - currentDistance - edge.Cost)
                 {
-                    newProfit = profit + ( edge.Cost * edge.Profit );
-                    newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
+                    //newProfit = profit + ( edge.Cost * edge.Profit );
+                    //newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
 
-                    edge.Quality = CurrentProblem.GetQuality( newProfit, newArea );
+                    //edge.Quality = CurrentProblem.GetQuality( newProfit, newArea );
 
                     //double edgeValue = edge.Cost * edge.TrailIntensity;
-                    double edgeVisibility = 1 / edge.Cost;
+                    //double edgeVisibility = 1 / edge.Cost;
+                    double edgeVisibility = edge.Quality * CurrentProblem.EdgeProfitImportance * 100;
 
                     // p_{ij}^k (used for choosing town to move to)
-                    float currentProbability = (float)( Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha ) * Math.Pow( edgeVisibility, Beta ) / sumOfAllowed );
+                    float currentProbability = (float)( (float)Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha ) *
+                        (float)Math.Pow( edgeVisibility, Beta ) / sumOfAllowed );
                     edgeProbabilities.Add( edge, currentProbability );
 
                     // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
@@ -228,7 +230,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode, ref Problem currentProblem, ref double currentElevationDiff )
         {
             // scale trial intensity on edges accordingly for all edges where a node is visited twice
-            double penaltyQuotient = 50;
+            double penaltyQuotient = 100;
             List<Edge> applyDoubleVisitPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
             visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
 
@@ -263,16 +265,23 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return allowed;
         }
 
-        private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed, List<Node> vNodes, HashSet<int> visited, int currentNode, ref Problem currentProblem, ref double currentElevationDiff )
+        private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed, List<Node> vNodes, HashSet<int> visited, int currentNode, double profit, double area, ref Problem currentProblem, ref double currentElevationDiff )
         {
 
             List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode, ref currentProblem, ref currentElevationDiff );
             // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
             float sumOfAllowed = 0;
+            double newProfit = profit;
+            double newArea = area;
             foreach (Edge edge in allowed)
             {
+                newProfit = profit + ( edge.Cost * edge.Profit );
+                newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
+
+                edge.Quality = currentProblem.GetQuality( newProfit, newArea );
                 float trailIntensityPowAlpha = (float)Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha );
-                float visibilityPowBeta = (float)Math.Pow( 1 / edge.Cost, Beta );
+                double edgeVisibility = edge.Quality * currentProblem.EdgeProfitImportance * 100;
+                float visibilityPowBeta = (float)Math.Pow( edgeVisibility, Beta );
 
                 sumOfAllowed += trailIntensityPowAlpha * visibilityPowBeta;
             }

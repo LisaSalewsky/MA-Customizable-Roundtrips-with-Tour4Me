@@ -509,7 +509,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             edge.ShoelaceBackward = ( yr + yl ) * ( xr - xl );
 
             edge.Tags = tags;
-            edge.Reversed = edge.ShoelaceForward < 0;
+            edge.Reversed = edge.GeoLocations != null &&
+                edge.GeoLocations.Count > 0 &&
+                ( edge.GeoLocations.First().Item1 != edge.SourceNode.Lat ||
+                edge.GeoLocations.First().Item2 != edge.SourceNode.Lon )
+                ;
             edge.OneWay = oneWay;
 
             AddEdge( edge );
