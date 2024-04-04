@@ -215,8 +215,8 @@ namespace Tour4MeAdvancedProject.Helper
             _ = DateTime.Now;
             Console.WriteLine( "start" );
 
+            int numRuns = 10;
             Color[] colors = GenerateColors( numberPaths );
-            int numRuns = 8;
 
             for (int i = 1; i <= numberPaths; i++)
             {
@@ -228,7 +228,7 @@ namespace Tour4MeAdvancedProject.Helper
                 _ = jsonBuilder.Append( "    \"runs\": [\n" );
                 for (int j = 1; j <= numRuns; j++)
                 {
-                    AntSolver solver = new AntSolver( 5, 1, alpha, beta );
+                    AntSolver solver = new AntSolver( 1, 1, alpha, beta );
                     SolveStatus status = solver.Solve( ref problem );
                     Console.WriteLine( "end" );
 
@@ -285,7 +285,7 @@ namespace Tour4MeAdvancedProject.Helper
             // Generate colors evenly distributed between red and blue
             for (int i = 0; i < count; i++)
             {
-                float hue = (float)i / ( count - 1 ); // Interpolate hue from red (0) to blue (1)
+                float hue = (float)i / count; // Interpolate hue from red (0) to blue (1)
                 colors.Add( ColorFromAhsb( 255, hue, 1.0f, 1.0f ) );
             }
 

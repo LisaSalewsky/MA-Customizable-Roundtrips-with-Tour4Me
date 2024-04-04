@@ -238,6 +238,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double elevationDiff = currentElevationDiff;
             double maxElevationDiff = currentProblem.MaxElevation;
 
+
             List<Edge> applyElevationPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
             ( elevationDiff + Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) ) / 2 > maxElevationDiff ||
             Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / x.Cost * 100 > maxSteepness
