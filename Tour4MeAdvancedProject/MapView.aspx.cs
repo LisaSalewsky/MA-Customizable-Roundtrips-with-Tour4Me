@@ -223,12 +223,15 @@ namespace Tour4MeAdvancedProject
 
             foreach (Node v in problem.Graph.VNodes)
             {
-                double dis = v.Distance( lat, lon );
-
-                if (dis < best_distance)
+                if (v != null)
                 {
-                    best_distance = dis;
-                    start = v;
+                    double dis = v.Distance( lat, lon );
+
+                    if (dis < best_distance)
+                    {
+                        best_distance = dis;
+                        start = v;
+                    }
                 }
             }
 
@@ -526,25 +529,28 @@ namespace Tour4MeAdvancedProject
 
             foreach (Edge e in problem.Graph.VEdges)
             {
-                _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[[{0:F6},{1:F6}],",
-                    e.SourceNode.Lat, e.SourceNode.Lon );
-
-                bool reverse = e.GeoLocations != null && e.GeoLocations.Count > 0 && ( e.SourceNode.Lat != e.GeoLocations.First().Item1 || e.SourceNode.Lon != e.GeoLocations.First().Item2 );
-                List<Tuple<double, double>> locationList = new List<Tuple<double, double>>( e.GeoLocations );
-
-                if (reverse)
+                if (e != null)
                 {
-                    locationList.Reverse();
-                    //edge.GeoLocations.Reverse();
-                }
-                foreach ((double locationsLat, double locationsLon) in locationList)
-                {
-                    _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}],",
-                        locationsLat, locationsLon );
-                }
-                _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}]]/",
-                    e.TargetNode.Lat, e.TargetNode.Lon );
+                    _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[[{0:F6},{1:F6}],",
+                        e.SourceNode.Lat, e.SourceNode.Lon );
 
+                    bool reverse = e.GeoLocations != null && e.GeoLocations.Count > 0 && ( e.SourceNode.Lat != e.GeoLocations.First().Item1 || e.SourceNode.Lon != e.GeoLocations.First().Item2 );
+                    List<Tuple<double, double>> locationList = new List<Tuple<double, double>>( e.GeoLocations );
+
+                    if (reverse)
+                    {
+                        locationList.Reverse();
+                        //edge.GeoLocations.Reverse();
+                    }
+                    foreach ((double locationsLat, double locationsLon) in locationList)
+                    {
+                        _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}],",
+                            locationsLat, locationsLon );
+                    }
+                    _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}]]/",
+                        e.TargetNode.Lat, e.TargetNode.Lon );
+
+                }
             }
 
             result.Add( outputString.ToString().Substring( 0, outputString.Length - 1 ) );

@@ -268,6 +268,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 CreateNodesAndEdgesFromDBCenterRadius( startLat, startLon, radius, cNodes, cEdges, VNodes, GIdNode );
 
+                RemoveDeadEnds();
             }
         }
 
@@ -643,7 +644,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
 
                 int current = vis;
-                Path path = new Path();
+                Path path = new Path( Tuple.Create( CenterLat, CenterLon ) );
 
                 bool aborted = false;
 
@@ -1021,6 +1022,59 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             while (currentNode != start);
             return (path, pathNodes);
         }
+
+        public void RemoveDeadEnds ()
+        {
+            HashSet<Node> deadEndNodes = new HashSet<Node>();
+            HashSet<Edge> deadEndEdges = new HashSet<Edge>();
+            foreach (Edge edge in VEdges)
+            {
+                bool nodeOrNeighborDeleted = false;
+                Node node = edge.SourceNode;
+                Node neighbor = edge.TargetNode;
+
+                // an edge is a connection from junction to junction
+                // so if you count all edges from a certain junction
+                // and it is exactly 1 you have found a dead end
+                if (node.Incident.Count() == 1)
+                {
+                    _ = deadEndNodes.Add( node );
+                    nodeOrNeighborDeleted = true;
+                }
+                if (neighbor.Incident.Count() == 1)
+                {
+                    _ = deadEndNodes.Add( neighbor );
+                    nodeOrNeighborDeleted = true;
+
+                }
+                if (nodeOrNeighborDeleted)
+                {
+                    _ = deadEndEdges.Add( edge );
+                }
+            }
+
+            foreach (Node node in deadEndNodes)
+            {
+                if (node.Incident.Count == 1)
+                {
+                    if (VNodes.Contains( node ))
+                    {
+                        Edge incident = node.Incident[ 0 ];
+                        Node neighbor = incident.SourceNode.GraphNodeId == node.GraphNodeId ? incident.TargetNode : incident.SourceNode;
+                        _ = neighbor.Incident.Remove( incident );
+                        _ = VNodes[ node.GraphNodeId ] = null;
+                    }
+                }
+            }
+            foreach (Edge currentEdge in deadEndEdges)
+            {
+                if (VEdges.Contains( currentEdge ))
+                {
+                    _ = VEdges[ currentEdge.GraphId ] = null;
+                }
+            }
+        }
+
     }
 
 }

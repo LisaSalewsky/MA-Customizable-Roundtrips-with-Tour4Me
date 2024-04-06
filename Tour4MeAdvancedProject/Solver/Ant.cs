@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using Tour4MeAdvancedProject.Helper;
+
+
 namespace Tour4MeAdvancedProject.ObjectClasses
 {
     public class Ant
@@ -139,7 +142,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
                 {
-                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, solutionVisited, pickedEdge, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentDistance, currentNode );
+                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, solutionVisited, pickedEdge, ref CurrentProblem.Path.BoundingCoordinates, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentDistance, currentNode );
 
                 }
                 else
@@ -194,6 +197,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             double newProfit = profit;
             double newArea = area;
+
             foreach (Edge edge in allowed)
             {
                 Node neighbor = edge.SourceNode == currentNode ? edge.TargetNode : edge.SourceNode;
@@ -203,7 +207,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 //    neighbor.ShortestDistance = CurrentProblem.Graph.ShortestPath( CurrentProblem.Start, neighbor.GraphNodeId );
                 //}
 
-                if (usePenalty || neighbor.ShortestDistance < CurrentProblem.TargetDistance - currentDistance - edge.Cost)
+                if (neighbor.ShortestDistance < CurrentProblem.TargetDistance - currentDistance - edge.Cost)
                 {
                     //newProfit = profit + ( edge.Cost * edge.Profit );
                     //newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
@@ -222,6 +226,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
                     edge.Pheromone += PheromoneAmount * edge.Profit;
                 }
+                else
+                {
+                    edge.Pheromone /= 1000;
+                }
+
+                if (neighbor.Incident.Count == 1 || currentNode.Incident.Count == 1)
+                {
+                    edge.Pheromone /= 1000;
+                }
             }
             profitOut = newProfit;
             areaOut = newArea;
@@ -230,7 +243,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode, ref Problem currentProblem, ref double currentElevationDiff )
         {
             // scale trial intensity on edges accordingly for all edges where a node is visited twice
-            double penaltyQuotient = 100;
+            double penaltyQuotient = 1000;
             List<Edge> applyDoubleVisitPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
             visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
 
@@ -290,7 +303,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return sumOfAllowed;
         }
 
-        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref double maxSteepness, ref double currentElevationDfif, ref double currentDistance, int currentNode )
+        private int AddEdgeAndContinue ( List<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref Tuple<double, double>[] boundingCoordinates, ref double maxSteepness, ref double currentElevationDfif, ref double currentDistance, int currentNode )
         {
             int parent;
             // now choose next node based on probability
@@ -303,10 +316,32 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             // once a node was visited, it cannot be visited again in this tour by the same ant
             _ = visited.Add( neighborId );
             solutionVisited.Add( neighborId );
-            _ = visitableNodes.Remove( visitableNodes.Find( x => x.GraphNodeId == neighborId ) );
+            _ = visitableNodes.Remove( visitableNodes.Find( x => x != null && x.GraphNodeId == neighborId ) );
 
             // Add the picked edge to the solution path
             SolutionEdges.Add( pickedEdge );
+
+            // insert the 4 boudning coordinates
+            // left
+            if (boundingCoordinates[ 0 ].Item1 > neighbor.Lat)
+            {
+                boundingCoordinates[ 0 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+            }
+            // right
+            else if (boundingCoordinates[ 3 ].Item1 < neighbor.Lat)
+            {
+                boundingCoordinates[ 3 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+            }
+            // top
+            else if (boundingCoordinates[ 2 ].Item2 > neighbor.Lon)
+            {
+                boundingCoordinates[ 2 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+            }
+            //bottom
+            else if (boundingCoordinates[ 1 ].Item2 < neighbor.Lon)
+            {
+                boundingCoordinates[ 1 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+            }
 
             Utils.CalculateElevationDiffAndSteepness( pickedEdge, ref maxSteepness, ref currentElevationDfif );
 
@@ -381,18 +416,18 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             List<Edge> acceptableLentghEdges = new List<Edge>( visited );
 
-            while (sum > problem.TargetDistance)
-            {
-                // pick last edge of the path
-                Edge penaltyEdge = acceptableLentghEdges.Last();
-                // set trail intensity to 0 to make it as unattractive as possible for future runs
-                penaltyEdge.TrailIntensity = 0.1;
+            //while (sum > problem.TargetDistance)
+            //{
+            //    // pick last edge of the path
+            //    Edge penaltyEdge = acceptableLentghEdges.Last();
+            //    // set trail intensity to 0 to make it as unattractive as possible for future runs
+            //    penaltyEdge.TrailIntensity = 0.1;
 
-                // remove last edge that added too much to the distance and re-calculate sum
-                _ = acceptableLentghEdges.Remove( penaltyEdge );
-                sum = acceptableLentghEdges.Sum( x => x.Cost );
+            //    // remove last edge that added too much to the distance and re-calculate sum
+            //    _ = acceptableLentghEdges.Remove( penaltyEdge );
+            //    sum = acceptableLentghEdges.Sum( x => x.Cost );
 
-            }
+            //}
 
             if (usePenalty && !closedTour)
             {
@@ -403,19 +438,38 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             if (inclueAreaCoverage)
             {
-                double quality = 0;
-                foreach (Edge edge in visited)
-                {
-                    quality += edge.Quality;
-                }
-                // the bigger the area covered, the smaller our penalty needs to be
-                penaltyQuotient *= problem.CoveredAreaImportance * problem.Path.CoveredArea / ( Math.PI * problem.TargetDistance * problem.TargetDistance );
+                GeoCoordinate rCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 3 ].Item1, problem.Path.BoundingCoordinates[ 3 ].Item2 );
+                GeoCoordinate lCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 0 ].Item1, problem.Path.BoundingCoordinates[ 0 ].Item2 );
+
+                double r1 = lCoord.GetDistanceTo( rCoord ) / 2;
+
+                GeoCoordinate uCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 2 ].Item1, problem.Path.BoundingCoordinates[ 2 ].Item2 );
+                GeoCoordinate dCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 1 ].Item1, problem.Path.BoundingCoordinates[ 1 ].Item2 );
+
+                double r2 = uCoord.GetDistanceTo( dCoord ) / 2;
+
+                double perfectEllipsoidArea = Math.PI * r1 * r2;
+                double boundingArea = r1 * r2;
+
+                double perfectDiff = boundingArea - perfectEllipsoidArea;
+
+                double actualDiff = boundingArea - problem.Path.CoveredArea;
+
+                penaltyQuotient *= problem.CoveredAreaImportance * ( perfectDiff - actualDiff );
+
+                //double quality = 0;
+                //foreach (Edge edge in visited)
+                //{
+                //    quality += edge.Quality;
+                //}
+                //// the bigger the area covered, the smaller our penalty needs to be
+                //penaltyQuotient *= problem.CoveredAreaImportance * problem.Path.CoveredArea / ( Math.PI * problem.TargetDistance * problem.TargetDistance );
             }
 
             foreach (Edge visitedEdge in visited)
             {
                 // update actual edge of the graph
-                Edge edge = problem.Graph.VEdges.Find( x => x.Id == visitedEdge.Id );
+                Edge edge = problem.Graph.VEdges[ visitedEdge.GraphId ];
 
                 // trailIntensity contains the actual pheromone left on the trail
                 // evaporationRate descibes how much of the trail has evaporated during one tour

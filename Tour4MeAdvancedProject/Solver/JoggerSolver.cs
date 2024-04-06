@@ -56,7 +56,7 @@ namespace Tour4MeAdvancedProject.Solver
                     int pointB = tPair.Item1;
 
                     bool isContained = false;
-                    Path pathSB = new Path();
+                    Path pathSB = new Path( Tuple.Create( CurrentProblem.Graph.CenterLat, CurrentProblem.Graph.CenterLon ) );
 
                     foreach (Tuple<int, Path> sPair in sRing)
                     {
@@ -126,7 +126,7 @@ namespace Tour4MeAdvancedProject.Solver
                         if (quality > bestQuality)
                         {
                             bestQuality = quality;
-                            CurrentProblem.Path = new Path( finalEdges, finalPath, quality, length );
+                            CurrentProblem.Path = new Path( finalEdges, finalPath, quality, length, Tuple.Create( CurrentProblem.Graph.CenterLat, CurrentProblem.Graph.CenterLon ) );
                         }
                         CurrentProblem.Path.CoveredArea = area;
                     }

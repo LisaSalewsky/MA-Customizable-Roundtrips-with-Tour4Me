@@ -37,10 +37,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double TargetDistance { get; set; }
         public List<string> Metadata { get; set; }
 
-        public Problem ( string fileName )
+        public Problem ( double startLat, double startLon, string fileName )
         {
             Graph = new Graph( fileName );
-            Path = new Path();
+            Path = new Path( Tuple.Create( startLat, startLon ) );
             Metadata = new List<string>();
             PrefTags = new HashSet<string>();
             AvoidTags = new HashSet<string>();
@@ -51,7 +51,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             //Graph = new Graph( startLat, startLon, givenMaxLat, givenMaxLon, givenMinLat, givenMinLon, radius, fileName );
             Graph = new Graph( startLat, startLon, radius, fileName );
-            Path = new Path();
+            Path = new Path( Tuple.Create( startLat, startLon ) );
             Metadata = new List<string>();
             PrefTags = new HashSet<string>();
             AvoidTags = new HashSet<string>();
@@ -309,16 +309,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             foreach (Edge edge in G.VEdges)
             {
-                edge.Profit = 0.0001;
-                foreach (string tag in edge.Tags)
+                if (edge != null)
                 {
-                    if (Math.Abs( edge.Profit - 0.0001 ) < double.Epsilon && PrefTags.Contains( tag ))
+                    edge.Profit = 0.0001;
+                    foreach (string tag in edge.Tags)
                     {
-                        edge.Profit = 1;
-                    }
-                    if (AvoidTags.Contains( tag ))
-                    {
-                        edge.Profit = -1;
+                        if (Math.Abs( edge.Profit - 0.0001 ) < double.Epsilon && PrefTags.Contains( tag ))
+                        {
+                            edge.Profit = 1;
+                        }
+                        if (AvoidTags.Contains( tag ))
+                        {
+                            edge.Profit = -1;
+                        }
                     }
                 }
             }

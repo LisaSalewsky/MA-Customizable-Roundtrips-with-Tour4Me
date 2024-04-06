@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Tour4MeAdvancedProject.ObjectClasses
@@ -15,11 +16,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public string SurroundingTags { get; set; }
         public string PathTypes { get; set; }
         public string Surfaces { get; set; }
+        // 4 bounding coordinates
+        // left, bottom, top, right
+        public Tuple<double, double>[] BoundingCoordinates = new Tuple<double, double>[] {
+            Tuple.Create( 0.0, 0.0 ), Tuple.Create( 0.0, 0.0 ), Tuple.Create( 0.0, 0.0 ), Tuple.Create( 0.0, 0.0 ) };
 
-        public Path ()
+        public Path ( Tuple<double, double> start )
         {
             Edges = new List<Edge>();
             Visited = new List<int>();
+            BoundingCoordinates = new Tuple<double, double>[] {
+            start, start, start, start };
         }
 
         public Path ( Path p )
@@ -33,6 +40,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             SurroundingTags = p.SurroundingTags;
             PathTypes = p.PathTypes;
             Surfaces = p.Surfaces;
+            BoundingCoordinates = p.BoundingCoordinates;
 
         }
 
@@ -44,12 +52,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Length = edges.Sum( x => x.Cost );
         }
 
-        public Path ( List<Edge> edges, List<int> visited, double quality, double length )
+        public Path ( List<Edge> edges, List<int> visited, double quality, double length, Tuple<double, double> start )
         {
             Edges = edges;
             Visited = visited;
             Quality = quality;
             Length = length;
+            BoundingCoordinates = new Tuple<double, double>[] {
+            start, start, start, start };
         }
 
         public void Add ( Edge addEdge, int neighbor, double newProfit )

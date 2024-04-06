@@ -9,7 +9,7 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntSolver : Selection
     {
-        public int NumberTours { get; set; } = 4;
+        public int NumberTours { get; set; } = 10;
         public int NumberAnts { get; set; } = 100;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
@@ -85,7 +85,13 @@ namespace Tour4MeAdvancedProject.Solver
                 }
             );
                 // reset all pheromone values set by ants
-                P.Graph.VEdges.ForEach( edge => edge.Pheromone = 1 );
+                foreach (Edge edge in P.Graph.VEdges)
+                {
+                    if (edge != null)
+                    {
+                        edge.Pheromone = 1;
+                    }
+                }
             }
 
             P = tempProblem;
@@ -139,20 +145,22 @@ namespace Tour4MeAdvancedProject.Solver
                 //    {
                 //        edge.TargetNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.TargetNode.GraphNodeId );
                 //    }
-
-                foreach (string tag in edge.Tags)
+                if (edge != null)
                 {
-                    if (P.PrefTags.Contains( tag ))
+                    foreach (string tag in edge.Tags)
                     {
-                        edge.Pheromone += increaseAmount;
+                        if (P.PrefTags.Contains( tag ))
+                        {
+                            edge.Pheromone += increaseAmount;
+                        }
+                        if (P.AvoidTags.Contains( tag ))
+                        {
+                            edge.Pheromone -= decreaseAmount;
+                        }
                     }
-                    if (P.AvoidTags.Contains( tag ))
-                    {
-                        edge.Pheromone -= decreaseAmount;
-                    }
+                    // don't allow negative pheromone values (for now) TODO maybe change this
+                    edge.TrailIntensity = edge.Pheromone < 0 ? 0 : edge.Pheromone;
                 }
-                // don't allow negative pheromone values (for now) TODO maybe change this
-                edge.TrailIntensity = edge.Pheromone < 0 ? 0 : edge.Pheromone;
             } );
 
         }
