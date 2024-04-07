@@ -9,7 +9,7 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntSolver : Selection
     {
-        public int NumberTours { get; set; } = 10;
+        public int NumberTours { get; set; } = 20;
         public int NumberAnts { get; set; } = 100;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
