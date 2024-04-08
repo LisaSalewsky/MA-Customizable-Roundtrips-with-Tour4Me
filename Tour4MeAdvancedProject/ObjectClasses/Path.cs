@@ -18,7 +18,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public string Surfaces { get; set; }
         // 4 bounding coordinates
         // left, bottom, top, right
-        public Tuple<double, double>[] BoundingCoordinates = new Tuple<double, double>[] {
+        public Tuple<double, double>[] BoundingCoordinates { get; set; } = new Tuple<double, double>[] {
             Tuple.Create( 0.0, 0.0 ), Tuple.Create( 0.0, 0.0 ), Tuple.Create( 0.0, 0.0 ), Tuple.Create( 0.0, 0.0 ) };
 
         public Path ( Tuple<double, double> start )

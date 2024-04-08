@@ -87,17 +87,22 @@ namespace Tour4MeAdvancedProject
 
             lat = latIn;
             lon = lonIn;
-            distance = distIn;
+            distance = distIn != 0 ? distIn : 1000;
             algorithm = Convert.ToInt32( algoIn );
             runningTime = Convert.ToDouble( runningTimeIn );
-            elevation = elevationIn == "" ? 0 : Convert.ToDouble( elevationIn );
-            steepness = steepnessIn == "" ? 0 : Convert.ToDouble( steepnessIn );
+            elevation = elevationIn == "" ? 5000 : Convert.ToDouble( elevationIn );
+            steepness = steepnessIn == "" || steepnessIn == "0" ? 100 : Convert.ToDouble( steepnessIn );
 
             runningTime = runningTime < 5 * 60 ? runningTime : 5 * 60;
 
-            edgeProfitImportance = edgeProfitIn;
-            coveredAreaImportance = coveredAreaIn;
-            elevationImportance = elevationImportanceIn;
+            bool noShape = tourShapeIn == "Select " ||
+                ( edgeProfitIn == 0 &&
+                coveredAreaIn == 0 &&
+                elevationImportanceIn == 0 );
+
+            edgeProfitImportance = noShape ? 0.33 : edgeProfitIn;
+            coveredAreaImportance = noShape ? 0.33 : coveredAreaIn;
+            elevationImportance = noShape ? 0.33 : elevationImportanceIn;
 
 
             //double min_lat = lat - (lat - AbsMinLat) % LatGran - LatPad;
@@ -385,13 +390,6 @@ namespace Tour4MeAdvancedProject
                                          " (theoretical upper bound: " +
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
-                    problem.Metadata.Add( "Length: " + problem.Path.Length );
-                    problem.Metadata.Add( "Elevation: " + problem.Path.Elevation );
-                    problem.Metadata.Add( "Steepness: " + problem.Path.Steepness );
-                    problem.Metadata.Add( "Surroundings: " + ( problem.Path.SurroundingTags.Length == 0 ? "None available" : problem.Path.SurroundingTags ) );
-                    problem.Metadata.Add( "Path Types: " + ( problem.Path.PathTypes.Length == 0 ? "None available" : problem.Path.PathTypes ) );
-                    problem.Metadata.Add( "Surfaces: " + ( problem.Path.Surfaces.Length == 0 ? "None available" : problem.Path.Surfaces ) );
-                    problem.Metadata.Add( "Shape: " + problem.Path.CoveredArea );
                     result.Add( "success", "200" );
                     foreach (KeyValuePair<string, string> kv in problem.OutputToResultString())
                     {

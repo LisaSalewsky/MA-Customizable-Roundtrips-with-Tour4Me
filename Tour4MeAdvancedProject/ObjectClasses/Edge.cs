@@ -80,6 +80,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             TargetNode = e.TargetNode;
             GeoLocations = e.GeoLocations;
             Pheromone = e.Pheromone;
+            TrailIntensity = e.TrailIntensity;
             Profit = e.Profit;
             Cost = e.Cost;
 
@@ -101,6 +102,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             GeoLocations = e.GeoLocations;
 
             Pheromone = e.Pheromone;
+            TrailIntensity = e.TrailIntensity;
             Profit = e.Profit;
             Cost = e.Cost;
         }

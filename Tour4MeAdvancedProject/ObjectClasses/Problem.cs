@@ -127,8 +127,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                     for (int target = 0; target < Graph.VNodes.Count; target++)
                     {
-                        ShortestPath[ source ].Add( dist.ContainsKey( target ) ? dist[ target ] : double.MaxValue );
-                        outputFile.WriteLine( $"c" + source + target + ( dist.ContainsKey( target ) ? dist[ target ].ToString() : "inf" ) );
+                        bool containsKey = dist.ContainsKey( target );
+                        ShortestPath[ source ].Add( containsKey ? dist[ target ] : double.MaxValue );
+                        outputFile.WriteLine( $"c" + source + target + ( containsKey ? dist[ target ].ToString() : "inf" ) );
                     }
                 }
             }
@@ -252,6 +253,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             StringBuilder outputString = new StringBuilder( "[" );
             Path.Visited.Add( Path.Visited.ElementAt( 0 ) );
 
+            // todo if this works, remove path length calculation from all other calculations and only do it here
+            Path.Length = 0;
             for (int i = 0; i < Path.Visited.Count() - 1; i++)
             {
                 int node = Path.Visited.ElementAt( i );
@@ -261,6 +264,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 // todo check if i can use solution edges instead
                 Edge edge = Graph.GetEdge( node, Path.Visited.ElementAt( i + 1 ) );
+                Path.Length += edge.Cost;
 
                 if (edge == null)
                 {
@@ -289,6 +293,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             _ = outputString.Append( "]" );
 
             result.Add( new KeyValuePair<string, string>( "path", outputString.ToString() ) );
+
+
+            Metadata.Add( "Length: " + Path.Length );
+            Metadata.Add( "Elevation: " + Path.Elevation );
+            Metadata.Add( "Steepness: " + Path.Steepness );
+            Metadata.Add( "Surroundings: " + ( Path.SurroundingTags.Length == 0 ? "None available" : Path.SurroundingTags ) );
+            Metadata.Add( "Path Types: " + ( Path.PathTypes.Length == 0 ? "None available" : Path.PathTypes ) );
+            Metadata.Add( "Surfaces: " + ( Path.Surfaces.Length == 0 ? "None available" : Path.Surfaces ) );
+            Metadata.Add( "Shape: " + Path.CoveredArea );
 
             outputString = new StringBuilder( "[" );
 

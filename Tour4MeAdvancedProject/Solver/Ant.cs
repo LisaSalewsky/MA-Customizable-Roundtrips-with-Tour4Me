@@ -105,6 +105,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             double currentPathsMaxSteepness = 0;
             double currentElevationDiff = 0;
+            Tuple<double, double> startCoordinates = Tuple.Create( graph.VNodes[ start ].Lat, graph.VNodes[ start ].Lon );
+            Tuple<double, double>[] boudingCoordinates = new Tuple<double, double>[] {
+            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
 
             while (queue.Count > 0)
             {
@@ -118,20 +121,21 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // one of the nodes has to be in visited (the one we are working from now)
                 // the other one may not be in visited
                 // so check, if either of the nodes is not yet in visited
-                double maxAllowedSteepness = CurrentProblem.MaxSteepness;
-                double maxAllowedElevationDiff = CurrentProblem.MaxElevation;
-                List<Edge> allowed = vNodes[ currentNode ].Incident.FindAll( x =>
-                  ( !visited.Contains( x.TargetNode.GraphNodeId ) || !visited.Contains( x.SourceNode.GraphNodeId ) ) &&
-                  ( ( currentElevationDiff + Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) ) / 2 > maxAllowedElevationDiff ||
-                  Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / x.Cost * 100 > maxAllowedSteepness )
-                );
+                _ = CurrentProblem.MaxSteepness;
+                _ = CurrentProblem.MaxElevation;
+                List<Edge> allowed = vNodes[ currentNode ].Incident;
+                //    .FindAll( x =>
+                //  ( !visited.Contains( x.TargetNode.GraphNodeId ) || !visited.Contains( x.SourceNode.GraphNodeId ) ) &&
+                //  ( ( currentElevationDiff + Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) ) / 2 > maxAllowedElevationDiff ||
+                //  Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / x.Cost * 100 > maxAllowedSteepness )
+                //);
 
                 FindAllowedPath( ref CurrentProblem, usePenalty, useBacktracking, vNodes, ref visitableNodes, ref visited, pickedEdge, currentDistance, ref currentNode, ref allowed, ref currentElevationDiff );
 
                 //float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed, vNodes, visited, currentNode, profit, area, ref CurrentProblem, ref currentElevationDiff );
                 //CalculateNewPheromoneValues( ref CurrentProblem, ref currentElevationDiff, usePenalty, vNodes, visited, currentDistance, edgeProbabilities, vNodes[ currentNode ], allowed, sumOfAllowed, profit, area, out profit, out area );
 
-                CalculateNewPheromoneValuesIncludeNegative( ref CurrentProblem, ref currentElevationDiff, vNodes, visited, currentDistance, edgeProbabilities, vNodes[ currentNode ], allowed, profit, area, out profit, out area );
+                CalculateNewPheromoneValuesIncludeNegative( ref CurrentProblem, ref currentElevationDiff, vNodes, visited, currentDistance, ref edgeProbabilities, vNodes[ currentNode ], allowed, profit, area, out profit, out area );
 
 
 
@@ -147,8 +151,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
                 {
-                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, solutionVisited, pickedEdge, ref CurrentProblem.Path.BoundingCoordinates, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentDistance, currentNode );
-
+                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, solutionVisited, pickedEdge, ref boudingCoordinates, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentDistance, currentNode );
+                    CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                 }
                 else
                 {
@@ -168,7 +172,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
 
             // if we can't find a next node from the one we picked, choose from the following options:
-            if (allowed.Count == 0 && currentDistance < CurrentProblem.TargetDistance)
+            //if (allowed.Count == 0 && currentDistance < CurrentProblem.TargetDistance)
+            if (currentDistance < CurrentProblem.TargetDistance)
             {
                 // if we use a penalty, the ants will figure out what to do by themselves. Just update the trail intensity accordingly
                 if (usePenalty)
@@ -257,7 +262,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             areaOut = newArea;
         }
 
-        private void CalculateNewPheromoneValuesIncludeNegative ( ref Problem CurrentProblem, ref double currentElevationDiff, List<Node> vNodes, HashSet<int> visited, double currentDistance, Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed, double profit, double area, out double profitOut, out double areaOut )
+        private void CalculateNewPheromoneValuesIncludeNegative ( ref Problem CurrentProblem, ref double currentElevationDiff, List<Node> vNodes, HashSet<int> visited, double currentDistance, ref Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed, double profit, double area, out double profitOut, out double areaOut )
         {
 
             List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId, ref CurrentProblem, ref currentElevationDiff );
@@ -312,6 +317,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 edgeProbabilities[ edge ] /= sumOfProbabilities;
             }
 
+            IOrderedEnumerable<KeyValuePair<Edge, float>> sortedProbabilities = from entry in edgeProbabilities orderby entry.Value ascending select entry;
+            edgeProbabilities = sortedProbabilities.ToDictionary( pair => pair.Key, pair => pair.Value );
             profitOut = newProfit;
             areaOut = newArea;
         }
@@ -513,24 +520,35 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             if (inclueAreaCoverage)
             {
-                GeoCoordinate rCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 3 ].Item1, problem.Path.BoundingCoordinates[ 3 ].Item2 );
-                GeoCoordinate lCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 0 ].Item1, problem.Path.BoundingCoordinates[ 0 ].Item2 );
+                lock (problem.Path.BoundingCoordinates)
+                {
+                    GeoCoordinate rCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 3 ].Item1, problem.Path.BoundingCoordinates[ 3 ].Item2 );
+                    GeoCoordinate lCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 0 ].Item1, problem.Path.BoundingCoordinates[ 0 ].Item2 );
+                    lock (rCoord)
+                    {
+                        lock (lCoord)
+                        {
 
-                double r1 = lCoord.GetDistanceTo( rCoord ) / 2;
+                            double r1 = lCoord.GetDistanceTo( rCoord );
+                        }
+                    }
 
-                GeoCoordinate uCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 2 ].Item1, problem.Path.BoundingCoordinates[ 2 ].Item2 );
-                GeoCoordinate dCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 1 ].Item1, problem.Path.BoundingCoordinates[ 1 ].Item2 );
+                    GeoCoordinate uCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 2 ].Item1, problem.Path.BoundingCoordinates[ 2 ].Item2 );
+                    GeoCoordinate dCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 1 ].Item1, problem.Path.BoundingCoordinates[ 1 ].Item2 );
 
-                double r2 = uCoord.GetDistanceTo( dCoord ) / 2;
+                    double r2 = uCoord.GetDistanceTo( dCoord );
 
-                double perfectEllipsoidArea = Math.PI * r1 * r2;
-                double boundingArea = r1 * r2;
+                    double perfectEllipsoidArea = Math.PI * ( r1 / 2 ) * ( r2 / 2 );
+                    double boundingArea = r1 * r2;
 
-                double perfectDiff = boundingArea - perfectEllipsoidArea;
+                    double perfectDiff = boundingArea - perfectEllipsoidArea;
 
-                double actualDiff = boundingArea - problem.Path.CoveredArea;
-
-                penaltyQuotient *= problem.CoveredAreaImportance * ( perfectDiff - actualDiff );
+                    double actualDiff = boundingArea - ( ( problem.Path.CoveredArea < 0 ? -1 : 1 ) * problem.Path.CoveredArea );
+                    if (boundingArea > 0)
+                    {
+                        penaltyQuotient *= problem.CoveredAreaImportance * ( actualDiff - perfectDiff );
+                    }
+                }
 
                 //double quality = 0;
                 //foreach (Edge edge in visited)

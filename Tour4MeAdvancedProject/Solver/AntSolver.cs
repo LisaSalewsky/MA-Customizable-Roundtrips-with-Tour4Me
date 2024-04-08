@@ -9,8 +9,8 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntSolver : Selection
     {
-        public int NumberTours { get; set; } = 20;
-        public int NumberAnts { get; set; } = 100;
+        public int NumberTours { get; set; } = 10;
+        public int NumberAnts { get; set; } = 50;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
         public double Beta { get; set; } = 0.7;
@@ -83,7 +83,7 @@ namespace Tour4MeAdvancedProject.Solver
                     // now update the pheromone trail (trailInensity)
                     currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
                 }
-            );
+                );
                 // reset all pheromone values set by ants
                 foreach (Edge edge in P.Graph.VEdges)
                 {

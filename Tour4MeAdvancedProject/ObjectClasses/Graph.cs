@@ -500,11 +500,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             Edge edge = new Edge( edgeGraphId, new Tuple<Node, Node>( l, r ), cost );
 
-            double yl = GetDistanceFromLatLon( l.Lat, l.Lon, MinLat, l.Lon ) * ( l.Lat < MinLat ? -1 : 1 );
-            double xl = GetDistanceFromLatLon( l.Lat, l.Lon, l.Lat, MinLon ) * ( l.Lon < MinLon ? -1 : 1 );
+            //double yl = GetDistanceFromLatLon( l.Lat, l.Lon, MinLat, l.Lon ) * ( l.Lat < MinLat ? -1 : 1 );
+            //double xl = GetDistanceFromLatLon( l.Lat, l.Lon, l.Lat, MinLon ) * ( l.Lon < MinLon ? -1 : 1 );
 
-            double yr = GetDistanceFromLatLon( r.Lat, r.Lon, MinLat, r.Lon ) * ( r.Lat < MinLat ? -1 : 1 );
-            double xr = GetDistanceFromLatLon( r.Lat, r.Lon, r.Lat, MinLon ) * ( r.Lon < MinLon ? -1 : 1 );
+            //double yr = GetDistanceFromLatLon( r.Lat, r.Lon, MinLat, r.Lon ) * ( r.Lat < MinLat ? -1 : 1 );
+            //double xr = GetDistanceFromLatLon( r.Lat, r.Lon, r.Lat, MinLon ) * ( r.Lon < MinLon ? -1 : 1 );
+
+            double yl = GetDistanceFromLatLon( l.Lat, l.Lon, CenterLat, l.Lon ) * ( l.Lat < CenterLat ? -1 : 1 );
+            double xl = GetDistanceFromLatLon( l.Lat, l.Lon, l.Lat, CenterLon ) * ( l.Lon < CenterLon ? -1 : 1 );
+
+            double yr = GetDistanceFromLatLon( r.Lat, r.Lon, CenterLat, r.Lon ) * ( r.Lat < CenterLat ? -1 : 1 );
+            double xr = GetDistanceFromLatLon( r.Lat, r.Lon, r.Lat, CenterLon ) * ( r.Lon < CenterLon ? -1 : 1 );
 
             edge.ShoelaceForward = ( yl + yr ) * ( xl - xr );
             edge.ShoelaceBackward = ( yr + yl ) * ( xr - xl );
@@ -1057,21 +1063,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 if (node.Incident.Count == 1)
                 {
-                    if (VNodes.Contains( node ))
-                    {
-                        Edge incident = node.Incident[ 0 ];
-                        Node neighbor = incident.SourceNode.GraphNodeId == node.GraphNodeId ? incident.TargetNode : incident.SourceNode;
-                        _ = neighbor.Incident.Remove( incident );
-                        _ = VNodes[ node.GraphNodeId ] = null;
-                    }
+                    Edge incident = node.Incident[ 0 ];
+                    Node neighbor = incident.SourceNode.GraphNodeId == node.GraphNodeId ? incident.TargetNode : incident.SourceNode;
+                    _ = neighbor.Incident.Remove( incident );
+                    _ = VNodes[ node.GraphNodeId ] = null;
+
                 }
             }
             foreach (Edge currentEdge in deadEndEdges)
             {
-                if (VEdges.Contains( currentEdge ))
-                {
-                    _ = VEdges[ currentEdge.GraphId ] = null;
-                }
+                _ = VEdges[ currentEdge.GraphId ] = null;
+
             }
         }
 

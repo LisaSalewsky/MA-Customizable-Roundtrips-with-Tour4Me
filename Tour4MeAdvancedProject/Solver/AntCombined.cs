@@ -9,8 +9,8 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntCombined : Selection
     {
-        public int NumberTours { get; set; } = 2;
-        public int NumberAnts { get; set; } = 10;
+        public int NumberTours { get; set; } = 15;
+        public int NumberAnts { get; set; } = 100;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
         public double Beta { get; set; } = 0.7;
@@ -76,8 +76,6 @@ namespace Tour4MeAdvancedProject.Solver
             EvaporationRate = 0.6;
             int pheromoneAmount = 1;
 
-            PreprocessEdges( problem );
-
 
             for (int i = 0; i < NumberAnts; i++)
             {
@@ -87,6 +85,8 @@ namespace Tour4MeAdvancedProject.Solver
             List<int> visitedNodes = new List<int>();
 
             Problem tempProblem = problem;
+            PreprocessEdges( problem );
+
             for (int i = 0; i < NumberTours; i++)
             {
                 _ = Parallel.ForEach( Ants, currentAnt =>
@@ -99,7 +99,13 @@ namespace Tour4MeAdvancedProject.Solver
                     currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
                 } );
                 // reset all pheromone values set by ants
-                problem.Graph.VEdges.ForEach( edge => edge.Pheromone = 0 );
+                foreach (Edge edge in problem.Graph.VEdges)
+                {
+                    if (edge != null)
+                    {
+                        edge.Pheromone = 1;
+                    }
+                }
             }
 
             problem = tempProblem;
@@ -136,7 +142,8 @@ namespace Tour4MeAdvancedProject.Solver
 
             _ = Parallel.ForEach( P.Path.Edges, edge =>
             {
-                edge.TrailIntensity = 5;
+                P.Graph.VEdges[ edge.GraphId ].TrailIntensity = 5000;
+                P.Graph.VEdges[ edge.GraphId ].Pheromone = 5000;
             } );
 
         }
