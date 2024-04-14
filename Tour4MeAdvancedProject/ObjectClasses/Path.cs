@@ -31,8 +31,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public Path ( Path p )
         {
-            Edges = p.Edges;
-            Visited = p.Visited;
+            Edges = new List<Edge>( p.Edges );
+            Visited = new List<int>( p.Visited );
             Length = p.Length;
             Elevation = p.Elevation;
             Steepness = p.Steepness;
@@ -67,6 +67,16 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             if (addEdge != null)
             {
                 Edges.Add( addEdge );
+                Quality += newProfit;
+                Length += addEdge.Cost;
+            }
+            Visited.Add( neighbor );
+        }
+        public void Insert ( Edge addEdge, int idx, int neighbor, double newProfit )
+        {
+            if (addEdge != null)
+            {
+                Edges.Insert( idx, addEdge );
                 Quality += newProfit;
                 Length += addEdge.Cost;
             }

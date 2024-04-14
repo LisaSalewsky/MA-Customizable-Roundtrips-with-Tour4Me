@@ -531,7 +531,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             foreach (Edge e in VNodes[ sId ].Incident)
             {
-                if (tId == e.SourceNode.GraphNodeId || tId == e.TargetNode.GraphNodeId)
+                if (( tId == e.SourceNode.GraphNodeId && sId == e.TargetNode.GraphNodeId ) || ( tId == e.TargetNode.GraphNodeId && sId == e.SourceNode.GraphNodeId ))
                 {
                     return e;
                 }
@@ -817,7 +817,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         }
         public void InitializeShortestPath ( int start )
         {
-            Dictionary<int, double> dist = new Dictionary<int, double>();
+            double[] dist = new double[ VNodes.Count ];
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
 
 
@@ -831,8 +831,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 int currentNode = current.Item2.Item1;
                 double actual = current.Item2.Item2;
 
-
-                if (!dist.TryGetValue( currentNode, out double bestKnownDist ))
+                double bestKnownDist = dist[ currentNode ];
+                if (bestKnownDist != 0.0 && bestKnownDist != double.MaxValue)
                 {
                     dist[ currentNode ] = actual;
                     bestKnownDist = actual;
@@ -843,15 +843,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-
-                foreach (Edge edge in VNodes[ currentNode ].Incident)
+                List<Edge> currentIncident = VNodes[ currentNode ].Incident;
+                foreach (Edge edge in currentIncident)
                 {
                     Node neighbor = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode : edge.SourceNode;
                     int neighborId = neighbor.GraphNodeId;
 
                     double newDistance = bestKnownDist + edge.Cost;
-
-                    if (!dist.TryGetValue( neighborId, out double currentNeighborDist ))
+                    double currentNeighborDist = dist[ neighborId ];
+                    if (currentNeighborDist != 0 && currentNeighborDist != double.MaxValue)
                     {
                         dist[ neighborId ] = double.MaxValue;
                         currentNeighborDist = double.MaxValue;
@@ -871,7 +871,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public double ShortestPath ( int start, int end )
         {
-            Dictionary<int, double> dist = new Dictionary<int, double>();
+            double[] dist = new double[ VNodes.Count ];
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
 
 
@@ -890,7 +890,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     return dist[ currentNode ];
                 }
 
-                if (!dist.TryGetValue( currentNode, out double bestKnownDist ))
+                double bestKnownDist = dist[ currentNode ];
+                if (bestKnownDist != 0.0 && bestKnownDist != double.MaxValue)
                 {
                     dist[ currentNode ] = actual;
                     bestKnownDist = actual;
@@ -901,13 +902,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     continue;
                 }
 
-                foreach (Edge edge in VNodes[ currentNode ].Incident)
+                List<Edge> currentIncident = VNodes[ currentNode ].Incident;
+                foreach (Edge edge in currentIncident)
                 {
                     int neighborId = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode.GraphNodeId : edge.SourceNode.GraphNodeId;
 
                     double newDistance = bestKnownDist + edge.Cost;
 
-                    if (!dist.TryGetValue( neighborId, out double currentNeighborDist ))
+                    double currentNeighborDist = dist[ neighborId ];
+                    if (currentNeighborDist != 0 && currentNeighborDist != double.MaxValue)
                     {
                         dist[ neighborId ] = double.MaxValue;
                         currentNeighborDist = double.MaxValue;

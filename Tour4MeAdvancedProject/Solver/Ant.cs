@@ -138,9 +138,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 CalculateNewPheromoneValuesIncludeNegative( ref CurrentProblem, ref currentElevationDiff, vNodes, visited, currentDistance, ref edgeProbabilities, vNodes[ currentNode ], allowed, profit, area, out profit, out area );
 
 
-
-                CurrentProblem.Path.CoveredArea = area;
-
+                lock (CurrentProblem.Path)
+                {
+                    CurrentProblem.Path.CoveredArea = area;
+                }
                 // randomly generate a random number between [0.0, 1.0) (excluding 1)
                 float probability = (float)Random.NextDouble();
                 // pick an edge according to edgeProbabilities and calculated probability
@@ -282,6 +283,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     newProfit = profit + ( edge.Cost * edge.Profit );
                     newArea = area + ( edge.SourceNode == currentNode ? edge.ShoelaceForward : edge.ShoelaceBackward );
 
+
                     edge.Quality = CurrentProblem.GetQuality( newProfit, newArea );
                     double edgeVisibility = edge.Quality * CurrentProblem.EdgeProfitImportance;
 
@@ -402,27 +404,30 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             // Add the picked edge to the solution path
             SolutionEdges.Add( pickedEdge );
+            lock (boundingCoordinates)
+            {
 
-            // insert the 4 boudning coordinates
-            // left
-            if (boundingCoordinates[ 0 ].Item1 > neighbor.Lat)
-            {
-                boundingCoordinates[ 0 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
-            }
-            // right
-            else if (boundingCoordinates[ 3 ].Item1 < neighbor.Lat)
-            {
-                boundingCoordinates[ 3 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
-            }
-            // top
-            else if (boundingCoordinates[ 2 ].Item2 > neighbor.Lon)
-            {
-                boundingCoordinates[ 2 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
-            }
-            //bottom
-            else if (boundingCoordinates[ 1 ].Item2 < neighbor.Lon)
-            {
-                boundingCoordinates[ 1 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+                // insert the 4 boudning coordinates
+                // left
+                if (boundingCoordinates[ 0 ].Item1 > neighbor.Lat)
+                {
+                    boundingCoordinates[ 0 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+                }
+                // right
+                else if (boundingCoordinates[ 3 ].Item1 < neighbor.Lat)
+                {
+                    boundingCoordinates[ 3 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+                }
+                // top
+                else if (boundingCoordinates[ 2 ].Item2 > neighbor.Lon)
+                {
+                    boundingCoordinates[ 2 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+                }
+                //bottom
+                else if (boundingCoordinates[ 1 ].Item2 < neighbor.Lon)
+                {
+                    boundingCoordinates[ 1 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+                }
             }
 
             Utils.CalculateElevationDiffAndSteepness( pickedEdge, ref maxSteepness, ref currentElevationDfif );
@@ -486,7 +491,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// determines whether the ants should find out that closing the tour is better (usePenalty = true)
         /// or we always enforce closing the tour (usePenalty = false).
         /// </param>
-        public void UpdatePheromoneTrail ( Problem problem, List<Edge> visited, double evaporation, bool usePenalty, bool inclueAreaCoverage )
+        public void UpdatePheromoneTrail ( ref Problem problem, List<Edge> visited, double evaporation, bool usePenalty, bool inclueAreaCoverage )
         {
             double evaporationRate = evaporation;
 
@@ -520,18 +525,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             if (inclueAreaCoverage)
             {
-                lock (problem.Path.BoundingCoordinates)
+                lock (problem.Path)
                 {
+
                     GeoCoordinate rCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 3 ].Item1, problem.Path.BoundingCoordinates[ 3 ].Item2 );
                     GeoCoordinate lCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 0 ].Item1, problem.Path.BoundingCoordinates[ 0 ].Item2 );
-                    lock (rCoord)
-                    {
-                        lock (lCoord)
-                        {
 
-                            double r1 = lCoord.GetDistanceTo( rCoord );
-                        }
-                    }
+                    double r1 = lCoord.GetDistanceTo( rCoord );
 
                     GeoCoordinate uCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 2 ].Item1, problem.Path.BoundingCoordinates[ 2 ].Item2 );
                     GeoCoordinate dCoord = new GeoCoordinate( problem.Path.BoundingCoordinates[ 1 ].Item1, problem.Path.BoundingCoordinates[ 1 ].Item2 );
@@ -546,10 +546,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     double actualDiff = boundingArea - ( ( problem.Path.CoveredArea < 0 ? -1 : 1 ) * problem.Path.CoveredArea );
                     if (boundingArea > 0)
                     {
-                        penaltyQuotient *= problem.CoveredAreaImportance * ( actualDiff - perfectDiff );
+                        penaltyQuotient *= problem.CoveredAreaImportance * Math.Abs( actualDiff - perfectDiff );
                     }
-                }
 
+                }
                 //double quality = 0;
                 //foreach (Edge edge in visited)
                 //{

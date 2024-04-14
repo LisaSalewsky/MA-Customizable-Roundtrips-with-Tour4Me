@@ -76,12 +76,15 @@ namespace Tour4MeAdvancedProject.Solver
                 //foreach (Ant currentAnt in Ants)
                 _ = Parallel.ForEach( Ants, currentAnt =>
                 {
-                    // calculate one Tour for the current Ant
-                    // save the edges that form the solution path in solutionEdges
-                    (solutionEdges, visitedNodes) = currentAnt.Tour( ref tempProblem, UsePenalty, UseBacktracking );
+                    lock (tempProblem)
+                    {
+                        // calculate one Tour for the current Ant
+                        // save the edges that form the solution path in solutionEdges
+                        (solutionEdges, visitedNodes) = currentAnt.Tour( ref tempProblem, UsePenalty, UseBacktracking );
 
-                    // now update the pheromone trail (trailInensity)
-                    currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
+                        // now update the pheromone trail (trailInensity)
+                        currentAnt.UpdatePheromoneTrail( ref tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
+                    }
                 }
                 );
                 // reset all pheromone values set by ants

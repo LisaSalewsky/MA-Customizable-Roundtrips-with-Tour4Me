@@ -58,6 +58,24 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         }
 
+        public Problem ( Problem p )
+        {
+            Start = p.Start;
+            CenterLat = p.CenterLat;
+            CenterLon = p.CenterLon;
+            PrefTags = p.PrefTags;
+            AvoidTags = p.AvoidTags;
+            MaxElevation = p.MaxElevation;
+            MaxSteepness = p.MaxSteepness;
+            Graph = p.Graph;
+            Backbone = p.Backbone;
+            RunningTime = p.RunningTime;
+            EdgeProfitImportance = p.EdgeProfitImportance;
+            CoveredAreaImportance = p.CoveredAreaImportance;
+            ElevationImportance = p.ElevationImportance;
+            ShortestPath = p.ShortestPath;
+        }
+
         //public Problem ( Guid ProblemId, out string error )
         //{
         //    error = "";
@@ -264,12 +282,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 // todo check if i can use solution edges instead
                 Edge edge = Graph.GetEdge( node, Path.Visited.ElementAt( i + 1 ) );
-                Path.Length += edge.Cost;
 
                 if (edge == null)
                 {
                     continue;
                 }
+                Path.Length += edge.Cost;
 
                 bool reverse = edge.GeoLocations != null &&
                     edge.GeoLocations.Count > 0 &&
