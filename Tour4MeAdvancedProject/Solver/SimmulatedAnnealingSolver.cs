@@ -15,10 +15,19 @@ namespace Tour4MeAdvancedProject.Solver
         public int Repetitions { get; set; } = 5;
         public double Temperature { get; set; } = 0.9;
         public Random Random { get; set; } = new Random();
+        public int NumberWaypoints { get; set; } = 10;
 
 
 
         public SimmulatedAnnealingSolver () { }
+
+        public SimmulatedAnnealingSolver ( int runs, int repetitions, double temp, int waypoints )
+        {
+            Runs = runs;
+            Repetitions = repetitions;
+            Temperature = temp;
+            NumberWaypoints = waypoints;
+        }
 
         public override SolveStatus Solve ( ref Problem P )
         {
@@ -88,9 +97,11 @@ namespace Tour4MeAdvancedProject.Solver
                         diff = neighborQuality - currentQuality;
 
                         // if the quality of the initial solution was worse than of the new one, always pick the new one
-                        if (diff <= 0)
+                        if (diff > 0)
                         {
-                            P = currentProblem;
+                            P.Path = neighboringSolution;
+                            P.Quality = neighborQuality;
+                            currentQuality = neighborQuality;
                         }
                         // if the quality of the new solution was worse than of the initial one, pick the new one with a chance
                         else
@@ -103,7 +114,9 @@ namespace Tour4MeAdvancedProject.Solver
                             // if the random value exceeds the probability, choose the new ( worse ) solution
                             if (rand > probs)
                             {
-                                P = currentProblem;
+                                P.Path = neighboringSolution;
+                                P.Quality = neighborQuality;
+                                currentQuality = neighborQuality;
                             }
                         }
                     }
@@ -117,131 +130,198 @@ namespace Tour4MeAdvancedProject.Solver
 
         private Path GenerateNeighborSolution ( Problem P )
         {
-            Path currentPath = new Path( P.Path );
+            Problem problem = new Problem( P, P.Path );
 
-            List<int> nodes = currentPath.Visited;
+            Path currentPath = problem.Path;
 
+            // list of the index where to find Node(Id) in the List of all visited nodes
+            List<int> waypoints = new List<int>();
+            List<int> nodes = P.Path.Visited;
+            _ = currentPath.Edges;
             Random rnd = new Random();
             List<Edge> incident;
-            Node nodeToMove;
-            int randomIndex;
-            double bestQuality = P.Path.Quality;
-            do
-            {
-                randomIndex = rnd.Next( 1, currentPath.Edges.Count - 1 );
-                nodes = currentPath.Visited;
-                nodeToMove = P.Graph.VNodes[ nodes[ randomIndex ] ];
-                incident = nodeToMove.Incident;
-            }
-            while (incident.Count( x => x != null ) < 2);
-            int nodeInsertCounter = randomIndex;
-            int edgeInsertCounter = randomIndex;
 
-            foreach (Edge edge in nodeToMove.Incident)
-            {
-                if (P.Graph.VEdges[ edge.GraphId ] != null)
-                {
-                    Node prev = P.Graph.VNodes[ nodes[ randomIndex - 1 ] ];
-                    Node succ = P.Graph.VNodes[ nodes[ randomIndex + 1 ] ];
-                    if (( edge.SourceNode == nodeToMove && ( edge.TargetNode == prev ) ) ||
-                        ( edge.TargetNode == nodeToMove && ( edge.SourceNode == prev ) ))
-                    {
-                        _ = currentPath.Edges.RemoveAll( x => x.GraphId == edge.GraphId );
-                        edgeInsertCounter--;
-                    }
-                    if (( edge.SourceNode == nodeToMove && ( edge.TargetNode == succ ) ) ||
-                        ( edge.TargetNode == nodeToMove && ( edge.SourceNode == succ ) ))
-                    {
-                        _ = currentPath.Edges.RemoveAll( x => x.GraphId == edge.GraphId );
-                    }
-                }
-            }
-            currentPath.Visited.RemoveAt( randomIndex );
-            int backupCounter = edgeInsertCounter;
-            HashSet<int> visitedNodes = nodes.ToHashSet();
+            // find waypoint idxs
+            incident = FindWaypointIndexes( P, waypoints, nodes );
 
-            foreach (Edge edge in incident)
-            {
-                Node neighbor = edge.SourceNode == nodeToMove ? edge.TargetNode : edge.SourceNode;
-                edgeInsertCounter = backupCounter;
+            // find new Waypoint to insert (& preedSucc coordinates)
+            _ = FindNewWaypoint( P, waypoints, out Tuple<int, int> predSuccWaypointIdxs, nodes, rnd, incident, out Node newWaypoint );
 
-                if (!visitedNodes.Contains( neighbor.GraphNodeId ))
-                {
-                    (List<Edge> resultEdges, List<int> resultNodes) = P.Graph.GetShortestPath( neighbor.GraphNodeId, nodes[ randomIndex - 1 ] );
-                    //double shortestPath = P.Graph.ShortestPath( neighbor.GraphNodeId, nodes[ randomIndex + 1 ] );
+            // Add / Remove / Move & use new path if quality gets better (or with temperature 
 
-                    List<bool> visited = new List<bool>();
-                    visited.AddRange( new bool[ P.Graph.VEdges.Count ] );
+            //P.Path = AddWaypoint( waypoints, predSuccWaypointIdxs, newWaypoint, problem );
+            //(P.Path, _) = RemoveWaypoint( waypoints, problem, rnd );
+            currentPath = MoveWaypoint( waypoints, problem, rnd, newWaypoint );
+            _ = predSuccWaypointIdxs.ToString();
 
-                    int current = neighbor.GraphNodeId;
+            P.Path = currentPath;
+            currentPath.Quality = P.GetQuality( P.GetProfit( currentPath ), P.GetArea( currentPath ) );
 
-                    double length = 0;
-                    bool validCandidates = true;
-
-                    while (validCandidates)
-                    {
-                        validCandidates = false;
-                        Edge bestEdge = null;
-                        int bestNeigh = 0;
-                        double bestProfit = -9999999999;
-
-                        foreach (Edge e in P.Graph.VNodes[ current ].Incident)
-                        {
-                            int neigh = e.SourceNode.GraphNodeId == current ? e.TargetNode.GraphNodeId : e.SourceNode.GraphNodeId;
-                            double dis = P.Graph.ShortestPath( nodes[ randomIndex ], neigh );
-
-                            if (dis > P.TargetDistance - length - e.Cost)
-                            {
-                                continue;
-                            }
-
-                            double prof = !visited[ e.GraphId ] ? e.Profit * e.Cost : -dis;
-
-                            if (prof > bestProfit)
-                            {
-                                bestProfit = prof;
-                                bestNeigh = neigh;
-                                bestEdge = e;
-                                validCandidates = true;
-                            }
-                        }
-                        bestProfit = bestEdge != null ? bestEdge.Profit * bestEdge.Cost : bestProfit;
-
-                        if (validCandidates)
-                        {
-                            currentPath.Insert( bestEdge, edgeInsertCounter, bestNeigh, bestProfit );
-                            edgeInsertCounter++;
-                            resultEdges.Add( bestEdge );
-                            resultNodes.Add( current );
-                            visited[ bestEdge.GraphId ] = true;
-                            length += bestEdge.Cost;
-                            current = bestNeigh;
-                        }
-                    }
-                    int count = nodeInsertCounter;
-                    foreach (int node in resultNodes)
-                    {
-                        currentPath.Visited.Insert( count, node );
-                        count++;
-                        nodeInsertCounter++;
-                    }
-                    count = Math.Max( 0, edgeInsertCounter + 1 - resultEdges.Count );
-                    foreach (Edge edgeToInsert in resultEdges)
-                    {
-                        currentPath.Edges.Insert( count, edgeToInsert );
-                        count++;
-                    }
-
-                }
-
-                double quality = P.GetQuality( P.GetProfit( currentPath ), P.GetArea( currentPath ) );
-                if (quality > bestQuality)
-                {
-                    P.Path = currentPath;
-                }
-            }
-
-            return P.Path;
+            return currentPath;
         }
+
+        private static List<Edge> FindNewWaypoint ( Problem P, List<int> waypoints, out Tuple<int, int> predSuccWaypointIdxs, List<int> nodes, Random rnd, List<Edge> incident, out Node newWaypoint )
+        {
+            // use random value of all existing waypoints & the point's predecessor (thus start random with 1)
+            List<int> availableNodes = new List<int>();
+            int newWaypointIdx = 0;
+
+            while (availableNodes.Count == 0)
+            {
+                newWaypointIdx = rnd.Next( 1, waypoints.Count - 1 );
+                for (int nodeId = waypoints[ newWaypointIdx - 1 ] + 1; nodeId < waypoints[ newWaypointIdx ]; nodeId++)
+                {
+                    Node possibleWaypoint = P.Graph.VNodes[ nodes[ nodeId ] ];
+                    incident = possibleWaypoint.Incident;
+                    if (incident.Count( x => x != null ) > 2)
+                    {
+                        availableNodes.Add( nodeId );
+                    }
+                }
+            }
+            // select middlemost point as waypoint
+            predSuccWaypointIdxs = Tuple.Create( waypoints[ newWaypointIdx - 1 ], waypoints[ newWaypointIdx + 1 ] );
+            newWaypoint = P.Graph.VNodes[ nodes[ availableNodes[ Math.Abs( ( availableNodes.Count - 1 ) / 2 ) ] ] ];
+            int i = 0;
+
+            bool wayPointIsPred = newWaypoint.GraphNodeId == P.Graph.VNodes[ nodes[ predSuccWaypointIdxs.Item1 ] ].GraphNodeId;
+            bool wayPointIsSucc = newWaypoint.GraphNodeId == P.Graph.VNodes[ nodes[ predSuccWaypointIdxs.Item2 ] ].GraphNodeId;
+            while (( wayPointIsPred || wayPointIsSucc ) &&
+                Math.Abs( ( availableNodes.Count - 1 ) / 2 ) + i + 1 < availableNodes.Count)
+            {
+                i++;
+                newWaypoint = P.Graph.VNodes[ nodes[ availableNodes[ Math.Abs( ( availableNodes.Count - 1 ) / 2 ) + i ] ] ];
+            }
+            i = 0;
+            while (wayPointIsPred || ( wayPointIsSucc && Math.Abs( ( availableNodes.Count - 1 ) / 2 ) - i > 0 ))
+            {
+                i++;
+                newWaypoint = P.Graph.VNodes[ nodes[ availableNodes[ Math.Abs( ( availableNodes.Count - 1 ) / 2 ) - i ] ] ];
+            }
+            wayPointIsPred = newWaypoint.GraphNodeId == P.Graph.VNodes[ nodes[ predSuccWaypointIdxs.Item1 ] ].GraphNodeId;
+            wayPointIsSucc = newWaypoint.GraphNodeId == P.Graph.VNodes[ nodes[ predSuccWaypointIdxs.Item2 ] ].GraphNodeId;
+
+            return incident;
+        }
+
+        private List<Edge> FindWaypointIndexes ( Problem P, List<int> waypoints, List<int> nodes )
+        {
+            List<Edge> incident = new List<Edge>();
+            int j = -1;
+            int numEdges = nodes.Count - 1;
+
+            while (P.Path.Visited.Count <= NumberWaypoints * 2)
+            {
+                NumberWaypoints /= 2;
+            }
+
+            for (int i = 0; i < NumberWaypoints; i++)
+            {
+                do
+                {
+                    j++;
+                    Node possibleWaypoint = P.Graph.VNodes[ nodes[ j ] ];
+                    incident = possibleWaypoint.Incident;
+                }
+                while (incident.Count( x => x != null ) < 2 && j < numEdges);
+                waypoints.Add( j );
+
+                int step = Math.Abs( ( nodes.Count - j ) / NumberWaypoints );
+                if (j + 1 + step < nodes.Count)
+                {
+                    // make a bigger step to cover as much of the path as possible
+                    j += step;
+                }
+            }
+
+            return incident;
+        }
+
+        private (Path, Tuple<int, int>) RemoveWaypoint ( List<int> waypointIdxs, Problem p, Random rnd, Node newWaypoint )
+        {
+            int randomIndex = rnd.Next( 1, waypointIdxs.Count - 1 );
+            int predIdx = waypointIdxs[ randomIndex - 1 ];
+            int succIdx = waypointIdxs[ randomIndex + 1 ];
+
+            bool predIsWaypoint = newWaypoint.GraphNodeId == p.Graph.VNodes[ p.Path.Visited[ predIdx ] ].GraphNodeId;
+            bool succIsWaypoint = newWaypoint.GraphNodeId == p.Graph.VNodes[ p.Path.Visited[ succIdx ] ].GraphNodeId;
+
+            while (predIsWaypoint || succIsWaypoint)
+            {
+                randomIndex = rnd.Next( 1, waypointIdxs.Count - 1 );
+                predIdx = waypointIdxs[ randomIndex - 1 ];
+                succIdx = waypointIdxs[ randomIndex + 1 ];
+
+                predIsWaypoint = newWaypoint.GraphNodeId == p.Graph.VNodes[ p.Path.Visited[ predIdx ] ].GraphNodeId;
+                succIsWaypoint = newWaypoint.GraphNodeId == p.Graph.VNodes[ p.Path.Visited[ succIdx ] ].GraphNodeId;
+
+            }
+
+            List<int> visited = p.Path.Visited;
+            List<Edge> pathEdges = p.Path.Edges;
+
+            // look at all nodes and edges between pred and succ waypoint & remove them
+            for (int i = predIdx + 1; i < succIdx; i++)
+            {
+                visited.RemoveAt( i );
+                pathEdges.RemoveAt( i );
+            }
+
+            // calculate new path to fill gap
+            (List<Edge> edges, List<int> nodeIds) = p.Graph.GetShortestPath( visited[ predIdx ], visited[ succIdx ] );
+
+            visited.InsertRange( predIdx, nodeIds );
+            pathEdges.InsertRange( predIdx, edges );
+
+
+            p.Path.Visited = visited;
+            p.Path.Edges = pathEdges;
+
+            return (p.Path, Tuple.Create( predIdx, succIdx ));
+        }
+
+        private Path AddWaypoint ( List<int> waypointIdxs, Tuple<int, int> predSuccWaypointIdxs, Node newWaypoint, Problem p )
+        {
+
+            int predIdx = predSuccWaypointIdxs.Item1;
+            int succIdx = predSuccWaypointIdxs.Item2;
+
+            List<int> visited = p.Path.Visited;
+            List<Edge> pathEdges = p.Path.Edges;
+
+            // look at all nodes and edges between pred and succ waypoint & remove nodes and edges to allow adding new waypoint
+            for (int i = predIdx + 1; i < succIdx; i++)
+            {
+                visited.RemoveAt( predIdx + 1 );
+                pathEdges.RemoveAt( predIdx + 1 );
+            }
+
+
+            // calculate new paths to fill gap while using new waypoint
+            (List<Edge> edges, List<int> nodeIds) = p.Graph.GetShortestPath( visited[ predIdx ], newWaypoint.GraphNodeId );
+
+            visited.InsertRange( predIdx, nodeIds );
+            pathEdges.InsertRange( predIdx, edges );
+
+
+            (edges, nodeIds) = p.Graph.GetShortestPath( newWaypoint.GraphNodeId, visited[ succIdx + nodeIds.Count() ] );
+
+            visited.InsertRange( predIdx, nodeIds );
+            pathEdges.InsertRange( predIdx, edges );
+
+            p.Path.Visited = visited;
+            p.Path.Edges = pathEdges;
+
+            return p.Path;
+        }
+
+        private Path MoveWaypoint ( List<int> waypointIdxs, Problem p, Random rnd, Node newWaypoint )
+        {
+            (Path path, Tuple<int, int> predSuccWaypointIdxs) = RemoveWaypoint( waypointIdxs, p, rnd, newWaypoint );
+
+            p.Path = path;
+            return AddWaypoint( waypointIdxs, predSuccWaypointIdxs, newWaypoint, p );
+        }
+
     }
 }

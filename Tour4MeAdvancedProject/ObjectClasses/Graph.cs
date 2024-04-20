@@ -832,7 +832,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 double actual = current.Item2.Item2;
 
                 double bestKnownDist = dist[ currentNode ];
-                if (bestKnownDist != 0.0 && bestKnownDist != double.MaxValue)
+                if (bestKnownDist == 0.0 && bestKnownDist == double.MaxValue)
                 {
                     dist[ currentNode ] = actual;
                     bestKnownDist = actual;
@@ -851,7 +851,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                     double newDistance = bestKnownDist + edge.Cost;
                     double currentNeighborDist = dist[ neighborId ];
-                    if (currentNeighborDist != 0 && currentNeighborDist != double.MaxValue)
+                    if (currentNeighborDist == 0.0)
                     {
                         dist[ neighborId ] = double.MaxValue;
                         currentNeighborDist = double.MaxValue;
@@ -891,7 +891,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
 
                 double bestKnownDist = dist[ currentNode ];
-                if (bestKnownDist != 0.0 && bestKnownDist != double.MaxValue)
+                if (bestKnownDist == 0.0 && bestKnownDist == double.MaxValue)
                 {
                     dist[ currentNode ] = actual;
                     bestKnownDist = actual;
@@ -910,7 +910,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     double newDistance = bestKnownDist + edge.Cost;
 
                     double currentNeighborDist = dist[ neighborId ];
-                    if (currentNeighborDist != 0 && currentNeighborDist != double.MaxValue)
+                    if (currentNeighborDist == 0.0)
                     {
                         dist[ neighborId ] = double.MaxValue;
                         currentNeighborDist = double.MaxValue;
@@ -999,7 +999,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
             return (new List<Edge>(), new List<int>());
         }
-        public (List<Edge> path, List<int> pathNodes) DijkstraShortestPath ( int start, int end )
+        public (List<Edge>, List<int>) DijkstraShortestPath ( int start, int end )
         {
             List<Edge> path = new List<Edge>();
             List<int> pathNodes = new List<int>();

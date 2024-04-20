@@ -14,7 +14,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
     {
         protected string graphName;
 
-        private Guid Id;
+        //private Guid Id;
 
         public int Start { get; set; }
         public double CenterLat { get; set; }
@@ -63,6 +63,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Start = p.Start;
             CenterLat = p.CenterLat;
             CenterLon = p.CenterLon;
+            Path = new Path( Tuple.Create( CenterLat, CenterLon ) );
+            Metadata = new List<string>();
             PrefTags = p.PrefTags;
             AvoidTags = p.AvoidTags;
             MaxElevation = p.MaxElevation;
@@ -74,6 +76,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             CoveredAreaImportance = p.CoveredAreaImportance;
             ElevationImportance = p.ElevationImportance;
             ShortestPath = p.ShortestPath;
+        }
+        public Problem ( Problem p, Path path ) : this( p )
+        {
+            Path = new Path( path );
         }
 
         //public Problem ( Guid ProblemId, out string error )
@@ -275,13 +281,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Path.Length = 0;
             for (int i = 0; i < Path.Visited.Count() - 1; i++)
             {
-                int node = Path.Visited.ElementAt( i );
+                int node = Path.Visited[ i ];
                 _ = outputString.AppendFormat( CultureInfo.InvariantCulture, "[{0:F6},{1:F6}],",
                     Graph.VNodes[ node ].Lat, Graph.VNodes[ node ].Lon );
 
 
                 // todo check if i can use solution edges instead
-                Edge edge = Graph.GetEdge( node, Path.Visited.ElementAt( i + 1 ) );
+                Edge edge = Graph.GetEdge( node, Path.Visited[ i + 1 ] );
 
                 if (edge == null)
                 {
@@ -294,6 +300,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     ( Graph.VNodes[ node ].Lat != edge.GeoLocations.First().Item1 ||
                     Graph.VNodes[ node ].Lon != edge.GeoLocations.First().Item2 );
                 List<Tuple<double, double>> locationList = new List<Tuple<double, double>>( edge.GeoLocations );
+
+
                 if (reverse)
                 {
                     locationList.Reverse();

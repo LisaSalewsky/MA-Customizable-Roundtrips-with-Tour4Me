@@ -26,22 +26,22 @@ namespace Tour4MeAdvancedProject
 
 
         private static Tuple<double, double> MarkerLatLon;
-        private static readonly bool Zoomed = true;
-        private static readonly List<List<Tuple<double, double>>> OuterBox = new List<List<Tuple<double, double>>>() { };
-        private static readonly List<List<Tuple<double, double>>> InnerBox = new List<List<Tuple<double, double>>>() { };
+        //private static readonly bool Zoomed = true;
+        //private static readonly List<List<Tuple<double, double>>> OuterBox = new List<List<Tuple<double, double>>>() { };
+        //private static readonly List<List<Tuple<double, double>>> InnerBox = new List<List<Tuple<double, double>>>() { };
 
-        private static readonly double LatGran = 0.5 / 4;
-        private static readonly double LatPad = 0.5 / 6;
-        private static readonly double AbsMinLat = LAT_DOR;
+        //private static readonly double LatGran = 0.5 / 4;
+        //private static readonly double LatPad = 0.5 / 6;
+        //private static readonly double AbsMinLat = LAT_DOR;
 
-        private static readonly double LonGran = 0.75 / 4;
-        private static readonly double LonPad = 0.75 / 6;
-        private static readonly double AbsMinLon = LON_DOR;
-        private static readonly string[] COLORS = { "red", "green", "blue", "maroon", "purple", "lime", "navy" };
+        //private static readonly double LonGran = 0.75 / 4;
+        //private static readonly double LonPad = 0.75 / 6;
+        //private static readonly double AbsMinLon = LON_DOR;
+        //private static readonly string[] COLORS = { "red", "green", "blue", "maroon", "purple", "lime", "navy" };
 
-        private readonly string SelectedMap = "dor";
+        //private readonly string SelectedMap = "dor";
 
-        private readonly int RouteCounter = 0;
+        //private readonly int RouteCounter = 0;
 
         // StoredRoutes: List(RouteID, Path)
         private readonly List<Tuple<int, List<int>>> Stored_routes = new List<Tuple<int, List<int>>>();

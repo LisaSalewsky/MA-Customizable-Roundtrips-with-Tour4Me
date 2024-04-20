@@ -130,7 +130,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 //  Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / x.Cost * 100 > maxAllowedSteepness )
                 //);
 
-                FindAllowedPath( ref CurrentProblem, usePenalty, useBacktracking, vNodes, ref visitableNodes, ref visited, pickedEdge, currentDistance, ref currentNode, ref allowed, ref currentElevationDiff );
+                FindAllowedPath( ref CurrentProblem, usePenalty, useBacktracking, vNodes, solutionVisited, ref visitableNodes, ref visited, pickedEdge, currentDistance, ref currentNode, ref allowed, ref currentElevationDiff );
 
                 //float sumOfAllowed = PrecomputeSumOverAllAllowedEdges( allowed, vNodes, visited, currentNode, profit, area, ref CurrentProblem, ref currentElevationDiff );
                 //CalculateNewPheromoneValues( ref CurrentProblem, ref currentElevationDiff, usePenalty, vNodes, visited, currentDistance, edgeProbabilities, vNodes[ currentNode ], allowed, sumOfAllowed, profit, area, out profit, out area );
@@ -169,7 +169,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return (SolutionEdges, solutionVisited);
         }
 
-        private void FindAllowedPath ( ref Problem CurrentProblem, bool usePenalty, bool useBacktracking, List<Node> vNodes, ref List<Node> visitableNodes, ref HashSet<int> visited, Edge pickedEdge, double currentDistance, ref int currentNode, ref List<Edge> allowed, ref double currentElevationDiff )
+        private void FindAllowedPath ( ref Problem CurrentProblem, bool usePenalty, bool useBacktracking, List<Node> vNodes, List<int> solutionVisited, ref List<Node> visitableNodes, ref HashSet<int> visited, Edge pickedEdge, double currentDistance, ref int currentNode, ref List<Edge> allowed, ref double currentElevationDiff )
         {
 
             // if we can't find a next node from the one we picked, choose from the following options:
@@ -184,7 +184,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if not, two more options reamain
                 else if (useBacktracking)
                 {
-                    BackTrackToUsableSolution( pickedEdge, visited, visitableNodes, currentNode, out visited, out visitableNodes, out currentNode );
+                    BackTrackToUsableSolution( pickedEdge, visited, visitableNodes, solutionVisited, currentNode, out visited, out visitableNodes, out currentNode );
                 }
                 // if we want to use backtracking, just step backwards through the graph and remove edges that didn't result in a working solution
                 // otherwise, we allow for edges to be visited more than once, with exception of the edge we just came from
@@ -404,6 +404,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             // Add the picked edge to the solution path
             SolutionEdges.Add( pickedEdge );
+
             lock (boundingCoordinates)
             {
 
@@ -454,7 +455,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );
         }
 
-        private void BackTrackToUsableSolution ( Edge pickedEdge, HashSet<int> visited, List<Node> visitableNodes, int currentNode, out HashSet<int> fixedVisited, out List<Node> fixedVisitable, out int fixedCurrentNode )
+        private void BackTrackToUsableSolution ( Edge pickedEdge, HashSet<int> visited, List<Node> visitableNodes, List<int> solutionVisited, int currentNode, out HashSet<int> fixedVisited, out List<Node> fixedVisitable, out int fixedCurrentNode )
         {
             fixedCurrentNode = -1;
             fixedVisitable = null;
