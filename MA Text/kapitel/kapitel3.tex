@@ -5,29 +5,42 @@
 \section{Goal and Methodology}
 \label{sec:goal}
 
+As stated before, existing tools that can calculate roundtrips leave out certain data like the elevation of nodes or path types of edges.
+The absence of these information impacts the quality of the created routes for users or even whole user groups. 
+For example, people who prefer running with little to no elevation can end up with a route that takes them uphill for half of the route.
+While this resulting path still may be a good choice for other users - joggers who prefer more challenging routes or people who want to hike and enjoy ascending - the constant elevation for one half of the tour can be undesirable for beginners.
+Some people could prefer to choose whether they are running through the city or in a park depending on the elevation level.
+For these users, the created route would be highly unfavorable, even though the result matches other constraints for what is considered a nice roundtrip.
+Therefore, it can be crucial to the usefulness of an app to give the user as many options to customize as possible. 
 
-The goal of this thesis is to create a usable application for computing running or cycling roundtrips of (almost) arbitrary length. 
-Usable in this case means an app that can be used in real time, that produces results of the desired length and prioritizes paths according to the users' input. 
-To achieve this goal, the thesis will be built on the already existing prototype Tour4Me and eventually add meta-heuristic approaches that have been deemed the most fitting for this purpose. 
 
-First, an interface for testing the new approaches has to be built. This interface also needs an overlay for adding in user options like the length of the desired roundtrip, as well as other preference inputs. 
-Based on this interface, different algorithms can be added and compared with each other to find the ones that will produce relatively good outputs.
-However, there can be very different definitions of what makes a result good or high quality. 
+Thus, the goal of this thesis is to create a usable application for computing running or cycling roundtrips of (almost) arbitrary length. 
+Usable in this case means an app that can be used in real time, that produces results of the desired length and prioritizes paths according to the user's input. 
+To achieve this goal, the thesis is built on the already existing prototype Tour4Me \cite{buchin_tour4me_2022} and adds meta-heuristic approaches that have been deemed the most fitting for this purpose. 
+
+First, an interface for testing the new approaches was built. 
+For adding in user options like the length of the desired roundtrip, as well as other preference inputs, an additional overlay was needed.
+Based on this interface, different algorithms could be added and compared with each other to identify the ones that produced promising outputs.
+However, the definitions of a high quality result can vary drastically based on the criteria that are used. 
 An ideal algorithm would be fast, always generate a route and use all the users' preference inputs.
-However, it is not possible to achieve all these goals with just one algorithm. 
-Therefore, different approaches will be implemented and analyzed according to how well they fulfill the previously mentioned criteria. 
+However, achieving all these goals with just one algorithm is not possible. 
+Therefore, different approaches have been implemented and analyzed according to how well they fulfilled the previously mentioned criteria. 
 
-Some of the possible approaches include different implementations of genetic algorithms \cite{gendreau_handbook_2010}, of ant colony or anthill algorithms \cite{gendreau_handbook_2010, babaoglu_anthill_2002, wang_application_2014} as well as possible hybrid versions.
-These hybrids can either be hybrids of one of the meta-heuristics with - for example - local search algorithms \cite{gendreau_handbook_2010, wang_application_2014} or hybrids of these two algorithms joined together.
-Furthermore, if there is enough time left, it is also possible to include the new algorithms into already implemented ones to improve those.
+The realized approaches are ant colony \cite{babaoglu_anthill_2002, gendreau_handbook_2010, wang_application_2014} (as a standalone solution as well as in combination with the previous greedy algorithm and the MinCost implementation) and Simulated annealing. \#TODO add more for SA (also add cites)
 
-When the best algorithms for this application have been determined, they will be integrated into the already existing Tour4Me application. The aim is for the app to calculate a high-quality tour for any typical roundtrip requests for running and cycling.
+After the most suitable algorithms for this application had been determined -- as well as relatively good parameter configurations for these -- they needed to be integrated into the already existing Tour4Me application. The aim was for the app to calculate a high-quality tour for any typical roundtrip requests for running and cycling.
 
 In addition to finding suitable algorithms that allow for fast and reliable computation of all typical roundtrips, working on the interface and data used also improves the usefulness of the app.
-It can be equally important to improve the interface, add more options like elevation data, include more information (for example previously used routes) etc. 
-There are several opportunities and options to improve the app not only by changing the used algorithms but also through adding user selection options and upgrading the GUI.
+Improving the interface, adding more options like elevation data, including more information (for example previously used routes) etc. can be equally important changes to increase the usability.
+There are several opportunities to improve the app not only by changing the used algorithms but also through adding user selection options and upgrading the GUI.
 The extension of available inputs and sliders to better specify tour parameters is an alternative approach towards the goal of making Tour4Me more usable.
-It is another option to put more work into improving the app aside from adding more or faster algorithms.
+Enhancing the interface and overall refining the usability builds a different pillar of improving the app aside from adding more or faster algorithms.
+
+
+
+
+
+
 
 
 

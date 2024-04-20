@@ -5,27 +5,85 @@
 As stated in the \href{chapter:introduction}{introduction}, most routing algorithms focus on shortest paths between two or more points.
 Many of those have been reviewed in several different surveys (see for example \cite{madkour_survey_2017, wayahdi_greedy_2021}).
 Additionally, there have been many more heuristic approaches, like local search variants \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} or different neighborhood based ideas \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} that offer faster results in exchange for not necessarily finding the one best solution, but only close approximations.
-Much research has been done and is still ongoing for these kinds of problems, stemming from the fact that many graph routing problems (for example the traveling salesman problem (TSP) \cite{gendreau_handbook_2010} or the vehicle routing problem \cite{braysy_vehicle_2005, irnich_sequential_2006}) are NP-hard \cite{reinelt_traveling_2003}.
+Much research has been done and is still ongoing for these kinds of problems, stemming from the fact that many graph routing problems (for example the traveling salesman problem (TSP) \cite{gendreau_handbook_2010}, the vehicle routing problem (VRP)  \cite{braysy_vehicle_2005, irnich_sequential_2006} or the arc orienteering Problem (AOP) \cite{agarwal_correlated_2023, buchin_tour4me_2022}) are NP-hard \cite{reinelt_traveling_2003}.
  
 Furthermore, finding a shortest path is important in various parts of daily life.
-Whether it is about discovering the best (shortest, quickest, most convenient) way to get to work or to a supermarket by car or bike, a good way to minimize travel time by bus or any other trip from one place to another.
+Whether the problem is discovering the best (shortest, quickest, most convenient) way to get to work or to a supermarket by car or bike, a good way to minimize travel time by bus or any other trip from one place to another.
 The examples for shortest path problems are numerous.
-Additionally, shortest paths are not limited to real-world networks but can also prove useful for social networks or any form of digital network.
-Here, different algorithms can help calculating friend networks or support the routing of data through virtual networks. \cite{madkour_survey_2017}
+Additionally, shortest paths are not limited to real-world networks but can also prove useful for social networks or any form of digital network \cite{potamias_fast_2009}.
+Here, different algorithms can help calculating friend networks or support the routing of data through virtual networks. 
 
 \section{Arc Orienteering Problem}
 \label{sec:aop}
 
+The arc orienteering problem (AOP) is a variant of the orienteering problem (OP) and forms the central concept for roundtrip generation.
+Souffiau et al.\ \cite{souffriau_planning_2011} describe the problem and underlying ideas as well as basic definitions of the AOP in detail.
+While many other variants of the OP mainly use the nodes of a graph to determine the benefit, the AOP focuses specifically on arcs - the edges - of the graph.
+Here, the underlying question is to generate a path that maximizes the profit of the contained edges while staying within the bounds of a maximum length ($C_{max}$). 
+Each edge has a cost $c_{ij}$ and a profit $p_{ij}$, which contribute to the overall length and overall profit of the generated path.
+The maximum length has to be defined by the user.
+Furthermore, a start- and endpoint have to be determined.
+For roundtrips, these two points are defined by the same vertex, so only the starting point $s$ needs to be selected.
 
+In a graph $G=(V,E)$, vertex positions are denoted by $v_{ij}$.
+Whether an edge is part of a path or not is given by $\chi_{ij}$
+Based on Souffiau et al., the objective is to maximize 
+
+\begin{equation}
+	\label{eq:aopMaximize}
+	\sum_{i=1}^{n} \sum_{j=1}^{n} c_{ij} \chi_{ij}
+\end{equation}
+
+while adhering to the following constraints:
+
+
+\begin{equation}
+	\label{eq:aopConstraints1}
+	\sum_{j=2}^{n} \chi_{1j} = \sum_{i=1}^{n-1} \chi_{in} = 1
+\end{equation}
+\begin{equation}
+	\label{eq:aopConstraints2}
+	\sum_{i=1}^{n} \chi_{ik} =  \sum_{j=1}^{n} \chi_{kj} \leq 1 \;\;\; \forall k = 2,...,n-1
+\end{equation}
+\begin{equation}
+	\label{eq:aopConstraints3}
+	\sum_{i=1}^{n}  \sum_{j=1}^{n} \chi_{ij} \leq C_{max}
+\end{equation}
+\begin{equation}
+	\label{eq:aopConstraints4}
+	2 \leq v_i \leq n \;\;\; \forall i = 2,...,n
+\end{equation}
+\begin{equation}
+	\label{eq:aopConstraints5}
+	v_i - v_j + 1 \leq (n-1)(1-\chi_{ij}) \;\;\; \forall i,j = 2,...,n; \;\;\; i \neq j
+\end{equation}
+\begin{equation}
+	\label{eq:aopConstraints6}
+	\chi_{ij} \in \{0,1\} \;\;\; \forall i,j=1,...,n
+\end{equation}
+
+
+The first constraint (\ref{eq:aopConstraints1}) ensures that both the starting point as well as the end point are part of the resulting path.
+For roundtrips, this constraint can be simplified to only use the first or the last point.
+The second constraint (\ref{eq:aopConstraints2}) establishes that the resulting tour is connected.
+Furthermore, all the contained vertices and edges have to be visited.
+The third constraint (\ref{eq:aopConstraints3}) guarantees that the resulting path will be at most of length $C_{max}$.
+While constraints four and five (\ref{eq:aopConstraints4}, \ref{eq:aopConstraints5}) ensure that no sub-tours are created.
+The last constraint (\ref{eq:aopConstraints6}) defines the permissible values (0 and 1) $\chi$ can have.
+These values indicate whether the edge is part of the solution (1) or not (0). 
+
+
+Using these constraints and the base formula (\ref{eq:aopMaximize}) to be maximized, the arc orienteering problem can be solved by various different algorithms.
 
 
 \section{Shortest Path algorithms}
 \label{sec:shortestPath}
 
+Despite not being directly usable for solving roundtrip problems, shortest paths still form an important background for the rest of the thesis. 
 Shortest path algorithms have been studied extensively for many years.
-In 1994, Deo and Pang created an overview tree for different types of shortest path sub-classes to give a better overview how to systematically classify a certain question into one of these categories.
+In 1994, Deo and Pang \cite{deo_shortest-path_1984} created an overview tree for different types of shortest path sub-classes to give a better overview how to systematically classify a certain question into one of these categories.
 The tree is visualized in figure \ref{fig:shortestPathTaxonomy}.
-This visualization gives a first idea of how complex the shortest path problem can be and how many different types of questions arise in different networks and with different goals. \cite{deo_shortest-path_1984}
+This visualization gives a first idea of how complex the shortest path problem can be and how many different types of questions arise in different networks and with different goals.
 
 
 \begin{figure}[ht]
@@ -35,66 +93,50 @@ This visualization gives a first idea of how complex the shortest path problem c
 	\label{fig:shortestPathTaxonomy}	
 \end{figure}
 
-Since the shortest path problem has been well-studied and still continues to advance in terms of the quality of the returned paths as well as in optimizing the running time of algorithms, the number of approaches to solve it is enormous.
-The above tree offers a systematic approach to classify problems and most fall into one of two categories: they are either single-source shortest paths (SSSP, on the leftmost branch the two bottom left items) or all-pairs shortest paths(APSP, on the leftmost branch the two bottom right items) \cite{madkour_survey_2017}.
-The first  - SSSP - only uses one single starting point and tries to find the one shortest path between it and one or all other vertices.
-The second aims to find shortest paths between all vertices of a graph - starting from a specified vertex or from every vertex to every other, which can be necessary for transportation networks and similar use cases. 
-Aside from these two categories, many more can be found to describe and sort types of approaches. 
-Madkour et al propose a different taxonomy than Deo and Pang did (see \cite{deo_shortest-path_1984} and figure \ref{fig:shortestPathTaxonomy}) to help classify the different algorithms into specific categories. \cite{madkour_survey_2017} 
+Since the shortest path problem has been well-studied and still continues to advance in terms of the quality of the returned paths as well as in optimizing the running time of algorithms, the number of approaches to solve this problem is enormous.
+The above tree offers a systematic approach to classify problems and most fall into one of two categories: they are either single-source shortest paths (SSSP, on the leftmost branch the two bottom left items) or all-pairs shortest paths(APSP, on the leftmost branch the two bottom right items).
 
-Which of these algorithms performs best is typically dependent on the type of graph it is being used on, the graph's structure and the specific problem to be solved. 
+
+The first  - SSSP - only uses one single starting point and tries to find the one shortest path between this point and one or all other vertices.
+These kinds of problems have common use cases in many daily routing problems. 
+One to one paths are already described in this chapter's introduction - finding shortest paths to a specified destination \cite{sanders_shortest_2019}.
+One to all paths can be useful for cases like fire departments or the police that might need a map of quickest routes for every place in their jurisdiction \cite{sanders_shortest_2019}.
+
+The second aims to find shortest paths between all vertices of a graph - starting from a specified vertex or from every vertex to every other, which can be necessary for transportation networks and similar use cases. 
+All to one path calculations can be useful in scenarios where an accident happens and out of all available emergency vehicles, the ones with the shortest paths have to be determined \cite{khamayseh_efficient_2015}.
+For all to all paths, many traffic-load calculation problems come to mind. 
+For example cases where trains have to be distributed along the rail network \cite{curtis_rewire_2012}.
+
+
+Aside from these two categories, many more can be found to describe and sort types of approaches. 
+
+
+Which of these shortest path algorithms performs best is typically dependent on the type of graph the implementation is being used on, the graph's structure and the specific problem to be solved. 
 A graph can be categorized as planar or not, directed or undirected, weighted or not, and carry only non-negative weights or allow negative ones as well, they can contain cycles or be acyclic and many more. 
 These different types determine which algorithms can be used as well as which will return better results.
 Some algorithms like Dijkstra can - without modifications - only be used on a specific type of graph. 
 In this case, the graph needs to have only non negative edges.
 Others are modified versions, created specifically to fix problems like graphs with negative edges. 
 
-\subsection{Single Source Shortest Paths}
-Following the classification graph (see \ref{fig:shortestPathTaxonomy}), on the bottom left, there is a class \glqq single-source\grqq, which envelops one to one and one to all paths.
-This class describes all problems that have a single source node and - following the respective parent nodes - have a usual path length, are unconstrained and find a singular short path that is not an approximation.
-These kinds of problems have common use cases in many daily routing problems. 
-One to one paths are already described in this chapter's introduction - finding shortest paths to a specified destination \cite{sanders_shortest_2019}.
-One to all paths can be useful for cases like fire departments or the police that might need a map of quickest routes for every place in their jurisdiction \cite{sanders_shortest_2019}.
 
-For these, many algorithms have been developed over time, trying to solve more types of problems. 
-Some algorithms are for undirected graphs (for example Dijkstra \cite{wayahdi_greedy_2021}), some for directed graphs with non-negative weights or with arbitrary weights but without negative cycles (like Bellman-Ford-Moore \cite{cherkassky_shortest_1996}).
-The respective lists are long and for many more specific cases, there are even more specific algorithms \cite{deo_shortest-path_1984, madkour_survey_2017}. 
-
-
-
-\subsection{All Pairs Shortest Paths}
-The path on the left of the classification graph also shows the class \glqq all nodes are sources\grqq, which encompasses the all to one and all to all cases. 
-In these lie all problems where it is necessary to build paths from every node to either a single destination or to all other nodes.
-As with single source shortest paths, this branch also describes paths that have a usual length, are unconstrained and give the respective best shortest path for every pair of nodes. 
-All to one path calculations can be useful in scenarios where an accident happens and out of all available emergency vehicles, the ones with the shortest paths have to be determined \cite{khamayseh_efficient_2015}.
-For all to all paths, many traffic-load calculation problems come to mind. 
-For example cases where trains have to be distributed along the rail network \cite{curtis_rewire_2012}.
-
-
-\subsection{Heuristic Approaches}
+\section{Heuristic Approaches}
+\label{sec:metaHeuristics}
 
 Additionally to exact approaches, heuristics can be used to improve the runtime of an algorithm.
-A heuristic is a technique that is based on experience or statistical insights.
+A heuristic is a technique that is based on experience or statistical insights \cite{gendreau_handbook_2010}.
 The downside of using such an approach is, that there will no longer be a guarantee that the result is the global optimum, as heuristics specifically only find partial or approximate solutions to a given problem. 
-In many cases where it would take too much time or space to find the actual optimal solution, heuristics can be used to find the best possible solution within the given bounds.
+In many cases where exact algorithms would take too much time or space to find the actual optimal solution, heuristics can be used to find the best possible solution within the given bounds.
 
-For these, several different ideas have been formed. 
-These can then be categorized into construction heuristics, improvement heuristics and meta-heuristics \cite{ropke_heuristic_2005}.
-Sometimes, a fourth category for two-phase heuristics is included as well (see \cite{}).
-
-\#TODO is this correct for heuristics in general? The paper refers to heuristics for VRP
+For these heuristics, several different ideas have been formed. 
+These can then be categorized into construction heuristics, improvement heuristics and meta-heuristics \cite{laporte_5_2002,ropke_heuristic_2005}.
+However, differentiating between these different types is not always trivial and oftentimes, the line is blurred.
 
 Construction heuristics build their solution from a starting point until a certain boundary is reached. 
 They typically don't have a separate improvement phase.
 Improvement heuristics try to improve an already existing solution.
 They perform improvement steps several times until a specified boundary is reached.
 These boundaries can be e.g. a time limit or reaching the threshold for a good enough approximation.
-(Iterative) Local Search and Neighborhoods are examples of improvement heuristics that can be used to reach a more optimized solution. \cite{laporte_5_2002, ropke_heuristic_2005}
-
-
-
-\section{Meta-heuristics}
-\label{sec:metaHeuristics}
+(Iterative) Local Search and Neighborhoods are examples of improvement heuristics that can be used to reach a more optimized solution.
 
 Meta-heuristics are a form of heuristic approaches.
 As such, they also try to find an approximate solution to a problem that is as optimal as possible.
@@ -103,7 +145,7 @@ These are used to enable the meta-heuristics to not produce only solution that a
 
 Classical heuristics oftentimes carry the inherent risk of only finding a local optimum that can be far from the actual global one.
 To reduce this risk, higher level approaches are necessary.
-These can include using several neighborhood structures to broaden the search space or entirely new concepts like the Ant Colony approach or Genetic Algorithms. \cite{gendreau_handbook_2010}
+These can include using several neighborhood structures to broaden the search space or entirely new concepts like the Ant Colony approach or Genetic Algorithms. 
 
 The meta-heuristic ideas that will be used in this thesis will be explained in the following subsections.
 
@@ -117,12 +159,12 @@ Real ants start off by walking around on random paths starting from their nest.
 When they discover a food source, they pick up the food and walk back to their nest.
 On this way, they distribute a substance called pheromones.
 These can then be detected by other ants and indicate to them, that a path leads to a potentially good food source. 
-Other ants then are more likely to follow a path with more pheromone placed on it and will in turn lay down their pheromone as well, leading to an accumulation of these on good paths.
+Other ants then are more likely to follow a path with more pheromone placed on the respective edges and will in turn lay down their pheromone as well, leading to an accumulation of the pheromones on good paths.
 Over time, the pheromones dissipate and when they aren't renewed, will evaporate completely, decreasing the attractiveness of the corresponding path \cite{gendreau_handbook_2010, dorigo_ant_1996}. 
 
 Furthermore, pheromone distribution also inherently leads to using shorter paths. 
 When several ants have to choose between paths, they will first select at random.
-However, as soon as one ant discovers the food, turns around and distributes its pheromone on the way back, it increases the likelihood of it's path being taken.
+However, as soon as one ant discovers the food, turns around and distributes pheromone on the way back, this process automatically increases the likelihood of the respective path being taken by other ants.
 Here, the shorter paths will be first to receive more pheromones as the ants returning will be quicker.
 Due to the faster accumulation, more ants will choose this shorter path and thus place even more pheromone on it, leading to a self-reinforcing loop that converges when all ants choose the best path only.
 Then, all worse paths will loose all their pheromone over time and leave the best result as the only remaining path \cite{gendreau_handbook_2010, dorigo_ant_1996}.
@@ -131,15 +173,15 @@ To illustrate pheromone distribution, an example illustrates in figure \ref{fig:
 In part \textbf{a} on the left side, there are many ants that run between two points A and E. 
 These could be the nest and an interesting food source.
 In part \textbf{b} in the middle, an obstacle has been added.
-This now leaves the ants with a choice, which path to follow. 
+This construction now leaves the ants with a choice, which path to follow. 
 In the beginning, the likelihood of picking either path will be around 50\%.
 While taking the path, the ants distribute pheromones on it. 
 On the shorter route, the ants will end up reaching the food source earlier, thus returning quicker than the ones who took the long path and distribute more pheromone on the shorter path.
 For the first few ants, there will be almost no change in the attractiveness of either path.
 However, the more ants take the short tour and return quicker, the more pheromone will accumulate on that path.
-This leads to a shift in the attractiveness, making the shorter path more likely to be chosen by later ants.
+This new pheromone placement and distribution leads to a shift in the attractiveness, making the shorter path more likely to be chosen by later ants.
 These ants will in turn again increase the amount of pheromones placed, making the path even more attractive.
-So, the ants create a self-reinforcing loop of positive feedback through their pheromones which eventually leads to a state where all ants always choose the shorter option.
+Thus, the ants create a self-reinforcing loop of positive feedback through their pheromones which eventually leads to a state where all ants always choose the shorter option.
 
 
 \begin{figure}[H]
@@ -154,7 +196,7 @@ So, the ants create a self-reinforcing loop of positive feedback through their p
 This behavior can be replicated in virtual graphs for various routing problems.
 Ant system has been first introduced in 1990 by Dorigo et al\cite{dorigo_ant_1996}.
 In the paper, the authors describe how to use ants for solving the traveling salesman problem (TSP).
-This is different from the question of finding a roundtrip with a certain length (plus additional user preferences).
+This problem is different from the question of finding a roundtrip with a certain length (plus additional user preferences).
 However, in the paper, they stress the adaptability of ant system approaches, showing both versatility and robustness on different example problems\cite{dorigo_ant_1996}.
 
 
@@ -164,10 +206,10 @@ To transform the analogy of real ants into an algorithm, some formulas and calcu
 Ants are very simple agents. 
 They can only do two things:
 Pick the next node to move to and place pheromone on a path.
-They communicate with other ant agents through the pheromone trails, making it a decentralized way of communication without the need for a central agent.
+They communicate with other ant agents through the pheromone trails, making this process a decentralized way of communication without the need for a central agent.
 For the algorithm, a set amount of $m$ ants moves through the graph, tries to find a good tour and places pheromones on edges.
 Every ant has a defined amount of pheromone to place. 
-How much of it will be laid on a path can be calculated in several different ways. 
+How much of the pheromone will be laid on a path can be calculated in several different ways. 
 Dorigo et al propose the following three ideas\cite{dorigo_ant_1996}:
 
 \begin{equation}\label{eq:antCycle}
@@ -196,22 +238,22 @@ Dorigo et al propose the following three ideas\cite{dorigo_ant_1996}:
 \end{equation}
 
 Here, equation \ref{eq:antCycle} is the default the authors used for solving the TSP.
-Q is a constant that has to be picked according to the problem in question.
-$L_k$ describes the length of the whole tour.
+The constant Q has to be picked according to the problem in question.
+Variable $L_k$ describes the length of the whole tour.
 This property makes sense for the TSP setting, but is relatively useless for the case of tours with a fixed length, as it will be the same value for every ant and every run made.
 In this case, where the user defines the length of the tour, $L_k$ will only scale the values picked for Q\cite{dorigo_ant_1996}.
 
 Equation \ref{eq:antDensity} only uses the constant Q to describe pheromone placement. 
 Here, neither the full tour length nor individual edge costs are taken into account. 
 Pheromone is placed evenly on all edges.
-This equates to a not-scaled version of equation \ref{eq:antCycle} with the given use-case of a set length for the tour\cite{dorigo_ant_1996}.
+This way of placing pheromones equates to a not-scaled version of equation \ref{eq:antCycle} with the given use-case of a set length for the tour\cite{dorigo_ant_1996}.
 
 The last equation \ref{eq:antQuantity} divides the constant by the length - or the cost - of each edge when it is used. 
-Doing this reduces the amount of pheromone placed on longer edges proportionally to shorter edges. 
+This division reduces the amount of pheromone placed on longer edges proportionally to shorter edges. 
 While this equation is not influenced directly by the fixed length, this property can still cause the equation to be less useful for tours with a specified length than for TSP.
 Since tours that are meant to cover a fixed distance are different from the TSP, where a shortest path that visits all selected cities is to be found, the last equation seems like the least promising candidate for useful pheromone distribution\cite{dorigo_ant_1996}.
 
-It is possible to define other ways to calculate the pheromone placement. 
+The pheromone calculation and placement can be defined with different formulas depending on the problem and what should be optimized. 
 Which option turns out to be the best fitting one will be described in the evaluation chapter \ref{chapter:evaluation}.
 
 
@@ -223,9 +265,8 @@ This value is described by $\Delta\tau_{ij}$ as follows\cite{dorigo_ant_1996}:
 \end{equation}
 
 This overall value can then be used to calculate the so called \glqq intensity\grqq{} of the placed pheromone trail.
-Since pheromones evaporate over time, this property has to be modeled as well. 
-To do this, a new parameter $\rho$ needs to be introduced. It describes how much of the pheromone stays on the trail between two time steps.
-So, the overall pheromone intensity can be described by
+Since pheromones evaporate over time, this property has to be modeled as well, using a new parameter $\rho$, which describes how much of the pheromone stays on the trail between two time steps.
+Thus, the overall pheromone intensity can be described by
 
 
 \begin{equation}\label{eq:trailIntensity}
@@ -236,7 +277,7 @@ where $\tau_{ij}(t)$ is the previous pheromone intensity and t+n describes the n
 
 Using these calculations, the pheromone intensity on all paths can be represented. 
 What's left is determining the probability with which ants will choose a certain edge over the other options.
-To do this, two more properties are needed: the visibility of an edge and a tabu-list (or rather a list of allowed nodes).
+For this calculation, two more properties are needed: the visibility of an edge and a tabu-list (or rather a list of allowed nodes).
 The tabu-list contains all nodes that have been visited before.
 Since roundtrips should - per default - be round rather than the same path run in two directions, this property is needed to ensure no city is visited more than once.
 In chapter \ref{chapter:evaluation}, different configurations are tested to represent different shapes and allow for more options users can define. 
