@@ -327,7 +327,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Metadata.Add( "Surroundings: " + ( Path.SurroundingTags.Length == 0 ? "None available" : Path.SurroundingTags ) );
             Metadata.Add( "Path Types: " + ( Path.PathTypes.Length == 0 ? "None available" : Path.PathTypes ) );
             Metadata.Add( "Surfaces: " + ( Path.Surfaces.Length == 0 ? "None available" : Path.Surfaces ) );
-            Metadata.Add( "Shape: " + Path.CoveredArea );
+            Metadata.Add( "Shape: " + ( Path.CoveredArea * 100 ) );
 
             outputString = new StringBuilder( "[" );
 
@@ -368,7 +368,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public double GetQuality ( double profit, double area )
         {
-            return ( EdgeProfitImportance * profit / TargetDistance ) + ( CoveredAreaImportance * area / ( Math.PI * TargetDistance * TargetDistance ) );
+            return ( EdgeProfitImportance * profit / TargetDistance ) +
+                      ( CoveredAreaImportance * area / ( Math.PI * TargetDistance * TargetDistance )
+                      / Math.Abs( TargetDistance - Path.Length ) );
         }
 
         public double GetProfit ( Path path )

@@ -154,6 +154,8 @@ namespace Tour4MeAdvancedProject.Solver
             CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
             CurrentProblem.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
 
+            CurrentProblem.Path.CoveredArea = CurrentProblem.Path.Quality;
+
             return bestQuality == -1 ? SolveStatus.Unsolved : SolveStatus.Feasible;
         }
 
