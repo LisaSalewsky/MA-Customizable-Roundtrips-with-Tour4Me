@@ -2,7 +2,7 @@
 \chapter{Implemented Changes}
 \label{chapter:implementedChanges}
 
-This work extends Tour4Me\footnote{\url{http://tour4me.cs.tu-dortmund.de/}} , which is an application written in C++ and HTML. 
+This work extends Tour4Me\footnote{\url{http://tour4me.cs.tu-dortmund.de/}}, which is an application written in C++ and HTML. 
 The implemented interface uses C\# as programming language to enable easy porting of the web application to a desktop or mobile application.
 To improve the query times, a spatial database was added. 
 Reasons for and positive effects of this decision are described in the following section.
@@ -102,8 +102,14 @@ The \texttt{custom\textunderscore filter} is defined to select only those edges,
 
 The excluded types are used for the following street types according to the OSM Wiki:
 
-\centering
+
+Next, the elevation data has to be added for the nodes of this graph.
+These information are not part of osmnx but need to be retrieved from a different source.
+For this thesis, Open Elevation\footnote{\url{https://open-elevation.com/}, last accessed: 20.03.2024} was used.
+
+
 \begin{table}[ht]
+	\centering
 	\begin{tabular}{l|l}
 		Highway type & Description\\
 		\hline
@@ -125,11 +131,8 @@ The excluded types are used for the following street types according to the OSM 
 \end{table}
 
 \footnotetext{\url{https://wiki.openstreetmap.org/wiki/Key:highway}, last accessed: 19.04.2024}
-
-Next, the elevation data has to be added for the nodes of this graph.
-These information are not part of osmnx but need to be retrieved from a different source.
-For this thesis, Open Elevation\footnote{\url{https://open-elevation.com/}, last accessed: 20.03.2024} was used.
 The 
+
 
 \subsection{Interface and Front end changes}
 \label{subsec:interfaceAndFrontendChanges}

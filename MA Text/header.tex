@@ -3,12 +3,18 @@
 \usepackage[a4paper,left=3.5cm,right=2.5cm,bottom=3.5cm,top=3cm]{geometry}
 
 \usepackage[german,english]{babel}
-
 \usepackage[pdftex]{graphicx,color}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{amsmath,amssymb, subcaption}
 \usepackage{mathtools}
 \usepackage{listings}
+
+% Theorem-Umgebungen
+\usepackage[amsmath,thmmarks]{ntheorem}
+
+% Korrekte Darstellung der Umlaute
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 
 
 \usepackage[style=numeric , isbn=false, url=false,
@@ -18,12 +24,7 @@ doi=true, backend=biber,defernumbers=false,uniquename=false, autolang=hyphen,bib
 	\clearfield{note}%
 }
 
-% Theorem-Umgebungen
-\usepackage[amsmath,thmmarks]{ntheorem}
-
-% Korrekte Darstellung der Umlaute
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage{csquotes}
 
 % Algorithmen
 \usepackage[plain,chapter]{algorithm}
