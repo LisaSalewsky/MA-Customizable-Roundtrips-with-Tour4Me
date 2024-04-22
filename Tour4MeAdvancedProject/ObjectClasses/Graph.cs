@@ -268,7 +268,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 CreateNodesAndEdgesFromDBCenterRadius( startLat, startLon, radius, cNodes, cEdges, VNodes, GIdNode );
 
-                RemoveDeadEnds();
+                RemoveAllDeadEndsPlusNewOnes();
             }
         }
 
@@ -1036,6 +1036,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             HashSet<Node> deadEndNodes = new HashSet<Node>();
             HashSet<Edge> deadEndEdges = new HashSet<Edge>();
+
             foreach (Edge edge in VEdges)
             {
                 bool nodeOrNeighborDeleted = false;
@@ -1079,6 +1080,34 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             }
         }
+        public void RemoveAllDeadEndsPlusNewOnes ()
+        {
+            HashSet<Node> deadEndNodes = VNodes.Where( x => x.Incident.Count == 1 ).ToHashSet();
+
+            while (deadEndNodes.Count > 0)
+            {
+                Node node = deadEndNodes.First();
+                _ = deadEndNodes.Remove( node );
+                if (node.Incident.Count > 0)
+                {
+
+                    Edge edge = node.Incident[ 0 ];
+                    Node neighbor = edge.SourceNode.GraphNodeId == node.GraphNodeId ? edge.TargetNode : edge.SourceNode;
+
+
+                    _ = VEdges[ edge.GraphId ] = null;
+                    _ = neighbor.Incident.Remove( edge );
+
+                    if (neighbor.Incident.Count == 1)
+                    {
+                        _ = deadEndNodes.Add( neighbor );
+                    }
+                }
+                _ = VNodes[ node.GraphNodeId ] = null;
+            }
+
+        }
+
 
     }
 

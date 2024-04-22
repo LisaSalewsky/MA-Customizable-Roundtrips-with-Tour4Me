@@ -47,6 +47,11 @@ namespace Tour4MeAdvancedProject.Helper
 
             currentElevationDiff += elevationDiff;
         }
+        public static void CalculateElevationDiff ( Edge edge, ref double currentElevationDiff )
+        {
+            double elevationDiff = Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation );
+            currentElevationDiff += elevationDiff;
+        }
 
     }
 }
