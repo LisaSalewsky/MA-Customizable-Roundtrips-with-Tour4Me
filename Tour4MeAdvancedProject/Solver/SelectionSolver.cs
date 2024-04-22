@@ -82,6 +82,7 @@ namespace Tour4MeAdvancedProject.Solver
             P.Path.PathTypes = string.Join( ", ", addedPathTypes );
             P.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
             P.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
+            P.Path.Quality = P.GetQuality( P.GetProfit( P.Path ), P.GetArea( P.Path ), P.Path.Elevation );
 
             return SolveStatus.Feasible;
         }

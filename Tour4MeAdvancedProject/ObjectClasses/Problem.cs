@@ -366,11 +366,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
         }
 
-        public double GetQuality ( double profit, double area )
+        public double GetQuality ( double profit, double area, double elevation )
         {
             return ( EdgeProfitImportance * profit / TargetDistance ) +
-                      ( CoveredAreaImportance * area / ( Math.PI * TargetDistance * TargetDistance )
-                      / Math.Abs( TargetDistance - Path.Length ) );
+                    ( ( ( CoveredAreaImportance * area * 100 / ( Math.PI * TargetDistance * TargetDistance ) ) +
+                    ( ElevationImportance * elevation / MaxElevation / TargetDistance ) )
+                    * 100 / Math.Exp( Math.Abs( TargetDistance - Path.Length ) ) );
         }
 
         public double GetProfit ( Path path )

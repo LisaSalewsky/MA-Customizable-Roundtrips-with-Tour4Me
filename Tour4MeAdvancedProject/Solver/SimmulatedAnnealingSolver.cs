@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tour4MeAdvancedProject.Helper;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
@@ -8,14 +9,14 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class SimmulatedAnnealingSolver : Selection
     {
-        public Algo Algo { get; set; } = Algo.minCost;
+        public Algo Algo { get; set; } = Algo.Greedy;
         // runs with changing temperature
         public int Runs { get; set; } = 50;
         // repetitions at each temperature
         public int Repetitions { get; set; } = 100;
         public double Temperature { get; set; } = 0.1;
         public Random Random { get; set; } = new Random();
-        public int NumberWaypoints { get; set; } = 10;
+        public int NumberWaypoints { get; set; } = 20;
 
 
 
@@ -82,8 +83,8 @@ namespace Tour4MeAdvancedProject.Solver
             if (status == SolveStatus.Feasible || status == SolveStatus.Optimal)
             {
                 double currentQuality = P.Path.Quality;
-                double initProb = 0.5;
-                double maxTemperature = Temperature;
+                double initProb = 0.6;
+                _ = Temperature;
                 for (int i = 0; i < Runs; i++)
                 {
                     Problem currentProblem = P;
@@ -121,7 +122,7 @@ namespace Tour4MeAdvancedProject.Solver
                         }
                     }
                     // change temperature according to difference in quality and normalize by maxTemperetature
-                    Temperature = ( -diff ) / Math.Log( initProb ) / maxTemperature;
+                    Temperature = -Math.Abs( diff ) / Math.Log( initProb );
                 }
             }
             P.Path.CoveredArea = P.Quality;
@@ -155,7 +156,7 @@ namespace Tour4MeAdvancedProject.Solver
             _ = predSuccWaypointIdxs.ToString();
 
             P.Path = currentPath;
-            currentPath.Quality = P.GetQuality( P.GetProfit( currentPath ), P.GetArea( currentPath ) );
+            currentPath.Quality = P.GetQuality( P.GetProfit( currentPath ), P.GetArea( currentPath ), P.Path.Elevation );
 
             return currentPath;
         }
@@ -179,6 +180,7 @@ namespace Tour4MeAdvancedProject.Solver
                     }
                 }
             }
+
             // select middlemost point as waypoint
             predSuccWaypointIdxs = Tuple.Create( waypoints[ newWaypointIdx - 1 ], waypoints[ newWaypointIdx + 1 ] );
             int selector = Math.Abs( ( availableNodes.Count - 1 ) / 2 );
@@ -264,6 +266,9 @@ namespace Tour4MeAdvancedProject.Solver
             _ = newWaypoint.GraphNodeId == p.Path.Visited[ predIdx ];
             _ = newWaypoint.GraphNodeId == p.Path.Visited[ succIdx ];
 
+            double elevationDiff = p.Path.Elevation;
+            double maxSteepness = p.Path.Steepness;
+
             //while (predIsWaypoint || succIsWaypoint)
             //{
             //    int randomIndex = rnd.Next( 1, waypointIdxs.Count - 1 );
@@ -283,8 +288,17 @@ namespace Tour4MeAdvancedProject.Solver
             // look at all nodes and edges between pred and succ waypoint & remove them
             for (int i = predIdx + 1; i < succIdx; i++)
             {
+                Edge currentEdge = pathEdges[ predIdx + 1 ];
+                elevationDiff -= Math.Abs( currentEdge.SourceNode.Elevation - currentEdge.TargetNode.Elevation ) / 2;
+
                 visited.RemoveAt( predIdx + 1 );
                 pathEdges.RemoveAt( predIdx + 1 );
+            }
+            maxSteepness = pathEdges.Max( x => Math.Abs( x.SourceNode.Elevation - x.TargetNode.Elevation ) / x.Cost * 100 );
+
+            foreach (Edge edge in edges)
+            {
+                Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
             }
 
 
@@ -294,6 +308,7 @@ namespace Tour4MeAdvancedProject.Solver
 
             p.Path.Visited = visited;
             p.Path.Edges = pathEdges;
+            p.Path.Elevation = elevationDiff / 2;
 
             return p.Path;
         }
@@ -307,20 +322,32 @@ namespace Tour4MeAdvancedProject.Solver
             List<int> visited = p.Path.Visited;
             List<Edge> pathEdges = p.Path.Edges;
 
+            double elevationDiff = p.Path.Elevation;
+            double maxSteepness = p.Path.Steepness;
+
             // calculate new paths to fill gap while using new waypoint
             (List<Edge> edgesL, List<int> nodeIdsL) = p.Graph.GetShortestPath( visited[ predIdx ], newWaypoint.GraphNodeId );
             (List<Edge> edgesR, List<int> nodeIdsR) = p.Graph.GetShortestPath( newWaypoint.GraphNodeId, visited[ succIdx ] );
 
-
-
             // look at all nodes and edges between pred and succ waypoint & remove nodes and edges to allow adding new waypoint
             for (int i = predIdx + 1; i < succIdx; i++)
             {
+                Edge currentEdge = pathEdges[ predIdx + 1 ];
+                elevationDiff -= Math.Abs( currentEdge.SourceNode.Elevation - currentEdge.TargetNode.Elevation ) / 2;
+
                 visited.RemoveAt( predIdx + 1 );
                 pathEdges.RemoveAt( predIdx + 1 );
             }
+            maxSteepness = pathEdges.Max( x => Math.Abs( x.SourceNode.Elevation - x.TargetNode.Elevation ) / x.Cost * 100 );
 
-
+            foreach (Edge edge in edgesL)
+            {
+                Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
+            }
+            foreach (Edge edge in edgesR)
+            {
+                Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
+            }
 
             visited.InsertRange( predIdx + 1, nodeIdsL );
             pathEdges.InsertRange( predIdx + 1, edgesL );
@@ -330,6 +357,8 @@ namespace Tour4MeAdvancedProject.Solver
 
             p.Path.Visited = visited;
             p.Path.Edges = pathEdges;
+            p.Path.Elevation = elevationDiff / 2;
+            p.Path.Steepness = maxSteepness;
 
             return p.Path;
         }

@@ -15,7 +15,7 @@ namespace Tour4MeAdvancedProject.Solver
         public override SolveStatus Solve ( ref Problem CurrentProblem )
         {
             double initRingSize = 5;
-            double tempRingSize = 1000;
+            double tempRingSize = 500;
 
             List<Tuple<int, Path>> sRing = CurrentProblem.Graph.CalculateRing( CurrentProblem.Start, ( CurrentProblem.TargetDistance / 3 ) - initRingSize, ( CurrentProblem.TargetDistance / 3 ) + initRingSize, 100, null );
 
@@ -87,6 +87,7 @@ namespace Tour4MeAdvancedProject.Solver
 
                             finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
+                            currentElevationDiff += Math.Abs( v.SourceNode.Elevation - v.TargetNode.Elevation ) / 2;
                         }
 
                         foreach (Edge v in tPair.Item2.Edges)
@@ -100,6 +101,7 @@ namespace Tour4MeAdvancedProject.Solver
                             //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
+                            currentElevationDiff += Math.Abs( v.SourceNode.Elevation - v.TargetNode.Elevation ) / 2;
                         }
 
                         for (int i = pathSB.Edges.Count - 1; i >= 0; i--)
@@ -115,13 +117,14 @@ namespace Tour4MeAdvancedProject.Solver
                             //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
                             finalEdges.Add( v );
+                            currentElevationDiff += Math.Abs( v.SourceNode.Elevation - v.TargetNode.Elevation ) / 2;
                         }
 
                         //Debug.Assert( CurrentProblem.Graph.GetEdge( finalPath[ finalPath.Count - 1 ], finalPath[ 0 ] ) != null );
 
                         finalPath.Add( finalPath[ 0 ] );
 
-                        double quality = CurrentProblem.GetQuality( profit, area );
+                        double quality = CurrentProblem.GetQuality( profit, area, currentElevationDiff );
 
                         if (quality > bestQuality)
                         {
