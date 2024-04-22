@@ -11,10 +11,10 @@ namespace Tour4MeAdvancedProject.Solver
     {
         public Algo Algo { get; set; } = Algo.Greedy;
         // runs with changing temperature
-        public int Runs { get; set; } = 50;
+        public int Runs { get; set; } = 100;
         // repetitions at each temperature
-        public int Repetitions { get; set; } = 100;
-        public double Temperature { get; set; } = 0.1;
+        public int Repetitions { get; set; } = 200;
+        public double Temperature { get; set; } = 0.3;
         public Random Random { get; set; } = new Random();
         public int NumberWaypoints { get; set; } = 20;
 
@@ -82,8 +82,9 @@ namespace Tour4MeAdvancedProject.Solver
 
             if (status == SolveStatus.Feasible || status == SolveStatus.Optimal)
             {
+                NumberWaypoints = P.Path.Visited.Count() / 10;
                 double currentQuality = P.Path.Quality;
-                double initProb = 0.6;
+                double initProb = 0.7;
                 _ = Temperature;
                 for (int i = 0; i < Runs; i++)
                 {

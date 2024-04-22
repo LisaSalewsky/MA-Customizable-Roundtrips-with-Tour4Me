@@ -370,15 +370,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     _ = reader.GetGuid( 0 );
                     Guid sourceId = reader.GetGuid( reader.GetOrdinal( "SourceNodeId" ) );
                     Guid targetId = reader.GetGuid( reader.GetOrdinal( "TargetNodeId" ) );
-                    int idxTags = reader.GetOrdinal( "Tags" );
-                    List<string> tags = new List<string>();
-                    if (!reader.IsDBNull( idxTags ))
-                    {
-                        tags = reader.GetString( idxTags )?.Split( ',' ).ToList();
-                    }
-                    bool reversed = reader.GetBoolean( reader.GetOrdinal( "Reversed" ) );
-                    bool oneWay = reader.GetBoolean( reader.GetOrdinal( "OneWay" ) );
-                    double cost = (double)reader.GetDecimal( reader.GetOrdinal( "Cost" ) );
 
                     if (!GIdNode.ContainsKey( sourceId ) || !GIdNode.ContainsKey( targetId ))
                     {
@@ -392,6 +383,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         //return;
                         continue;
                     }
+                    int idxTags = reader.GetOrdinal( "Tags" );
+                    List<string> tags = new List<string>();
+                    if (!reader.IsDBNull( idxTags ))
+                    {
+                        tags = reader.GetString( idxTags )?.Split( ',' ).ToList();
+                    }
+                    bool reversed = reader.GetBoolean( reader.GetOrdinal( "Reversed" ) );
+                    bool oneWay = reader.GetBoolean( reader.GetOrdinal( "OneWay" ) );
+                    double cost = (double)reader.GetDecimal( reader.GetOrdinal( "Cost" ) );
 
                     Node source = VNodes[ sId ];
                     Node target = VNodes[ tId ];

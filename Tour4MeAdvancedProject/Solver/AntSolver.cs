@@ -83,7 +83,7 @@ namespace Tour4MeAdvancedProject.Solver
                         (solutionEdges, visitedNodes) = currentAnt.Tour( ref tempProblem, UsePenalty, UseBacktracking );
 
                         // now update the pheromone trail (trailInensity)
-                        currentAnt.UpdatePheromoneTrail( ref tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
+                        currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
                     }
                 }
                 );

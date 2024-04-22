@@ -10,16 +10,17 @@
 
 #form1 {
     background: var(--lighter-highlight-color);
+    height:100vh;
 }
 
 #header-nav {
     background-color: var(--dark-bg-color);
-    color: whitesmoke;
+    color: var(--lighter-highlight-color);
 }
 
 #header-nav a {
     background-color: var(--dark-bg-color);
-    color: whitesmoke;
+    color: var(--lighter-highlight-color);
 }
 
 #header-nav a:hover {
@@ -33,13 +34,13 @@
 }
 
 #header-nav .inactive:hover{
-    color: whitesmoke;
+    color: var(--primary-text-color);
    pointer-events: none;
    cursor: default;
 }
 
 .footerlinks {
-    color: whitesmoke;
+    color: var(--lighter-highlight-color);
     text-decoration: none !important;
 }
 
@@ -47,20 +48,28 @@
     color: var(--highlight-color);
 }
 
- footer {
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
     width: 100%;
+    height: 5vh;
+    text-align: center;
+    z-index:3;
 }
  footer, .container:after {
-    height: 20px;
+    height: 5vh;
 }
 
 #footer1 {
-    background: var(--primary-bg-color);
+    background: var(--secondary-dark-bg-color);
+    height: 100%;
+    padding: 7px;
 }
 
-#footer2 {
+/*#footer2 {
     background: var(--secondary-dark-bg-color);
-}
+}*/
 
 
 .loader {
