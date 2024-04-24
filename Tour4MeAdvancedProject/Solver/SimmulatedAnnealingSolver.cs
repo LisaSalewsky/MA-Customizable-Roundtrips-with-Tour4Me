@@ -11,9 +11,9 @@ namespace Tour4MeAdvancedProject.Solver
     {
         public Algo Algo { get; set; } = Algo.Greedy;
         // runs with changing temperature
-        public int Runs { get; set; } = 100;
+        public int Runs { get; set; } = 50;
         // repetitions at each temperature
-        public int Repetitions { get; set; } = 200;
+        public int Repetitions { get; set; } = 50;
         public double Temperature { get; set; } = 0.3;
         public Random Random { get; set; } = new Random();
         public int NumberWaypoints { get; set; } = 20;
@@ -151,9 +151,9 @@ namespace Tour4MeAdvancedProject.Solver
 
             // Add / Remove / Move & use new path if quality gets better (or with temperature 
 
-            //currentPath = AddWaypoint( waypoints, predSuccWaypointIdxs, newWaypoint, problem );
+            currentPath = AddWaypoint( waypoints, predSuccWaypointIdxs, newWaypoint, problem );
             //currentPath = RemoveWaypoint( waypoints, problem, rnd, newWaypoint, predSuccWaypointIdxs );
-            currentPath = MoveWaypoint( waypoints, problem, rnd, newWaypoint, predSuccWaypointIdxs );
+            //currentPath = MoveWaypoint( waypoints, problem, rnd, newWaypoint, predSuccWaypointIdxs );
             _ = predSuccWaypointIdxs.ToString();
 
             P.Path = currentPath;
@@ -183,7 +183,7 @@ namespace Tour4MeAdvancedProject.Solver
             }
 
             // select middlemost point as waypoint
-            predSuccWaypointIdxs = Tuple.Create( waypoints[ newWaypointIdx - 1 ], waypoints[ newWaypointIdx + 1 ] );
+            predSuccWaypointIdxs = Tuple.Create( waypoints[ newWaypointIdx - 1 ], waypoints[ newWaypointIdx + 1 >= waypoints.Count() ? 0 : newWaypointIdx + 1 ] );
             int selector = Math.Abs( ( availableNodes.Count - 1 ) / 2 );
             Node tempWaypoint = P.Graph.VNodes[ nodes[ availableNodes[ selector ] ] ];
             List<Edge> incidentCandidtates;
