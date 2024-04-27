@@ -367,9 +367,9 @@ namespace Tour4MeAdvancedProject
             switch (status)
             {
                 case SolveStatus.Optimal:
-                    problem.Metadata.Add( "Profit: " + problem.GetProfit( problem.Path ) +
+                    problem.Metadata.Add( "Profit: " + problem.GetProfit( problem.Path.Visited ) +
                                          " (theoretical upper bound: " + problem.TargetDistance + ")" );
-                    problem.Metadata.Add( "Area: " + Math.Abs( problem.GetArea( problem.Path ) ) +
+                    problem.Metadata.Add( "Area: " + Math.Abs( problem.GetArea( problem.Path.Visited ) ) +
                                          " (theoretical upper bound: " +
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
@@ -384,9 +384,9 @@ namespace Tour4MeAdvancedProject
                 //    problem.OutputToGPX(filename);
                 //}
                 case SolveStatus.Feasible:
-                    problem.Metadata.Add( "Profit: " + problem.GetProfit( problem.Path ) +
+                    problem.Metadata.Add( "Profit: " + problem.GetProfit( problem.Path.Visited ) +
                                          " (theoretical upper bound: " + problem.TargetDistance + ")" );
-                    problem.Metadata.Add( "Area: " + Math.Abs( problem.GetArea( problem.Path ) ) +
+                    problem.Metadata.Add( "Area: " + Math.Abs( problem.GetArea( problem.Path.Visited ) ) +
                                          " (theoretical upper bound: " +
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );

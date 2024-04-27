@@ -151,7 +151,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
                 {
-                    parent = AddEdgeAndContinue( visitableNodes, queue, visited, solutionVisited, pickedEdge, ref boudingCoordinates, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentDistance, currentNode );
+                    parent = AddEdgeAndContinue( CurrentProblem.Path, visitableNodes, queue, visited, solutionVisited, pickedEdge, ref boudingCoordinates, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentDistance, currentNode );
                     CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                 }
                 else
@@ -385,7 +385,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return sumOfAllowed;
         }
 
-        private int AddEdgeAndContinue ( HashSet<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref Tuple<double, double>[] boundingCoordinates, ref double maxSteepness, ref double currentElevationDfif, ref double currentDistance, int currentNode )
+        private int AddEdgeAndContinue ( Path curerntPath, HashSet<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref Tuple<double, double>[] boundingCoordinates, ref double maxSteepness, ref double currentElevationDfif, ref double currentDistance, int currentNode )
         {
             int parent;
             // now choose next node based on probability
@@ -405,34 +405,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             lock (boundingCoordinates)
             {
-
-                // insert the 4 boudning coordinates
-                // left
-                if (boundingCoordinates[ 0 ].Item1 > neighbor.Lat)
-                {
-                    boundingCoordinates[ 0 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
-                }
-                // right
-                else if (boundingCoordinates[ 3 ].Item1 < neighbor.Lat)
-                {
-                    boundingCoordinates[ 3 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
-                }
-                // top
-                else if (boundingCoordinates[ 2 ].Item2 > neighbor.Lon)
-                {
-                    boundingCoordinates[ 2 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
-                }
-                //bottom
-                else if (boundingCoordinates[ 1 ].Item2 < neighbor.Lon)
-                {
-                    boundingCoordinates[ 1 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
-                }
+                curerntPath.UpdateBoundingCoordinates( ref boundingCoordinates, neighbor );
             }
 
             Utils.CalculateElevationDiffAndSteepness( pickedEdge, ref maxSteepness, ref currentElevationDfif );
 
             return parent;
         }
+
 
         private void CloseOffPath ( Graph graph, int start, int parent, ref double maxSteepness, ref double currentElevationDfif, out List<Edge> edges, out List<int> nodes )
         {

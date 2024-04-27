@@ -26,6 +26,10 @@ namespace Tour4MeAdvancedProject.Solver
             double currentPathsMaxSteepness = 0;
             double currentElevationDiff = 0;
 
+            Tuple<double, double> startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+            Tuple<double, double>[] boudingCoordinates = new Tuple<double, double>[] {
+            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+
 
             //Path endPath = new Path();
             double length = 0;
@@ -63,6 +67,7 @@ namespace Tour4MeAdvancedProject.Solver
                 if (validCandidates)
                 {
                     P.Path.Add( bestEdge, bestNeigh, bestProfit );
+                    P.Path.UpdateBoundingCoordinates( ref boudingCoordinates, P.Graph.VNodes[ bestNeigh ] );
                     foreach (string currentTag in bestEdge.Tags)
                     {
                         Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
@@ -78,11 +83,11 @@ namespace Tour4MeAdvancedProject.Solver
             Console.WriteLine( length );
             P.Path.Steepness = currentPathsMaxSteepness / 2;
             P.Path.Elevation = currentElevationDiff;
-
+            P.Path.BoundingCoordinates = boudingCoordinates;
             P.Path.PathTypes = string.Join( ", ", addedPathTypes );
             P.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
             P.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
-            P.Path.Quality = P.GetQuality( P.GetProfit( P.Path ), P.GetArea( P.Path ), P.Path.Elevation );
+            P.Path.Quality = P.GetQuality( P.GetProfit( P.Path.Visited ), P.GetArea( P.Path.Visited ), P.Path.Elevation );
 
             return SolveStatus.Feasible;
         }

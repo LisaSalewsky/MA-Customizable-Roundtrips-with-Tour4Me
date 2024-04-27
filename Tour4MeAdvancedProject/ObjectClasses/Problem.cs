@@ -69,6 +69,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             AvoidTags = p.AvoidTags;
             MaxElevation = p.MaxElevation;
             MaxSteepness = p.MaxSteepness;
+            TargetDistance = p.TargetDistance;
             Graph = p.Graph;
             Backbone = p.Backbone;
             RunningTime = p.RunningTime;
@@ -368,10 +369,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public double GetQuality ( double profit, double area, double elevation )
         {
-            return ( EdgeProfitImportance * profit / TargetDistance ) +
-                    ( ( ( CoveredAreaImportance * area / ( Math.PI * TargetDistance * TargetDistance ) ) +
-                    ( ElevationImportance * elevation * Path.Length / MaxElevation / TargetDistance ) )
-                    * 100 / Math.Exp( Math.Abs( TargetDistance - Path.Length ) ) );
+            double diff = Math.Abs( TargetDistance - Path.Length );
+            return ( 1 / Math.Pow( diff, 2 ) ) +
+                      ( EdgeProfitImportance * profit / TargetDistance ) +
+                     ( ( CoveredAreaImportance * area / ( Math.PI * TargetDistance * TargetDistance ) ) +
+                       ( ElevationImportance * elevation / TargetDistance )
+                      )
+                    ; /// Math.Abs( TargetDistance - Path.Length );
         }
 
         public double GetProfit ( Path path )
@@ -436,7 +440,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             {
                 int current = path[ i ];
 
-                if (prev != -1)
+                if (prev != -1 && prev != current)
                 {
                     Edge edge = Graph.GetEdge( prev, current );
 

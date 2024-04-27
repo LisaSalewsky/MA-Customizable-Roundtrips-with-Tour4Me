@@ -82,5 +82,32 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
             Visited.Add( neighbor );
         }
+
+
+        public void UpdateBoundingCoordinates ( ref Tuple<double, double>[] boundingCoordinates, Node neighbor )
+        {
+
+            // insert the 4 boudning coordinates
+            // left
+            if (boundingCoordinates[ 0 ].Item1 > neighbor.Lat)
+            {
+                boundingCoordinates[ 0 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+            }
+            // right
+            if (boundingCoordinates[ 3 ].Item1 < neighbor.Lat)
+            {
+                boundingCoordinates[ 3 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+            }
+            // top
+            if (boundingCoordinates[ 2 ].Item2 > neighbor.Lon)
+            {
+                boundingCoordinates[ 2 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+            }
+            //bottom
+            if (boundingCoordinates[ 1 ].Item2 < neighbor.Lon)
+            {
+                boundingCoordinates[ 1 ] = Tuple.Create( neighbor.Lat, neighbor.Lon );
+            }
+        }
     }
 }

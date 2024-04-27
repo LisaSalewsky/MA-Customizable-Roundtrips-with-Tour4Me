@@ -39,6 +39,11 @@ namespace Tour4MeAdvancedProject.Solver
             double currentElevationDiff = 0;
             double length = 0;
 
+            Tuple<double, double> startCoordinates = Tuple.Create( CurrentProblem.Graph.VNodes[ CurrentProblem.Start ].Lat, CurrentProblem.Graph.VNodes[ CurrentProblem.Start ].Lon );
+            Tuple<double, double>[] boudingCoordinates = new Tuple<double, double>[] {
+            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+
+
             foreach (Tuple<int, Path> pair in sRing)
             {
                 index++;
@@ -84,9 +89,10 @@ namespace Tour4MeAdvancedProject.Solver
                                 visited[ v.GraphId ] = visitedIndex;
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
-
-                            finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
+                            int neighbor = v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId;
+                            finalPath.Add( neighbor );
                             finalEdges.Add( v );
+                            CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
                             currentElevationDiff += Math.Abs( v.SourceNode.Elevation - v.TargetNode.Elevation ) / 2;
                         }
 
@@ -98,9 +104,11 @@ namespace Tour4MeAdvancedProject.Solver
                                 visited[ v.GraphId ] = visitedIndex;
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
+                            int neighbor = v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId;
                             //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
-                            finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
+                            finalPath.Add( neighbor );
                             finalEdges.Add( v );
+                            CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
                             currentElevationDiff += Math.Abs( v.SourceNode.Elevation - v.TargetNode.Elevation ) / 2;
                         }
 
@@ -114,9 +122,11 @@ namespace Tour4MeAdvancedProject.Solver
                                 visited[ v.GraphId ] = visitedIndex;
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
+                            int neighbor = v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId;
                             //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
-                            finalPath.Add( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId );
+                            finalPath.Add( neighbor );
                             finalEdges.Add( v );
+                            CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
                             currentElevationDiff += Math.Abs( v.SourceNode.Elevation - v.TargetNode.Elevation ) / 2;
                         }
 
