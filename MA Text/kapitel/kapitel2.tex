@@ -201,6 +201,7 @@ However, in the paper, they stress the adaptability of ant system approaches, sh
 
 
 \subsubsection{Calculations}
+\label{subsubsec:antCalculations}
 
 To transform the analogy of real ants into an algorithm, some formulas and calculations are needed.
 Ants are very simple agents. 
@@ -308,11 +309,118 @@ Overall, the results of experimenting with different parameter configurations sh
 
 
 
-\# TODO add fomulas and desription how they help constructing paths
+\# TODO add formulas and description how they help constructing paths
 \# TODO add how to use for my work
+
+
+\subsubsection{Pseudocode}
+\label{subsubsec:antPseudocode}
+
 
 \subsection{Genetic Algorithms}
 \label{subsec:geneticAlgorithmsBackground}
 
 \subsection{Simulated Annealing}
 \label{subsec:simulatedAnnealingBackground}
+
+Simulated Annealing (SA) builds upon a statistical physics concept of annealing.
+The physical process of annealing describes a thermal procedure to improve solids.
+Improving in this case means \enquote{obtaining low energy states of a solid in a heat bath} \cite{aarts_simulated_2005}.
+Low energy is needed to achieve the stable solid state of a crystal \cite{delahaye_simulated_2019}, see figure \ref{fig:annealingIllustration} for a visualization of the different states.
+
+The physical process is split into two general steps:
+\begin{itemize}
+	\item melting the solid through heating
+	\item cooling the material to a specified temperature
+\end{itemize}
+The basic concept is, that given a sufficiently high starting temperature to which the material is heated and a long enough cooling time, the material can reach a stable solid state. 
+
+\begin{figure}[h]
+	\includegraphics[width=0.9\textwidth]{bilder/AnnealingIllustration.png}
+	\caption{The illustration shows two different cooling procedures for a material. The upper one depicts the effects of sudden cooling, resulting in a meta-stable state, while the lower one portrays a slower cooling schedule which results in a stable solid state \cite{delahaye_simulated_2019}.}
+	\label{fig:annealingIllustration}
+\end{figure}
+
+
+The above figure shows the effects of different cooling schedules on a material and the type of solid state this material will obtain as a result.
+In the upper part, the top left image shows a liquid state, in which molecules are free and can move around.
+Cooling down too quickly hinders the atoms to move into proper positions, resulting in an unordered, non-symmetrical state, which is meta-stable (top right).
+In contrast, the lower part depicts a slower cooling process, where the atoms are given enough time to move into symmetrical form (bottom right).
+This state is equivalent with a minimum energy state, resulting in a stable crystal structure and a highly durable solid material. 
+
+Based on this analogy, simulated annealing was developed as a concept to solve NP-hard computational problems by improving local search variants \cite{aarts_simulated_2005, eglese_simulated_1990}.
+Local search approaches a very good at finding locally optimal solutions, but can easily fail to find a global optimum.
+Simulated annealing addresses this problem with the underlying idea based on the two steps of heating and slow cooling.
+What makes SA different from a basic local search is, that it allows -- with a certain probability (temperature) -- for worse solutions to be accepted.
+
+First, some basic solution for the problem is needed.
+For the use case of this thesis, a basic solution will be a roundtrip.
+Furthermore, a function which determines the quality of the solution is needed, so that comparing different solutions to each other is possible. 
+Starting from the initial roundtrip, neighboring solutions need to be generated and their quality will be assessed using the quality function.
+Any neighboring roundtrip which yields a better result will be accepted as the new solution that has to be improved.
+Worse roundtrips can also be accepted based on a cooling schedule.
+
+The schedule contains an initial temperature and a function to calculate the cooling of this value, lowering it over time.
+In the beginning, the solution is likely to be further away from a global optimum.
+Thus, a higher temperature allows for an increased likelihood to accept solutions with a lower quality, which in turn allows to escape local optima.
+The longer SA runs, the lower the temperature gets, lowering the likelihood of accepting worse solutions while nearing the global optimum. 
+To do this, several nested runs are needed.
+In an outer loop, the temperature changes and gets updated with lower values.
+In an inner loop, several possible neighborhoods are tested for one temperature state. 
+Solutions that are better than the previous one are always chosen.
+Solutions that are worse than the previous one are chosen based on the temperature.
+
+
+\subsubsection{Calculations}
+\label{subsubsec:SACalculations}
+
+For SA to yield a good result, several parameters need to be set. 
+First, a starting roundtrip, which builds the base, has to be calculated.
+Then, initial temperature as well as the cooling formula have to be determined.
+Furthermore, a neighboring roundtrip has to be found, as well as a formula for calculating the quality of all found solutions.
+Additionally, the number of runs has to be decided, while keeping both the runtime as well as the quality of the resulting tour in mind.
+
+For some of the parameters -- like the initial temperature and the cooling formula --, thorough testing of different configurations is needed.
+For others, only a limited set of options is interesting.
+Determining a neighboring roundtrip as well as an initial solution are the two parameters that have a base set 
+
+
+\subsubsection{Pseudocode}
+\label{subsubsec:SAPseudocode}
+
+
+
+\begin{algorithm}
+	\caption{High level Simulated Annealing}
+	\label{alg:SApseudocode}
+	\begin{algorithmic}[1]
+		\STATE Select init roundtrip (i)
+		\STATE Select init temperature (t)
+		\FOR{$i=0$ to numberRepitions}
+			\FOR{$i=0$ to numberRuns per temperature}
+				\STATE Generate neighborhood roundtrip (j)
+				\STATE Calculate difference in quality d = f(j)-f(i)
+					\IF {d $\geq$ 0}
+						\STATE use neighboring solution as current best i $\gets$ j
+					\ELSE 
+						\STATE random $\gets$ generate random(0,1)
+						\IF {random < exp(d/t)} 
+							\STATE use neighboring solution as current best i $\gets$ j
+						\ENDIF
+					\ENDIF
+			 \ENDFOR
+			 \STATE update temperature t $\gets$ T(t)
+		 \ENDFOR
+	\end{algorithmic}
+\end{algorithm}
+
+
+
+
+
+
+
+
+
+
+

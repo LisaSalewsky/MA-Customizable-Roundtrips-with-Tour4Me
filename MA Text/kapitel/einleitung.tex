@@ -108,7 +108,8 @@ The offered choices include a Greedy Selection approach, Integer Linear Programm
 
 The Greedy Selection \cite{buchin_tour4me_2022, wayahdi_greedy_2021} is the simplest algorithm which only ensures that the chosen route is a roundtrip.
 The result path is built by iterating over the valid edges and picking the most profitable of these until the cycle is finished or no candidate is left.
-A valid edge is determined by checking whether the start- and endpoint \textit{s} can still be reached if that selected edge is picked next.
+A valid edge is determined by checking whether the start- and endpoint \textit{s} can still be reached if that selected edge is picked next. 
+Edges that yield the highest profit and are valid are chosen at every node.
 
 
 For Integer Linear Programming \cite{buchin_tour4me_2022, graver_foundations_1975}, the touring problem must be stated in an appropriate form.
@@ -130,13 +131,13 @@ The solution path is then obtained through intersecting the sets of all circles 
 To ensure that the highest profit tour is returned, all possible combinations are calculated and the best of these solutions will be returned \cite{buchin_tour4me_2022}. 
 Further details can be found in the original paper \cite{gemsa_efficient_2013}, which offers a Greedy Faces approach as well as two variants for the Partial Shortest Paths algorithm, of which the 2-via-routes option was implemented in Tour4Me.
 
-Building from this solution, Iterative Local Search \cite{buchin_tour4me_2022, lu_arc_2015, verbeeck_extension_2014} can be applied to improve the found tours.
+Building from the solution that was built using minCost, Iterative Local Search \cite{buchin_tour4me_2022, lu_arc_2015, verbeeck_extension_2014} can be applied to improve the found tours.
 ILS is split into two main phases: the removal step and the improvement step.
 The algorithm starts with a full roundtrip and then removes partial paths $P$ from the current best solution $S$ (the removal step).
 After that, the previous tour now has a gap, which has to be closed by iteratively adding new vertices and edges that improve the solution profit while always staying within the given budget (the improvement step).
 When adding new edges to the solution that close the path, both the profit as well as the length that these paths have must be considered. 
 Since the roundtrip has a given maximum length, the profit has to be maximized while keeping track of and never exceeding this length constraint.
-The best solution is improved constantly until the user selected time limit is reached \cite{buchin_tour4me_2022}.
+The best solution is improved constantly until the user selected time limit is reached.
 
 Searching for viable edges is performed using a depth first approach, thus bounding the maximum depth of this step can drastically speed up the algorithm.
 This speed up then results in more iterations of removal and improvement being possible within the given time limit.
