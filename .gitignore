@@ -39,6 +39,10 @@ obj/s
 *.user
 *.userosscache
 *.sln.docstates
+**/images/
+**/img/
+**/bilder/
+*.pdf
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
