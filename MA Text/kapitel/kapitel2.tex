@@ -316,10 +316,6 @@ Overall, the results of experimenting with different parameter configurations sh
 \subsubsection{Pseudocode}
 \label{subsubsec:antPseudocode}
 
-
-\subsection{Genetic Algorithms}
-\label{subsec:geneticAlgorithmsBackground}
-
 \subsection{Simulated Annealing}
 \label{subsec:simulatedAnnealingBackground}
 
@@ -336,6 +332,7 @@ The physical process is split into two general steps:
 The basic concept is, that given a sufficiently high starting temperature to which the material is heated and a long enough cooling time, the material can reach a stable solid state. 
 
 \begin{figure}[h]
+	\centering
 	\includegraphics[width=0.9\textwidth]{bilder/AnnealingIllustration.png}
 	\caption{The illustration shows two different cooling procedures for a material. The upper one depicts the effects of sudden cooling, resulting in a meta-stable state, while the lower one portrays a slower cooling schedule which results in a stable solid state \cite{delahaye_simulated_2019}.}
 	\label{fig:annealingIllustration}
@@ -371,9 +368,6 @@ Solutions that are better than the previous one are always chosen.
 Solutions that are worse than the previous one are chosen based on the temperature.
 
 
-\subsubsection{Calculations}
-\label{subsubsec:SACalculations}
-
 For SA to yield a good result, several parameters need to be set. 
 First, a starting roundtrip, which builds the base, has to be calculated.
 Then, initial temperature as well as the cooling formula have to be determined.
@@ -382,7 +376,46 @@ Additionally, the number of runs has to be decided, while keeping both the runti
 
 For some of the parameters -- like the initial temperature and the cooling formula --, thorough testing of different configurations is needed.
 For others, only a limited set of options is interesting.
-Determining a neighboring roundtrip as well as an initial solution are the two parameters that have a base set 
+Determining a neighboring roundtrip as well as an initial solution are the two parameters that have a narrow array of possibilities to calculate them.
+
+For an initial solution, the implemented algorithms -- AntColony, Greedy and MinCost (see \ref{subsec:Tour4Me}) -- can calculate a base roundtrip.
+Which of these is to be preferred is dependent on the preferences about the resulting shape. 
+Greedy and AntColony prioritize edge quality while MinCost mostly optimizes for a rounder shape.
+
+To determine a neighboring solution, there are a few options that can yield good results.
+One approach is to pick two random vertices and switch their position in different ways within the roundtrip path \cite{zhan_list-based_2016}. 
+Another is to create waypoints, similarly to how it is done in the MinCost algorithm, but without the length restrictions.
+The generated initial solution can then be used to generate a set of waypoints. 
+Based on this node set, neighboring roundtrips are ones where the tour is modified by removing, adding or moving one of the waypoints.
+
+To remove a waypoint, the node and the paths that connect this vertex with the neighboring two waypoints need to be deleted. 
+Then, the two ends are connected by a shortest path or a MinCost approach.
+For adding a waypoint, first, a suitable node needs to be determined. 
+This choice can be done either randomly or based on a probability distribution that gives higher probabilities to nodes closer to the path and lowers in value the further away a node is.
+After a suitable node was picked, the closest waypoint and the best neighbor needs to be found.
+This selection is done by calculating the shortest paths from the new waypoint to all existing ones.
+Then, the connection between the two picked nodes has to be removed and a the new waypoint needs to be joined up with the two nodes that now frame the gap. 
+Moving is the combination of removal and adding.
+For this operation, the new node has to be found first and the closest waypoint will be the one to remove.
+
+
+
+
+\subsubsection{Calculations}
+\label{subsubsec:SACalculations}
+
+For SA, a few parameters have to be calculated.
+The temperature schedule can be calculated using an exponential function to decrease the value for each iteration, where f(j) is the quality of the neighboring solution, f(i) the quality of the current solution and T the temperature: 
+
+\begin{equation}\label{eq:temperatureSchedule}
+	T = e^{\frac{f(j)-f(i)}{T}}	
+\end{equation}
+
+The quality of the solution is calculated based on the covered area A and the respective importance (areaImportance), the edge profit (P) and the respective importance (edgeImportance) and all other valuable properties (others) and scaled by the target length of the tour (L). 
+
+\begin{equation}\label{eq:qualitySA}
+	f(i) = \frac{areaImportance * A(i)}{\pi * L(i)^2} + \frac{edgeImportance * P(i)}{L(i)} + others(i)
+\end{equation}
 
 
 \subsubsection{Pseudocode}
@@ -421,6 +454,10 @@ Determining a neighboring roundtrip as well as an initial solution are the two p
 
 
 
+
+
+\subsection{Genetic Algorithms}
+\label{subsec:geneticAlgorithmsBackground}
 
 
 
