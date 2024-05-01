@@ -328,7 +328,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Metadata.Add( "Surroundings: " + ( Path.SurroundingTags.Length == 0 ? "None available" : Path.SurroundingTags ) );
             Metadata.Add( "Path Types: " + ( Path.PathTypes.Length == 0 ? "None available" : Path.PathTypes ) );
             Metadata.Add( "Surfaces: " + ( Path.Surfaces.Length == 0 ? "None available" : Path.Surfaces ) );
-            Metadata.Add( "Shape: " + ( Path.CoveredArea * 100 ) );
+            Metadata.Add( "Shape: " + Path.CoveredArea );
+            Metadata.Add( "Quality: " + Path.Quality );
+            Metadata.Add( "TotalEdgeProfits: " + Path.TotalEdgeProfits );
 
             outputString = new StringBuilder( "[" );
 
@@ -369,15 +371,26 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public double GetQuality ( double profit, double area, double elevation )
         {
-            double diff = Math.Abs( TargetDistance - Path.Length );
+            double diff = 200 + TargetDistance - Path.Length;
             return (
-                      ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
-                      (
+                       ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
                           ( CoveredAreaImportance * 100 * area / ( Math.PI * TargetDistance * TargetDistance ) ) +
                           ( ElevationImportance * 100 * elevation / TargetDistance )
-                       )
-                   ) / Math.Pow( diff, 2 )
+                      )
+                    / Math.Pow( diff, 3 )
+                    * 100000000
                     ; /// Math.Abs( TargetDistance - Path.Length );
+        }
+
+        public double GetEdgeQuality ( double profit, double area, double elevation )
+        {
+            return (
+                       ( EdgeProfitImportance * profit / TargetDistance ) +
+                          ( CoveredAreaImportance * area / ( Math.PI * TargetDistance * TargetDistance ) ) +
+                          ( ElevationImportance * elevation / TargetDistance )
+                      )
+                    * 10000
+                    ;
         }
 
         public double GetProfit ( Path path )

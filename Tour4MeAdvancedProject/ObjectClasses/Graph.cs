@@ -391,7 +391,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     }
                     bool reversed = reader.GetBoolean( reader.GetOrdinal( "Reversed" ) );
                     bool oneWay = reader.GetBoolean( reader.GetOrdinal( "OneWay" ) );
-                    double cost = (double)reader.GetDecimal( reader.GetOrdinal( "Cost" ) );
+                    double cost = (double)reader.GetValue( reader.GetOrdinal( "Cost" ) );
+
+                    if (cost == 0)
+                    {
+                        cost += 0.1f;
+                    }
 
                     Node source = VNodes[ sId ];
                     Node target = VNodes[ tId ];
@@ -855,7 +860,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                     double newDistance = bestKnownDist + edge.Cost;
                     double currentNeighborDist = dist[ neighborId ];
-                    if (currentNeighborDist == 0.0)
+                    if (currentNeighborDist == 0.0 && neighborId != start)
                     {
                         dist[ neighborId ] = double.MaxValue;
                         currentNeighborDist = double.MaxValue;

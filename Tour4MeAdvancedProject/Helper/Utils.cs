@@ -40,7 +40,7 @@ namespace Tour4MeAdvancedProject.Helper
         {
             double elevationDiff = Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation );
 
-            if (( elevationDiff / edge.Cost * 100 ) > maxSteepness)
+            if (( elevationDiff / edge.Cost * 100 ) > maxSteepness && elevationDiff != 0)
             {
                 maxSteepness = elevationDiff / edge.Cost * 100;
             }
@@ -53,5 +53,11 @@ namespace Tour4MeAdvancedProject.Helper
             currentElevationDiff += elevationDiff;
         }
 
+        internal static void CaculateQualityValues ( Problem problem, Edge v, double currentElevation, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality )
+        {
+            currentEdgeProfits += v.Cost * v.Profit;
+            currentArea += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
+            currentQuality = problem.GetQuality( currentEdgeProfits, currentArea, currentElevation );
+        }
     }
 }

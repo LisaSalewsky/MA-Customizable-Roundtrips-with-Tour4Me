@@ -25,6 +25,9 @@ namespace Tour4MeAdvancedProject.Solver
             HashSet<string> addedSurroundings = new HashSet<string>();
             double currentPathsMaxSteepness = 0;
             double currentElevationDiff = 0;
+            double currentEdgeProfits = 0;
+            double currentArea = 0;
+            double currentQuality = 0;
 
             Tuple<double, double> startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
             Tuple<double, double>[] boudingCoordinates = new Tuple<double, double>[] {
@@ -73,6 +76,7 @@ namespace Tour4MeAdvancedProject.Solver
                         Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                     }
                     Utils.CalculateElevationDiffAndSteepness( bestEdge, ref currentPathsMaxSteepness, ref currentElevationDiff );
+                    Utils.CaculateQualityValues( P, bestEdge, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
 
                     visited[ bestEdge.GraphId ] = true;
                     length += bestEdge.Cost;
@@ -81,13 +85,15 @@ namespace Tour4MeAdvancedProject.Solver
             }
 
             Console.WriteLine( length );
-            P.Path.Steepness = currentPathsMaxSteepness / 2;
-            P.Path.Elevation = currentElevationDiff;
+            P.Path.Length = length;
+            P.Path.Steepness = currentPathsMaxSteepness;
+            P.Path.Elevation = currentElevationDiff / 2;
             P.Path.BoundingCoordinates = boudingCoordinates;
             P.Path.PathTypes = string.Join( ", ", addedPathTypes );
             P.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
             P.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
             P.Path.Quality = P.GetQuality( P.GetProfit( P.Path.Visited ), P.GetArea( P.Path.Visited ), P.Path.Elevation );
+            //P.Path.CoveredArea = P.Path.Quality;
 
             return SolveStatus.Feasible;
         }

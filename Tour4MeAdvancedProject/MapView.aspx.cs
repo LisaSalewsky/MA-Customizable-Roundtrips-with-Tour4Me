@@ -386,7 +386,11 @@ namespace Tour4MeAdvancedProject
                 case SolveStatus.Feasible:
                     problem.Metadata.Add( "Profit: " + problem.GetProfit( problem.Path.Visited ) +
                                          " (theoretical upper bound: " + problem.TargetDistance + ")" );
-                    problem.Metadata.Add( "Area: " + Math.Abs( problem.GetArea( problem.Path.Visited ) ) +
+                    //problem.Metadata.Add( "Area: " + Math.Abs( problem.GetArea( problem.Path.Visited ) ) +
+                    //                     " (theoretical upper bound: " +
+                    //                     ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
+                    //                      ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
+                    problem.Metadata.Add( "Area: " + 1 +
                                          " (theoretical upper bound: " +
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );

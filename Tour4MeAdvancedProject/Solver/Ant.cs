@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using Tour4MeAdvancedProject.Helper;
+using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
 
 namespace Tour4MeAdvancedProject.ObjectClasses
@@ -93,8 +94,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             List<int> solutionVisited = new List<int>();
             Edge pickedEdge = null;
 
+
+
+            HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
+            HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
+            HashSet<string> addedSurroundings = new HashSet<string>();
+
             double currentDistance = 0;
             double elevation = 0;
+            double currentEdgeProfits = 0;
+            double currentArea = 0;
+            double currentQuality = 0;
             _ = visited.Add( start );
             solutionVisited.Add( start );
             #endregion
@@ -151,12 +161,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
                 {
-                    parent = AddEdgeAndContinue( CurrentProblem.Path, visitableNodes, queue, visited, solutionVisited, pickedEdge, ref boudingCoordinates, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentDistance, currentNode );
+                    parent = AddEdgeAndContinue( CurrentProblem, visitableNodes, queue, visited, solutionVisited, pickedEdge, ref boudingCoordinates, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentDistance, ref currentEdgeProfits, ref currentArea, ref currentQuality, currentNode );
                     CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                 }
                 else
                 {
-                    CloseOffPath( graph, start, parent, ref currentPathsMaxSteepness, ref currentElevationDiff, out List<Edge> edges, out List<int> nodes );
+                    CloseOffPath( CurrentProblem, start, parent, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality, out List<Edge> edges, out List<int> nodes );
 
                     CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
                     CurrentProblem.Path.Elevation = currentElevationDiff;
@@ -164,7 +174,16 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
             }
 
+            CurrentProblem.Path.Length = CurrentProblem.Path.Edges.Sum( x => x.Cost );
             CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
+            CurrentProblem.Path.Elevation = currentElevationDiff / 2;
+            CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
+            CurrentProblem.Path.PathTypes = string.Join( ", ", addedPathTypes );
+            CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
+            CurrentProblem.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
+            CurrentProblem.Path.Quality = CurrentProblem.GetQuality( CurrentProblem.GetProfit( CurrentProblem.Path.Visited ), CurrentProblem.GetArea( CurrentProblem.Path.Visited ), CurrentProblem.Path.Elevation );
+
+            //CurrentProblem.Path.CoveredArea = CurrentProblem.Path.Quality;
             return (SolutionEdges, solutionVisited);
         }
 
@@ -282,8 +301,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     area += edge.SourceNode == currentNode ? edge.ShoelaceForward : edge.ShoelaceBackward;
                     elevation += Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2;
 
+                    edge.Quality = CurrentProblem.GetEdgeQuality( profit, area, elevation );
                     edge.Quality = CurrentProblem.GetQuality( profit, area, elevation );
-                    double edgeVisibility = edge.Quality * CurrentProblem.EdgeProfitImportance;
+                    double edgeVisibility = edge.Cost * edge.Profit * CurrentProblem.EdgeProfitImportance;
+                    edgeVisibility = edge.Quality * CurrentProblem.EdgeProfitImportance;
 
                     int negModifier = area < 0 ? -1 : 1;
 
@@ -296,7 +317,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     edgeProbabilities.Add( edge, currentProbability );
 
                     // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
-                    edge.Pheromone += PheromoneAmount * edge.Profit * edge.Cost;
+                    //edge.Pheromone += PheromoneAmount * edge.Quality;
+                    edge.Pheromone += PheromoneAmount * edge.Cost * edge.Profit;
                 }
                 else
                 {
@@ -317,8 +339,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 edgeProbabilities[ edge ] /= sumOfProbabilities;
             }
 
-            IOrderedEnumerable<KeyValuePair<Edge, float>> sortedProbabilities = from entry in edgeProbabilities orderby entry.Value ascending select entry;
-            edgeProbabilities = sortedProbabilities.ToDictionary( pair => pair.Key, pair => pair.Value );
         }
         private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode, Problem currentProblem, double currentElevationDiff )
         {
@@ -354,7 +374,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 _ = allowed.Remove( edge );
                 allowed.Add( newEdge );
             }
-
             //allowed = applyPenalty;
             return allowed;
         }
@@ -385,7 +404,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return sumOfAllowed;
         }
 
-        private int AddEdgeAndContinue ( Path curerntPath, HashSet<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref Tuple<double, double>[] boundingCoordinates, ref double maxSteepness, ref double currentElevationDfif, ref double currentDistance, int currentNode )
+        private int AddEdgeAndContinue ( Problem problem, HashSet<Node> visitableNodes, List<int> queue, HashSet<int> visited, List<int> solutionVisited, Edge pickedEdge, ref Tuple<double, double>[] boundingCoordinates, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings, ref double maxSteepness, ref double currentElevationDiff, ref double currentDistance, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality, int currentNode )
         {
             int parent;
             // now choose next node based on probability
@@ -405,29 +424,40 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             lock (boundingCoordinates)
             {
-                curerntPath.UpdateBoundingCoordinates( ref boundingCoordinates, neighbor );
+                problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, neighbor );
+            }
+            foreach (string currentTag in pickedEdge.Tags)
+            {
+                Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
             }
 
-            Utils.CalculateElevationDiffAndSteepness( pickedEdge, ref maxSteepness, ref currentElevationDfif );
+            Utils.CalculateElevationDiffAndSteepness( pickedEdge, ref maxSteepness, ref currentElevationDiff );
+            Utils.CaculateQualityValues( problem, pickedEdge, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
 
             return parent;
         }
 
 
-        private void CloseOffPath ( Graph graph, int start, int parent, ref double maxSteepness, ref double currentElevationDfif, out List<Edge> edges, out List<int> nodes )
+        private void CloseOffPath ( Problem problem, int start, int parent, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings, ref double maxSteepness, ref double currentElevationDiff, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality, out List<Edge> edges, out List<int> nodes )
         {
             // if we need to close the loop since we cannot take any other neighbor:
             // close it using the shortest path from the remaining acceptable node
             edges = new List<Edge>();
             nodes = new List<int>();
             //(edges, nodes) = graph.GetShortestPath( parent, start );
-            (edges, nodes) = graph.DijkstraShortestPath( start, parent );
+            (edges, nodes) = problem.Graph.DijkstraShortestPath( start, parent );
             edges.Reverse();
             nodes.Reverse();
 
             foreach (Edge edge in edges)
             {
-                Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref currentElevationDfif );
+                foreach (string currentTag in edge.Tags)
+                {
+                    Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
+                }
+                Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref currentElevationDiff );
+                Utils.CaculateQualityValues( problem, edge, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+
             }
 
             double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );

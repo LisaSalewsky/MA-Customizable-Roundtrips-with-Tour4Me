@@ -13,6 +13,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double Elevation { get; set; } = 100;
         public double Steepness { get; set; } = 100;
         public double CoveredArea { get; set; }
+        public double TotalEdgeProfits { get; set; }
         public string SurroundingTags { get; set; }
         public string PathTypes { get; set; }
         public string Surfaces { get; set; }
