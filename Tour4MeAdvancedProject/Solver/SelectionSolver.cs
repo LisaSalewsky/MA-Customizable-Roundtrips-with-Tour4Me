@@ -86,6 +86,8 @@ namespace Tour4MeAdvancedProject.Solver
 
             Console.WriteLine( length );
             P.Path.Length = length;
+            P.Path.TotalEdgeProfits = currentEdgeProfits;
+            P.Path.CoveredArea = currentArea;
             P.Path.Steepness = currentPathsMaxSteepness;
             P.Path.Elevation = currentElevationDiff / 2;
             P.Path.BoundingCoordinates = boudingCoordinates;

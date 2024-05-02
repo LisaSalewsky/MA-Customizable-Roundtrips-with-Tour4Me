@@ -466,7 +466,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 while (reader.Read())
                 {
                     Guid nodeId = reader.GetGuid( reader.GetOrdinal( "Id" ) );
-                    double elevation = (double)reader.GetDecimal( reader.GetOrdinal( "Elevation" ) );
+                    double elevation = (double)reader.GetValue( reader.GetOrdinal( "Elevation" ) );
                     double latitude = reader.GetDouble( reader.GetOrdinal( "Latitude" ) );
                     double longitude = reader.GetDouble( reader.GetOrdinal( "Longitude" ) );
 

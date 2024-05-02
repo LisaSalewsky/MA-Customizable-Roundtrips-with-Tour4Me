@@ -37,8 +37,9 @@ namespace Tour4MeAdvancedProject.Solver
             HashSet<string> addedSurroundings = new HashSet<string>();
             double currentPathsMaxSteepness = 0;
             double currentElevationDiff = 0;
-            double length = 0;
-
+            double currentEdgeProfits = 0;
+            double currentQuality = 0;
+            double currentArea = 0;
             Tuple<double, double> startCoordinates = Tuple.Create( CurrentProblem.Graph.VNodes[ CurrentProblem.Start ].Lat, CurrentProblem.Graph.VNodes[ CurrentProblem.Start ].Lon );
             Tuple<double, double>[] boudingCoordinates = new Tuple<double, double>[] {
             startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
@@ -78,9 +79,11 @@ namespace Tour4MeAdvancedProject.Solver
                         visitedIndex++;
                         double profit = 0;
                         double area = 0;
-                        double currentEdgeProfits = 0;
-                        double currentArea = 0;
-                        double currentQuality = 0;
+                        currentElevationDiff = 0;
+                        currentEdgeProfits = 0;
+                        currentQuality = 0;
+                        currentArea = 0;
+                        double length = 0;
                         List<int> finalPath = new List<int>();
                         List<Edge> finalEdges = new List<Edge>();
 
@@ -163,6 +166,7 @@ namespace Tour4MeAdvancedProject.Solver
                             CurrentProblem.Path = new Path( finalEdges, finalPath, quality, length, Tuple.Create( CurrentProblem.Graph.CenterLat, CurrentProblem.Graph.CenterLon ) );
                         }
                         CurrentProblem.Path.CoveredArea = area;
+                        currentArea = area;
                     }
                 }
             }
@@ -183,6 +187,9 @@ namespace Tour4MeAdvancedProject.Solver
 
             CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
             CurrentProblem.Path.Elevation = currentElevationDiff / 2;
+            CurrentProblem.Path.TotalEdgeProfits = currentEdgeProfits;
+            CurrentProblem.Path.Quality = currentQuality;
+            CurrentProblem.Path.CoveredArea = currentArea;
 
             CurrentProblem.Path.PathTypes = string.Join( ", ", addedPathTypes );
             CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );

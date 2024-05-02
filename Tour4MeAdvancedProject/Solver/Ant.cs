@@ -181,7 +181,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             CurrentProblem.Path.PathTypes = string.Join( ", ", addedPathTypes );
             CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
             CurrentProblem.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
-            CurrentProblem.Path.Quality = CurrentProblem.GetQuality( CurrentProblem.GetProfit( CurrentProblem.Path.Visited ), CurrentProblem.GetArea( CurrentProblem.Path.Visited ), CurrentProblem.Path.Elevation );
+            //CurrentProblem.Path.Quality = CurrentProblem.GetQuality( CurrentProblem.GetProfit( CurrentProblem.Path.Visited ), CurrentProblem.GetArea( CurrentProblem.Path.Visited ), CurrentProblem.Path.Elevation );
+            CurrentProblem.Path.TotalEdgeProfits = currentEdgeProfits;
+            CurrentProblem.Path.Quality = currentQuality;
+            CurrentProblem.Path.CoveredArea = currentArea;
 
             //CurrentProblem.Path.CoveredArea = CurrentProblem.Path.Quality;
             return (SolutionEdges, solutionVisited);
