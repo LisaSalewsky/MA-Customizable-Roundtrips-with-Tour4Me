@@ -158,7 +158,7 @@ namespace Tour4MeAdvancedProject.Solver
 
                         finalPath.Add( finalPath[ 0 ] );
 
-                        double quality = CurrentProblem.GetQuality( profit, area, currentElevationDiff );
+                        double quality = CurrentProblem.GetQuality( profit, area, currentElevationDiff, CurrentProblem.Path.Length );
 
                         if (quality > bestQuality)
                         {

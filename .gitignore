@@ -43,6 +43,8 @@ obj/s
 **/img/
 **/bilder/
 *.pdf
+*.csv
+**/.ipynb_checkpoints/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

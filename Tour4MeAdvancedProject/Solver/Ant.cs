@@ -246,7 +246,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     newArea = area + ( edge.SourceNode == currentNode ? edge.ShoelaceForward : edge.ShoelaceBackward );
                     newElevation = elevation + ( Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2 );
 
-                    edge.Quality = CurrentProblem.GetQuality( newProfit, newArea, newElevation );
+                    edge.Quality = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
 
                     //double edgeValue = edge.Cost * edge.TrailIntensity;
                     //double edgeVisibility = 1 / edge.Cost;
@@ -305,7 +305,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     elevation += Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2;
 
                     edge.Quality = CurrentProblem.GetEdgeQuality( profit, area, elevation );
-                    edge.Quality = CurrentProblem.GetQuality( profit, area, elevation );
+                    //edge.Quality = CurrentProblem.GetQuality( profit, area, elevation, );
                     double edgeVisibility = edge.Cost * edge.Profit * CurrentProblem.EdgeProfitImportance;
                     edgeVisibility = edge.Quality * CurrentProblem.EdgeProfitImportance;
 
@@ -396,7 +396,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
                 newElevation = elevation + ( Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2 );
 
-                edge.Quality = currentProblem.GetQuality( newProfit, newArea, newElevation );
+                edge.Quality = currentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
                 float trailIntensityPowAlpha = (float)Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha );
                 double edgeVisibility = edge.Quality * currentProblem.EdgeProfitImportance;
                 float visibilityPowBeta = (float)Math.Pow( edgeVisibility, Beta );

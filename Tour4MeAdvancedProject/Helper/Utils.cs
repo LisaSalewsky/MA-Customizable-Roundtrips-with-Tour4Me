@@ -57,7 +57,7 @@ namespace Tour4MeAdvancedProject.Helper
         {
             currentEdgeProfits += v.Cost * v.Profit;
             currentArea += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
-            currentQuality = problem.GetQuality( currentEdgeProfits, currentArea, currentElevation );
+            currentQuality = problem.GetQuality( currentEdgeProfits, currentArea, currentElevation, problem.Path.Length );
         }
     }
 }

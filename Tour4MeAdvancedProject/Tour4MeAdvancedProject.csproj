@@ -2336,6 +2336,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Helper\Utils.cs" />
+    <Compile Include="Helper\Waypoint.cs" />
     <Compile Include="homepage.aspx.cs">
       <DependentUpon>homepage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
