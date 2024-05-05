@@ -166,7 +166,7 @@ namespace Tour4MeAdvancedProject.Solver
                             CurrentProblem.Path = new Path( finalEdges, finalPath, quality, length, Tuple.Create( CurrentProblem.Graph.CenterLat, CurrentProblem.Graph.CenterLon ) );
                         }
                         CurrentProblem.Path.CoveredArea = area;
-                        currentArea = area;
+                        //currentArea = area;
                     }
                 }
             }
@@ -185,15 +185,7 @@ namespace Tour4MeAdvancedProject.Solver
             //}
             //);
 
-            CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
-            CurrentProblem.Path.Elevation = currentElevationDiff / 2;
-            CurrentProblem.Path.TotalEdgeProfits = currentEdgeProfits;
-            CurrentProblem.Path.Quality = currentQuality;
-            CurrentProblem.Path.CoveredArea = currentArea;
-
-            CurrentProblem.Path.PathTypes = string.Join( ", ", addedPathTypes );
-            CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
-            CurrentProblem.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
+            Utils.UpdateCurrentProblemPathMetadata( ref CurrentProblem, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
 
             //CurrentProblem.Path.CoveredArea = CurrentProblem.Path.Quality;
 

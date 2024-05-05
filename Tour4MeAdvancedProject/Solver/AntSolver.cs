@@ -71,6 +71,7 @@ namespace Tour4MeAdvancedProject.Solver
             List<int> visitedNodes = new List<int>();
 
             Problem tempProblem = P;
+            Problem returnedProb = new Problem( tempProblem );
             for (int i = 0; i < NumberTours; i++)
             {
                 //foreach (Ant currentAnt in Ants)
@@ -80,7 +81,7 @@ namespace Tour4MeAdvancedProject.Solver
                     {
                         // calculate one Tour for the current Ant
                         // save the edges that form the solution path in solutionEdges
-                        (solutionEdges, visitedNodes) = currentAnt.Tour( ref tempProblem, UsePenalty, UseBacktracking );
+                        (returnedProb, solutionEdges, visitedNodes) = currentAnt.Tour( tempProblem, UsePenalty, UseBacktracking );
 
                         // now update the pheromone trail (trailInensity)
                         currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
@@ -97,7 +98,7 @@ namespace Tour4MeAdvancedProject.Solver
                 }
             }
 
-            P = tempProblem;
+            P = returnedProb;
 
             P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes.ToList() ), P.Path );
 
@@ -105,21 +106,15 @@ namespace Tour4MeAdvancedProject.Solver
             HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
             HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
             HashSet<string> addedSurroundings = new HashSet<string>();
+            double currentEdgeProfits = P.Path.TotalEdgeProfits;
+            double currentArea = P.Path.CoveredArea;
+            double currentQuality = P.Path.Quality;
+            double currentPathsMaxSteepness = P.Path.Steepness;
+            double currentElevationDiff = P.Path.Elevation;
+            System.Tuple<double, double>[] boudingCoordinates = P.Path.BoundingCoordinates;
 
-            foreach (Edge edge in solutionEdges)
-            {
-                for (int i = 0; i < edge.Tags.Count; i++)
-                {
-                    string currentTag = edge.Tags[ i ];
-                    Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
 
-                }
-
-            }
-            P.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
-            P.Path.PathTypes = string.Join( ", ", addedPathTypes );
-            P.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
-            P.Path.Elevation = P.Path.Elevation / 2;
+            Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
 
             return SolveStatus.Feasible;
         }

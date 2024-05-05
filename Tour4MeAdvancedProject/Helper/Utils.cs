@@ -59,5 +59,23 @@ namespace Tour4MeAdvancedProject.Helper
             currentArea += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
             currentQuality = problem.GetQuality( currentEdgeProfits, currentArea, currentElevation, problem.Path.Length );
         }
+
+
+        public static void UpdateCurrentProblemPathMetadata ( ref Problem CurrentProblem, HashSet<SurfaceTag> addedSurfaceTags, HashSet<HighwayTag> addedPathTypes, HashSet<string> addedSurroundings, double currentEdgeProfits, double currentArea, double currentQuality, double currentPathsMaxSteepness, double currentElevationDiff, Tuple<double, double>[] boudingCoordinates )
+        {
+            CurrentProblem.Path.Length = CurrentProblem.Path.Edges.Sum( x => x.Cost );
+            CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
+            CurrentProblem.Path.Elevation = currentElevationDiff / 2;
+            CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
+            CurrentProblem.Path.PathTypes = string.Join( ", ", addedPathTypes );
+            CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
+            CurrentProblem.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
+            //CurrentProblem.Path.Quality = CurrentProblem.GetQuality( CurrentProblem.GetProfit( CurrentProblem.Path.Visited ), CurrentProblem.GetArea( CurrentProblem.Path.Visited ), CurrentProblem.Path.Elevation );
+            CurrentProblem.Path.TotalEdgeProfits = currentEdgeProfits;
+            CurrentProblem.Path.Quality = currentQuality;
+            CurrentProblem.Path.CoveredArea = currentArea;
+        }
+
+
     }
 }

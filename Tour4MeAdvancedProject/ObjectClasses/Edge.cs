@@ -83,6 +83,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             TrailIntensity = e.TrailIntensity;
             Profit = e.Profit;
             Cost = e.Cost;
+            ShoelaceForward = e.ShoelaceForward;
+            ShoelaceBackward = e.ShoelaceBackward;
 
             Tags = tags;
             Reversed = reversed;
@@ -97,6 +99,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             TargetNode = e.TargetNode;
 
             Reversed = reversed;
+            ShoelaceForward = e.ShoelaceForward;
+            ShoelaceBackward = e.ShoelaceBackward;
 
             Tags = e.Tags;
             GeoLocations = e.GeoLocations;

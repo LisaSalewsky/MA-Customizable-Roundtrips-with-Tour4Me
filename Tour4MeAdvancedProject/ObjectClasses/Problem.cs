@@ -321,14 +321,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             result.Add( new KeyValuePair<string, string>( "path", outputString.ToString() ) );
 
-
+            int negmodifier = Path.CoveredArea < 0 ? -1 : 1;
             Metadata.Add( "Length: " + Path.Length );
             Metadata.Add( "Elevation: " + Path.Elevation );
             Metadata.Add( "Steepness: " + Path.Steepness );
             Metadata.Add( "Surroundings: " + ( Path.SurroundingTags.Length == 0 ? "None available" : Path.SurroundingTags ) );
             Metadata.Add( "Path Types: " + ( Path.PathTypes.Length == 0 ? "None available" : Path.PathTypes ) );
             Metadata.Add( "Surfaces: " + ( Path.Surfaces.Length == 0 ? "None available" : Path.Surfaces ) );
-            Metadata.Add( "Shape: " + Path.CoveredArea );
+            Metadata.Add( "Shape: " + ( negmodifier * Path.CoveredArea ) );
             Metadata.Add( "Quality: " + Path.Quality );
             Metadata.Add( "TotalEdgeProfits: " + Path.TotalEdgeProfits );
 
@@ -372,10 +372,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double GetQuality ( double profit, double area, double elevation, double pathLength )
         {
             double diff = 1 + Math.Abs( TargetDistance - pathLength );
+            int negModifier = area < 0 ? -1 : 1;
             return
                       (
                       ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
-                      ( CoveredAreaImportance * 100 * Math.Sqrt( area ) / ( Math.PI * TargetDistance * TargetDistance ) )
+                      ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance * TargetDistance ) )
                       //( ElevationImportance * elevation / pathLength / TargetDistance ) +
                       )
                       / Math.Pow( diff, 2 )

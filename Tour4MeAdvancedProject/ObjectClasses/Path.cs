@@ -34,10 +34,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             Edges = new List<Edge>( p.Edges );
             Visited = new List<int>( p.Visited );
+            Quality = p.Quality;
             Length = p.Length;
             Elevation = p.Elevation;
             Steepness = p.Steepness;
             CoveredArea = p.CoveredArea;
+            TotalEdgeProfits = p.TotalEdgeProfits;
             SurroundingTags = p.SurroundingTags;
             PathTypes = p.PathTypes;
             Surfaces = p.Surfaces;

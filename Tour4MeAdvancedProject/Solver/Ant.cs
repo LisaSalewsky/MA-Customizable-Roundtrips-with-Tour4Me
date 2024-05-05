@@ -67,7 +67,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// <seealso cref="Edge"/>
         /// <seealso cref="Node"/>
         /// <seealso cref="AntColonyOptimizer"/>
-        public (List<Edge>, List<int>) Tour ( ref Problem CurrentProblem, bool usePenalty, bool useBacktracking )
+        public (Problem, List<Edge>, List<int>) Tour ( Problem CurrentProblem, bool usePenalty, bool useBacktracking )
         {
             #region intialize needed variables
             SolutionEdges = new List<Edge>();
@@ -168,26 +168,18 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 {
                     CloseOffPath( CurrentProblem, start, parent, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality, out List<Edge> edges, out List<int> nodes );
 
-                    CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
-                    CurrentProblem.Path.Elevation = currentElevationDiff;
-                    return (SolutionEdges.Concat( edges ).ToList(), solutionVisited.Concat( nodes ).ToList());
+                    CurrentProblem.Path.Visited = solutionVisited.Concat( nodes ).ToList();
+                    CurrentProblem.Path.Edges = SolutionEdges.Concat( edges ).ToList();
+
+                    Utils.UpdateCurrentProblemPathMetadata( ref CurrentProblem, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+
+                    return (CurrentProblem, CurrentProblem.Path.Edges, CurrentProblem.Path.Visited);
                 }
             }
 
-            CurrentProblem.Path.Length = CurrentProblem.Path.Edges.Sum( x => x.Cost );
-            CurrentProblem.Path.Steepness = currentPathsMaxSteepness;
-            CurrentProblem.Path.Elevation = currentElevationDiff / 2;
-            CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
-            CurrentProblem.Path.PathTypes = string.Join( ", ", addedPathTypes );
-            CurrentProblem.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
-            CurrentProblem.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
-            //CurrentProblem.Path.Quality = CurrentProblem.GetQuality( CurrentProblem.GetProfit( CurrentProblem.Path.Visited ), CurrentProblem.GetArea( CurrentProblem.Path.Visited ), CurrentProblem.Path.Elevation );
-            CurrentProblem.Path.TotalEdgeProfits = currentEdgeProfits;
-            CurrentProblem.Path.Quality = currentQuality;
-            CurrentProblem.Path.CoveredArea = currentArea;
-
+            Utils.UpdateCurrentProblemPathMetadata( ref CurrentProblem, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
             //CurrentProblem.Path.CoveredArea = CurrentProblem.Path.Quality;
-            return (SolutionEdges, solutionVisited);
+            return (CurrentProblem, SolutionEdges, solutionVisited);
         }
 
         private void FindAllowedPath ( Problem CurrentProblem, bool usePenalty, bool useBacktracking, List<Node> vNodes, List<int> solutionVisited, ref HashSet<Node> visitableNodes, ref HashSet<int> visited, Edge pickedEdge, double currentDistance, ref int currentNode, ref List<Edge> allowed, ref double currentElevationDiff )

@@ -84,18 +84,7 @@ namespace Tour4MeAdvancedProject.Solver
                 }
             }
 
-            Console.WriteLine( length );
-            P.Path.Length = length;
-            P.Path.TotalEdgeProfits = currentEdgeProfits;
-            P.Path.CoveredArea = currentArea;
-            P.Path.Steepness = currentPathsMaxSteepness;
-            P.Path.Elevation = currentElevationDiff / 2;
-            P.Path.BoundingCoordinates = boudingCoordinates;
-            P.Path.PathTypes = string.Join( ", ", addedPathTypes );
-            P.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
-            P.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
-            P.Path.Quality = P.GetQuality( P.GetProfit( P.Path.Visited ), P.GetArea( P.Path.Visited ), P.Path.Elevation, P.Path.Length );
-            //P.Path.CoveredArea = P.Path.Quality;
+            Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
 
             return SolveStatus.Feasible;
         }
