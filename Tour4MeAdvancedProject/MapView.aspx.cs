@@ -327,26 +327,48 @@ namespace Tour4MeAdvancedProject
                     }
                 case 4:
                     {
-                        // Ant Combined
+                        // Ant MinCost
                         AntCombined solver = new AntCombined();
                         status = solver.Solve( ref problem, Algo.minCost );
                         break;
                     }
                 case 5:
                     {
-                        // Ant Combined
+                        // Ant Greedy
                         AntCombined solver = new AntCombined();
                         status = solver.Solve( ref problem, Algo.Greedy );
                         break;
                     }
                 case 6:
                     {
-                        // Simmulated Annealing
+                        // Simmulated Annealing Greedy
                         SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
-                        status = solver.Solve( ref problem );
+                        status = solver.Solve( ref problem, Algo.Greedy );
                         break;
                     }
                 case 7:
+                    {
+                        // Simmulated Annealing MinCost
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.minCost );
+                        break;
+
+                    }
+                case 8:
+                    {
+                        // Simmulated Annealing Ant
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.AntColony );
+                        break;
+                    }
+                case 9:
+                    {
+                        // Simmulated Annealing Empty
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.SimulatedAnnealingEmpty );
+                        break;
+                    }
+                case 10:
                     {
                         // Genetic
                         GeneticSolver solver = new GeneticSolver();

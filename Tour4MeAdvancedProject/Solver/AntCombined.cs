@@ -82,7 +82,7 @@ namespace Tour4MeAdvancedProject.Solver
             List<int> visitedNodes = new List<int>();
 
             Problem tempProblem = problem;
-            PreprocessEdges( problem );
+            PreprocessEdges( tempProblem );
 
             for (int i = 0; i < NumberTours; i++)
             {

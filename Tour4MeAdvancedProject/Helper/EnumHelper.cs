@@ -35,7 +35,10 @@ namespace Tour4MeAdvancedProject.Helper
             AntColony,
             AntMinCost,
             AntGreedy,
-            SimulatedAnnealing,
+            SimulatedAnnealingGreedy,
+            SimulatedAnnealingMinCost,
+            SimulatedAnnealingAnt,
+            SimulatedAnnealingEmpty,
             Genetic
         }
 

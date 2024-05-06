@@ -44,6 +44,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Metadata = new List<string>();
             PrefTags = new HashSet<string>();
             AvoidTags = new HashSet<string>();
+            CenterLat = startLat;
+            CenterLon = startLon;
         }
 
         //public Problem ( double startLat, double startLon, double givenMaxLat, double givenMaxLon, double givenMinLat, double givenMinLon, double radius, string fileName )
@@ -55,6 +57,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Metadata = new List<string>();
             PrefTags = new HashSet<string>();
             AvoidTags = new HashSet<string>();
+            CenterLat = startLat;
+            CenterLon = startLon;
 
         }
 
