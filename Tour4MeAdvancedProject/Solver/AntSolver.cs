@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.SignalR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tour4MeAdvancedProject.Helper;
+using Tour4MeAdvancedProject.Hubs;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
@@ -18,8 +20,12 @@ namespace Tour4MeAdvancedProject.Solver
         public bool UsePenalty { get; set; } = true;
         public bool UseBacktracking { get; set; } = true;
         public bool InclueAreaCoverage { get; set; } = true;
+        public IHubContext _hubContext { get; set; }
 
-        public AntSolver () { }
+        public AntSolver ()
+        {
+            _hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
+        }
 
         public AntSolver ( int numberTours, int numberAnts, double alpha, double beta )
         {
@@ -27,6 +33,8 @@ namespace Tour4MeAdvancedProject.Solver
             NumberAnts = numberAnts;
             Alpha = alpha;
             Beta = beta;
+
+            _hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
         }
 
 
@@ -72,6 +80,8 @@ namespace Tour4MeAdvancedProject.Solver
 
             Problem tempProblem = P;
             Problem returnedProb = new Problem( tempProblem );
+
+            List<Problem> allSolutions = new List<Problem>();
             for (int i = 0; i < NumberTours; i++)
             {
                 //foreach (Ant currentAnt in Ants)
@@ -82,7 +92,8 @@ namespace Tour4MeAdvancedProject.Solver
                         // calculate one Tour for the current Ant
                         // save the edges that form the solution path in solutionEdges
                         (returnedProb, solutionEdges, visitedNodes) = currentAnt.Tour( tempProblem, UsePenalty, UseBacktracking );
-
+                        allSolutions.Add( returnedProb );
+                        _hubContext.Clients.All.SendAsync( "ReceiveVisitedNodes", visitedNodes );
                         // now update the pheromone trail (trailInensity)
                         currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
                     }

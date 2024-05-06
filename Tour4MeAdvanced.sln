@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D7BB2BA1-869D-4A17-9B2B-DB4A828141A5}"
 	ProjectSection(SolutionItems) = preProject
 		Tour4MeAdvancedProject\.editorconfig = Tour4MeAdvancedProject\.editorconfig
+		Startup.cs = Startup.cs
 	EndProjectSection
 EndProject
 Global

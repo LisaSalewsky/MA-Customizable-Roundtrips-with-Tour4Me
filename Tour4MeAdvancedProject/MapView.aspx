@@ -16,6 +16,8 @@
     <script src="https://unpkg.com/leaflet-sidebar@0.2.0/src/L.Control.Sidebar.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
     <script type="text/javascript">
         //if (!MyGlobalVariables) {
         //    MyGlobalVariables = {};
@@ -392,6 +394,30 @@
     </script>
 
     <script>
+
+
+        // SignalR connection setup
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/signalr")
+            .build();
+
+        connection.on("ReceiveVisitedNodes", (visitedNodes) => {
+            console.log("Received visited nodes:", visitedNodes);
+            // Additional code to handle the received data, if needed
+        });
+
+        connection.start()
+            .then(() => console.log('SignalR connection established.'))
+            .catch(err => console.error('Error establishing SignalR connection:', err));
+
+        // Rest of the existing JavaScript code
+
+
+
+
+
+
+
         var map = L.map('map').setView([0, 0], 13);
 
         updateOutput();
