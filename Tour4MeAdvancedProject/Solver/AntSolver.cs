@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNet.SignalR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tour4MeAdvancedProject.Helper;
-using Tour4MeAdvancedProject.Hubs;
 using Tour4MeAdvancedProject.ObjectClasses;
 using static Tour4MeAdvancedProject.Helper.EnumHelper;
 
@@ -11,8 +9,8 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntSolver : Selection
     {
-        public int NumberTours { get; set; } = 10;
-        public int NumberAnts { get; set; } = 100;
+        public int NumberTours { get; set; } = 1;
+        public int NumberAnts { get; set; } = 1;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
         public double Beta { get; set; } = 0.7;
@@ -20,11 +18,11 @@ namespace Tour4MeAdvancedProject.Solver
         public bool UsePenalty { get; set; } = true;
         public bool UseBacktracking { get; set; } = true;
         public bool InclueAreaCoverage { get; set; } = true;
-        public IHubContext _hubContext { get; set; }
+        //public IHubContext _hubContext { get; set; }
 
         public AntSolver ()
         {
-            _hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
+            //_hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
         }
 
         public AntSolver ( int numberTours, int numberAnts, double alpha, double beta )
@@ -34,7 +32,7 @@ namespace Tour4MeAdvancedProject.Solver
             Alpha = alpha;
             Beta = beta;
 
-            _hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
+            //_hubContext = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
         }
 
 
@@ -93,7 +91,7 @@ namespace Tour4MeAdvancedProject.Solver
                         // save the edges that form the solution path in solutionEdges
                         (returnedProb, solutionEdges, visitedNodes) = currentAnt.Tour( tempProblem, UsePenalty, UseBacktracking );
                         allSolutions.Add( returnedProb );
-                        _hubContext.Clients.All.SendAsync( "ReceiveVisitedNodes", visitedNodes );
+                        //_hubContext.Clients.All.SendAsync( "ReceiveVisitedNodes", visitedNodes );
                         // now update the pheromone trail (trailInensity)
                         currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
                     }

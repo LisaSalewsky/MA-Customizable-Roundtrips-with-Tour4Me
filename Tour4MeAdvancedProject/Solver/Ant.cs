@@ -338,7 +338,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode, Problem currentProblem, double currentDistance, double currentElevationDiff, double profit, double area )
         {
             // scale trial intensity on edges accordingly for all edges where a node is visited twice
-            double penaltyQuotient = 100;
+            double penaltyQuotient = 10;
             List<Edge> applyDoubleVisitPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
             visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
 
@@ -351,7 +351,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double currentQuality = currentProblem.GetEdgeQuality( profit, area, currentElevationDiff );
             double quality = 0;
 
-            foreach (Edge edge in applyDoubleVisitPenalty)
+            foreach (Edge edge in currentProblem.Graph.VEdges.Where( x => x != null ))
             {
                 Node neighbor = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode : edge.SourceNode;
 
@@ -371,27 +371,27 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
             }
 
-            penaltyQuotient = 1000;
-
-            List<Edge> applyElevationPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
-            ( elevationDiff + Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) ) / 2 > maxElevationDiff ||
-            Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / x.Cost * 100 > maxSteepness
-            );
+            //List<Edge> applyElevationPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
+            //( elevationDiff + Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) ) / 2 > maxElevationDiff ||
+            //Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) / x.Cost * 100 > maxSteepness
+            //);
             List<Edge> allowed = new List<Edge>( vNodes[ currentNode ].Incident );
 
+
+            //foreach (Edge edge in applyElevationPenalty)
+            //{
+            //    Edge newEdge = new Edge( edge, edge.Reversed );
+            //    newEdge.TrailIntensity /= currentProblem.ElevationImportance == 0 ? 1 : ( penaltyQuotient * currentProblem.ElevationImportance );
+            //    _ = allowed.Remove( edge );
+            //    allowed.Add( newEdge );
+            //}
+
+            penaltyQuotient = 1000;
             foreach (Edge edge in applyDoubleVisitPenalty)
             {
                 // create new list of edges with applied penalties
                 Edge newEdge = new Edge( edge, edge.Reversed );
                 newEdge.TrailIntensity /= penaltyQuotient;
-                _ = allowed.Remove( edge );
-                allowed.Add( newEdge );
-            }
-
-            foreach (Edge edge in applyElevationPenalty)
-            {
-                Edge newEdge = new Edge( edge, edge.Reversed );
-                newEdge.TrailIntensity /= currentProblem.ElevationImportance == 0 ? 1 : ( penaltyQuotient * currentProblem.ElevationImportance );
                 _ = allowed.Remove( edge );
                 allowed.Add( newEdge );
             }

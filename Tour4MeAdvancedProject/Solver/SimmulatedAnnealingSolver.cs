@@ -617,11 +617,11 @@ namespace Tour4MeAdvancedProject.Solver
             _ = availableNodes.Add( p.Graph.VNodes[ waypointList[ curWaypointNodeId ].NodeID ] );
 
 
-            double elevationDiff = p.Path.Elevation;
-            double maxSteepness = p.Path.Steepness;
-            double currentEdgeProfits = p.Path.TotalEdgeProfits;
-            double currentArea = p.Path.CoveredArea;
-            double currentQuality = p.Path.Quality;
+            double elevationDiff = 0;
+            double maxSteepness = 0;
+            double currentEdgeProfits = 0;
+            double currentArea = 0;
+            double currentQuality = 0;
 
 
             List<int> visited = p.Path.Visited;
@@ -703,11 +703,11 @@ namespace Tour4MeAdvancedProject.Solver
             List<int> visited = new List<int>( returnPath.Visited );
             List<Edge> pathEdges = new List<Edge>( returnPath.Edges );
 
-            double elevationDiff = returnPath.Elevation;
-            double maxSteepness = returnPath.Steepness;
-            double currentEdgeProfits = returnPath.TotalEdgeProfits;
-            double currentArea = returnPath.CoveredArea;
-            double currentQuality = returnPath.Quality;
+            double elevationDiff = 0;
+            double maxSteepness = 0;
+            double currentEdgeProfits = 0;
+            double currentArea = 0;
+            double currentQuality = 0;
 
             // prepare to calculate new path to fill gap
             (List<Edge> edgesL, List<int> nodeIdsL) = (new List<Edge>(), new List<int>());

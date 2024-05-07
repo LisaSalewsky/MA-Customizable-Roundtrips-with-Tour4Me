@@ -417,6 +417,40 @@ namespace Tour4MeAdvancedProject
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
                     result.Add( "success", "200" );
+
+
+                    HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
+                    HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
+                    HashSet<string> addedSurroundings = new HashSet<string>();
+                    double maxSteepness = 0;
+                    double elevationDiff = 0;
+                    double currentEdgeProfits = 0;
+                    double currentArea = 0;
+                    double currentQuality = 0;
+
+                    foreach (Edge edge in problem.Path.Edges)
+                    {
+                        foreach (string tag in edge.Tags)
+                        {
+                            Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, tag );
+                        }
+                        Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
+                        Utils.CaculateQualityValues( problem, edge, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                    }
+
+
+                    // update all current path values
+                    problem.Path.Visited = problem.Path.Visited;
+                    problem.Path.Edges = problem.Path.Edges;
+                    problem.Path.Elevation = elevationDiff / 2;
+                    problem.Path.Steepness = maxSteepness;
+                    problem.Path.CoveredArea = currentArea;
+                    problem.Path.TotalEdgeProfits = currentEdgeProfits;
+                    problem.Path.Quality = currentQuality;
+                    problem.Path.BoundingCoordinates = problem.Path.BoundingCoordinates;
+                    problem.Path.Length = problem.Path.Edges.Sum( x => x.Cost );
+
+
                     foreach (KeyValuePair<string, string> kv in problem.OutputToResultString())
                     {
                         result.Add( kv.Key, kv.Value );
