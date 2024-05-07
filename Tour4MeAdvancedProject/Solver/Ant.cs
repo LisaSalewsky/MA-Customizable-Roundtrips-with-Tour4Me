@@ -192,7 +192,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // if we use a penalty, the ants will figure out what to do by themselves. Just update the trail intensity accordingly
                 if (usePenalty)
                 {
-                    allowed = ScaleTrailIntensity( vNodes, visited, currentNode, CurrentProblem, currentDistance, currentElevationDiff, profit, area );
+                    allowed = ScaleTrailIntensity( vNodes, visited, currentNode, CurrentProblem, currentElevationDiff );
                 }
                 // if not, two more options reamain
                 else if (useBacktracking)
@@ -215,7 +215,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         private void CalculateNewPheromoneValues ( ref Problem CurrentProblem, ref double currentElevationDiff, bool usePenalty, List<Node> vNodes, HashSet<int> visited, double currentDistance, Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed, float sumOfAllowed, double profit, double area, double elevation, out double profitOut, out double areaOut, out double elevationOut )
         {
-            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId, CurrentProblem, currentDistance, currentElevationDiff, profit, area );
+            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId, CurrentProblem, currentElevationDiff );
             profitOut = profit;
             areaOut = area;
 
@@ -282,7 +282,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         private void CalculateNewPheromoneValuesIncludeNegative ( Problem CurrentProblem, double currentElevationDiff, List<Node> vNodes, HashSet<int> visited, double currentDistance, ref Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed, ref double profit, ref double area, ref double elevation )
         {
 
-            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId, CurrentProblem, currentDistance, currentElevationDiff, profit, area );
+            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId, CurrentProblem, currentElevationDiff );
 
 
             foreach (Edge edge in allowed)
@@ -335,43 +335,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
 
         }
-        private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode, Problem currentProblem, double currentDistance, double currentElevationDiff, double profit, double area )
+        private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode, Problem currentProblem, double currentElevationDiff )
         {
             // scale trial intensity on edges accordingly for all edges where a node is visited twice
             double penaltyQuotient = 100;
-            List<Edge> applyDoubleVisitPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
-            visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
 
             double maxSteepness = currentProblem.MaxSteepness;
             double elevationDiff = currentElevationDiff;
             double maxElevationDiff = currentProblem.MaxElevation;
 
-            double newProfit = profit;
-            double newArea = area;
-            double currentQuality = currentProblem.GetEdgeQuality( profit, area, currentElevationDiff );
-            double quality = 0;
-
-            foreach (Edge edge in applyDoubleVisitPenalty)
-            {
-                Node neighbor = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode : edge.SourceNode;
-
-                if (neighbor.ShortestDistance < currentProblem.TargetDistance - currentDistance - edge.Cost)
-                {
-                    newProfit = profit + ( edge.Cost * edge.Profit );
-                    newArea = area + ( edge.SourceNode.GraphNodeId == currentNode ? edge.ShoelaceForward : edge.ShoelaceBackward );
-                    elevationDiff = currentElevationDiff + ( Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2 );
-
-
-                    quality = currentProblem.GetEdgeQuality( newProfit, newArea, elevationDiff );
-                }
-
-                if (quality < currentQuality)
-                {
-                    edge.TrailIntensity /= penaltyQuotient;
-                }
-            }
-
-            penaltyQuotient = 1000;
 
             List<Edge> applyElevationPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
             ( elevationDiff + Math.Abs( x.TargetNode.Elevation - x.SourceNode.Elevation ) ) / 2 > maxElevationDiff ||
@@ -379,19 +351,23 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             );
             List<Edge> allowed = new List<Edge>( vNodes[ currentNode ].Incident );
 
+            foreach (Edge edge in applyElevationPenalty)
+            {
+                Edge newEdge = new Edge( edge, edge.Reversed );
+                newEdge.TrailIntensity /= currentProblem.ElevationImportance == 0 ? 1 : ( penaltyQuotient * currentProblem.ElevationImportance );
+                _ = allowed.Remove( edge );
+                allowed.Add( newEdge );
+            }
+
+            penaltyQuotient = 1000;
+            List<Edge> applyDoubleVisitPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
+            visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
+
             foreach (Edge edge in applyDoubleVisitPenalty)
             {
                 // create new list of edges with applied penalties
                 Edge newEdge = new Edge( edge, edge.Reversed );
                 newEdge.TrailIntensity /= penaltyQuotient;
-                _ = allowed.Remove( edge );
-                allowed.Add( newEdge );
-            }
-
-            foreach (Edge edge in applyElevationPenalty)
-            {
-                Edge newEdge = new Edge( edge, edge.Reversed );
-                newEdge.TrailIntensity /= currentProblem.ElevationImportance == 0 ? 1 : ( penaltyQuotient * currentProblem.ElevationImportance );
                 _ = allowed.Remove( edge );
                 allowed.Add( newEdge );
             }
@@ -402,7 +378,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed, List<Node> vNodes, HashSet<int> visited, int currentNode, double currentDistance, double profit, double area, double elevation, ref Problem currentProblem, ref double currentElevationDiff )
         {
 
-            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode, currentProblem, currentDistance, currentElevationDiff, profit, area );
+            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode, currentProblem, currentElevationDiff );
             // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
             float sumOfAllowed = 0;
             double newProfit = profit;
