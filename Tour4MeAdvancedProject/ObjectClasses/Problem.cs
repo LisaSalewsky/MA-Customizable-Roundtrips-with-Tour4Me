@@ -395,7 +395,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                           ( CoveredAreaImportance * area / ( Math.PI * TargetDistance * TargetDistance ) ) +
                           ( ElevationImportance * elevation / TargetDistance )
                       )
-                    * 10000
+                    * 100
                     ;
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tour4MeAdvancedProject.Helper;
@@ -72,6 +73,9 @@ namespace Tour4MeAdvancedProject.Solver
 
             Problem tempProblem = P;
             Problem returnedProb = new Problem( tempProblem );
+            List<Problem> allSolutions = new List<Problem>();
+
+
             for (int i = 0; i < NumberTours; i++)
             {
                 //foreach (Ant currentAnt in Ants)
@@ -82,6 +86,7 @@ namespace Tour4MeAdvancedProject.Solver
                         // calculate one Tour for the current Ant
                         // save the edges that form the solution path in solutionEdges
                         (returnedProb, solutionEdges, visitedNodes) = currentAnt.Tour( tempProblem, UsePenalty, UseBacktracking );
+                        allSolutions.Add( returnedProb );
 
                         // now update the pheromone trail (trailInensity)
                         currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
@@ -96,8 +101,11 @@ namespace Tour4MeAdvancedProject.Solver
                         edge.Pheromone = 1;
                     }
                 }
+                tempProblem = allSolutions.First( s => Math.Abs( s.Path.Quality ) == allSolutions.Max( x => Math.Abs( x.Path.Quality ) ) );
             }
 
+
+            returnedProb = allSolutions.First( s => Math.Abs( s.Path.CoveredArea ) == allSolutions.Max( x => Math.Abs( x.Path.CoveredArea ) ) );
             P = returnedProb;
 
             P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes.ToList() ), P.Path );

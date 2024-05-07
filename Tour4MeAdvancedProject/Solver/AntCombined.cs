@@ -12,8 +12,8 @@ namespace Tour4MeAdvancedProject.Solver
         public int NumberTours { get; set; } = 5;
         public int NumberAnts { get; set; } = 2;
         public List<Ant> Ants { get; set; } = new List<Ant>();
-        public double Alpha { get; set; } = 0.2;
-        public double Beta { get; set; } = 0.8;
+        public double Alpha { get; set; } = 0.8;
+        public double Beta { get; set; } = 0.2;
         public double EvaporationRate { get; set; } = 0.3;
         public bool UsePenalty { get; set; } = true;
         public bool UseBacktracking { get; set; } = true;
@@ -76,7 +76,7 @@ namespace Tour4MeAdvancedProject.Solver
 
             for (int i = 0; i < NumberAnts; i++)
             {
-                Ants.Add( new Ant( pheromoneAmount ) );
+                Ants.Add( new Ant( pheromoneAmount, Alpha, Beta ) );
             }
             List<Edge> solutionEdges = new List<Edge>();
             List<int> visitedNodes = new List<int>();
