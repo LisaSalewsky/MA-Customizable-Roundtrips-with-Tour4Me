@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Tour4MeAdvancedProject.ObjectClasses
 {
 
-    public class Node
+    public class Node : ICloneable
     {
         public double Lat { get; set; }
         public double Lon { get; set; }
@@ -67,6 +67,32 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public bool IsRight ( Node l1, Node l2 )
         {
             return ( ( ( l2.Lon - l1.Lon ) * ( Lat - l1.Lat ) ) - ( ( l2.Lat - l1.Lat ) * ( Lon - l1.Lon ) ) ) <= 0;
+        }
+
+
+        public object Clone ()
+        {
+            // Deep copy the Incident list
+            List<Edge> clonedIncident = new List<Edge>( Incident.Count );
+            foreach (Edge edge in Incident)
+            {
+                clonedIncident.Add( (Edge)edge.Clone() );
+            }
+
+            // Deep copy the Suroundings set
+            HashSet<string> clonedSuroundings = new HashSet<string>( Suroundings );
+
+            return new Node
+            {
+                Lat = Lat,
+                Lon = Lon,
+                Elevation = Elevation,
+                NodeId = NodeId,
+                GraphNodeId = GraphNodeId,
+                Incident = clonedIncident,
+                Suroundings = clonedSuroundings,
+                ShortestDistance = ShortestDistance
+            };
         }
     }
 

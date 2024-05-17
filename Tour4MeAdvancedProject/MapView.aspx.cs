@@ -371,8 +371,8 @@ namespace Tour4MeAdvancedProject
                 case 10:
                     {
                         // Genetic
-                        GeneticSolver solver = new GeneticSolver();
-                        status = solver.Solve( ref problem );
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.SimulatedAnnealingFullyRandom );
                         break;
                     }
             }

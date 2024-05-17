@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Tour4MeAdvancedProject.ObjectClasses
 {
 
-    public class Edge
+    public class Edge : ICloneable
     {
         //private double preference;
 
@@ -114,6 +115,41 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public bool LessThan ( Edge otherEdge )
         {
             return SourceNode.GraphNodeId < otherEdge.SourceNode.GraphNodeId || ( SourceNode == otherEdge.SourceNode && TargetNode.GraphNodeId < otherEdge.TargetNode.GraphNodeId );
+        }
+
+
+        public object Clone ()
+        {
+            // Deep copy the Tags list
+            List<string> clonedTags = Tags != null ? new List<string>( Tags ) : null;
+
+            // Deep copy the GeoLocations list
+            List<Tuple<double, double>> clonedGeoLocations = GeoLocations != null
+                ? new List<Tuple<double, double>>( GeoLocations.Select( gl => new Tuple<double, double>( gl.Item1, gl.Item2 ) ) )
+                : null;
+
+            // Deep copy SourceNode and TargetNode
+            Node clonedSourceNode = SourceNode;
+            Node clonedTargetNode = TargetNode;
+
+            return new Edge
+            {
+                Id = Id,
+                GraphId = GraphId,
+                ShoelaceForward = ShoelaceForward,
+                ShoelaceBackward = ShoelaceBackward,
+                Reversed = Reversed,
+                OneWay = OneWay,
+                Tags = clonedTags,
+                GeoLocations = clonedGeoLocations,
+                SourceNode = clonedSourceNode,
+                TargetNode = clonedTargetNode,
+                Pheromone = Pheromone,
+                TrailIntensity = TrailIntensity,
+                Cost = Cost,
+                Profit = Profit,
+                Quality = Quality
+            };
         }
     }
 

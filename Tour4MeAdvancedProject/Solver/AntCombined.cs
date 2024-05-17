@@ -55,11 +55,11 @@ namespace Tour4MeAdvancedProject.Solver
                         //status = solver.Solve( ref problem);
                         break;
                     }
-                case Algo.Genetic:
+                case Algo.SimulatedAnnealingMinCost:
                     {
-                        // Genetic
-                        GeneticSolver solver = new GeneticSolver();
-                        _ = solver.Solve( ref problem );
+                        // Simmulated Annealing
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        _ = solver.Solve( ref problem, Algo.minCost );
                         break;
                     }
                 default:

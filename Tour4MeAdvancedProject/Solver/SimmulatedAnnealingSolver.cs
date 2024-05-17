@@ -89,6 +89,7 @@ namespace Tour4MeAdvancedProject.Solver
                         break;
                     }
                 case Algo.SimulatedAnnealingEmpty:
+                case Algo.SimulatedAnnealingFullyRandom:
                 default:
                     {
                         Path emptyPath = new Path( Tuple.Create( P.CenterLat, P.CenterLon ) );
@@ -186,7 +187,8 @@ namespace Tour4MeAdvancedProject.Solver
                     double diff = 0;
                     for (int j = 0; j < Repetitions; j++)
                     {
-                        Path neighboringSolution = GenerateNeighborSolution( problem, ref waypointList, ref cumulativeProbabilities, ref availableNodes, rnd, probabilityList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, out recalculateProbs );
+
+                        Path neighboringSolution = GenerateNeighborSolution( problem, ref waypointList, ref cumulativeProbabilities, ref availableNodes, rnd, probabilityList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, out recalculateProbs ); // , out alreadyRecalculated );
 
 
                         double neighborQuality = neighboringSolution.Quality;
@@ -199,7 +201,31 @@ namespace Tour4MeAdvancedProject.Solver
                             problem.Path = new Path( neighboringSolution );
                             problem.Quality = neighborQuality;
                             currentQuality = neighborQuality;
-                            waypointListBackup = new List<Waypoint>( waypointList );
+                            waypointListBackup = new List<Waypoint>();
+                            foreach (Waypoint wp in waypointList)
+                            {
+                                waypointListBackup.Add( (Waypoint)wp.Clone() );
+                            }
+
+
+
+                            //// TODO debug only
+                            //List<int> visited = problem.Path.Visited;
+
+                            //int nextIdx = 1;
+                            //foreach (Waypoint wp in waypointListBackup)
+                            //{
+                            //    visited.Add( wp.NodeID );
+                            //    visited = visited.Concat( wp.Path ).ToList();
+                            //    nextIdx++;
+                            //}
+
+                            //// TODO for testing only, set breakpoint with conditions to check for a closed path!
+                            //for (int t = 0; t < visited.Count - 1; t++)
+                            //{
+                            //    Edge edge = problem.Graph.GetEdge( visited[ t ], visited[ t + 1 ] );
+                            //}
+
                             cumulativeProbabilitiesBackup = new List<double>( cumulativeProbabilities ).ToArray();
                             pathChanged = true;
                         }
@@ -217,15 +243,65 @@ namespace Tour4MeAdvancedProject.Solver
                                 problem.Path = new Path( neighboringSolution );
                                 problem.Quality = neighborQuality;
                                 currentQuality = neighborQuality;
-                                waypointListBackup = new List<Waypoint>( waypointList );
+                                waypointListBackup = new List<Waypoint>();
+                                foreach (Waypoint wp in waypointList)
+                                {
+                                    waypointListBackup.Add( (Waypoint)wp.Clone() );
+                                }
+
+
+
+                                //// TODO debug only
+                                //List<int> visited = problem.Path.Visited;
+
+                                //int nextIdx = 1;
+                                //foreach (Waypoint wp in waypointListBackup)
+                                //{
+                                //    visited.Add( wp.NodeID );
+                                //    visited = visited.Concat( wp.Path ).ToList();
+                                //    nextIdx++;
+                                //}
+
+                                //// TODO for testing only, set breakpoint with conditions to check for a closed path!
+                                //for (int t = 0; t < visited.Count - 1; t++)
+                                //{
+                                //    Edge edge = problem.Graph.GetEdge( visited[ t ], visited[ t + 1 ] );
+                                //}
+
                                 cumulativeProbabilitiesBackup = new List<double>( cumulativeProbabilities ).ToArray();
                                 pathChanged = true;
                             }
                         }
                         if (!pathChanged)
                         {
-                            waypointList = new List<Waypoint>( waypointListBackup );
+                            List<Waypoint> old = new List<Waypoint>( waypointList );
+                            waypointList = new List<Waypoint>();
+                            foreach (Waypoint wp in waypointListBackup)
+                            {
+                                waypointList.Add( (Waypoint)wp.Clone() );
+                            }
                             cumulativeProbabilities = new List<double>( cumulativeProbabilitiesBackup ).ToArray();
+
+
+
+                            //// TODO debug only
+                            //List<int> vis = problem.Path.Visited;
+
+                            //int nxtIdx = 1;
+                            //foreach (Waypoint wp in waypointList)
+                            //{
+                            //    vis.Add( wp.NodeID );
+                            //    vis = vis.Concat( wp.Path ).ToList();
+                            //    nxtIdx++;
+                            //}
+
+                            //// TODO for testing only, set breakpoint with conditions to check for a closed path!
+                            //for (int t = 0; t < vis.Count - 1; t++)
+                            //{
+                            //    Edge edge = problem.Graph.GetEdge( vis[ t ], vis[ t + 1 ] );
+                            //}
+
+
                         }
                         pathChanged = false;
                     }
@@ -417,10 +493,10 @@ namespace Tour4MeAdvancedProject.Solver
             }
 
             // TODO Debug only
-            Dictionary<int, double> nodeIdDists = new Dictionary<int, double>();
-            int q = -1;
-            IEnumerable<Tuple<int, double>> sortedDist1 = from idDistPair in dist orderby idDistPair ascending select Tuple.Create( q++, idDistPair );
-            List<Tuple<int, double>> nodeIdDistParisSorted1 = sortedDist1.Where( x => x.Item2 != 0 ).ToList();
+            //Dictionary<int, double> nodeIdDists = new Dictionary<int, double>();
+            //int q = -1;
+            //IEnumerable<Tuple<int, double>> sortedDist1 = from idDistPair in dist orderby idDistPair ascending select Tuple.Create( q++, idDistPair );
+            //List<Tuple<int, double>> nodeIdDistParisSorted1 = sortedDist1.Where( x => x.Item2 != 0 ).ToList();
 
             for (int i = 0; i < dist.Length; i++)
             {
@@ -430,7 +506,7 @@ namespace Tour4MeAdvancedProject.Solver
                     dist[ i ] = startedWithEmptyPath
                         ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : dist[ i ] / 100
                         : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : Math.Pow( dist[ i ], 2 );
-                    nodeIdDists.Add( i, Math.Sqrt( dist[ i ] ) );
+                    //nodeIdDists.Add( i, Math.Sqrt( dist[ i ] ) );
                 }
             }
             double sum = 0.0;
@@ -445,9 +521,9 @@ namespace Tour4MeAdvancedProject.Solver
             }
 
             // TODO debug only
-            Dictionary<int, double> nodeIdDistPairs = new Dictionary<int, double>();
-            IEnumerable<Tuple<int, double>> sortedDist = from idDistPair in nodeIdDists orderby idDistPair.Value ascending select Tuple.Create( idDistPair.Key, idDistPair.Value );
-            List<Tuple<int, double>> nodeIdDistParisSorted = sortedDist.Where( x => x.Item2 != 0 ).ToList();
+            //Dictionary<int, double> nodeIdDistPairs = new Dictionary<int, double>();
+            //IEnumerable<Tuple<int, double>> sortedDist = from idDistPair in nodeIdDists orderby idDistPair.Value ascending select Tuple.Create( idDistPair.Key, idDistPair.Value );
+            //List<Tuple<int, double>> nodeIdDistParisSorted = sortedDist.Where( x => x.Item2 != 0 ).ToList();
 
             // Calculate probabilities
             double[] probabilities = new double[ dist.Length ];
@@ -455,44 +531,82 @@ namespace Tour4MeAdvancedProject.Solver
             {
                 probabilities[ i ] = dist[ i ] == 0 ? 0 : 1.0 / dist[ i ] / sum;
                 probNodeIdList.Add( Tuple.Create( probabilities[ i ], i ) );
-                if (probabilities[ i ] > 0)
-                {
-                    nodeIdDistPairs.Add( i, 1.0 / Math.Pow( dist[ i ], 2 ) / sum );
-                }
+                //if (probabilities[ i ] > 0)
+                //{
+                //    nodeIdDistPairs.Add( i, 1.0 / Math.Pow( dist[ i ], 2 ) / sum );
+                //}
             }
 
-            IEnumerable<Tuple<int, double>> sortedDist2 = from idDistPair in probNodeIdList orderby idDistPair.Item1 descending select Tuple.Create( idDistPair.Item2, idDistPair.Item1 );
-            List<Tuple<int, double>> nodeIdDistParisSorted2 = sortedDist2.Where( x => x.Item2 != 0 ).ToList();
+            //IEnumerable<Tuple<int, double>> sortedDist2 = from idDistPair in probNodeIdList orderby idDistPair.Item1 descending select Tuple.Create( idDistPair.Item2, idDistPair.Item1 );
+            //List<Tuple<int, double>> nodeIdDistParisSorted2 = sortedDist2.Where( x => x.Item2 != 0 ).ToList();
             return probNodeIdList;
 
         }
 
 
-        private Path GenerateNeighborSolution ( Problem problem, ref List<Waypoint> waypointList, ref double[] cummulativeProbabilities, ref HashSet<Node> availableNodes, Random rnd, List<Tuple<double, int>> probabilityList, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings, out bool recalculateProbs )
+        private Path GenerateNeighborSolution ( Problem problem, ref List<Waypoint> waypointList, ref double[] cummulativeProbabilities, ref HashSet<Node> availableNodes, Random rnd, List<Tuple<double, int>> probabilityList, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings, out bool recalculateProbs ) //, out bool alreadyRecalculated )
         {
-            recalculateProbs = false;
             // find new Waypoint to insert (& preedSucc coordinates)
-            FindNewRandomWaypoint( problem, ref waypointList, ref cummulativeProbabilities, out Tuple<int, int> predSuccwaypointList, rnd, probabilityList, out Node newWaypoint );
+            FindNewRandomWaypoint( problem, ref waypointList, ref cummulativeProbabilities, availableNodes, out Tuple<int, int> predSuccwaypointList, rnd, probabilityList, out Node newWaypoint );
 
+            //alreadyRecalculated = true;
             // Add / Remove / Move waypoints
+            recalculateProbs = false;
 
             //Path currentPath = MoveWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
             //currentPath = RemoveWaypoint( ref availableNodes,waypointList, problem, rnd, newWaypoint, predSuccwaypointList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings);
             Path currentPath;
+            double randomNumber = rnd.NextDouble();
+
             if (waypointList.Count < 10)
             {
-                currentPath = AddWaypoint( ref availableNodes, waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
+                if (waypointList.Count == 1)
+                {
+                    currentPath = AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
+
+                }
+                else
+                {
+                    // if there are less than 10 waypoints, only add or move
+                    currentPath = randomNumber <= 0.5
+                        ? AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings )
+                        : MoveWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
+
+                    //alreadyRecalculated = true;
+                }
             }
             else
             {
-                currentPath = MoveWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
+                // if there are 10 or more, only remove or move
+                currentPath = randomNumber <= 0.5
+                    ? RemoveWaypoint( ref availableNodes, ref waypointList, problem, predSuccwaypointList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings )
+                    : MoveWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
                 recalculateProbs = true;
             }
-            _ = predSuccwaypointList.ToString();
+
+            //List<int> vis = currentPath.Visited;
+
+            //int nxtIdx = 1;
+            //foreach (Waypoint wp in waypointList)
+            //{
+            //    vis.Add( wp.NodeID );
+            //    vis = vis.Concat( wp.Path ).ToList();
+            //    nxtIdx++;
+            //}
+
+            //// TODO for testing only, set breakpoint with conditions to check for a closed path!
+            //for (int t = 0; t < vis.Count - 1; t++)
+            //{
+            //    Edge edge = problem.Graph.GetEdge( vis[ t ], vis[ t + 1 ] );
+            //    Console.WriteLine( edge != null ? edge.ToString() : "" );
+            //}
+
 
             //originalProblem.Path = currentPath;
             currentPath.Quality = problem.GetQuality( problem.GetProfit( currentPath.Visited ), problem.GetArea( currentPath.Visited ), currentPath.Elevation, currentPath.Length );
 
+            //alreadyRecalculated = false;
+            //recalculateProbs = false;
             return currentPath;
         }
 
@@ -549,7 +663,7 @@ namespace Tour4MeAdvancedProject.Solver
             return incident;
         }
 
-        private void FindNewRandomWaypoint ( Problem P, ref List<Waypoint> waypointList, ref double[] cumulativeProbabilities, out Tuple<int, int> predSuccwaypointList, Random rnd, List<Tuple<double, int>> probabilityList, out Node newWaypoint )
+        private void FindNewRandomWaypoint ( Problem P, ref List<Waypoint> waypointList, ref double[] cumulativeProbabilities, HashSet<Node> availableNodes, out Tuple<int, int> predSuccwaypointList, Random rnd, List<Tuple<double, int>> probabilityList, out Node newWaypoint )
         {
             // pick a random number between 0 and 1
             double randomNumber = rnd.NextDouble();
@@ -557,7 +671,7 @@ namespace Tour4MeAdvancedProject.Solver
             int chosenIndex = 0;
             for (int i = 0; i < cumulativeProbabilities.Length; i++)
             {
-                if (randomNumber < cumulativeProbabilities[ i ])
+                if (randomNumber < cumulativeProbabilities[ i ] && !waypointList.Any( x => x.NodeID == i ) && P.Graph.VNodes[ chosenIndex ] != null)
                 {
                     chosenIndex = i;
                     break;
@@ -614,7 +728,7 @@ namespace Tour4MeAdvancedProject.Solver
             int succIdxInWaypointList = predSuccwaypointList.Item2;
 
             // removed node is now available again
-            _ = availableNodes.Add( p.Graph.VNodes[ waypointList[ curWaypointNodeId ].NodeID ] );
+            _ = availableNodes.Add( p.Graph.VNodes[ curWaypointNodeId ] );
 
 
             double elevationDiff = p.Path.Elevation;
@@ -624,42 +738,46 @@ namespace Tour4MeAdvancedProject.Solver
             double currentQuality = p.Path.Quality;
 
 
-            List<int> visited = p.Path.Visited;
-            List<Edge> pathEdges = p.Path.Edges;
+            Path returnPath = new Path( p.Path );
+            List<int> visited = returnPath.Visited;
+            List<Edge> pathEdges = returnPath.Edges;
+
 
             // calcualte new path beween pred and succ
             (List<Edge> edges, List<int> nodeIds) = p.Graph.GetShortestPath( waypointList[ predIdxInWaypointList ].NodeID, waypointList[ succIdxInWaypointList ].NodeID );
-
-            // remove current waypoint from WP list
-            _ = waypointList.Remove( waypointList.First( x => x.NodeID == curWaypointNodeId ) );
 
             // set previously calculated shortest path (nodes and edges) as path values for pred node
             waypointList[ predIdxInWaypointList ].Path = nodeIds;
             waypointList[ predIdxInWaypointList ].Edges = edges;
 
-            Tuple<double, double>[] boundingCoordinates = p.Path.BoundingCoordinates;
+            // remove current waypoint from WP list
+            _ = waypointList.Remove( waypointList.First( x => x.NodeID == curWaypointNodeId ) );
+
+            Tuple<double, double>[] boundingCoordinates = returnPath.BoundingCoordinates;
 
             // re-calculate bounding box coordinates
             foreach (int nodeId in nodeIds)
             {
-                p.Path.UpdateBoundingCoordinates( ref boundingCoordinates, p.Graph.VNodes[ nodeId ] );
+                returnPath.UpdateBoundingCoordinates( ref boundingCoordinates, p.Graph.VNodes[ nodeId ] );
             }
-            visited = new List<int>();
-            pathEdges = new List<Edge>();
-            foreach (Waypoint wp in waypointList)
-            {
-                visited.Add( wp.NodeID );
-                visited = visited.Concat( wp.Path ).ToList();
-                pathEdges = pathEdges.Concat( wp.Edges ).ToList();
-            }
+            //visited = new List<int>();
+            //pathEdges = new List<Edge>();
+            //int nextIdx = 1;
+            //foreach (Waypoint wp in waypointList)
+            //{
+            //    visited.Add( wp.NodeID );
+            //    visited = visited.Concat( wp.Path ).ToList();
+            //    pathEdges = pathEdges.Concat( wp.Edges ).ToList();
+            //    nextIdx++;
+            //}
 
 
 
-            // TODO for testing only, set breakpoint with conditions to check for a closed path!
-            for (int i = 0; i < visited.Count - 1; i++)
-            {
-                Edge edge = p.Graph.GetEdge( visited[ i ], visited[ i + 1 ] );
-            }
+            //// TODO for testing only, set breakpoint with conditions to check for a closed path!
+            //for (int i = 0; i < visited.Count - 1; i++)
+            //{
+            //    Edge edge = p.Graph.GetEdge( visited[ i ], visited[ i + 1 ] );
+            //}
 
 
             foreach (Edge edge in pathEdges)
@@ -672,17 +790,17 @@ namespace Tour4MeAdvancedProject.Solver
                 Utils.CaculateQualityValues( p, edge, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
             }
             // update all current path values
-            p.Path.Visited = visited;
-            p.Path.Edges = pathEdges;
-            p.Path.Elevation = elevationDiff / 2;
-            p.Path.Steepness = maxSteepness;
-            p.Path.CoveredArea = currentArea;
-            p.Path.TotalEdgeProfits = currentEdgeProfits;
-            p.Path.Quality = currentQuality;
-            p.Path.BoundingCoordinates = boundingCoordinates;
-            p.Path.Length = pathEdges.Sum( x => x.Cost );
+            returnPath.Visited = visited;
+            returnPath.Edges = pathEdges;
+            returnPath.Elevation = elevationDiff / 2;
+            returnPath.Steepness = maxSteepness;
+            returnPath.CoveredArea = currentArea;
+            returnPath.TotalEdgeProfits = currentEdgeProfits;
+            returnPath.Quality = currentQuality;
+            returnPath.BoundingCoordinates = boundingCoordinates;
+            returnPath.Length = pathEdges.Sum( x => x.Cost );
 
-            return p.Path;
+            return returnPath;
         }
 
         private Path MoveWaypoint ( ref HashSet<Node> availableNodes, ref List<Waypoint> waypointList, Tuple<int, int> predSuccwaypointList, Node newWaypoint, Problem p, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings )
@@ -739,20 +857,22 @@ namespace Tour4MeAdvancedProject.Solver
             {
                 returnPath.UpdateBoundingCoordinates( ref boundingCoordinates, p.Graph.VNodes[ nodeId ] );
             }
-            visited = new List<int>();
-            pathEdges = new List<Edge>();
-            foreach (Waypoint wp in waypointList)
-            {
-                visited.Add( wp.NodeID );
-                visited = visited.Concat( wp.Path ).ToList();
-                pathEdges = pathEdges.Concat( wp.Edges ).ToList();
-            }
+            //visited = new List<int>();
+            //pathEdges = new List<Edge>();
+            //int nextIdx = 1;
+            //foreach (Waypoint wp in waypointList)
+            //{
+            //    visited.Add( wp.NodeID );
+            //    visited = visited.Concat( wp.Path ).ToList();
+            //    pathEdges = pathEdges.Concat( wp.Edges ).ToList();
+            //    nextIdx++;
+            //}
 
-            // TODO for testing only, set breakpoint with conditions to check for a closed path!
-            for (int i = 0; i < visited.Count - 1; i++)
-            {
-                Edge edge = p.Graph.GetEdge( visited[ i ], visited[ i + 1 ] );
-            }
+            //// TODO for testing only, set breakpoint with conditions to check for a closed path!
+            //for (int i = 0; i < visited.Count - 1; i++)
+            //{
+            //    Edge edge = p.Graph.GetEdge( visited[ i ], visited[ i + 1 ] );
+            //}
 
 
             foreach (Edge edge in pathEdges)
@@ -788,10 +908,10 @@ namespace Tour4MeAdvancedProject.Solver
             p.Path = path;
 
             // + add in new one close to pred and succ of it 
-            return AddWaypoint( ref availableNodes, waypointList, predSuccwaypointList, newWaypoint, p, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
+            return AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, p, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
         }
 
-        private Path AddWaypoint ( ref HashSet<Node> availableNodes, List<Waypoint> waypointList, Tuple<int, int> predSuccwaypointList, Node newWaypoint, Problem p, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings )
+        private Path AddWaypoint ( ref HashSet<Node> availableNodes, ref List<Waypoint> waypointList, Tuple<int, int> predSuccwaypointList, Node newWaypoint, Problem p, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings )
         {
             int predIdx = predSuccwaypointList.Item1;
             int succIdx = predSuccwaypointList.Item2;
@@ -877,20 +997,22 @@ namespace Tour4MeAdvancedProject.Solver
             }
 
 
-            visited = new List<int>();
-            pathEdges = new List<Edge>();
-            foreach (Waypoint wp in waypointList)
-            {
-                visited.Add( wp.NodeID );
-                visited = visited.Concat( wp.Path ).ToList();
-                pathEdges = pathEdges.Concat( wp.Edges ).ToList();
-            }
+            //visited = new List<int>();
+            //pathEdges = new List<Edge>();
+            //int nextIdx = 1;
+            //foreach (Waypoint wp in waypointList)
+            //{
+            //    visited.Add( wp.NodeID );
+            //    visited = visited.Concat( wp.Path ).ToList();
+            //    pathEdges = pathEdges.Concat( wp.Edges ).ToList();
+            //    nextIdx++;
+            //}
 
-            // TODO for testing only, set breakpoint with conditions to check for a closed path!
-            for (int i = 0; i < visited.Count - 1; i++)
-            {
-                Edge edge = p.Graph.GetEdge( visited[ i ], visited[ i + 1 ] );
-            }
+            //// TODO for testing only, set breakpoint with conditions to check for a closed path!
+            //for (int i = 0; i < visited.Count - 1; i++)
+            //{
+            //    Edge edge = p.Graph.GetEdge( visited[ i ], visited[ i + 1 ] );
+            //}
 
             foreach (Edge edge in pathEdges)
             {

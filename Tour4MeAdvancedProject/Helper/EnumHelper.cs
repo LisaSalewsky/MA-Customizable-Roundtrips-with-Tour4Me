@@ -39,7 +39,7 @@ namespace Tour4MeAdvancedProject.Helper
             SimulatedAnnealingMinCost,
             SimulatedAnnealingAnt,
             SimulatedAnnealingEmpty,
-            Genetic
+            SimulatedAnnealingFullyRandom
         }
 
         public enum SolveStatus
