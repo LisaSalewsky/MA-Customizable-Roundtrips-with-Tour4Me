@@ -77,5 +77,52 @@ namespace Tour4MeAdvancedProject.Helper
         }
 
 
+
+        public static void UpdateMetadata ( Problem p, List<Waypoint> waypointList, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings, ref double elevationDiff, ref double maxSteepness, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality, List<int> nodeIdsL, List<int> nodeIdsR, ref Path returnPath, List<int> visited, List<Edge> pathEdges )
+        {
+            Tuple<double, double>[] boundingCoordinates = returnPath.BoundingCoordinates;
+            foreach (int nodeId in nodeIdsL)
+            {
+                returnPath.UpdateBoundingCoordinates( ref boundingCoordinates, p.Graph.VNodes[ nodeId ] );
+            }
+            if (nodeIdsR != null)
+            {
+                foreach (int nodeId in nodeIdsR)
+                {
+                    returnPath.UpdateBoundingCoordinates( ref boundingCoordinates, p.Graph.VNodes[ nodeId ] );
+                }
+            }
+
+
+            foreach (Waypoint wp in waypointList)
+            {
+                visited.Add( wp.NodeID );
+                visited = visited.Concat( wp.Path ).ToList();
+                pathEdges = pathEdges.Concat( wp.Edges ).ToList();
+            }
+
+            foreach (Edge edge in pathEdges)
+            {
+                foreach (string tag in edge.Tags)
+                {
+                    Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, tag );
+                }
+                Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
+                Utils.CaculateQualityValues( p, edge, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+            }
+
+
+            // update all current path values
+            returnPath.Visited = visited;
+            returnPath.Edges = pathEdges;
+            returnPath.Elevation = elevationDiff / 2;
+            returnPath.Steepness = maxSteepness;
+            returnPath.CoveredArea = currentArea;
+            returnPath.TotalEdgeProfits = currentEdgeProfits;
+            returnPath.Quality = currentQuality;
+            returnPath.BoundingCoordinates = boundingCoordinates;
+            returnPath.Length = pathEdges.Sum( x => x.Cost );
+        }
+
     }
 }
