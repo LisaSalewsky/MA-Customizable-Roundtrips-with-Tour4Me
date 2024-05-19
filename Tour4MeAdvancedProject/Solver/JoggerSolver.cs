@@ -185,8 +185,8 @@ namespace Tour4MeAdvancedProject.Solver
             //}
             //);
 
-            Utils.UpdateCurrentProblemPathMetadata( ref CurrentProblem, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
-
+            //Utils.UpdateCurrentProblemPathMetadata( ref CurrentProblem, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+            Utils.UpdateMetadata( CurrentProblem.Path, CurrentProblem );
             //CurrentProblem.Path.CoveredArea = CurrentProblem.Path.Quality;
 
             return bestQuality == -1 ? SolveStatus.Unsolved : SolveStatus.Feasible;

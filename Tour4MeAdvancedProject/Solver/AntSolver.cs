@@ -122,7 +122,8 @@ namespace Tour4MeAdvancedProject.Solver
             System.Tuple<double, double>[] boudingCoordinates = P.Path.BoundingCoordinates;
 
 
-            Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+            //Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+            Utils.UpdateMetadata( P.Path, P );
 
             return SolveStatus.Feasible;
         }

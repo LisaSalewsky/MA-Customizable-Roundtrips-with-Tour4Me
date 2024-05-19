@@ -392,6 +392,73 @@
     </script>
 
     <script>
+        
+        $(document).ready(function () {
+                console.log("Button clicked");
+            $(document).on("click", "[id^=toggleRouteButton]", function (event) {
+                event.preventDefault();
+                event.stopPropagation()
+                toggleRoute(this);
+            });
+                console.log("Button clicked");
+            $(document).on("click", "[id^=deleteRouteButton]", function (event) {
+                event.preventDefault();
+                event.stopPropagation()
+                deleteRoute(this);
+            });
+        });
+
+        function findRoute(route_id) {
+            var route_obj;
+            for (let index = 0; index < stored_routes.length; index++) {
+                const element = stored_routes[index];
+
+                if (element["route_id"] == route_id) {
+                    return element;
+                }
+            }
+        }
+
+        function toggleRoute(route) {
+            route_id = route.attributes["route_id"].value;
+
+            var route_obj = findRoute(route_id);
+
+            if ($(route).hasClass("off")) {
+                route_obj["line"].addTo(map);
+
+                $(route).removeClass("off");
+
+            } else {
+
+                route_obj["line"].remove(map);
+                $(route).addClass("off");
+
+            }
+        }
+
+
+        function deleteRoute(route) {
+            route_id = route.attributes["route_id"].value;
+
+            var element = document.getElementById("routeInfoTour" + route_id); // will return element
+            element.parentNode.removeChild(element);
+
+
+            for (let index = 0; index < stored_routes.length; index++) {
+                const element = stored_routes[index];
+
+                if (element["route_id"] == route_id) {
+                    element["line"].remove(map);
+                    stored_routes.splice(index, 1);
+                    break;
+                }
+            }
+
+        }
+    </script>
+
+    <script>
         var map = L.map('map').setView([0, 0], 13);
 
         updateOutput();
@@ -947,8 +1014,13 @@
                         open_string = route_counter == 0 ? "open" : "";
                         color = colors[route_counter % colors.length];
 
-                        html_routes.innerHTML += " <details " + open_string + ">"
-                            + "  <summary> <i class=\"fa-solid fa-route\" style=\"color: " + color + ";\"></i> Tour " + (route_counter + 1) + "</summary>"
+                        html_routes.innerHTML += " <details id=\"routeInfoTour" + route_counter + "\" " + open_string + ">"
+                            + "  <summary> <i class=\"fa-solid fa-route\" style=\"color: " + color + ";\"></i> Tour " + (route_counter + 1) + " (" + parsedMetadata["Algo"] + ") "
+                            + "            <button id=\"toggleRouteButton" + route_counter + "\" class=\"btn btn-primary info-elements\" route_id=\"" + route_counter + "\"  data-toggle=\"tooltip\" data-placement=\"bottom\""
+                            + "                title=\"Toggle Selected Route\">T</button>"
+                            + "            <button id=\"deleteRouteButton" + route_counter + "\" class=\"btn btn-red info-elements\" route_id=\"" + route_counter + "\"  data-toggle=\"tooltip\" data-placement=\"bottom\""
+                            + "                title=\"Delete Route\">D</button>"
+                            + " </summary>"
                             + "      <div class=\"form-group row output-info-box\">"
                             + ""
                             + "          <div class=\"form-group column left\">"
@@ -1011,6 +1083,16 @@
                             + "                      </label > "
                             + "                  </div>"
                             + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-4\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"shapeOut\">Covered area"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-7 out-label\">"
+                            + "                      <label id=\"shapeOut" + route_counter + "\">" + parsedMetadata["Shape"] + " "
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "              </div>"
                             + "          </div>"
                             + "          <div class=\"form-group column middle\">"
                             + "          </div>"
@@ -1020,7 +1102,7 @@
                             + "                      <label class=\"routeInfoOutputLabels\" for=\"pathTypesOut\">Path types"
                             + "                      </label>"
                             + "                  </div>"
-                            + "                  <div class=\"form-group col-md-7\">"
+                            + "                  <div class=\"form-group col-md-7 out-label\">"
                             + "                      <label id=\"pathTypesOut" + route_counter + "\">" + parsedMetadata["Path Types"] + " " 
                             + "                      </label>"
                             + "                  </div>"
@@ -1030,7 +1112,7 @@
                             + "                      <label class=\"routeInfoOutputLabels\" for=\"surfacesOut\">Surfaces"
                             + "                      </label>"
                             + "                  </div>"
-                            + "                  <div class=\"form-group col-md-7\">"
+                            + "                  <div class=\"form-group col-md-7 out-label\">"
                             + "                      <label id=\"surfacesOut" + route_counter + "\">" + parsedMetadata["Surfaces"] + " " 
                             + "                      </label>"
                             + "                  </div>"
@@ -1040,19 +1122,35 @@
                             + "                      <label class=\"routeInfoOutputLabels\" for=\"mainSurroundingsOut\">Main surroundings"
                             + "                      </label>"
                             + "                  </div>"
-                            + "                  <div class=\"form-group col-md-7\">"
+                            + "                  <div class=\"form-group col-md-7 out-label\">"
                             + "                      <label id=\"mainSurroundingsOut" + route_counter + "\">" + parsedMetadata["Surroundings"] + " " 
                             + "                      </label>"
                             + "                  </div>"
                             + "              </div>"
                             + "              <div class=\"form-group row\">"
                             + "                  <div class=\"form-group col-md-4\">"
-                            + "                      <label class=\"routeInfoOutputLabels\" for=\"shapeOut\">Covered area"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"initTimeOut\">Init Time"
                             + "                      </label>"
                             + "                  </div>"
-                            + "                  <div class=\"form-group col-md-7\">"
-                            + "                      <label id=\"shapeOut" + route_counter + "\">" + parsedMetadata["Shape"] + " "
+                            + "                  <div class=\"form-group col-md-6 out-label\">"
+                            + "                      <label id=\"initTimeOut" + route_counter + "\">" + parsedMetadata["Initialization time (ms)"] + " "
                             + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-1\">"
+                            + "                      ms"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-4\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"algoTimeOut\">Algo Time"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-6 out-label\">"
+                            + "                      <label id=\"algoTimeOut" + route_counter + "\">" + parsedMetadata["Algorithm computation time (ms)"] + " "
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-1\">"
+                            + "                      ms"
                             + "                  </div>"
                             + "              </div>"
                             + "              <div class=\"form-group row\">"
@@ -1108,16 +1206,16 @@
 
         });
 
-        function findRoute(route_id) {
-            var route_obj;
-            for (let index = 0; index < stored_routes.length; index++) {
-                const element = stored_routes[index];
+        //function findRoute(route_id) {
+        //    var route_obj;
+        //    for (let index = 0; index < stored_routes.length; index++) {
+        //        const element = stored_routes[index];
 
-                if (element["route_id"] == route_id) {
-                    return element;
-                }
-            }
-        }
+        //        if (element["route_id"] == route_id) {
+        //            return element;
+        //        }
+        //    }
+        //}
 
 
 

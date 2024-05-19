@@ -134,6 +134,8 @@ namespace Tour4MeAdvancedProject.Solver
             problem.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
             problem.Path.Elevation = problem.Path.Elevation / 2;
 
+            Utils.UpdateMetadata( problem.Path, problem );
+
             return SolveStatus.Feasible;
         }
 

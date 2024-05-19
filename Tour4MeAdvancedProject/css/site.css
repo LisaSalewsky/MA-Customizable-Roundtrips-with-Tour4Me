@@ -199,6 +199,14 @@
         font-weight: bold;
     }
 
+    #inputs_bottom .info-elements {
+        height: 30px;
+        font-size: 13px;
+        border-radius: 0.25em !important;
+        margin-right: 5px;        
+        margin-bottom: 0.5rem;
+    }
+
     #inputs_bottom details {
         width: 100%;
     }

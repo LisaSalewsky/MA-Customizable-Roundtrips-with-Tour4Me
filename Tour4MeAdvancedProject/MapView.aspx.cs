@@ -294,6 +294,9 @@ namespace Tour4MeAdvancedProject
 
             SolveStatus status = SolveStatus.Unsolved;
 
+            string algo = "";
+
+
             Console.WriteLine( "start" );
             switch (algorithm)
             {
@@ -302,6 +305,7 @@ namespace Tour4MeAdvancedProject
                         // Greedy
                         SelectionSolver solver = new SelectionSolver();
                         status = solver.Solve( ref problem );
+                        algo = Algo.Greedy.ToString();
                         break;
                     }
                 case 1:
@@ -309,6 +313,7 @@ namespace Tour4MeAdvancedProject
                         // minCost
                         JoggerSolver solver = new JoggerSolver();
                         status = solver.Solve( ref problem );
+                        algo = Algo.minCost.ToString();
                         break;
                     }
                 case 2:
@@ -316,6 +321,7 @@ namespace Tour4MeAdvancedProject
                         // ILS
                         //ILS solver = new ILS();
                         //status = solver.Solve( ref problem);
+                        algo = Algo.ILS.ToString();
                         break;
                     }
                 case 3:
@@ -323,6 +329,7 @@ namespace Tour4MeAdvancedProject
                         // Ant
                         AntSolver solver = new AntSolver();
                         status = solver.Solve( ref problem );
+                        algo = Algo.AntColony.ToString();
                         break;
                     }
                 case 4:
@@ -330,6 +337,7 @@ namespace Tour4MeAdvancedProject
                         // Ant MinCost
                         AntCombined solver = new AntCombined();
                         status = solver.Solve( ref problem, Algo.minCost );
+                        algo = Algo.AntMinCost.ToString();
                         break;
                     }
                 case 5:
@@ -337,6 +345,7 @@ namespace Tour4MeAdvancedProject
                         // Ant Greedy
                         AntCombined solver = new AntCombined();
                         status = solver.Solve( ref problem, Algo.Greedy );
+                        algo = Algo.AntGreedy.ToString();
                         break;
                     }
                 case 6:
@@ -344,6 +353,7 @@ namespace Tour4MeAdvancedProject
                         // Simmulated Annealing Greedy
                         SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
                         status = solver.Solve( ref problem, Algo.Greedy );
+                        algo = Algo.SimulatedAnnealingGreedy.ToString();
                         break;
                     }
                 case 7:
@@ -351,6 +361,7 @@ namespace Tour4MeAdvancedProject
                         // Simmulated Annealing MinCost
                         SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
                         status = solver.Solve( ref problem, Algo.minCost );
+                        algo = Algo.SimulatedAnnealingMinCost.ToString();
                         break;
 
                     }
@@ -359,6 +370,7 @@ namespace Tour4MeAdvancedProject
                         // Simmulated Annealing Ant
                         SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
                         status = solver.Solve( ref problem, Algo.AntColony );
+                        algo = Algo.SimulatedAnnealingAnt.ToString();
                         break;
                     }
                 case 9:
@@ -366,6 +378,7 @@ namespace Tour4MeAdvancedProject
                         // Simmulated Annealing Empty
                         SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
                         status = solver.Solve( ref problem, Algo.SimulatedAnnealingEmpty );
+                        algo = Algo.SimulatedAnnealingEmpty.ToString();
                         break;
                     }
                 case 10:
@@ -373,6 +386,7 @@ namespace Tour4MeAdvancedProject
                         // Genetic
                         SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
                         status = solver.Solve( ref problem, Algo.SimulatedAnnealingFullyRandom );
+                        algo = Algo.SimulatedAnnealingFullyRandom.ToString();
                         break;
                     }
             }
@@ -385,6 +399,7 @@ namespace Tour4MeAdvancedProject
 
             problem.Metadata.Add( "Initialization time (ms): " + init_time_int.ToString() );
             problem.Metadata.Add( "Algorithm computation time (ms): " + algo_time_int.ToString() );
+            problem.Metadata.Add( "Algo: " + algo );
 
             switch (status)
             {

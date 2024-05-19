@@ -17,6 +17,7 @@ namespace Tour4MeAdvancedProject.Helper
 
         public enum SurfaceTag
         {
+            Asphalt,
             Paved,
             Cobblestone,
             Gravel,

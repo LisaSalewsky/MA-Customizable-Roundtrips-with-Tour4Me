@@ -15,7 +15,7 @@ namespace Tour4MeAdvancedProject.Solver
         // runs with changing temperature
         public int Runs { get; set; } = 50;
         // repetitions at each temperature
-        public int Repetitions { get; set; } = 10;
+        public int Repetitions { get; set; } = 5;
         public double Temperature { get; set; } = 0.9;
         public Random Random { get; set; } = new Random();
         public int NumberwaypointList { get; set; } = 10;
@@ -41,6 +41,7 @@ namespace Tour4MeAdvancedProject.Solver
 
         public override SolveStatus Solve ( ref Problem P )
         {
+            bool useDatastructure = false;
 
 
             SolveStatus status = SolveStatus.Unsolved;
@@ -207,7 +208,7 @@ namespace Tour4MeAdvancedProject.Solver
                     for (int j = 0; j < Repetitions; j++)
                     {
 
-                        Path neighboringSolution = GenerateNeighborSolution( problem, ref waypointList, ref cumulativeProbabilities, ref availableNodes, rnd, probabilityList, waypointAllDistancesForNodeIdDict, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, out recalculateProbs, ref waypointChangeAndIdx, out int currentWaypointId ); // , out alreadyRecalculated );
+                        Path neighboringSolution = GenerateNeighborSolution( problem, useDatastructure, ref waypointList, ref cumulativeProbabilities, ref availableNodes, rnd, waypointAllDistancesForNodeIdDict, out recalculateProbs, ref waypointChangeAndIdx, out int currentWaypointId ); // , out alreadyRecalculated );
 
                         double neighborQuality = neighboringSolution.Quality;
 
@@ -229,8 +230,10 @@ namespace Tour4MeAdvancedProject.Solver
                             pathChanged = true;
 
                             viableNodes = availableNodes.Where( x => x != null && probabilityList[ x.GraphNodeId ].Item1 > 0 ).ToArray();
-                            UpdateDistances( problem, waypointList, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
-
+                            if (useDatastructure)
+                            {
+                                UpdateDistances( problem, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
+                            }
                         }
                         // if the quality of the new solution was worse than of the initial one, pick the new one with a chance
                         else
@@ -253,7 +256,10 @@ namespace Tour4MeAdvancedProject.Solver
                                 }
 
                                 viableNodes = availableNodes.Where( x => x != null && probabilityList[ x.GraphNodeId ].Item1 > 0 ).ToArray();
-                                UpdateDistances( problem, waypointList, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
+                                if (useDatastructure)
+                                {
+                                    UpdateDistances( problem, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
+                                }
 
                                 cumulativeProbabilitiesBackup = new List<double>( cumulativeProbabilities ).ToArray();
                                 pathChanged = true;
@@ -276,7 +282,15 @@ namespace Tour4MeAdvancedProject.Solver
                             closestNode = graphNodes
                                     .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) )
                                     .FirstOrDefault();
-                            probabilityList = CalculateProbabilityDistribution( closestNode, problem, availableNodes );
+                            if (Algo == Algo.SimulatedAnnealingFullyRandom)
+                            {
+                                probabilityList = CalculateFullyRandomDistribution( closestNode, P, availableNodes );
+                            }
+                            else
+                            {
+                                // calculate cummulative Probabilities for selecting the index
+                                probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes );
+                            }
 
                             // calculate cummulative Probabilities for selecting the index
                             cumulativeProbabilities = new double[ probabilityList.Count ];
@@ -300,7 +314,15 @@ namespace Tour4MeAdvancedProject.Solver
                         closestNode = graphNodes
                                 .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) )
                                 .FirstOrDefault();
-                        probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes );
+                        if (Algo == Algo.SimulatedAnnealingFullyRandom)
+                        {
+                            probabilityList = CalculateFullyRandomDistribution( closestNode, P, availableNodes );
+                        }
+                        else
+                        {
+                            // calculate cummulative Probabilities for selecting the index
+                            probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes );
+                        }
 
                         // calculate cummulative Probabilities for selecting the index
                         cumulativeProbabilities = new double[ probabilityList.Count ];
@@ -323,12 +345,14 @@ namespace Tour4MeAdvancedProject.Solver
             currentPathsMaxSteepness = P.Path.Steepness;
             currentElevationDiff = P.Path.Elevation;
             boudingCoordinates = P.Path.BoundingCoordinates;
-            Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+            //Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+
+            Utils.UpdateMetadata( P.Path, P );
 
             return SolveStatus.Feasible;
         }
 
-        private static void UpdateDistances ( Problem problem, List<Waypoint> waypointList, ref Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, Tuple<string, int> waypointChangeAndIdx, Node[] viableNodes, int newWaypointId )
+        private static void UpdateDistances ( Problem problem, ref Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, Tuple<string, int> waypointChangeAndIdx, Node[] viableNodes, int newWaypointId )
         {
             if (waypointChangeAndIdx.Item1 == "add")
             {
@@ -402,12 +426,14 @@ namespace Tour4MeAdvancedProject.Solver
             {
                 if (dist[ i ] > 0)
                 {
-                    dist[ i ] = 1;
+                    dist[ i ] = startedWithEmptyPath
+                        ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : 1
+                        : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : 1;
                 }
             }
 
 
-            CaclucateAndSetProbabilities( p, probNodeIdList, startedWithEmptyPath, avgDist, dist );
+            CaclucateAndSetProbabilities( p, probNodeIdList, dist );
 
             return probNodeIdList;
         }
@@ -489,15 +515,6 @@ namespace Tour4MeAdvancedProject.Solver
 
             CaculateDistances( p, availableNodes, dist, actDist, start, queue );
 
-            CaclucateAndSetProbabilities( p, probNodeIdList, startedWithEmptyPath, avgDist, dist );
-
-            return probNodeIdList;
-
-        }
-
-        private static void CaclucateAndSetProbabilities ( Problem p, List<Tuple<double, int>> probNodeIdList, bool startedWithEmptyPath, double avgDist, double[] dist )
-        {
-
             // set distances that are too far to 0
             for (int i = 0; i < dist.Length; i++)
             {
@@ -508,6 +525,16 @@ namespace Tour4MeAdvancedProject.Solver
                         : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : Math.Pow( dist[ i ], 2 );
                 }
             }
+
+            CaclucateAndSetProbabilities( p, probNodeIdList, dist );
+
+            return probNodeIdList;
+
+        }
+
+        private static void CaclucateAndSetProbabilities ( Problem p, List<Tuple<double, int>> probNodeIdList, double[] dist )
+        {
+
             double sum = 0.0;
 
             // Calculate sum of distances
@@ -586,10 +613,10 @@ namespace Tour4MeAdvancedProject.Solver
             }
         }
 
-        private Path GenerateNeighborSolution ( Problem problem, ref List<Waypoint> waypointList, ref double[] cummulativeProbabilities, ref HashSet<Node> availableNodes, Random rnd, List<Tuple<double, int>> probabilityList, Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings, out bool recalculateProbs, ref Tuple<string, int> waypointChangeAndIdx, out int currentWaypointId ) //, out bool alreadyRecalculated )
+        private Path GenerateNeighborSolution ( Problem problem, bool useDatastructure, ref List<Waypoint> waypointList, ref double[] cummulativeProbabilities, ref HashSet<Node> availableNodes, Random rnd, Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, out bool recalculateProbs, ref Tuple<string, int> waypointChangeAndIdx, out int currentWaypointId ) //, out bool alreadyRecalculated )
         {
             // find new Waypoint to insert (& preedSucc coordinates)
-            FindNewRandomWaypoint( problem, ref waypointList, ref cummulativeProbabilities, availableNodes, waypointAllDistancesForNodeIdDict, out Tuple<int, int> predSuccwaypointList, rnd, probabilityList, out Node newWaypoint );
+            FindNewRandomWaypoint( problem, useDatastructure, ref waypointList, ref cummulativeProbabilities, availableNodes, waypointAllDistancesForNodeIdDict, out Tuple<int, int> predSuccwaypointList, rnd, out Node newWaypoint );
             currentWaypointId = newWaypoint.GraphNodeId;
             recalculateProbs = false;
 
@@ -600,7 +627,7 @@ namespace Tour4MeAdvancedProject.Solver
             if (waypointList.Count == 1)
             {
                 waypointChangeAndIdx = Tuple.Create( "add", newWaypoint.GraphNodeId );
-                currentPath = AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
+                currentPath = AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem );
 
             }
             else if (waypointList.Count < 10 && ( problem.Path.Length < problem.TargetDistance + 1000 ))
@@ -610,8 +637,8 @@ namespace Tour4MeAdvancedProject.Solver
                         waypointChangeAndIdx = randomNumber <= 0.5 ? Tuple.Create( "add", newWaypoint.GraphNodeId ) : Tuple.Create( "move", newWaypoint.GraphNodeId );
                         // if there are less than 10 waypoints, only add or move
                         currentPath = randomNumber <= 0.5
-                            ? AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings )
-                            : MoveWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
+                            ? AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem )
+                            : MoveWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem );
                     }
                 }
             }
@@ -622,8 +649,8 @@ namespace Tour4MeAdvancedProject.Solver
                 waypointChangeAndIdx = randomNumber <= 0.5 ? Tuple.Create( "remove", curWaypointNodeId ) : Tuple.Create( "move", newWaypoint.GraphNodeId );
                 // if there are 10 or more, only remove or move
                 currentPath = randomNumber <= 0.5
-                    ? RemoveWaypoint( ref availableNodes, ref waypointList, problem, predSuccwaypointList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings )
-                    : MoveWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
+                    ? RemoveWaypoint( ref availableNodes, ref waypointList, problem, predSuccwaypointList )
+                    : MoveWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, problem );
                 recalculateProbs = true;
             }
 
@@ -685,7 +712,7 @@ namespace Tour4MeAdvancedProject.Solver
             return incident;
         }
 
-        private void FindNewRandomWaypoint ( Problem P, ref List<Waypoint> waypointList, ref double[] cumulativeProbabilities, HashSet<Node> availableNodes, Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, out Tuple<int, int> predSuccwaypointList, Random rnd, List<Tuple<double, int>> probabilityList, out Node newWaypoint )
+        private void FindNewRandomWaypoint ( Problem P, bool useDatastructure, ref List<Waypoint> waypointList, ref double[] cumulativeProbabilities, HashSet<Node> availableNodes, Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, out Tuple<int, int> predSuccwaypointList, Random rnd, out Node newWaypoint )
         {
             // pick a random number between 0 and 1
             double randomNumber = rnd.NextDouble();
@@ -693,7 +720,11 @@ namespace Tour4MeAdvancedProject.Solver
             int chosenIndex = 0;
             for (int i = 0; i < cumulativeProbabilities.Length; i++)
             {
-                if (randomNumber < cumulativeProbabilities[ i ] && !waypointList.Any( x => x.NodeID == i ) && P.Graph.VNodes[ chosenIndex ] != null)
+                Node selected = P.Graph.VNodes[ i ];
+                if (randomNumber < cumulativeProbabilities[ i ] &&
+                    !waypointList.Any( x => x.NodeID == i ) &&
+                    selected != null &&
+                    availableNodes.Contains( selected ))
                 {
                     chosenIndex = i;
                     break;
@@ -715,35 +746,41 @@ namespace Tour4MeAdvancedProject.Solver
                 cumulativeProbabilities[ j ] = cumulativeProbabilities[ j - 1 ];
             }
             int closestWaypointIdx = -1;
-
-            // calculate shortest distance to all waypoints except the first (ensures that the starting point can never be deleted)
-            //for (int i = 1; i < waypointList.Count; i++)
-            //{
-            //    double currentShortestPath = P.Graph.ShortestPath( waypointList[ i ].NodeID, newWaypoint.GraphNodeId );
-
-            //    if (currentShortestPath < shortestPath)
-            //    {
-            //        shortestPath = currentShortestPath;
-            //        closestWaypointIdx = i;
-            //    }
-
-
-            //}
-
             double generalShortestDist = double.MaxValue;
 
+            // calculate shortest distance to all waypoints except the first (ensures that the starting point can never be deleted)
 
-            foreach (KeyValuePair<int, Dictionary<int, double>> kvp in waypointAllDistancesForNodeIdDict)
+
+            if (!useDatastructure)
             {
-                // make sure we only look at permitted nodes (the ones that have been added to the waypoint
-                // and never use the first waypoint, since that is the starting point and should neither be removed nor moved
-                if (waypointAllDistancesForNodeIdDict[ kvp.Key ].ContainsKey( chosenIndex ) && kvp.Key != waypointList[ 0 ].NodeID)
+
+                for (int i = 1; i < waypointList.Count; i++)
                 {
-                    double shotestDist = waypointAllDistancesForNodeIdDict[ kvp.Key ][ chosenIndex ];
-                    if (shotestDist < generalShortestDist)
+                    double currentShortestPath = P.Graph.ShortestPath( waypointList[ i ].NodeID, newWaypoint.GraphNodeId );
+
+                    if (currentShortestPath < generalShortestDist)
                     {
-                        generalShortestDist = shotestDist;
-                        closestWaypointIdx = waypointList.FindIndex( x => x.NodeID == kvp.Key );
+                        generalShortestDist = currentShortestPath;
+                        closestWaypointIdx = i;
+                    }
+
+
+                }
+            }
+            else
+            {
+                foreach (KeyValuePair<int, Dictionary<int, double>> kvp in waypointAllDistancesForNodeIdDict)
+                {
+                    // make sure we only look at permitted nodes (the ones that have been added to the waypoint
+                    // and never use the first waypoint, since that is the starting point and should neither be removed nor moved
+                    if (waypointAllDistancesForNodeIdDict[ kvp.Key ].ContainsKey( chosenIndex ) && kvp.Key != waypointList[ 0 ].NodeID)
+                    {
+                        double shotestDist = waypointAllDistancesForNodeIdDict[ kvp.Key ][ chosenIndex ];
+                        if (shotestDist < generalShortestDist)
+                        {
+                            generalShortestDist = shotestDist;
+                            closestWaypointIdx = waypointList.FindIndex( x => x.NodeID == kvp.Key );
+                        }
                     }
                 }
             }
@@ -760,7 +797,7 @@ namespace Tour4MeAdvancedProject.Solver
 
         }
 
-        private Path RemoveWaypoint ( ref HashSet<Node> availableNodes, ref List<Waypoint> waypointList, Problem p, Tuple<int, int> predSuccwaypointList, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings )
+        private Path RemoveWaypoint ( ref HashSet<Node> availableNodes, ref List<Waypoint> waypointList, Problem p, Tuple<int, int> predSuccwaypointList )
         {
             int curWaypoint = ( predSuccwaypointList.Item1 + 1 + waypointList.Count ) % waypointList.Count;
             int curWaypointNodeId = waypointList[ curWaypoint ].NodeID;
@@ -769,18 +806,16 @@ namespace Tour4MeAdvancedProject.Solver
 
             // removed node is now available again
             _ = availableNodes.Add( p.Graph.VNodes[ curWaypointNodeId ] );
-
-
-            double elevationDiff = p.Path.Elevation;
-            double maxSteepness = p.Path.Steepness;
-            double currentEdgeProfits = p.Path.TotalEdgeProfits;
-            double currentArea = p.Path.CoveredArea;
-            double currentQuality = p.Path.Quality;
+            _ = p.Path.Elevation;
+            _ = p.Path.Steepness;
+            _ = p.Path.TotalEdgeProfits;
+            _ = p.Path.CoveredArea;
+            _ = p.Path.Quality;
 
 
             Path returnPath = new Path( p.Path );
-            List<int> visited = new List<int>();
-            List<Edge> pathEdges = new List<Edge>();
+            _ = new List<int>();
+            _ = new List<Edge>();
 
 
             // calcualte new path beween pred and succ
@@ -791,14 +826,14 @@ namespace Tour4MeAdvancedProject.Solver
             waypointList[ predIdxInWaypointList ].Edges = edges;
 
             // remove current waypoint from WP list
-            _ = waypointList.Remove( waypointList.First( x => x.NodeID == curWaypointNodeId ) );
+            waypointList.RemoveAt( curWaypoint );
 
-            Utils.UpdateMetadata( p, waypointList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, ref elevationDiff, ref maxSteepness, ref currentEdgeProfits, ref currentArea, ref currentQuality, nodeIds, null, ref returnPath, visited, pathEdges );
+            Utils.UpdateMetadata( p, waypointList, nodeIds, null, ref returnPath );
 
             return returnPath;
         }
 
-        private Path MoveWaypoint ( ref HashSet<Node> availableNodes, ref List<Waypoint> waypointList, Tuple<int, int> predSuccwaypointList, Node newWaypoint, Problem p, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings )
+        private Path MoveWaypoint ( ref HashSet<Node> availableNodes, ref List<Waypoint> waypointList, Tuple<int, int> predSuccwaypointList, Node newWaypoint, Problem p )
         {
 
             int curWaypoint = ( predSuccwaypointList.Item1 + 1 + waypointList.Count ) % waypointList.Count;
@@ -822,15 +857,13 @@ namespace Tour4MeAdvancedProject.Solver
 
 
             Path returnPath = new Path( p.Path );
-
-            List<int> visited = new List<int>();
-            List<Edge> pathEdges = new List<Edge>();
-
-            double elevationDiff = returnPath.Elevation;
-            double maxSteepness = returnPath.Steepness;
-            double currentEdgeProfits = returnPath.TotalEdgeProfits;
-            double currentArea = returnPath.CoveredArea;
-            double currentQuality = returnPath.Quality;
+            _ = new List<int>();
+            _ = new List<Edge>();
+            _ = returnPath.Elevation;
+            _ = returnPath.Steepness;
+            _ = returnPath.TotalEdgeProfits;
+            _ = returnPath.CoveredArea;
+            _ = returnPath.Quality;
 
 
 
@@ -853,35 +886,17 @@ namespace Tour4MeAdvancedProject.Solver
             waypointList[ curWaypoint ].Path = nodeIdsR;
 
 
-            Utils.UpdateMetadata( p, waypointList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, ref elevationDiff, ref maxSteepness, ref currentEdgeProfits, ref currentArea, ref currentQuality, nodeIdsL, nodeIdsR, ref returnPath, visited, pathEdges );
+            Utils.UpdateMetadata( p, waypointList, nodeIdsL, nodeIdsR, ref returnPath );
             return returnPath;
         }
 
-        private Path RemoveAndAddWaypoint ( ref HashSet<Node> availableNodes, List<Waypoint> waypointList, Problem p, Random rnd, Node newWaypoint, Tuple<int, int> predSuccwaypointList, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings )
-        {
-            // moving = remove waypoint closest to new waypoint
-            Path path = RemoveWaypoint( ref availableNodes, ref waypointList, p, predSuccwaypointList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
-
-            p.Path = path;
-
-            // + add in new one close to pred and succ of it 
-            return AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, p, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings );
-        }
-
-        private Path AddWaypoint ( ref HashSet<Node> availableNodes, ref List<Waypoint> waypointList, Tuple<int, int> predSuccwaypointList, Node newWaypoint, Problem p, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings )
+        private Path AddWaypoint ( ref HashSet<Node> availableNodes, ref List<Waypoint> waypointList, Tuple<int, int> predSuccwaypointList, Node newWaypoint, Problem p )
         {
             int predIdx = predSuccwaypointList.Item1;
             int succIdx = predSuccwaypointList.Item2;
-
-            double elevationDiff = 0;
-            double maxSteepness = 0;
-            double currentEdgeProfits = 0;
-            double currentArea = 0;
-            double currentQuality = 0;
             Path returnPath = new Path( p.Path );
-
-            List<int> visited = new List<int>();
-            List<Edge> pathEdges = new List<Edge>();
+            _ = new List<int>();
+            _ = new List<Edge>();
             List<Edge> edgesL;
             List<int> nodeIdsL;
             List<Edge> edgesR;
@@ -933,10 +948,21 @@ namespace Tour4MeAdvancedProject.Solver
             // new waypoint is not available anymore
             _ = availableNodes.Remove( newWaypoint );
 
-            Utils.UpdateMetadata( p, waypointList, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, ref elevationDiff, ref maxSteepness, ref currentEdgeProfits, ref currentArea, ref currentQuality, nodeIdsL, nodeIdsR, ref returnPath, visited, pathEdges );
+            Utils.UpdateMetadata( p, waypointList, nodeIdsL, nodeIdsR, ref returnPath );
 
             return returnPath;
         }
 
+
+        private Path RemoveAndAddWaypoint ( ref HashSet<Node> availableNodes, List<Waypoint> waypointList, Problem p, Node newWaypoint, Tuple<int, int> predSuccwaypointList )
+        {
+            // moving = remove waypoint closest to new waypoint
+            Path path = RemoveWaypoint( ref availableNodes, ref waypointList, p, predSuccwaypointList );
+
+            p.Path = path;
+
+            // + add in new one close to pred and succ of it 
+            return AddWaypoint( ref availableNodes, ref waypointList, predSuccwaypointList, newWaypoint, p );
+        }
     }
 }
