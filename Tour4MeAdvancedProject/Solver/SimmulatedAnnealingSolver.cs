@@ -42,6 +42,8 @@ namespace Tour4MeAdvancedProject.Solver
         public override SolveStatus Solve ( ref Problem P )
         {
             bool useDatastructure = false;
+            bool calculatePointsOfInterest = true;
+
 
 
             SolveStatus status = SolveStatus.Unsolved;
@@ -171,16 +173,22 @@ namespace Tour4MeAdvancedProject.Solver
                 else
                 {
                     // calculate cummulative Probabilities for selecting the index
-                    probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes );
+                    probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes, calculatePointsOfInterest );
                 }
-                double[] cumulativeProbabilities = new double[ probabilityList.Count ];
-                cumulativeProbabilities[ 0 ] = probabilityList[ 0 ].Item1;
+                Dictionary<int, double> cumulativeProbabilities = new Dictionary<int, double>
+                {
+                    [ 0 ] = probabilityList[ 0 ].Item1
+                };
                 for (int i = 1; i < probabilityList.Count; i++)
                 {
-                    cumulativeProbabilities[ i ] = cumulativeProbabilities[ i - 1 ] + probabilityList[ i ].Item1;
+                    if (i > 0)
+                    {
+                        cumulativeProbabilities.Add( i, probabilityList[ i ].Item1 + cumulativeProbabilities[ i - 1 ] );
+                    }
+                    //cumulativeProbabilities[ i ] = cumulativeProbabilities[ i - 1 ] + probabilityList[ i ].Item1;
                 }
                 List<Waypoint> waypointListBackup = new List<Waypoint>( waypointList );
-                double[] cumulativeProbabilitiesBackup = new double[ cumulativeProbabilities.Length ];
+                Dictionary<int, double> cumulativeProbabilitiesBackup = new Dictionary<int, double>();
                 bool alreadyRecalculated = false;
 
                 bool pathChanged = false;
@@ -190,10 +198,14 @@ namespace Tour4MeAdvancedProject.Solver
 
 
                 Node[] viableNodes = availableNodes.Where( x => x != null && probabilityList[ x.GraphNodeId ].Item1 > 0 ).ToArray();
-                waypointAllDistancesForNodeIdDict.Add( waypointList[ 0 ].NodeID, new Dictionary<int, double>() );
-                foreach (Node viableNode in viableNodes)
+
+                if (useDatastructure)
                 {
-                    waypointAllDistancesForNodeIdDict[ waypointList[ 0 ].NodeID ].Add( viableNode.GraphNodeId, viableNode.ShortestDistance );
+                    waypointAllDistancesForNodeIdDict.Add( waypointList[ 0 ].NodeID, new Dictionary<int, double>() );
+                    foreach (Node viableNode in viableNodes)
+                    {
+                        waypointAllDistancesForNodeIdDict[ waypointList[ 0 ].NodeID ].Add( viableNode.GraphNodeId, viableNode.ShortestDistance );
+                    }
                 }
 
 
@@ -226,7 +238,7 @@ namespace Tour4MeAdvancedProject.Solver
                                 waypointListBackup.Add( (Waypoint)wp.Clone() );
                             }
 
-                            cumulativeProbabilitiesBackup = new List<double>( cumulativeProbabilities ).ToArray();
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
                             pathChanged = true;
 
                             viableNodes = availableNodes.Where( x => x != null && probabilityList[ x.GraphNodeId ].Item1 > 0 ).ToArray();
@@ -261,7 +273,7 @@ namespace Tour4MeAdvancedProject.Solver
                                     UpdateDistances( problem, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
                                 }
 
-                                cumulativeProbabilitiesBackup = new List<double>( cumulativeProbabilities ).ToArray();
+                                cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
                                 pathChanged = true;
                             }
                         }
@@ -273,7 +285,7 @@ namespace Tour4MeAdvancedProject.Solver
                             {
                                 waypointList.Add( (Waypoint)wp.Clone() );
                             }
-                            cumulativeProbabilities = new List<double>( cumulativeProbabilitiesBackup ).ToArray();
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
 
                         }
                         else if (problem.Path.Length > problem.TargetDistance + 1000)
@@ -289,17 +301,19 @@ namespace Tour4MeAdvancedProject.Solver
                             else
                             {
                                 // calculate cummulative Probabilities for selecting the index
-                                probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes );
+                                probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes, calculatePointsOfInterest );
                             }
 
                             // calculate cummulative Probabilities for selecting the index
-                            cumulativeProbabilities = new double[ probabilityList.Count ];
-                            cumulativeProbabilities[ 0 ] = probabilityList[ 0 ].Item1;
+                            cumulativeProbabilities = new Dictionary<int, double>
+                            {
+                                [ 0 ] = probabilityList[ 0 ].Item1
+                            };
                             for (int l = 1; l < probabilityList.Count; l++)
                             {
                                 cumulativeProbabilities[ l ] = cumulativeProbabilities[ l - 1 ] + probabilityList[ l ].Item1;
                             }
-                            cumulativeProbabilitiesBackup = new double[ cumulativeProbabilities.Length ];
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
                             alreadyRecalculated = true;
                         }
                         pathChanged = false;
@@ -321,17 +335,19 @@ namespace Tour4MeAdvancedProject.Solver
                         else
                         {
                             // calculate cummulative Probabilities for selecting the index
-                            probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes );
+                            probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes, calculatePointsOfInterest );
                         }
 
                         // calculate cummulative Probabilities for selecting the index
-                        cumulativeProbabilities = new double[ probabilityList.Count ];
-                        cumulativeProbabilities[ 0 ] = probabilityList[ 0 ].Item1;
+                        cumulativeProbabilities = new Dictionary<int, double>
+                        {
+                            [ 0 ] = probabilityList[ 0 ].Item1
+                        };
                         for (int l = 1; l < probabilityList.Count; l++)
                         {
                             cumulativeProbabilities[ l ] = cumulativeProbabilities[ l - 1 ] + probabilityList[ l ].Item1;
                         }
-                        cumulativeProbabilitiesBackup = new double[ cumulativeProbabilities.Length ];
+                        cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
                         alreadyRecalculated = true;
                     }
                 }
@@ -494,7 +510,7 @@ namespace Tour4MeAdvancedProject.Solver
         }
 
 
-        private List<Tuple<double, int>> CalculateProbabilityDistribution ( Node pathMiddle, Problem p, HashSet<Node> availableNodes )
+        private List<Tuple<double, int>> CalculateProbabilityDistribution ( Node pathMiddle, Problem p, HashSet<Node> availableNodes, bool calculatePointsOfInterest )
         {
 
             // list containing a probability and the nodeID of the node this probability belongs to
@@ -513,16 +529,34 @@ namespace Tour4MeAdvancedProject.Solver
             int start = pathMiddle.GraphNodeId;
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
 
-            CaculateDistances( p, availableNodes, dist, actDist, start, queue );
 
-            // set distances that are too far to 0
-            for (int i = 0; i < dist.Length; i++)
+            if (calculatePointsOfInterest)
             {
-                if (dist[ i ] != 0)
+                CaculateDistances( p, availableNodes, dist, actDist, start, queue );
+                foreach (Node node in availableNodes)
                 {
-                    dist[ i ] = startedWithEmptyPath
-                        ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : dist[ i ] / 100
-                        : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : Math.Pow( dist[ i ], 2 );
+                    int i = node.GraphNodeId;
+                    if (dist[ i ] > 0)
+                    {
+                        dist[ i ] = startedWithEmptyPath
+                            ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : 1 / node.Incident.Sum( x => x.Profit * x.Cost )
+                            : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : 1 / node.Incident.Sum( x => x.Profit * x.Cost );
+                    }
+                }
+            }
+            else
+            {
+                CaculateDistances( p, availableNodes, dist, actDist, start, queue );
+
+                // set distances that are too far to 0
+                for (int i = 0; i < dist.Length; i++)
+                {
+                    if (dist[ i ] != 0)
+                    {
+                        dist[ i ] = startedWithEmptyPath
+                            ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : dist[ i ] / 100
+                            : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : Math.Pow( dist[ i ], 2 );
+                    }
                 }
             }
 

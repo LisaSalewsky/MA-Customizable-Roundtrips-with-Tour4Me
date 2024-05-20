@@ -877,6 +877,73 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
         }
 
+        public Dictionary<int, double> GetDistancesForViableNodes ( int start, double distance )
+        {
+            Dictionary<int, double> resutls = new Dictionary<int, double>();
+            double[] dist = new double[ VNodes.Count ];
+            PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
+
+
+            dist[ start ] = 0.0;
+            queue.Enqueue( 0.0, new Tuple<int, double>( start, 0.0 ) );
+
+            while (queue.Count > 0)
+            {
+                (double, Tuple<int, double>) current = queue.Dequeue();
+                _ = current.Item1;
+                int currentNode = current.Item2.Item1;
+                double actual = current.Item2.Item2;
+
+                double bestKnownDist = dist[ currentNode ];
+                if (bestKnownDist == 0.0 && bestKnownDist == double.MaxValue)
+                {
+                    dist[ currentNode ] = actual;
+                    bestKnownDist = actual;
+                }
+
+                if (bestKnownDist != actual)
+                {
+                    continue;
+                }
+
+                List<Edge> currentIncident = VNodes[ currentNode ].Incident;
+                foreach (Edge edge in currentIncident)
+                {
+                    Node neighbor = edge.SourceNode.GraphNodeId == currentNode ? edge.TargetNode : edge.SourceNode;
+                    int neighborId = neighbor.GraphNodeId;
+
+                    double newDistance = bestKnownDist + edge.Cost;
+
+                    double currentNeighborDist = dist[ neighborId ];
+                    if (currentNeighborDist == 0.0 && neighborId != start)
+                    {
+                        dist[ neighborId ] = double.MaxValue;
+                        currentNeighborDist = double.MaxValue;
+                    }
+
+                    if (newDistance <= distance)
+                    {
+                        if (newDistance < currentNeighborDist)
+                        {
+                            double heuristic = newDistance + GetDistanceFromLatLon( start, neighborId );
+                            queue.Enqueue( heuristic, new Tuple<int, double>( neighborId, newDistance ) );
+                            dist[ neighborId ] = newDistance;
+                            neighbor.ShortestDistance = newDistance;
+
+                            if (!resutls.ContainsKey( neighborId ))
+                            {
+                                resutls.Add( neighborId, newDistance );
+                            }
+                            else
+                            {
+                                resutls[ neighborId ] = newDistance;
+                            }
+                        }
+                    }
+                }
+            }
+            return resutls;
+        }
 
         public double ShortestPath ( int start, int end )
         {
