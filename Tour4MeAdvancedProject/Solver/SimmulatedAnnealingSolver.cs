@@ -42,7 +42,7 @@ namespace Tour4MeAdvancedProject.Solver
         public override SolveStatus Solve ( ref Problem P )
         {
             bool useDatastructure = false;
-            bool calculatePointsOfInterest = true;
+            bool calculatePointsOfInterest = false;
 
 
 
@@ -125,6 +125,7 @@ namespace Tour4MeAdvancedProject.Solver
             double currentElevationDiff = P.Path.Elevation;
             Tuple<double, double>[] boudingCoordinates = P.Path.BoundingCoordinates;
 
+            Algo = Algo.SimulatedAnnealingFullyRandom;
 
             if (status == SolveStatus.Feasible || status == SolveStatus.Optimal)
             {
@@ -177,13 +178,15 @@ namespace Tour4MeAdvancedProject.Solver
                 }
                 Dictionary<int, double> cumulativeProbabilities = new Dictionary<int, double>
                 {
-                    [ 0 ] = probabilityList[ 0 ].Item1
+                    { probabilityList[ 0 ].Item2, probabilityList[ 0 ].Item1 }
                 };
+                double prevItem = cumulativeProbabilities.FirstOrDefault().Value;
                 for (int i = 1; i < probabilityList.Count; i++)
                 {
-                    if (i > 0)
+                    if (probabilityList[ i ].Item1 > 0)
                     {
-                        cumulativeProbabilities.Add( i, probabilityList[ i ].Item1 + cumulativeProbabilities[ i - 1 ] );
+                        prevItem += probabilityList[ i ].Item1;
+                        cumulativeProbabilities.Add( i, prevItem );
                     }
                     //cumulativeProbabilities[ i ] = cumulativeProbabilities[ i - 1 ] + probabilityList[ i ].Item1;
                 }
@@ -339,13 +342,20 @@ namespace Tour4MeAdvancedProject.Solver
                         }
 
                         // calculate cummulative Probabilities for selecting the index
+
                         cumulativeProbabilities = new Dictionary<int, double>
                         {
-                            [ 0 ] = probabilityList[ 0 ].Item1
+                            { probabilityList[ 0 ].Item2, probabilityList[ 0 ].Item1 }
                         };
+                        prevItem = cumulativeProbabilities.FirstOrDefault().Value;
                         for (int l = 1; l < probabilityList.Count; l++)
                         {
-                            cumulativeProbabilities[ l ] = cumulativeProbabilities[ l - 1 ] + probabilityList[ l ].Item1;
+                            if (probabilityList[ l ].Item1 > 0)
+                            {
+                                prevItem += probabilityList[ l ].Item1;
+                                cumulativeProbabilities.Add( l, prevItem );
+                            }
+                            //cumulativeProbabilities[ i ] = cumulativeProbabilities[ i - 1 ] + probabilityList[ i ].Item1;
                         }
                         cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
                         alreadyRecalculated = true;
@@ -517,7 +527,7 @@ namespace Tour4MeAdvancedProject.Solver
             List<Tuple<double, int>> probNodeIdList = new List<Tuple<double, int>>();
             bool startedWithEmptyPath = p.Path.Visited.Count == 1;
             // calculate average distance of path nodes to the middle
-            double avgDist = p.TargetDistance / 4;
+            double avgDist = p.TargetDistance / 2;
             if (startedWithEmptyPath)
             {
                 avgDist = 2 * p.TargetDistance / 3;
@@ -539,8 +549,8 @@ namespace Tour4MeAdvancedProject.Solver
                     if (dist[ i ] > 0)
                     {
                         dist[ i ] = startedWithEmptyPath
-                            ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : 1 / node.Incident.Sum( x => x.Profit * x.Cost )
-                            : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : 1 / node.Incident.Sum( x => x.Profit * x.Cost );
+                            ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : 1 / node.Incident.Sum( x => x.Profit * x.Cost ) / 100
+                            : ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null ) ? 0 : 1 / Math.Pow( node.Incident.Sum( x => x.Profit * x.Cost ), 2 );
                     }
                 }
             }
@@ -555,7 +565,7 @@ namespace Tour4MeAdvancedProject.Solver
                     {
                         dist[ i ] = startedWithEmptyPath
                             ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : dist[ i ] / 100
-                            : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : Math.Pow( dist[ i ], 2 );
+                            : ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null ) ? 0 : actDist[ i ];
                     }
                 }
             }
@@ -647,7 +657,7 @@ namespace Tour4MeAdvancedProject.Solver
             }
         }
 
-        private Path GenerateNeighborSolution ( Problem problem, bool useDatastructure, ref List<Waypoint> waypointList, ref double[] cummulativeProbabilities, ref HashSet<Node> availableNodes, Random rnd, Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, out bool recalculateProbs, ref Tuple<string, int> waypointChangeAndIdx, out int currentWaypointId ) //, out bool alreadyRecalculated )
+        private Path GenerateNeighborSolution ( Problem problem, bool useDatastructure, ref List<Waypoint> waypointList, ref Dictionary<int, double> cummulativeProbabilities, ref HashSet<Node> availableNodes, Random rnd, Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, out bool recalculateProbs, ref Tuple<string, int> waypointChangeAndIdx, out int currentWaypointId ) //, out bool alreadyRecalculated )
         {
             // find new Waypoint to insert (& preedSucc coordinates)
             FindNewRandomWaypoint( problem, useDatastructure, ref waypointList, ref cummulativeProbabilities, availableNodes, waypointAllDistancesForNodeIdDict, out Tuple<int, int> predSuccwaypointList, rnd, out Node newWaypoint );
@@ -746,21 +756,21 @@ namespace Tour4MeAdvancedProject.Solver
             return incident;
         }
 
-        private void FindNewRandomWaypoint ( Problem P, bool useDatastructure, ref List<Waypoint> waypointList, ref double[] cumulativeProbabilities, HashSet<Node> availableNodes, Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, out Tuple<int, int> predSuccwaypointList, Random rnd, out Node newWaypoint )
+        private void FindNewRandomWaypoint ( Problem P, bool useDatastructure, ref List<Waypoint> waypointList, ref Dictionary<int, double> cumulativeProbabilities, HashSet<Node> availableNodes, Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, out Tuple<int, int> predSuccwaypointList, Random rnd, out Node newWaypoint )
         {
             // pick a random number between 0 and 1
             double randomNumber = rnd.NextDouble();
             // use cummulative probabilities to pick the first matching index
             int chosenIndex = 0;
-            for (int i = 0; i < cumulativeProbabilities.Length; i++)
+            foreach (KeyValuePair<int, double> kvp in cumulativeProbabilities)
             {
-                Node selected = P.Graph.VNodes[ i ];
-                if (randomNumber < cumulativeProbabilities[ i ] &&
-                    !waypointList.Any( x => x.NodeID == i ) &&
+                Node selected = P.Graph.VNodes[ kvp.Key ];
+                if (randomNumber < kvp.Value &&
+                    !waypointList.Any( x => x.NodeID == kvp.Key ) &&
                     selected != null &&
                     availableNodes.Contains( selected ))
                 {
-                    chosenIndex = i;
+                    chosenIndex = kvp.Key;
                     break;
                 }
             }
@@ -768,17 +778,17 @@ namespace Tour4MeAdvancedProject.Solver
             // the new waypoint will be the element at the chosen index
             newWaypoint = P.Graph.VNodes[ chosenIndex ];
 
-            int j = chosenIndex;
-            while (j > 0 && j + 1 < cumulativeProbabilities.Length && cumulativeProbabilities[ j ] == cumulativeProbabilities[ j + 1 ])
-            {
-                cumulativeProbabilities[ j ] = cumulativeProbabilities[ j - 1 ];
-                j++;
-            }
-            if (j > 0)
-            {
-                // fix the last which will always be skipped in the while loop (since j is updated but not j+1)
-                cumulativeProbabilities[ j ] = cumulativeProbabilities[ j - 1 ];
-            }
+            //int j = chosenIndex;
+            //while (j > 0 && j + 1 < cumulativeProbabilities.Length && cumulativeProbabilities[ j ] == cumulativeProbabilities[ j + 1 ])
+            //{
+            //    cumulativeProbabilities[ j ] = cumulativeProbabilities[ j - 1 ];
+            //    j++;
+            //}
+            //if (j > 0)
+            //{
+            //    // fix the last which will always be skipped in the while loop (since j is updated but not j+1)
+            //    cumulativeProbabilities[ j ] = cumulativeProbabilities[ j - 1 ];
+            //}
             int closestWaypointIdx = -1;
             double generalShortestDist = double.MaxValue;
 
