@@ -125,7 +125,7 @@ namespace Tour4MeAdvancedProject.Solver
             double currentElevationDiff = P.Path.Elevation;
             Tuple<double, double>[] boudingCoordinates = P.Path.BoundingCoordinates;
 
-            Algo = Algo.SimulatedAnnealingFullyRandom;
+            //Algo = Algo.SimulatedAnnealingFullyRandom;
 
             if (status == SolveStatus.Feasible || status == SolveStatus.Optimal)
             {
@@ -160,9 +160,9 @@ namespace Tour4MeAdvancedProject.Solver
 
 
                 // Query the tree for nearest neighbors
-                Node closestNode = graphNodes
-                                    .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) )
-                                    .FirstOrDefault();
+                IOrderedEnumerable<Node> orderedNodes = graphNodes
+                                    .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) );
+                Node closestNode = orderedNodes.FirstOrDefault();
                 HashSet<Node> availableNodes = graphNodes.Where( x => x != null &&
                                                                 !waypointList.Any( y => y.NodeID == x.GraphNodeId ) ).ToHashSet();
                 List<Tuple<double, int>> probabilityList;
@@ -527,10 +527,10 @@ namespace Tour4MeAdvancedProject.Solver
             List<Tuple<double, int>> probNodeIdList = new List<Tuple<double, int>>();
             bool startedWithEmptyPath = p.Path.Visited.Count == 1;
             // calculate average distance of path nodes to the middle
-            double avgDist = p.TargetDistance / 2;
+            double avgDist = p.TargetDistance / 4;
             if (startedWithEmptyPath)
             {
-                avgDist = 2 * p.TargetDistance / 3;
+                avgDist = p.TargetDistance / 2;
             }
 
             // calculate distance of every node from the middle of the path
@@ -549,8 +549,8 @@ namespace Tour4MeAdvancedProject.Solver
                     if (dist[ i ] > 0)
                     {
                         dist[ i ] = startedWithEmptyPath
-                            ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : 1 / node.Incident.Sum( x => x.Profit * x.Cost ) / 100
-                            : ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null ) ? 0 : 1 / Math.Pow( node.Incident.Sum( x => x.Profit * x.Cost ), 2 );
+                            ? ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : 1 / node.Incident.Sum( x => x.Profit * x.Cost ) / 10
+                            : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : 1 / Math.Pow( node.Incident.Sum( x => x.Profit * x.Cost ), 2 );
                     }
                 }
             }
@@ -564,8 +564,8 @@ namespace Tour4MeAdvancedProject.Solver
                     if (dist[ i ] != 0)
                     {
                         dist[ i ] = startedWithEmptyPath
-                            ? ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : dist[ i ] / 100
-                            : ( dist[ i ] > avgDist * 2 || p.Graph.VNodes[ i ] == null ) ? 0 : actDist[ i ];
+                            ? ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null || dist[ i ] < avgDist / 2 ) ? 0 : dist[ i ] / 10
+                            : ( dist[ i ] > avgDist || p.Graph.VNodes[ i ] == null ) ? 0 : Math.Pow( dist[ i ], 2 );
                     }
                 }
             }
@@ -633,7 +633,7 @@ namespace Tour4MeAdvancedProject.Solver
                     if (availableNodes.Any( x => x.GraphNodeId == neighborId ))
                     {
                         // weighted distance calculation (cost weighted by profit)
-                        double newDistance = bestKnownDist + ( edge.Cost / ( edge.Profit + 0.1 ) );
+                        double newDistance = bestKnownDist + ( edge.Cost / ( edge.Profit + 1.1 ) );
                         double newActual = bestKnownDist + edge.Cost;
 
                         // normal distance calculation with unweighted cost

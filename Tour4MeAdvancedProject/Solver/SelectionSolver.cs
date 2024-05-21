@@ -71,6 +71,7 @@ namespace Tour4MeAdvancedProject.Solver
                 {
                     P.Path.Add( bestEdge, bestNeigh, bestProfit );
                     P.Path.UpdateBoundingCoordinates( ref boudingCoordinates, P.Graph.VNodes[ bestNeigh ] );
+                    P.Path.BoundingCoordinates = boudingCoordinates;
                     foreach (string currentTag in bestEdge.Tags)
                     {
                         Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );

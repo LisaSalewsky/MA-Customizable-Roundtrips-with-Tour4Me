@@ -360,11 +360,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     edge.Profit = 0.0001;
                     foreach (string tag in edge.Tags)
                     {
-                        if (Math.Abs( edge.Profit - 0.0001 ) < double.Epsilon && PrefTags.Contains( tag ))
+                        string formattedTag = char.ToUpper( tag[ 0 ] ) + tag.Substring( 1 );
+                        if (Math.Abs( edge.Profit - 0.0001 ) < double.Epsilon && PrefTags.Contains( formattedTag ))
                         {
                             edge.Profit = 1;
                         }
-                        if (AvoidTags.Contains( tag ))
+                        if (AvoidTags.Contains( formattedTag ))
                         {
                             edge.Profit = -1;
                         }
@@ -384,7 +385,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                       //( ElevationImportance * elevation / pathLength / TargetDistance ) +
                       )
                       / Math.Pow( diff, 2 )
-                      * 10000
                     ; /// Math.Abs( TargetDistance - Path.Length );
         }
 
