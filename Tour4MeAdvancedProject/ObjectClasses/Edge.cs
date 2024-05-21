@@ -25,6 +25,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double Cost { get; set; }
         public double Profit { get; set; } = 0;
         public double Quality { get; set; } = 0;
+        public bool Visited { get; set; }
 
         public Edge ()
         {

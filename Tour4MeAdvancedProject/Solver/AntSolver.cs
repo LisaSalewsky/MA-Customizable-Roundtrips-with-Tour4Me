@@ -98,6 +98,7 @@ namespace Tour4MeAdvancedProject.Solver
                 {
                     if (edge != null)
                     {
+                        edge.Visited = false;
                         edge.Pheromone = 1;
                     }
                 }

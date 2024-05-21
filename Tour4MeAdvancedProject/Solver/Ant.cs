@@ -296,13 +296,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                 if (neighbor.ShortestDistance < CurrentProblem.TargetDistance - currentDistance - edge.Cost)
                 {
-                    profit += edge.Cost * edge.Profit;
+                    double edgeVisibility = 0;
+                    if (!edge.Visited)
+                    {
+                        edgeVisibility = edge.Cost * edge.Profit * CurrentProblem.EdgeProfitImportance;
+                        profit += edge.Cost * edge.Profit;
+                    }
                     area += edge.SourceNode == currentNode ? edge.ShoelaceForward : edge.ShoelaceBackward;
                     elevation += Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation );
 
                     edge.Quality = CurrentProblem.GetEdgeQuality( profit, area, elevation );
                     //edge.Quality = CurrentProblem.GetQuality( profit, area, elevation, );
-                    double edgeVisibility = edge.Cost * edge.Profit * CurrentProblem.EdgeProfitImportance;
                     edgeVisibility = edge.Quality;
 
                     int negModifier = area < 0 ? -1 : 1;
@@ -422,6 +426,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             // Add the picked edge to the solution path
             SolutionEdges.Add( pickedEdge );
+            pickedEdge.Visited = true;
 
             lock (boundingCoordinates)
             {

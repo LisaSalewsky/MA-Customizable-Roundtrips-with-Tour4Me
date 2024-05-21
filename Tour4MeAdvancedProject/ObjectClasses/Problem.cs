@@ -381,8 +381,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return
                       (
                       ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
+                      ( ElevationImportance * elevation / 100 / pathLength / TargetDistance ) +
                       ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance * TargetDistance ) )
-                      //( ElevationImportance * elevation / pathLength / TargetDistance ) +
                       )
                       / Math.Pow( diff, 2 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
