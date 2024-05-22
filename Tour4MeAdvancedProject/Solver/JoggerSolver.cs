@@ -98,12 +98,14 @@ namespace Tour4MeAdvancedProject.Solver
                             int neighbor = v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId;
                             finalPath.Add( neighbor );
                             finalEdges.Add( v );
+                            length += v.Cost;
                             for (int j = 0; j < v.Tags.Count; j++)
                             {
                                 string currentTag = v.Tags[ j ];
                                 Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                             }
                             CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
+                            CurrentProblem.Path.Length = length;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
                             Utils.CaculateQualityValues( CurrentProblem, v, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
@@ -120,12 +122,14 @@ namespace Tour4MeAdvancedProject.Solver
                             //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( neighbor );
                             finalEdges.Add( v );
+                            length += v.Cost;
                             for (int j = 0; j < v.Tags.Count; j++)
                             {
                                 string currentTag = v.Tags[ j ];
                                 Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                             }
                             CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
+                            CurrentProblem.Path.Length = length;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
                             Utils.CaculateQualityValues( CurrentProblem, v, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
@@ -144,12 +148,14 @@ namespace Tour4MeAdvancedProject.Solver
                             //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( neighbor );
                             finalEdges.Add( v );
+                            length += v.Cost;
                             for (int j = 0; j < v.Tags.Count; j++)
                             {
                                 string currentTag = v.Tags[ j ];
                                 Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                             }
                             CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
+                            CurrentProblem.Path.Length = length;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
                             Utils.CaculateQualityValues( CurrentProblem, v, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
@@ -158,7 +164,7 @@ namespace Tour4MeAdvancedProject.Solver
 
                         finalPath.Add( finalPath[ 0 ] );
 
-                        double quality = CurrentProblem.GetQuality( profit, area, currentElevationDiff, CurrentProblem.Path.Length );
+                        double quality = CurrentProblem.GetQuality( profit, area, currentElevationDiff, length );
 
                         if (quality > bestQuality)
                         {

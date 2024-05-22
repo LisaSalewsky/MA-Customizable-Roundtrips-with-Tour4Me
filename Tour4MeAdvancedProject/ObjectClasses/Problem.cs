@@ -378,14 +378,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             double diff = 1 + Math.Abs( TargetDistance - pathLength );
             int negModifier = area < 0 ? -1 : 1;
-            return
+            double test =
                       (
-                      ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
+                      ( EdgeProfitImportance * profit / TargetDistance ) +
                       ( ElevationImportance * elevation / 100 / pathLength / TargetDistance ) +
                       ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance * TargetDistance ) )
                       )
                       / Math.Pow( diff, 2 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
+            return test;
         }
 
         public double GetEdgeQuality ( double profit, double area, double elevation )

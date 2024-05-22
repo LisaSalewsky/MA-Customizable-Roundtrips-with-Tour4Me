@@ -1158,7 +1158,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         }
         public void RemoveAllDeadEndsPlusNewOnes ()
         {
-            HashSet<Node> deadEndNodes = VNodes.Where( x => x.Incident.Count == 1 ).ToHashSet();
+            HashSet<Node> deadEndNodes = VNodes.Where( x => x.Incident.Count < 2 ).ToHashSet();
 
             while (deadEndNodes.Count > 0)
             {
@@ -1174,13 +1174,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     _ = VEdges[ edge.GraphId ] = null;
                     _ = neighbor.Incident.Remove( edge );
 
-                    if (neighbor.Incident.Count == 1)
+                    if (neighbor.Incident.Count < 2)
                     {
                         _ = deadEndNodes.Add( neighbor );
                     }
                 }
                 _ = VNodes[ node.GraphNodeId ] = null;
             }
+
+            deadEndNodes = VNodes.Where( x => x != null && x.Incident.Count < 2 ).ToHashSet();
 
         }
 

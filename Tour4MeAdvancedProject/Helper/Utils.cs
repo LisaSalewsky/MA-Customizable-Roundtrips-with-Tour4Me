@@ -90,6 +90,7 @@ namespace Tour4MeAdvancedProject.Helper
             List<int> visited = visitedPath.Visited;
 
             List<Edge> pathEdges = visitedPath.Edges;
+            p.Path.Length = pathEdges.Sum( x => x.Cost );
 
             foreach (Edge edge in pathEdges)
             {
@@ -110,7 +111,6 @@ namespace Tour4MeAdvancedProject.Helper
             p.Path.CoveredArea = currentArea;
             p.Path.TotalEdgeProfits = currentEdgeProfits;
             p.Path.Quality = currentQuality;
-            p.Path.Length = pathEdges.Sum( x => x.Cost );
             p.Path.PathTypes = string.Join( ", ", addedPathTypes );
             p.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
             p.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
