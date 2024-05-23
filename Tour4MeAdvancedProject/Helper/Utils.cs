@@ -53,10 +53,11 @@ namespace Tour4MeAdvancedProject.Helper
             currentElevationDiff += elevationDiff;
         }
 
-        internal static void CaculateQualityValues ( Problem problem, Edge v, double currentElevation, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality )
+        internal static void CaculateQualityValues ( Problem problem, Edge v, int startNodeId, double currentElevation, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality )
         {
-            currentEdgeProfits += v.Cost * v.Profit;
-            currentArea += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
+            currentEdgeProfits += !v.Visited ? v.Cost * v.Profit : 0;
+            v.Visited = true;
+            currentArea += v.SourceNode.GraphNodeId == startNodeId ? v.ShoelaceForward : v.ShoelaceBackward;
             currentQuality = problem.GetQuality( currentEdgeProfits, currentArea, currentElevation, problem.Path.Length );
         }
 
@@ -84,33 +85,42 @@ namespace Tour4MeAdvancedProject.Helper
             HashSet<string> addedSurroundings = new HashSet<string>();
             double elevationDiff = 0;
             double maxSteepness = 0;
-            double currentEdgeProfits = 0;
-            double currentArea = 0;
-            double currentQuality = 0;
             List<int> visited = visitedPath.Visited;
 
             List<Edge> pathEdges = visitedPath.Edges;
             p.Path.Length = pathEdges.Sum( x => x.Cost );
 
+            double totalEdgeProfits = 0;
+            int i = 0;
             foreach (Edge edge in pathEdges)
             {
+                int startNodeId = visited[ i ];
+                i++;
                 foreach (string tag in edge.Tags)
                 {
                     Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, tag );
                 }
                 Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
-                Utils.CaculateQualityValues( p, edge, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                //Utils.CaculateQualityValues( p, edge, startNodeId, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                totalEdgeProfits += !edge.Visited ? edge.Profit * edge.Cost : 0;
+                edge.Visited = true;
             }
+            pathEdges.ForEach( x => x.Visited = false );
 
+            p.Path.CoveredArea = p.GetArea( visited );
+
+            p.Path.TotalEdgeProfits = totalEdgeProfits;
+            //p.Path.TotalEdgeProfits = pathEdges.Sum( x => x.Profit * x.Cost );
+            p.Path.Quality = p.GetQuality( p.Path.TotalEdgeProfits, p.Path.CoveredArea, elevationDiff / 2, p.Path.Length );
 
             // update all current path values
             p.Path.Visited = visited;
             p.Path.Edges = pathEdges;
             p.Path.Elevation = elevationDiff / 2;
             p.Path.Steepness = maxSteepness;
-            p.Path.CoveredArea = currentArea;
-            p.Path.TotalEdgeProfits = currentEdgeProfits;
-            p.Path.Quality = currentQuality;
+            //p.Path.CoveredArea = currentArea;
+            //p.Path.TotalEdgeProfits = currentEdgeProfits;
+            //p.Path.Quality = currentQuality;
             p.Path.PathTypes = string.Join( ", ", addedPathTypes );
             p.Path.Surfaces = string.Join( ", ", addedSurfaceTags );
             p.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
@@ -151,14 +161,18 @@ namespace Tour4MeAdvancedProject.Helper
                 pathEdges = pathEdges.Concat( wp.Edges ).ToList();
             }
 
+            int i = 0;
             foreach (Edge edge in pathEdges)
             {
+                int startNodeId = visited[ i ];
+                i++;
                 foreach (string tag in edge.Tags)
                 {
                     Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, tag );
                 }
                 Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
-                Utils.CaculateQualityValues( p, edge, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                Utils.CaculateQualityValues( p, edge, startNodeId, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                pathEdges.ForEach( x => x.Visited = false );
             }
 
 

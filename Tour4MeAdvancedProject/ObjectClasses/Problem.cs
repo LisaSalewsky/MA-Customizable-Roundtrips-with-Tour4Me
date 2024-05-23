@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -326,15 +327,28 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             result.Add( new KeyValuePair<string, string>( "path", outputString.ToString() ) );
 
             int negmodifier = Path.CoveredArea < 0 ? -1 : 1;
+            GeoCoordinate rCoord = new GeoCoordinate( Path.BoundingCoordinates[ 3 ].Item1, Path.BoundingCoordinates[ 3 ].Item2 );
+            GeoCoordinate lCoord = new GeoCoordinate( Path.BoundingCoordinates[ 0 ].Item1, Path.BoundingCoordinates[ 0 ].Item2 );
+
+            double r1 = lCoord.GetDistanceTo( rCoord );
+
+            GeoCoordinate uCoord = new GeoCoordinate( Path.BoundingCoordinates[ 2 ].Item1, Path.BoundingCoordinates[ 2 ].Item2 );
+            GeoCoordinate dCoord = new GeoCoordinate( Path.BoundingCoordinates[ 1 ].Item1, Path.BoundingCoordinates[ 1 ].Item2 );
+
+            double r2 = uCoord.GetDistanceTo( dCoord );
+
+            double perfectEllipsoidArea = Math.PI * ( r1 / 2 ) * ( r2 / 2 );
+
             Metadata.Add( "Length: " + Path.Length );
             Metadata.Add( "Elevation: " + Path.Elevation );
             Metadata.Add( "Steepness: " + Path.Steepness );
             Metadata.Add( "Surroundings: " + ( Path.SurroundingTags.Length == 0 ? "None available" : Path.SurroundingTags ) );
             Metadata.Add( "Path Types: " + ( Path.PathTypes.Length == 0 ? "None available" : Path.PathTypes ) );
             Metadata.Add( "Surfaces: " + ( Path.Surfaces.Length == 0 ? "None available" : Path.Surfaces ) );
-            Metadata.Add( "Shape: " + ( negmodifier * Path.CoveredArea ) );
+            Metadata.Add( "Shape: " + ( negmodifier * Math.Round( Path.CoveredArea ) ) );
             Metadata.Add( "Quality: " + Path.Quality );
             Metadata.Add( "TotalEdgeProfits: " + Path.TotalEdgeProfits );
+            Metadata.Add( "MaximumPossibleArea: " + Math.Round( perfectEllipsoidArea ) );
 
             outputString = new StringBuilder( "[" );
 
@@ -380,10 +394,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             int negModifier = area < 0 ? -1 : 1;
             double test =
                       (
-                      ( EdgeProfitImportance * profit / TargetDistance ) +
-                      ( ElevationImportance * elevation / 100 / pathLength / TargetDistance ) +
-                      ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance * TargetDistance ) )
-                      )
+                      ( EdgeProfitImportance * profit ) +
+                      ( ElevationImportance * elevation / 100 ) +
+                      ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
+                      ) / pathLength / TargetDistance * 100000
                       / Math.Pow( diff, 2 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
             return test;
@@ -466,7 +480,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 {
                     Edge edge = Graph.GetEdge( prev, current );
 
-                    area += prev == edge.SourceNode.GraphNodeId ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                    area += edge.SourceNode.GraphNodeId == current ? edge.ShoelaceForward : edge.ShoelaceBackward;
                 }
 
                 prev = current;
@@ -475,7 +489,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             if (prev != path.First())
             {
                 Edge edge = Graph.GetEdge( prev, path.First() );
-                area += prev == edge.SourceNode.GraphNodeId ? edge.ShoelaceForward : edge.ShoelaceBackward;
+                area += edge.SourceNode.GraphNodeId == prev ? edge.ShoelaceForward : edge.ShoelaceBackward;
             }
 
             return area / 2;

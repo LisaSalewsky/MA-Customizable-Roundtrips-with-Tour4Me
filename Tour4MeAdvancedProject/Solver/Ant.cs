@@ -426,7 +426,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             // Add the picked edge to the solution path
             SolutionEdges.Add( pickedEdge );
-            pickedEdge.Visited = true;
 
             lock (boundingCoordinates)
             {
@@ -438,7 +437,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
 
             Utils.CalculateElevationDiffAndSteepness( pickedEdge, ref maxSteepness, ref currentElevationDiff );
-            Utils.CaculateQualityValues( problem, pickedEdge, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+            Utils.CaculateQualityValues( problem, pickedEdge, currentNode, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+            pickedEdge.Visited = true;
+
 
             return parent;
         }
@@ -455,16 +456,20 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             edges.Reverse();
             nodes.Reverse();
 
+            int i = 0;
             foreach (Edge edge in edges)
             {
+                int startNodeId = nodes[ i ];
+                i++;
                 foreach (string currentTag in edge.Tags)
                 {
                     Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                 }
                 Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref currentElevationDiff );
-                Utils.CaculateQualityValues( problem, edge, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                Utils.CaculateQualityValues( problem, edge, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
 
             }
+            edges.ForEach( x => x.Visited = false );
 
             double sum = SolutionEdges.Concat( edges ).ToList().Sum( x => x.Cost );
         }

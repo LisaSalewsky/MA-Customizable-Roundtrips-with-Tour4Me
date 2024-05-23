@@ -124,6 +124,7 @@ namespace Tour4MeAdvancedProject.Solver
             double currentPathsMaxSteepness = P.Path.Steepness;
             double currentElevationDiff = P.Path.Elevation;
             Tuple<double, double>[] boundingCoordinates = P.Path.BoundingCoordinates;
+            Tuple<double, double> startCoordinates;
 
             //Algo = Algo.SimulatedAnnealingFullyRandom;
 
@@ -153,6 +154,15 @@ namespace Tour4MeAdvancedProject.Solver
                 double latT = boundingCoordinates[ 2 ].Item1;
                 double lonR = boundingCoordinates[ 3 ].Item2;
 
+
+                startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                    startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+                foreach (int node in problem.Path.Visited)
+                {
+                    problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
+                }
+                problem.Path.BoundingCoordinates = boundingCoordinates;
 
                 double targetDist = P.TargetDistance;
                 Coordinate pathMiddle = new Coordinate( ( latT + latB ) / 2, ( lonR + lonL ) / 2 );
@@ -299,11 +309,14 @@ namespace Tour4MeAdvancedProject.Solver
                         else if (problem.Path.Length > problem.TargetDistance + 1000 && !alreadyRecalculated)
                         {
 
+                            startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                            P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
                             foreach (int node in problem.Path.Visited)
                             {
                                 problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
                             }
-
+                            problem.Path.BoundingCoordinates = boundingCoordinates;
 
                             lonL = boundingCoordinates[ 0 ].Item2;
                             latB = boundingCoordinates[ 1 ].Item1;
@@ -355,11 +368,14 @@ namespace Tour4MeAdvancedProject.Solver
                     if (recalculateProbs && !alreadyRecalculated)
                     {
 
+                        startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                        P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
                         foreach (int node in problem.Path.Visited)
                         {
                             problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
                         }
-
+                        problem.Path.BoundingCoordinates = boundingCoordinates;
 
                         lonL = boundingCoordinates[ 0 ].Item2;
                         latB = boundingCoordinates[ 1 ].Item1;
@@ -405,13 +421,19 @@ namespace Tour4MeAdvancedProject.Solver
                 P = problem;
             }
 
-            length = P.Path.Length;
-            currentArea = P.Path.CoveredArea;
-            currentEdgeProfits = P.Path.TotalEdgeProfits;
-            currentPathsMaxSteepness = P.Path.Steepness;
-            currentElevationDiff = P.Path.Elevation;
-            boundingCoordinates = P.Path.BoundingCoordinates;
             //Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+
+            startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+            P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+            boundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+            foreach (int node in P.Path.Visited)
+            {
+                P.Path.UpdateBoundingCoordinates( ref boundingCoordinates, P.Graph.VNodes[ node ] );
+            }
+            P.Path.BoundingCoordinates = boundingCoordinates;
+
 
             Utils.UpdateMetadata( P.Path, P );
 
@@ -476,7 +498,7 @@ namespace Tour4MeAdvancedProject.Solver
             double avgDist = p.TargetDistance / 4;
             if (startedWithEmptyPath)
             {
-                avgDist = p.TargetDistance / 2;
+                avgDist = p.TargetDistance / 4;
             }
 
             // calculate distance of every node from the middle of the path
@@ -570,7 +592,7 @@ namespace Tour4MeAdvancedProject.Solver
             double avgDist = p.TargetDistance / 4;
             if (startedWithEmptyPath)
             {
-                avgDist = p.TargetDistance / 2;
+                avgDist = p.TargetDistance / 4;
             }
 
             // calculate distance of every node from the middle of the path

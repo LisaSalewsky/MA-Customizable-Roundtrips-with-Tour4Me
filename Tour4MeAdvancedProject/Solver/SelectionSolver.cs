@@ -42,12 +42,14 @@ namespace Tour4MeAdvancedProject.Solver
             {
                 validCandidates = false;
                 Edge bestEdge = null;
-                int bestNeigh = 0;
+                int bestNeigh = -1;
+                int startNodeId = -1;
                 double bestProfit = -9999999999;
 
                 foreach (Edge e in P.Graph.VNodes[ current ].Incident)
                 {
                     int neigh = e.SourceNode.GraphNodeId == current ? e.TargetNode.GraphNodeId : e.SourceNode.GraphNodeId;
+                    startNodeId = e.SourceNode.GraphNodeId == current ? e.SourceNode.GraphNodeId : e.TargetNode.GraphNodeId;
                     double dis = P.Graph.ShortestPath( P.Start, neigh );
 
                     if (dis > P.TargetDistance - length - e.Cost)
@@ -77,7 +79,7 @@ namespace Tour4MeAdvancedProject.Solver
                         Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                     }
                     Utils.CalculateElevationDiffAndSteepness( bestEdge, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                    Utils.CaculateQualityValues( P, bestEdge, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                    Utils.CaculateQualityValues( P, bestEdge, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
 
                     visited[ bestEdge.GraphId ] = true;
                     length += bestEdge.Cost;

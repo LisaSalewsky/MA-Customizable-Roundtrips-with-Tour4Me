@@ -427,7 +427,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                             }
                             double firstLat = edge.GeoLocations.First().Item1;
                             double firstLon = edge.GeoLocations.First().Item2;
-                            edge.Reversed = edge.GeoLocations == null || edge.GeoLocations.Count == 0 || ( firstLat == edge.SourceNode.Lat && firstLon == edge.SourceNode.Lon );
+                            edge.Reversed = edge.GeoLocations == null || edge.GeoLocations.Count == 0 || !( firstLat == edge.SourceNode.Lat && firstLon == edge.SourceNode.Lon );
 
                         }
                         catch (Exception ex)

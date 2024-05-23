@@ -979,7 +979,7 @@
                         var last10Points = path.slice(-10);
 
                         // Define different colors for markers
-                        var colors = ['var(--btn-info-color)', 'var(--highlight-color)', 'var(--warning-color)', 'purple', 'pink', 'cyan', 'magenta', 'yellow', 'brown', 'gray'];
+                        var colors = ['var(--btn-info-color)', 'var(--highlight-color)', 'var(--warning-color)', 'purple', 'black', 'cyan', 'magenta', 'yellow', 'brown', 'gray'];
 
 
 
@@ -1090,6 +1090,16 @@
                             + "                  </div>"
                             + "                  <div class=\"form-group col-md-7 out-label\">"
                             + "                      <label id=\"shapeOut" + route_counter + "\">" + parsedMetadata["Shape"] + " "
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "              </div>"
+                            + "              <div class=\"form-group row\">"
+                            + "                  <div class=\"form-group col-md-4\">"
+                            + "                      <label class=\"routeInfoOutputLabels\" for=\"maximumPossibleAreaOut\">Maximum possible area"
+                            + "                      </label>"
+                            + "                  </div>"
+                            + "                  <div class=\"form-group col-md-7 out-label\">"
+                            + "                      <label id=\"maximumPossibleAreaOut" + route_counter + "\">" + parsedMetadata["MaximumPossibleArea"] + " "
                             + "                      </label>"
                             + "                  </div>"
                             + "              </div>"

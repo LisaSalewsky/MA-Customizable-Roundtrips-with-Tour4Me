@@ -96,6 +96,7 @@ namespace Tour4MeAdvancedProject.Solver
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
                             int neighbor = v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId;
+                            int startNodeId = v.Reversed ? v.SourceNode.GraphNodeId : v.TargetNode.GraphNodeId;
                             finalPath.Add( neighbor );
                             finalEdges.Add( v );
                             length += v.Cost;
@@ -106,9 +107,11 @@ namespace Tour4MeAdvancedProject.Solver
                             }
                             CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
                             CurrentProblem.Path.Length = length;
+                            CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                            Utils.CaculateQualityValues( CurrentProblem, v, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
+                        pathSA.Edges.ForEach( x => x.Visited = false );
 
                         foreach (Edge v in tPair.Item2.Edges)
                         {
@@ -119,6 +122,7 @@ namespace Tour4MeAdvancedProject.Solver
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
                             int neighbor = v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId;
+                            int startNodeId = v.Reversed ? v.SourceNode.GraphNodeId : v.TargetNode.GraphNodeId;
                             //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( !v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( neighbor );
                             finalEdges.Add( v );
@@ -130,9 +134,11 @@ namespace Tour4MeAdvancedProject.Solver
                             }
                             CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
                             CurrentProblem.Path.Length = length;
+                            CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                            Utils.CaculateQualityValues( CurrentProblem, v, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
+                        tPair.Item2.Edges.ForEach( x => x.Visited = false );
 
                         for (int i = pathSB.Edges.Count - 1; i >= 0; i--)
                         {
@@ -145,6 +151,7 @@ namespace Tour4MeAdvancedProject.Solver
                             }
                             area += !v.Reversed ? v.ShoelaceForward : v.ShoelaceBackward;
                             int neighbor = v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId;
+                            int startNodeId = v.Reversed ? v.SourceNode.GraphNodeId : v.TargetNode.GraphNodeId;
                             //Debug.Assert( finalPath[ finalPath.Count - 1 ] == ( v.Reversed ? v.TargetNode.GraphNodeId : v.SourceNode.GraphNodeId ) );
                             finalPath.Add( neighbor );
                             finalEdges.Add( v );
@@ -156,9 +163,11 @@ namespace Tour4MeAdvancedProject.Solver
                             }
                             CurrentProblem.Path.UpdateBoundingCoordinates( ref boudingCoordinates, CurrentProblem.Graph.VNodes[ neighbor ] );
                             CurrentProblem.Path.Length = length;
+                            CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                            Utils.CaculateQualityValues( CurrentProblem, v, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
+                        pathSB.Edges.ForEach( x => x.Visited = false );
 
                         //Debug.Assert( CurrentProblem.Graph.GetEdge( finalPath[ finalPath.Count - 1 ], finalPath[ 0 ] ) != null );
 
