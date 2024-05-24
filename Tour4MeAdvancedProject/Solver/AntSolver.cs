@@ -15,7 +15,11 @@ namespace Tour4MeAdvancedProject.Solver
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
         public double Beta { get; set; } = 0.7;
-        public double EvaporationRate { get; set; } = 0.8;
+        public double EvaporationRate { get; set; } = 0.4;
+        public int EdgeScalingPenalty { get; set; } = 1;
+        public int InitTrailIntensity { get; set; } = 1;
+        public int TrailPenalty { get; set; } = 1;
+        public string NewPheromoneFunction { get; set; } = "Profit";
         public bool UsePenalty { get; set; } = true;
         public bool UseBacktracking { get; set; } = true;
         public bool InclueAreaCoverage { get; set; } = true;
@@ -30,6 +34,23 @@ namespace Tour4MeAdvancedProject.Solver
             Beta = beta;
         }
 
+        public AntSolver (
+            int numberRunsAnt,
+            int numberAnts,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            int initTrailIntensity,
+            int trailPenalty,
+            string newPheromoneFunction ) : this( numberRunsAnt, numberAnts, alpha, beta )
+        {
+            EvaporationRate = evaporationRate;
+            EdgeScalingPenalty = edgeScalingPenalty;
+            InitTrailIntensity = initTrailIntensity;
+            TrailPenalty = trailPenalty;
+            NewPheromoneFunction = newPheromoneFunction;
+        }
 
         /// <summary>
         /// Overrides the base method to solve the given problem using the Ant Colony Optimization (ACO)
@@ -58,7 +79,7 @@ namespace Tour4MeAdvancedProject.Solver
             UsePenalty = true;
             UseBacktracking = false;
             InclueAreaCoverage = true;
-            EvaporationRate = 0.4;
+            //EvaporationRate = ;
             int pheromoneAmount = 10;
 
             PreprocessEdges( P );
@@ -89,7 +110,7 @@ namespace Tour4MeAdvancedProject.Solver
                         allSolutions.Add( returnedProb );
 
                         // now update the pheromone trail (trailInensity)
-                        currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage );
+                        currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage, TrailPenalty );
                     }
                 }
                 );

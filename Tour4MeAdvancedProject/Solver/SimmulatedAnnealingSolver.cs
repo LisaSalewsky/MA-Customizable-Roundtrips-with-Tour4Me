@@ -629,7 +629,7 @@ namespace Tour4MeAdvancedProject.Solver
                     {
                         copy.Add( kvp.Key, double.MaxValue );
                         copy[ kvp.Key ] = startedWithEmptyPath
-                            ? ( kvp.Value > avgDist || p.Graph.VNodes[ kvp.Key ] == null || kvp.Value < avgDist / 2 ) ? 0 : kvp.Value
+                            ? ( kvp.Value > avgDist || p.Graph.VNodes[ kvp.Key ] == null || kvp.Value < avgDist / 2 ) ? 0 : Math.Pow( kvp.Value, 2 )
                             : ( kvp.Value > avgDist || p.Graph.VNodes[ kvp.Key ] == null ) ? 0 : Math.Pow( kvp.Value, 2 );
                     }
                 }

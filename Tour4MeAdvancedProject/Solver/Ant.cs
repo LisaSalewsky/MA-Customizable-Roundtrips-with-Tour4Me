@@ -504,12 +504,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// determines whether the ants should find out that closing the tour is better (usePenalty = true)
         /// or we always enforce closing the tour (usePenalty = false).
         /// </param>
-        public void UpdatePheromoneTrail ( Problem problem, List<Edge> visited, double evaporation, bool usePenalty, bool inclueAreaCoverage )
+        public void UpdatePheromoneTrail ( Problem problem, List<Edge> visited, double evaporation, bool usePenalty, bool inclueAreaCoverage, double penalty )
         {
             double evaporationRate = evaporation;
 
             // default set to 1 because that means no addition or reduction of pheromone values to be added
-            double penaltyQuotient = 1;
+            double penaltyQuotient = penalty;
 
             bool closedTour = visited.First().Equals( visited.Last() );
             double sum = visited.Sum( x => x.Cost );

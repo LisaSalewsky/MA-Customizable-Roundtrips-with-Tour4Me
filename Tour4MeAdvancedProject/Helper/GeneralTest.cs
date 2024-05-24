@@ -20,17 +20,215 @@ namespace Tour4MeAdvancedProject.Helper
     [WebService( Namespace = "http://localhost:44323/" )]
     [WebServiceBinding( ConformsTo = WsiProfiles.BasicProfile1_1 )]
     [System.Web.Script.Services.ScriptService]
-    public partial class PathParameterTest : WebService
+    public partial class GeneralTest : WebService
     {
 
         [WebMethod]
         [ScriptMethod( UseHttpGet = true )]
-        public string GeneratePathTestPlot ( int numberPaths )
+        public string GenerateTestingValues (
+            string algorithm,
+            int pathLength,
+            int numberPaths,
+            int numberAnts,
+            int numberRunsAnt,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            int initTrailIntensity,
+            int TrailPenalty,
+            string newPheromoneFucntion,
+            int numberRunsSA,
+            int numberRepitiionsSA,
+            int initTemperature,
+            string coolingFunction,
+            int numberWaypoints,
+            string distanceScalingCalculationForProbability )
         {
             StringBuilder jsonBuilder = new StringBuilder();
 
             _ = jsonBuilder.Append( "[\n" );
+            Problem problem = InitializeGraphAndProblem();
+            Console.WriteLine( "start" );
 
+            SolveStatus status = SolveStatus.Unsolved;
+            string algo = "";
+
+            _ = Enum.TryParse( algorithm, out Algo algorithmEnum );
+
+            switch (algorithmEnum)
+            {
+                case Algo.Greedy:
+                    {
+                        // Greedy
+                        SelectionSolver solver = new SelectionSolver();
+                        status = solver.Solve( ref problem );
+                        algo = Algo.Greedy.ToString();
+                        break;
+                    }
+                case Algo.minCost:
+                    {
+                        // minCost
+                        JoggerSolver solver = new JoggerSolver();
+                        status = solver.Solve( ref problem );
+                        algo = Algo.minCost.ToString();
+                        break;
+                    }
+                case Algo.ILS:
+                    {
+                        // ILS
+                        //ILS solver = new ILS();
+                        //status = solver.Solve( ref problem);
+                        algo = Algo.ILS.ToString();
+                        break;
+                    }
+                case Algo.AntColony:
+                    {
+                        // Ant
+                        AntSolver solver = new AntSolver( numberRunsAnt, numberAnts, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion );
+                        status = solver.Solve( ref problem );
+                        algo = Algo.AntColony.ToString();
+                        break;
+                    }
+                case Algo.AntMinCost:
+                    {
+                        // Ant MinCost
+                        AntCombined solver = new AntCombined();
+                        status = solver.Solve( ref problem, Algo.minCost );
+                        algo = Algo.AntMinCost.ToString();
+                        break;
+                    }
+                case Algo.AntGreedy:
+                    {
+                        // Ant Greedy
+                        AntCombined solver = new AntCombined();
+                        status = solver.Solve( ref problem, Algo.Greedy );
+                        algo = Algo.AntGreedy.ToString();
+                        break;
+                    }
+                case Algo.SimulatedAnnealingGreedy:
+                    {
+                        // Simmulated Annealing Greedy
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.Greedy );
+                        algo = Algo.SimulatedAnnealingGreedy.ToString();
+                        break;
+                    }
+                case Algo.SimulatedAnnealingMinCost:
+                    {
+                        // Simmulated Annealing MinCost
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.minCost );
+                        algo = Algo.SimulatedAnnealingMinCost.ToString();
+                        break;
+
+                    }
+                case Algo.SimulatedAnnealingAnt:
+                    {
+                        // Simmulated Annealing Ant
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.AntColony );
+                        algo = Algo.SimulatedAnnealingAnt.ToString();
+                        break;
+                    }
+                case Algo.SimulatedAnnealingEmpty:
+                    {
+                        // Simmulated Annealing Empty
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.SimulatedAnnealingEmpty );
+                        algo = Algo.SimulatedAnnealingEmpty.ToString();
+                        break;
+                    }
+                case Algo.SimulatedAnnealingFullyRandom:
+                    {
+                        // Genetic
+                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
+                        status = solver.Solve( ref problem, Algo.SimulatedAnnealingFullyRandom );
+                        algo = Algo.SimulatedAnnealingFullyRandom.ToString();
+                        break;
+                    }
+                default:
+                    status = SolveStatus.Unsolved;
+                    break;
+            }
+
+            Console.WriteLine( algo );
+            Console.WriteLine( status );
+
+            int numRuns = 10;
+            Color[] colors = GenerateColors( numberPaths );
+
+            for (int i = 1; i <= numberPaths; i++)
+            {
+                alpha = i / numberPaths;
+                beta = 1 - alpha;
+
+                _ = jsonBuilder.Append( "    {\n" );
+                _ = jsonBuilder.Append( "    \"tour\": \"Tour " + i + "\",\n" );
+                _ = jsonBuilder.Append( "    \"runs\": [\n" );
+                for (int j = 1; j <= numRuns; j++)
+                {
+                    AntSolver solver = new AntSolver( 4, 1, alpha, beta );
+                    SolveStatus solveStatus = solver.Solve( ref problem );
+                    Console.WriteLine( "end" );
+
+                    string result;
+                    switch (solveStatus)
+                    {
+                        case SolveStatus.Optimal:
+                            foreach (KeyValuePair<string, string> kv in GenerateOutputString( problem ))
+                            {
+                                if (kv.Key == "path")
+                                {
+                                    result = kv.Value;
+                                }
+                            }
+                            result = "";
+                            foreach (int node in problem.Path.Visited)
+                            {
+                                result += node + ", ";
+                            }
+                            result = result.Substring( 0, result.Length - 2 );
+                            _ = jsonBuilder.Append( "    {\n" );
+                            _ = jsonBuilder.Append( "    \"run\": \"Run " + j + "\",\n" );
+                            _ = jsonBuilder.Append( "    \"values\": " + result + ",\n" );
+                            _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+
+                            _ = j == numRuns ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+
+                            break;
+                        case SolveStatus.Feasible:
+                            foreach (KeyValuePair<string, string> kv in GenerateOutputString( problem ))
+                            {
+                                result = kv.Value;
+                            }
+                            result = "";
+                            foreach (int node in problem.Path.Visited)
+                            {
+                                result += problem.Graph.VNodes[ node ].NodeId + ", ";
+                            }
+                            result = result.Substring( 0, result.Length - 2 );
+                            _ = jsonBuilder.Append( "    {\n" );
+                            _ = jsonBuilder.Append( "    \"run\": \"Run " + i + "\",\n" );
+                            _ = jsonBuilder.Append( "    \"values\": \"" + result + "\",\n" );
+                            _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+
+                            _ = j == numRuns ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+
+                            break;
+                    }
+                }
+                _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+
+            }
+
+            return jsonBuilder.ToString();
+        }
+
+        private static Problem InitializeGraphAndProblem ()
+        {
             double lat = 51.489808;
             double lon = 7.406319;
             double distance = 5000;
@@ -215,78 +413,7 @@ namespace Tour4MeAdvancedProject.Helper
             problem.TargetDistance = distance;
             _ = DateTime.Now;
             _ = DateTime.Now;
-            Console.WriteLine( "start" );
-
-            int numRuns = 10;
-            Color[] colors = GenerateColors( numberPaths );
-
-            for (int i = 1; i <= numberPaths; i++)
-            {
-                double alpha = i / numberPaths;
-                double beta = 1 - alpha;
-
-                _ = jsonBuilder.Append( "    {\n" );
-                _ = jsonBuilder.Append( "    \"tour\": \"Tour " + i + "\",\n" );
-                _ = jsonBuilder.Append( "    \"runs\": [\n" );
-                for (int j = 1; j <= numRuns; j++)
-                {
-                    AntSolver solver = new AntSolver( 4, 1, alpha, beta );
-                    SolveStatus status = solver.Solve( ref problem );
-                    Console.WriteLine( "end" );
-
-                    string result = "";
-                    switch (status)
-                    {
-                        case SolveStatus.Optimal:
-                            foreach (KeyValuePair<string, string> kv in GenerateOutputString( problem ))
-                            {
-                                if (kv.Key == "path")
-                                {
-                                    result = kv.Value;
-                                }
-                            }
-                            result = "";
-                            foreach (int node in problem.Path.Visited)
-                            {
-                                result += node + ", ";
-                            }
-                            result = result.Substring( 0, result.Length - 2 );
-                            _ = jsonBuilder.Append( "    {\n" );
-                            _ = jsonBuilder.Append( "    \"run\": \"Run " + j + "\",\n" );
-                            _ = jsonBuilder.Append( "    \"values\": " + result + ",\n" );
-                            _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
-                            _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
-
-                            _ = j == numRuns ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
-
-                            break;
-                        case SolveStatus.Feasible:
-                            foreach (KeyValuePair<string, string> kv in GenerateOutputString( problem ))
-                            {
-                                result = kv.Value;
-                            }
-                            result = "";
-                            foreach (int node in problem.Path.Visited)
-                            {
-                                result += problem.Graph.VNodes[ node ].NodeId + ", ";
-                            }
-                            result = result.Substring( 0, result.Length - 2 );
-                            _ = jsonBuilder.Append( "    {\n" );
-                            _ = jsonBuilder.Append( "    \"run\": \"Run " + i + "\",\n" );
-                            _ = jsonBuilder.Append( "    \"values\": \"" + result + "\",\n" );
-                            _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
-                            _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
-
-                            _ = j == numRuns ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
-
-                            break;
-                    }
-                }
-                _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
-
-            }
-
-            return jsonBuilder.ToString();
+            return problem;
         }
 
         public static string ConvertColorToString ( Color color )

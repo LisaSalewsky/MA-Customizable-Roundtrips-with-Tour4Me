@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -76,8 +77,9 @@ namespace Tour4MeAdvancedProject
                                                         double edgeProfitIn, double coveredAreaIn, double elevationImportanceIn
                                                         )
         {
+            Process currentProcess = Process.GetCurrentProcess();
             Dictionary<string, string> result = new Dictionary<string, string>();
-
+            long memoryUsage = -1;
 
             DateTime init_time_1 = DateTime.Now;
 
@@ -415,6 +417,16 @@ namespace Tour4MeAdvancedProject
                     {
                         result.Add( kv.Key, kv.Value );
                     }
+
+                    if (!currentProcess.HasExited)
+                    {
+                        // Refresh the current process property values.
+                        currentProcess.Refresh();
+
+                        memoryUsage = currentProcess.WorkingSet64;
+
+                        Console.WriteLine( $"  Physical memory usage     : {memoryUsage}" );
+                    }
                     return result;
                 //if (gpx)
                 //{
@@ -432,6 +444,17 @@ namespace Tour4MeAdvancedProject
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
                     result.Add( "success", "200" );
+
+                    if (!currentProcess.HasExited)
+                    {
+                        // Refresh the current process property values.
+                        currentProcess.Refresh();
+                        //     Gets the amount of physical memory, in bytes
+                        memoryUsage = currentProcess.WorkingSet64;
+
+                        Console.WriteLine( $"  Physical memory usage     : {memoryUsage}" );
+                    }
+                    problem.Metadata.Add( "MemoryUsage: " + memoryUsage );
                     foreach (KeyValuePair<string, string> kv in problem.OutputToResultString())
                     {
                         result.Add( kv.Key, kv.Value );
@@ -443,12 +466,47 @@ namespace Tour4MeAdvancedProject
                 //}
                 case SolveStatus.Unsolved:
                     result.Add( "error", "Not solved 400" );
+
+                    if (!currentProcess.HasExited)
+                    {
+                        // Refresh the current process property values.
+                        currentProcess.Refresh();
+
+                        memoryUsage = currentProcess.WorkingSet64;
+
+                        Console.WriteLine( $"  Physical memory usage     : {memoryUsage}" );
+                    }
+                    problem.Metadata.Add( "MemoryUsage: " + memoryUsage );
                     return result;
                 case SolveStatus.Timeout:
                     result.Add( "error", "Timeout 504" );
+
+                    if (!currentProcess.HasExited)
+                    {
+                        // Refresh the current process property values.
+                        currentProcess.Refresh();
+
+                        memoryUsage = currentProcess.WorkingSet64;
+
+                        Console.WriteLine( $"  Physical memory usage     : {memoryUsage}" );
+                    }
+                    problem.Metadata.Add( "MemoryUsage: " + memoryUsage );
                     return result;
             }
             result.Add( "error", "Not solved 400" );
+
+
+            if (!currentProcess.HasExited)
+            {
+                // Refresh the current process property values.
+                currentProcess.Refresh();
+
+                memoryUsage = currentProcess.WorkingSet64;
+
+                Console.WriteLine( $"  Physical memory usage     : {memoryUsage}" );
+            }
+            problem.Metadata.Add( "MemoryUsage: " + memoryUsage );
+
             return result;
 
         }
@@ -500,7 +558,6 @@ namespace Tour4MeAdvancedProject
             .ToList();
 
             result.Add( "surroundings", formattedSurroundingsList );
-
 
             return result;
         }

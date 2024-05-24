@@ -341,13 +341,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             Metadata.Add( "Length: " + Path.Length );
             Metadata.Add( "Elevation: " + Path.Elevation );
-            Metadata.Add( "Steepness: " + Path.Steepness );
+            Metadata.Add( "Steepness: " + Math.Round( Path.Steepness, 2 ) );
             Metadata.Add( "Surroundings: " + ( Path.SurroundingTags.Length == 0 ? "None available" : Path.SurroundingTags ) );
             Metadata.Add( "Path Types: " + ( Path.PathTypes.Length == 0 ? "None available" : Path.PathTypes ) );
             Metadata.Add( "Surfaces: " + ( Path.Surfaces.Length == 0 ? "None available" : Path.Surfaces ) );
             Metadata.Add( "Shape: " + ( negmodifier * Math.Round( Path.CoveredArea ) ) );
-            Metadata.Add( "Quality: " + Path.Quality );
-            Metadata.Add( "TotalEdgeProfits: " + Path.TotalEdgeProfits );
+            Metadata.Add( "Quality: " + Math.Round( Path.Quality, 4 ) );
+            Metadata.Add( "TotalEdgeProfits: " + Math.Round( Path.TotalEdgeProfits ) );
             Metadata.Add( "MaximumPossibleArea: " + Math.Round( perfectEllipsoidArea ) );
 
             outputString = new StringBuilder( "[" );
@@ -398,7 +398,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                       ( ElevationImportance * elevation / 100 ) +
                       ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
                       ) / pathLength / TargetDistance * 100000
-                      / Math.Pow( diff, 2 )
+                      / Math.Pow( diff, 4 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
             return test;
         }

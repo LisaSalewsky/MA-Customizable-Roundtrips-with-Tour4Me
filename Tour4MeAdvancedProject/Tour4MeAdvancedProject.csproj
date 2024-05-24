@@ -2294,6 +2294,7 @@
     <Content Include="fontawesome\svgs\solid\yen-sign.svg" />
     <Content Include="fontawesome\svgs\solid\yin-yang.svg" />
     <Content Include="fontawesome\svgs\solid\z.svg" />
+    <Content Include="Helper\GeneralTestPage.asmx" />
     <Content Include="Helper\PathParameterTestPage.asmx" />
     <Content Include="homepage.aspx" />
     <Content Include="img\girl-3832331.jpg" />
@@ -2332,6 +2333,9 @@
     <Compile Include="Helper\GraphColumnsEnumHelper.cs" />
     <Compile Include="Helper\ImportGraphDataToSQL.cs" />
     <Compile Include="Helper\ParallelizingIterator.cs" />
+    <Compile Include="Helper\GeneralTest.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Helper\PathParameterTest.cs">
       <SubType>Component</SubType>
     </Compile>
