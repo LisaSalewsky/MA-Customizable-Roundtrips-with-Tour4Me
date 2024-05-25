@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -45,131 +46,136 @@ namespace Tour4MeAdvancedProject.Helper
             int numberWaypoints,
             string distanceScalingCalculationForProbability )
         {
+            Process currentProcess = Process.GetCurrentProcess();
+            long memoryUsage = -1;
             StringBuilder jsonBuilder = new StringBuilder();
 
+
             _ = jsonBuilder.Append( "[\n" );
-            Problem problem = InitializeGraphAndProblem();
             Console.WriteLine( "start" );
 
             SolveStatus status = SolveStatus.Unsolved;
             string algo = "";
 
             _ = Enum.TryParse( algorithm, out Algo algorithmEnum );
-
-            switch (algorithmEnum)
-            {
-                case Algo.Greedy:
-                    {
-                        // Greedy
-                        SelectionSolver solver = new SelectionSolver();
-                        status = solver.Solve( ref problem );
-                        algo = Algo.Greedy.ToString();
-                        break;
-                    }
-                case Algo.minCost:
-                    {
-                        // minCost
-                        JoggerSolver solver = new JoggerSolver();
-                        status = solver.Solve( ref problem );
-                        algo = Algo.minCost.ToString();
-                        break;
-                    }
-                case Algo.ILS:
-                    {
-                        // ILS
-                        //ILS solver = new ILS();
-                        //status = solver.Solve( ref problem);
-                        algo = Algo.ILS.ToString();
-                        break;
-                    }
-                case Algo.AntColony:
-                    {
-                        // Ant
-                        AntSolver solver = new AntSolver( numberRunsAnt, numberAnts, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion );
-                        status = solver.Solve( ref problem );
-                        algo = Algo.AntColony.ToString();
-                        break;
-                    }
-                case Algo.AntMinCost:
-                    {
-                        // Ant MinCost
-                        AntCombined solver = new AntCombined();
-                        status = solver.Solve( ref problem, Algo.minCost );
-                        algo = Algo.AntMinCost.ToString();
-                        break;
-                    }
-                case Algo.AntGreedy:
-                    {
-                        // Ant Greedy
-                        AntCombined solver = new AntCombined();
-                        status = solver.Solve( ref problem, Algo.Greedy );
-                        algo = Algo.AntGreedy.ToString();
-                        break;
-                    }
-                case Algo.SimulatedAnnealingGreedy:
-                    {
-                        // Simmulated Annealing Greedy
-                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
-                        status = solver.Solve( ref problem, Algo.Greedy );
-                        algo = Algo.SimulatedAnnealingGreedy.ToString();
-                        break;
-                    }
-                case Algo.SimulatedAnnealingMinCost:
-                    {
-                        // Simmulated Annealing MinCost
-                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
-                        status = solver.Solve( ref problem, Algo.minCost );
-                        algo = Algo.SimulatedAnnealingMinCost.ToString();
-                        break;
-
-                    }
-                case Algo.SimulatedAnnealingAnt:
-                    {
-                        // Simmulated Annealing Ant
-                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
-                        status = solver.Solve( ref problem, Algo.AntColony );
-                        algo = Algo.SimulatedAnnealingAnt.ToString();
-                        break;
-                    }
-                case Algo.SimulatedAnnealingEmpty:
-                    {
-                        // Simmulated Annealing Empty
-                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
-                        status = solver.Solve( ref problem, Algo.SimulatedAnnealingEmpty );
-                        algo = Algo.SimulatedAnnealingEmpty.ToString();
-                        break;
-                    }
-                case Algo.SimulatedAnnealingFullyRandom:
-                    {
-                        // Genetic
-                        SimmulatedAnnealingSolver solver = new SimmulatedAnnealingSolver();
-                        status = solver.Solve( ref problem, Algo.SimulatedAnnealingFullyRandom );
-                        algo = Algo.SimulatedAnnealingFullyRandom.ToString();
-                        break;
-                    }
-                default:
-                    status = SolveStatus.Unsolved;
-                    break;
-            }
-
             Console.WriteLine( algo );
             Console.WriteLine( status );
 
-            int numRuns = 10;
+            if (!currentProcess.HasExited)
+            {
+                // Refresh the current process property values.
+                currentProcess.Refresh();
+
+                memoryUsage = currentProcess.WorkingSet64;
+            }
+            int numRuns = 20;
             Color[] colors = GenerateColors( numberPaths );
+
+            Selection solver = null;
+            double coveredAreaImportanceInit = (double)1 / numberPaths;
+
 
             for (int i = 1; i <= numberPaths; i++)
             {
-                alpha = i / numberPaths;
-                beta = 1 - alpha;
+                double coveredAreaImportance = i * coveredAreaImportanceInit;
+                double edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
+                double elevationImportance = ( 1 - coveredAreaImportance ) / 2;
+                switch (algorithmEnum)
+                {
+                    case Algo.Greedy:
+                        {
+                            // Greedy
+                            solver = new SelectionSolver();
+                            break;
+                        }
+                    case Algo.minCost:
+                        {
+                            // minCost
+                            solver = new JoggerSolver();
+                            break;
+                        }
+                    case Algo.ILS:
+                        {
+                            // ILS
+                            //ILS solver = new ILS();
+                            //status = solver.Solve( ref problem);
+                            _ = Algo.ILS.ToString();
+                            break;
+                        }
+                    case Algo.AntColony:
+                        {
+                            // Ant
+                            solver = new AntSolver( numberRunsAnt, numberAnts, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion );
+                            break;
+                        }
+                    case Algo.AntMinCost:
+                        {
+                            // Ant MinCost
+                            solver = new AntCombined();
+                            break;
+                        }
+                    case Algo.AntGreedy:
+                        {
+                            // Ant Greedy
+                            solver = new AntCombined();
+                            break;
+                        }
+                    case Algo.SimulatedAnnealingGreedy:
+                        {
+                            // Simmulated Annealing Greedy
+                            solver = new SimmulatedAnnealingSolver();
+                            break;
+                        }
+                    case Algo.SimulatedAnnealingMinCost:
+                        {
+                            // Simmulated Annealing MinCost
+                            solver = new SimmulatedAnnealingSolver();
+                            break;
 
+                        }
+                    case Algo.SimulatedAnnealingAnt:
+                        {
+                            // Simmulated Annealing Ant
+                            solver = new SimmulatedAnnealingSolver();
+                            break;
+                        }
+                    case Algo.SimulatedAnnealingEmpty:
+                        {
+                            // Simmulated Annealing Empty
+
+                            solver = new SimmulatedAnnealingSolver();
+                            break;
+                        }
+                    case Algo.SimulatedAnnealingFullyRandom:
+                        {
+                            // Genetic
+                            solver = new SimmulatedAnnealingSolver();
+                            break;
+                        }
+                    default:
+                        break;
+                }
                 _ = jsonBuilder.Append( "    {\n" );
                 _ = jsonBuilder.Append( "    \"tour\": \"Tour " + i + "\",\n" );
                 _ = jsonBuilder.Append( "    \"runs\": [\n" );
+                Graph G = null;
                 for (int j = 1; j <= numRuns; j++)
                 {
-                    AntSolver solver = new AntSolver( 4, 1, alpha, beta );
+                    //AntSolver solver = new AntSolver( 4, 1, alpha, beta );
+
+                    DateTime init_time_1 = DateTime.Now;
+
+                    Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+                    DateTime init_time_2 = DateTime.Now;
+                    DateTime algo_time_1 = DateTime.Now;
+
                     SolveStatus solveStatus = solver.Solve( ref problem );
+
+
+                    DateTime algo_time_2 = DateTime.Now;
+                    int init_time_int = (int)( init_time_2 - init_time_1 ).TotalMilliseconds;
+                    int algo_time_int = (int)( algo_time_2 - algo_time_1 ).TotalMilliseconds;
+
                     Console.WriteLine( "end" );
 
                     string result;
@@ -213,7 +219,20 @@ namespace Tour4MeAdvancedProject.Helper
                             _ = jsonBuilder.Append( "    \"run\": \"Run " + i + "\",\n" );
                             _ = jsonBuilder.Append( "    \"values\": \"" + result + "\",\n" );
                             _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
-                            _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+                            _ = jsonBuilder.Append( "    \"opacity\": " + ( 1.0 / numberPaths ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+
+                            int negModifier = problem.Path.CoveredArea < 0 ? -1 : 1;
+                            _ = jsonBuilder.Append( "    \"CoveredArea\": " + ( negModifier * problem.Path.CoveredArea ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+
+                            _ = jsonBuilder.Append( "    \"CoveredAreaImportance\": " + problem.CoveredAreaImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"Profit\": " + problem.Path.TotalEdgeProfits.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"ProfitImportance\": " + problem.EdgeProfitImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"Elevation\": " + problem.Path.Elevation.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"ElevationImportance\": " + problem.ElevationImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"Quality\": " + problem.Quality.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"InitTime\": " + init_time_int.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"Time\": " + algo_time_int.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                            _ = jsonBuilder.Append( "    \"MemoryUse\": " + memoryUsage.ToString( System.Globalization.CultureInfo.InvariantCulture ) );
 
                             _ = j == numRuns ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
 
@@ -227,11 +246,11 @@ namespace Tour4MeAdvancedProject.Helper
             return jsonBuilder.ToString();
         }
 
-        private static Problem InitializeGraphAndProblem ()
+        private static Problem InitializeGraphAndProblem ( ref Graph G, int length, double edgeProfitImportance, double coveredAreaImportance, double elevationImportance )
         {
             double lat = 51.489808;
             double lon = 7.406319;
-            double distance = 5000;
+            double distance = length;
             double elevation = 100;
             double steepness = 0.05;
             string[] tagsHIn = new string[] { };
@@ -248,9 +267,9 @@ namespace Tour4MeAdvancedProject.Helper
 
 
 
-            double edgeProfitImportance = 0.5;
-            double coveredAreaImportance = 0.5;
-            double elevationImportance = 0;
+            //double edgeProfitImportance = 0.5;
+            //double coveredAreaImportance = 0.5;
+            //double elevationImportance = 0;
 
             StringBuilder stream = new StringBuilder();
             string filename = stream.AppendFormat( "grid-dor" ).ToString();//stream.ToString();
@@ -265,9 +284,15 @@ namespace Tour4MeAdvancedProject.Helper
                     Uri uri = new Uri( path );
                     string localPath = Uri.UnescapeDataString( uri.LocalPath );
 
-
-                    //problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
-                    problem = new Problem( lat, lon, distance * 3 / 4, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    if (G == null)
+                    {
+                        //problem = new Problem( Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                        problem = new Problem( lat, lon, distance * 3 / 4, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    }
+                    else
+                    {
+                        problem = new Problem( G, lat, lon, distance * 3 / 4, Path.Combine( localPath, "Tour4MeAdvancedProject", "input", filename + ".txt" ) );
+                    }
                     _ = Guid.TryParse( "123E4567-E89B-12D3-A456-426614174001", out Guid guid );
 
                     string error = "";
@@ -372,36 +397,40 @@ namespace Tour4MeAdvancedProject.Helper
             }
 
 
-            _ = Enum.TryParse( "Round", true, out TourShape tourShape );
+            //_ = Enum.TryParse( "Round", true, out TourShape tourShape );
 
-            switch (tourShape)
-            {
-                // for a U-Turn, we only need to consider edge profit
-                case TourShape.UTurn:
-                    problem.EdgeProfitImportance = 0.5;
-                    problem.CoveredAreaImportance = 0;
-                    problem.ElevationImportance = 0.5;
-                    break;
-                // for round tours, covered area is very important, edge profit not so much
-                case TourShape.Round:
-                    problem.EdgeProfitImportance = 0.1;
-                    problem.ElevationImportance = 0.1;
-                    problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance - problem.ElevationImportance;
-                    break;
-                // for complex tours, we prioritize edge profit but try not to generate a U-Turn either 
-                case TourShape.Complex:
-                    problem.EdgeProfitImportance = 0.4;
-                    problem.ElevationImportance = 0.4;
-                    problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance;
-                    break;
-                // custom tour shapes allow the user to select the values themselves
-                case TourShape.Custom:
-                default:
-                    problem.EdgeProfitImportance = edgeProfitImportance;
-                    problem.CoveredAreaImportance = coveredAreaImportance;
-                    problem.ElevationImportance = elevationImportance;
-                    break;
-            }
+            //switch (tourShape)
+            //{
+            //    // for a U-Turn, we only need to consider edge profit
+            //    case TourShape.UTurn:
+            //        problem.EdgeProfitImportance = 0.5;
+            //        problem.CoveredAreaImportance = 0;
+            //        problem.ElevationImportance = 0.5;
+            //        break;
+            //    // for round tours, covered area is very important, edge profit not so much
+            //    case TourShape.Round:
+            //        problem.EdgeProfitImportance = 0.1;
+            //        problem.ElevationImportance = 0.1;
+            //        problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance - problem.ElevationImportance;
+            //        break;
+            //    // for complex tours, we prioritize edge profit but try not to generate a U-Turn either 
+            //    case TourShape.Complex:
+            //        problem.EdgeProfitImportance = 0.4;
+            //        problem.ElevationImportance = 0.4;
+            //        problem.CoveredAreaImportance = 1 - problem.EdgeProfitImportance;
+            //        break;
+            //    // custom tour shapes allow the user to select the values themselves
+            //    case TourShape.Custom:
+            //    default:
+            //        problem.EdgeProfitImportance = edgeProfitImportance;
+            //        problem.CoveredAreaImportance = coveredAreaImportance;
+            //        problem.ElevationImportance = elevationImportance;
+            //        break;
+            //}
+
+            problem.EdgeProfitImportance = edgeProfitImportance;
+            problem.CoveredAreaImportance = coveredAreaImportance;
+            problem.ElevationImportance = elevationImportance;
 
             problem.MaxElevation = elevation;
             problem.MaxSteepness = steepness;

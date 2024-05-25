@@ -412,7 +412,7 @@ namespace Tour4MeAdvancedProject
                                          " (theoretical upper bound: " +
                                          ( Math.PI * ( problem.TargetDistance / ( 2 * Math.PI ) ) *
                                           ( problem.TargetDistance / ( 2 * Math.PI ) ) ) + ")" );
-                    result.Add( "success", "200" );
+                    //_ = jsonBuilder.Append( "    \"CoveredArea\": " + "\"" + problem.Path.CoveredArea.ToString( System.Globalization.CultureInfo.InvariantCulture ) + "\"" + ",\n" );                    result.Add( "success", "200" );
                     foreach (KeyValuePair<string, string> kv in problem.OutputToResultString())
                     {
                         result.Add( kv.Key, kv.Value );

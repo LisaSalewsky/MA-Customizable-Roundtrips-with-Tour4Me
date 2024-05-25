@@ -62,6 +62,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             CenterLon = startLon;
 
         }
+        //public Problem ( double startLat, double startLon, double givenMaxLat, double givenMaxLon, double givenMinLat, double givenMinLon, double radius, string fileName )
+        public Problem ( Graph G, double startLat, double startLon, double radius, string fileName ) : this( startLat, startLon, radius, fileName )
+        {
+            Graph = G;
+        }
+
 
         public Problem ( Problem p )
         {

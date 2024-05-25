@@ -10,12 +10,12 @@ namespace Tour4MeAdvancedProject.Solver
 {
     public class AntSolver : Selection
     {
-        public int NumberTours { get; set; } = 10;
+        public int NumberTours { get; set; } = 50;
         public int NumberAnts { get; set; } = 100;
         public List<Ant> Ants { get; set; } = new List<Ant>();
         public double Alpha { get; set; } = 0.3;
         public double Beta { get; set; } = 0.7;
-        public double EvaporationRate { get; set; } = 0.4;
+        public double EvaporationRate { get; set; } = 0.6;
         public int EdgeScalingPenalty { get; set; } = 1;
         public int InitTrailIntensity { get; set; } = 1;
         public int TrailPenalty { get; set; } = 1;
