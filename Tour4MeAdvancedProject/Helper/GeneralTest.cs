@@ -159,14 +159,14 @@ namespace Tour4MeAdvancedProject.Helper
                 _ = jsonBuilder.Append( "    \"tour\": \"Tour " + i + "\",\n" );
                 _ = jsonBuilder.Append( "    \"runs\": [\n" );
                 Graph G = null;
+
+                DateTime init_time_1 = DateTime.Now;
+
+                Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+                DateTime init_time_2 = DateTime.Now;
                 for (int j = 1; j <= numRuns; j++)
                 {
                     //AntSolver solver = new AntSolver( 4, 1, alpha, beta );
-
-                    DateTime init_time_1 = DateTime.Now;
-
-                    Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
-                    DateTime init_time_2 = DateTime.Now;
                     DateTime algo_time_1 = DateTime.Now;
 
                     SolveStatus solveStatus = solver.Solve( ref problem );

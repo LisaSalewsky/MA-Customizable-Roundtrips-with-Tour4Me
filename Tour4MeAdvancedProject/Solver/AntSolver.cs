@@ -84,7 +84,7 @@ namespace Tour4MeAdvancedProject.Solver
 
             PreprocessEdges( P );
 
-
+            Ants = new List<Ant>();
             for (int i = 0; i < NumberAnts; i++)
             {
                 Ants.Add( new Ant( pheromoneAmount ) );
@@ -163,6 +163,17 @@ namespace Tour4MeAdvancedProject.Solver
             //HashSet<int> visitedNodes = new HashSet<int>();
             //P.Graph.CalculateShortestDistances( P.Start );
             P.Graph.InitializeShortestPath( P.Start );
+
+            foreach (Edge edge in P.Graph.VEdges)
+            {
+                if (edge != null)
+                {
+                    edge.Visited = false;
+                    edge.Pheromone = 1;
+                    edge.TrailIntensity = 1;
+                    edge.Quality = 0;
+                }
+            }
 
             _ = Parallel.ForEach( P.Graph.VEdges, edge =>
             {

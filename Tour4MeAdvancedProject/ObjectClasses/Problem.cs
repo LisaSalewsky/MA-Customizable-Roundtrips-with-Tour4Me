@@ -352,8 +352,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Metadata.Add( "Path Types: " + ( Path.PathTypes.Length == 0 ? "None available" : Path.PathTypes ) );
             Metadata.Add( "Surfaces: " + ( Path.Surfaces.Length == 0 ? "None available" : Path.Surfaces ) );
             Metadata.Add( "Shape: " + ( negmodifier * Math.Round( Path.CoveredArea ) ) );
-            Metadata.Add( "Quality: " + Math.Round( Path.Quality, 4 ) );
-            Metadata.Add( "TotalEdgeProfits: " + Math.Round( Path.TotalEdgeProfits ) );
+            Metadata.Add( "Quality: " + Math.Round( Path.Quality * 100000, 4 ) );
+            Metadata.Add( "TotalEdgeProfits: " + Math.Round( Path.TotalEdgeProfits, 4 ) );
             Metadata.Add( "MaximumPossibleArea: " + Math.Round( perfectEllipsoidArea ) );
 
             outputString = new StringBuilder( "[" );
@@ -400,9 +400,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             int negModifier = area < 0 ? -1 : 1;
             double test =
                       (
-                      ( EdgeProfitImportance * profit ) +
-                      ( ElevationImportance * elevation / 100 ) +
-                      ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
+                      ( EdgeProfitImportance * 100 * profit ) +
+                      //( ElevationImportance * elevation / 100 ) +
+                      ( CoveredAreaImportance * 10000 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
                       ) / pathLength / TargetDistance * 100000
                       / Math.Pow( diff, 4 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
@@ -411,12 +411,12 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public double GetEdgeQuality ( double profit, double area, double elevation )
         {
+            int negModifier = area < 0 ? -1 : 1;
             return (
-                       ( EdgeProfitImportance * profit / TargetDistance ) +
-                          ( CoveredAreaImportance * area / ( Math.PI * TargetDistance * TargetDistance ) ) +
-                          ( ElevationImportance * elevation / TargetDistance )
-                      )
-                    * 100
+                       ( EdgeProfitImportance * 1000 * profit ) +
+                      ( ElevationImportance * elevation / 100 ) +
+                      ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
+                      ) / TargetDistance * 100000
                     ;
         }
 
