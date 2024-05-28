@@ -399,11 +399,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double diff = 1 + Math.Abs( TargetDistance - pathLength );
             int negModifier = area < 0 ? -1 : 1;
             double test =
-                      (
-                      ( EdgeProfitImportance * 100 * profit ) +
-                      //( ElevationImportance * elevation / 100 ) +
-                      ( CoveredAreaImportance * 10000 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
-                      ) / pathLength / TargetDistance * 100000
+                      ( ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
+                      ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation / TargetDistance ) +
+                      ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
+                      )
                       / Math.Pow( diff, 4 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
             return test;
@@ -412,12 +411,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double GetEdgeQuality ( double profit, double area, double elevation )
         {
             int negModifier = area < 0 ? -1 : 1;
-            return (
-                       ( EdgeProfitImportance * 1000 * profit ) +
-                      ( ElevationImportance * elevation / 100 ) +
-                      ( CoveredAreaImportance * 100 * negModifier * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
-                      ) / TargetDistance * 100000
-                    ;
+            double test = (
+                            ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
+                            ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation / TargetDistance ) +
+                            ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
+                          ) / TargetDistance;
+            if (test == 0)
+            {
+                Console.WriteLine( "ahhhhh" );
+            }
+
+            return test;
         }
 
         public double GetProfit ( Path path )

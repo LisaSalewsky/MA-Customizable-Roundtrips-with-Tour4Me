@@ -109,7 +109,7 @@ namespace Tour4MeAdvancedProject.Solver
                             CurrentProblem.Path.Length = length;
                             CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, length, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
                         pathSA.Edges.ForEach( x => x.Visited = false );
 
@@ -136,7 +136,7 @@ namespace Tour4MeAdvancedProject.Solver
                             CurrentProblem.Path.Length = length;
                             CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, length, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
                         tPair.Item2.Edges.ForEach( x => x.Visited = false );
 
@@ -165,7 +165,7 @@ namespace Tour4MeAdvancedProject.Solver
                             CurrentProblem.Path.Length = length;
                             CurrentProblem.Path.BoundingCoordinates = boudingCoordinates;
                             Utils.CalculateElevationDiffAndSteepness( v, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                            Utils.CaculateQualityValues( CurrentProblem, v, startNodeId, length, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                         }
                         pathSB.Edges.ForEach( x => x.Visited = false );
 

@@ -74,16 +74,16 @@ namespace Tour4MeAdvancedProject.Solver
                     P.Path.Add( bestEdge, bestNeigh, bestProfit );
                     P.Path.UpdateBoundingCoordinates( ref boudingCoordinates, P.Graph.VNodes[ bestNeigh ] );
                     P.Path.BoundingCoordinates = boudingCoordinates;
+                    visited[ bestEdge.GraphId ] = true;
+                    length += bestEdge.Cost;
+                    current = bestNeigh;
                     foreach (string currentTag in bestEdge.Tags)
                     {
                         Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                     }
                     Utils.CalculateElevationDiffAndSteepness( bestEdge, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                    Utils.CaculateQualityValues( P, bestEdge, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                    Utils.CaculateQualityValues( P, bestEdge, startNodeId, length, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
 
-                    visited[ bestEdge.GraphId ] = true;
-                    length += bestEdge.Cost;
-                    current = bestNeigh;
                 }
             }
 

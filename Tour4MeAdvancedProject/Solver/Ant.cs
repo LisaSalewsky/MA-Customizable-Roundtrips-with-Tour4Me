@@ -118,7 +118,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
             while (queue.Count > 0)
             {
-                Dictionary<Edge, float> edgeProbabilities = new Dictionary<Edge, float>();
+                Dictionary<Edge, double> edgeProbabilities = new Dictionary<Edge, double>();
                 //(double currentDist, (int currentNode, double currentActual)) = queue.Dequeue();
                 int currentNode = queue.First();
                 _ = queue.Remove( currentNode );
@@ -135,11 +135,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 CalculateNewPheromoneValuesIncludeNegative( CurrentProblem, currentElevationDiff, vNodes, visited, currentDistance, currentEdgeProfits, currentArea, currentElevationDiff, ref edgeProbabilities, vNodes[ currentNode ], allowed );
 
                 // randomly generate a random number between [0.0, 1.0) (excluding 1)
-                float probability = (float)Random.NextDouble();
+                double probability = Random.NextDouble();
                 // pick an edge according to edgeProbabilities and calculated probability
-                KeyValuePair<Edge, float> pickedPair = ChooseEdge( edgeProbabilities, probability );
+                KeyValuePair<Edge, double> pickedPair = ChooseEdge( edgeProbabilities, probability );
                 pickedEdge = pickedPair.Key;
-                float pickedProbability = pickedPair.Value;
+                double pickedProbability = pickedPair.Value;
+                if (pickedProbability == 0)
+                {
+                    Console.WriteLine( "ahhhhhhhhhh" );
+                }
 
                 // if we picked an edge: move to the respctive neighbor and add it to the queue (= choose next town to move to)
                 if (pickedEdge != null && pickedProbability > 0)
@@ -157,7 +161,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 }
                 else
                 {
-                    CloseOffPath( CurrentProblem, start, parent, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, ref currentPathsMaxSteepness, ref currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality, out List<Edge> edges, out List<int> nodes );
+                    CloseOffPath( CurrentProblem, start, parent, ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, ref currentPathsMaxSteepness, currentDistance, ref currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality, out List<Edge> edges, out List<int> nodes );
 
                     CurrentProblem.Path.Visited = solutionVisited.Concat( nodes ).ToList();
                     CurrentProblem.Path.Edges = SolutionEdges.Concat( edges ).ToList();
@@ -229,11 +233,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     newArea = area + ( edge.SourceNode == currentNode ? edge.ShoelaceForward : edge.ShoelaceBackward );
                     newElevation = elevation + ( Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2 );
 
-                    edge.Quality = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
+                    //edge.Quality = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
 
                     //double edgeValue = edge.Cost * edge.TrailIntensity;
                     //double edgeVisibility = 1 / edge.Cost;
-                    double edgeVisibility = edge.Quality;
+                    double edgeVisibility = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
 
                     int negModifier = newArea < 0 ? -1 : 1;
 
@@ -246,15 +250,27 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                     // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
                     edge.Pheromone += PheromoneAmount * edge.Profit * edge.Cost;
+                    if (edge.Pheromone < double.MinValue || edge.Pheromone > double.MaxValue)
+                    {
+                        Console.WriteLine( "ahhh" );
+                    }
                 }
                 else
                 {
                     edge.Pheromone /= 1000;
+                    if (edge.Pheromone < double.MinValue || edge.Pheromone > double.MaxValue)
+                    {
+                        Console.WriteLine( "ahhh" );
+                    }
                 }
 
                 if (neighbor.Incident.Count == 1 || currentNode.Incident.Count == 1)
                 {
                     edge.Pheromone /= 1000;
+                    if (edge.Pheromone < double.MinValue || edge.Pheromone > double.MaxValue)
+                    {
+                        Console.WriteLine( "ahhh" );
+                    }
                 }
             }
 
@@ -270,7 +286,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             elevationOut = newElevation;
         }
 
-        private void CalculateNewPheromoneValuesIncludeNegative ( Problem CurrentProblem, double currentElevationDiff, List<Node> vNodes, HashSet<int> visited, double currentDistance, double profit, double area, double elevation, ref Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed )
+        private void CalculateNewPheromoneValuesIncludeNegative ( Problem CurrentProblem, double currentElevationDiff, List<Node> vNodes, HashSet<int> visited, double currentDistance, double profit, double area, double elevation, ref Dictionary<Edge, double> edgeProbabilities, Node currentNode, List<Edge> allowed )
         {
 
             List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId, CurrentProblem, currentElevationDiff );
@@ -305,38 +321,61 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     //edge.Quality = CurrentProblem.GetQuality( newProfit, newArea, newElevation, newDistance );
                     //edge.Quality = CurrentProblem.GetQuality( profit, area, elevation, );
                     //edgeVisibility = edge.Quality;
-                    edgeVisibility = CurrentProblem.GetQuality( newProfit, newArea, newElevation, newDistance ); ;
+                    edgeVisibility = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
 
                     int negModifier = area < 0 ? -1 : 1;
+                    int visNegModifier = edgeVisibility < 0 ? -1 : 1;
 
+                    //float transformedValue = (float)( Math.Exp( Math.Abs( edgeVisibility ) ) * negModifier );
 
-                    float transformedValue = (float)( Math.Exp( Math.Abs( edgeVisibility ) ) * negModifier );
+                    //// Calculate probabilities without normalization
+                    //float currentProbability = (float)( Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha ) *
+                    //                                    transformedValue );
 
-                    // Calculate probabilities without normalization
-                    float currentProbability = (float)( Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha ) *
-                                                        transformedValue );
+                    double currentProbability = Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha ) * Math.Pow( edgeVisibility * visNegModifier, Beta );
+
                     edgeProbabilities.Add( edge, currentProbability );
 
+                    if (currentProbability != currentProbability || currentProbability == 0 || currentProbability > double.MaxValue || currentProbability < double.MinValue)
+                    {
+                        Console.WriteLine( "ahhhh" );
+                    }
                     // delta t_{ij}^k (PheromoneAmount / edge.Cost = Q / L_k) & update of delta t_ij (edge.Pheromone)
                     //edge.Pheromone += PheromoneAmount * edge.Quality;
                     edge.Pheromone += PheromoneAmount * edge.Cost * edge.Profit;
+                    if (edge.Pheromone < double.MinValue || edge.Pheromone > double.MaxValue)
+                    {
+                        Console.WriteLine( "ahhh" );
+                    }
                 }
                 else
                 {
                     edge.Pheromone /= 1000;
+                    if (edge.Pheromone < double.MinValue || edge.Pheromone > double.MaxValue)
+                    {
+                        Console.WriteLine( "ahhh" );
+                    }
                 }
 
                 if (neighbor.Incident.Count == 1 || currentNode.Incident.Count == 1)
                 {
                     edge.Pheromone /= 1000;
+                    if (edge.Pheromone < double.MinValue || edge.Pheromone > double.MaxValue)
+                    {
+                        Console.WriteLine( "ahhh" );
+                    }
                 }
             }
 
             // Normalize probabilities
             // p_{ij}^k (used for choosing town to move to)
-            float sumOfProbabilities = edgeProbabilities.Values.Sum();
+            double sumOfProbabilities = edgeProbabilities.Values.Sum();
             foreach (Edge edge in edgeProbabilities.Keys.ToList())
             {
+                if (sumOfProbabilities == 0 || sumOfProbabilities < double.MinValue || sumOfProbabilities > double.MaxValue)
+                {
+                    Console.WriteLine( "ahhh" );
+                }
                 edgeProbabilities[ edge ] /= sumOfProbabilities;
             }
 
@@ -344,7 +383,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         private static List<Edge> ScaleTrailIntensity ( List<Node> vNodes, HashSet<int> visited, int currentNode, Problem currentProblem, double currentElevationDiff )
         {
             // scale trial intensity on edges accordingly for all edges where a node is visited twice
-            double penaltyQuotient = 10;
+            double penaltyQuotient = currentProblem.TargetDistance / 100;
 
             double maxSteepness = currentProblem.MaxSteepness;
             double elevationDiff = currentElevationDiff;
@@ -365,7 +404,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 allowed.Add( newEdge );
             }
 
-            penaltyQuotient = 50000;
+            penaltyQuotient = 10 * currentProblem.TargetDistance;
             List<Edge> applyDoubleVisitPenalty = vNodes[ currentNode ].Incident.FindAll( x =>
             visited.Contains( x.TargetNode.GraphNodeId ) && visited.Contains( x.SourceNode.GraphNodeId ) );
 
@@ -374,6 +413,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // create new list of edges with applied penalties
                 Edge newEdge = new Edge( edge, edge.Reversed );
                 newEdge.TrailIntensity /= penaltyQuotient;
+                if (newEdge.TrailIntensity < double.MinValue || edge.TrailIntensity > double.MaxValue)
+                {
+                    Console.WriteLine( "ahhh" );
+                }
                 _ = allowed.Remove( edge );
                 allowed.Add( newEdge );
             }
@@ -396,9 +439,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
                 newElevation = elevation + ( Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2 );
 
-                edge.Quality = currentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
+                //edge.Quality = currentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
                 float trailIntensityPowAlpha = (float)Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha );
-                double edgeVisibility = edge.Quality * currentProblem.EdgeProfitImportance;
+                double edgeVisibility = currentProblem.GetEdgeQuality( newProfit, newArea, newElevation ) * currentProblem.EdgeProfitImportance;
                 float visibilityPowBeta = (float)Math.Pow( edgeVisibility, Beta );
 
                 sumOfAllowed += trailIntensityPowAlpha * visibilityPowBeta;
@@ -435,7 +478,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
 
             Utils.CalculateElevationDiffAndSteepness( pickedEdge, ref maxSteepness, ref currentElevationDiff );
-            Utils.CaculateQualityValues( problem, pickedEdge, currentNode, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+            Utils.CaculateQualityValues( problem, pickedEdge, currentNode, currentDistance, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
             pickedEdge.Visited = true;
 
 
@@ -443,7 +486,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         }
 
 
-        private void CloseOffPath ( Problem problem, int start, int parent, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings, ref double maxSteepness, ref double currentElevationDiff, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality, out List<Edge> edges, out List<int> nodes )
+        private void CloseOffPath ( Problem problem, int start, int parent, ref HashSet<SurfaceTag> addedSurfaceTags, ref HashSet<HighwayTag> addedPathTypes, ref HashSet<string> addedSurroundings, ref double maxSteepness, double currentDistance, ref double currentElevationDiff, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality, out List<Edge> edges, out List<int> nodes )
         {
             // if we need to close the loop since we cannot take any other neighbor:
             // close it using the shortest path from the remaining acceptable node
@@ -464,7 +507,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                 }
                 Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref currentElevationDiff );
-                Utils.CaculateQualityValues( problem, edge, startNodeId, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                Utils.CaculateQualityValues( problem, edge, startNodeId, currentDistance + edge.Cost, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
 
             }
             edges.ForEach( x => x.Visited = false );
@@ -487,7 +530,6 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // make edge impossible to pick again
                 // setting trailIntensity to 0 makes the probability of this edge being picked 0
                 pickedEdge.TrailIntensity = 0;
-                _ = pickedEdge.SourceNode.GraphNodeId == neighborId ? pickedEdge.TargetNode : pickedEdge.SourceNode;
             }
         }
 
@@ -557,7 +599,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     double actualDiff = boundingArea - ( ( problem.Path.CoveredArea < 0 ? -1 : 1 ) * problem.Path.CoveredArea );
                     if (boundingArea > 0)
                     {
-                        penaltyQuotient *= problem.CoveredAreaImportance * Math.Abs( actualDiff - perfectDiff );
+                        penaltyQuotient *= ( problem.CoveredAreaImportance > 0 ? problem.CoveredAreaImportance : 0.0001 * Math.Abs( actualDiff - perfectDiff ) ) * problem.TargetDistance;
                     }
 
                 }
@@ -580,6 +622,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 // pheromone contains the newly placed pheromone from the current ants (updated during tour)
                 // scale this by a penalty if the ant didn't close the tour
                 edge.TrailIntensity = ( edge.TrailIntensity * evaporationRate ) + ( edge.Pheromone / penaltyQuotient );
+                if (edge.TrailIntensity < double.MinValue || edge.TrailIntensity > double.MaxValue)
+                {
+                    Console.WriteLine( "ahhh" );
+                }
             }
         }
 
@@ -589,19 +635,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         /// <param name="probabilities">Array of probabilities for each choice.</param>
         /// <param name="randomNumber"> the random number that was generated.</param>
         /// <returns>The randomly selected choice and its respective edge id.</returns>
-        private KeyValuePair<Edge, float> ChooseEdge ( Dictionary<Edge, float> probabilities, float randomNumber )
+        private KeyValuePair<Edge, double> ChooseEdge ( Dictionary<Edge, double> probabilities, double randomNumber )
         {
             if (probabilities.Count == 1)
             {
                 return probabilities.First();
             }
             // start with percentage 0
-            float sum = 0;
+            double sum = 0;
             // step through all possible neighbor edges
-            foreach (KeyValuePair<Edge, float> kvp in probabilities)
+            foreach (KeyValuePair<Edge, double> kvp in probabilities)
             {
                 // get the current edge percentage
-                float percentage = kvp.Value;
+                double percentage = kvp.Value;
                 // add this to the previous percentage
                 sum += percentage;
                 // only if percentage is larger than the random number we generated earlier, 
@@ -614,7 +660,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             // last walk through the loop shouold always check against 100% and thus always return something
             // if nothing was returned, we had an error case
             // represent this with kvp (-1, -1) which is not posible
-            return new KeyValuePair<Edge, float>( null, -1 );
+            return new KeyValuePair<Edge, double>( null, -1 );
         }
     }
 }

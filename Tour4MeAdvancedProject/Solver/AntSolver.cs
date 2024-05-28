@@ -17,7 +17,7 @@ namespace Tour4MeAdvancedProject.Solver
         public double Beta { get; set; } = 0.7;
         public double EvaporationRate { get; set; } = 0.6;
         public int EdgeScalingPenalty { get; set; } = 1;
-        public int InitTrailIntensity { get; set; } = 1;
+        public double InitTrailIntensity { get; set; } = (int)0.0001;
         public int TrailPenalty { get; set; } = 1;
         public string NewPheromoneFunction { get; set; } = "Profit";
         public bool UsePenalty { get; set; } = true;
@@ -41,7 +41,7 @@ namespace Tour4MeAdvancedProject.Solver
             double beta,
             double evaporationRate,
             int edgeScalingPenalty,
-            int initTrailIntensity,
+            double initTrailIntensity,
             int trailPenalty,
             string newPheromoneFunction ) : this( numberRunsAnt, numberAnts, alpha, beta )
         {
@@ -131,7 +131,13 @@ namespace Tour4MeAdvancedProject.Solver
             P = returnedProb;
 
             P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes.ToList() ), P.Path );
-
+            foreach (Edge edge in P.Graph.VEdges)
+            {
+                if (edge != null)
+                {
+                    edge.TrailIntensity = 1;
+                }
+            }
 
             HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
             HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
@@ -200,6 +206,10 @@ namespace Tour4MeAdvancedProject.Solver
                     }
                     // don't allow negative pheromone values (for now) TODO maybe change this
                     edge.TrailIntensity = edge.Pheromone < 0 ? 0 : edge.Pheromone;
+                    if (edge.TrailIntensity < double.MinValue || edge.TrailIntensity > double.MaxValue)
+                    {
+                        Console.WriteLine( "ahhh" );
+                    }
                 }
             } );
 

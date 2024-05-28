@@ -19,6 +19,7 @@ namespace Tour4MeAdvancedProject.Solver
         public double Temperature { get; set; } = 0.9;
         public Random Random { get; set; } = new Random();
         public int NumberwaypointList { get; set; } = 10;
+        public string DistanceScalingCalculationForProbability { get; set; } = "Random";
 
 
 
@@ -30,6 +31,14 @@ namespace Tour4MeAdvancedProject.Solver
             Repetitions = repetitions;
             Temperature = temp;
             NumberwaypointList = waypointList;
+        }
+        public SimmulatedAnnealingSolver ( int runs, int repetitions, double temp, int waypointList, string distanceScalingCalculationForProbability ) : this( runs, repetitions, temp, waypointList )
+        {
+            Runs = runs;
+            Repetitions = repetitions;
+            Temperature = temp;
+            NumberwaypointList = waypointList;
+            DistanceScalingCalculationForProbability = distanceScalingCalculationForProbability;
         }
 
         public SolveStatus Solve ( ref Problem P, Algo algo )

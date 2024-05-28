@@ -53,12 +53,16 @@ namespace Tour4MeAdvancedProject.Helper
             currentElevationDiff += elevationDiff;
         }
 
-        internal static void CaculateQualityValues ( Problem problem, Edge v, int startNodeId, double currentElevation, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality )
+        internal static void CaculateQualityValues ( Problem problem, Edge v, int startNodeId, double currentDistance, double currentElevation, ref double currentEdgeProfits, ref double currentArea, ref double currentQuality )
         {
             currentEdgeProfits += !v.Visited ? v.Cost * v.Profit : 0;
             v.Visited = true;
             currentArea += v.SourceNode.GraphNodeId == startNodeId ? v.ShoelaceForward : v.ShoelaceBackward;
-            currentQuality = problem.GetQuality( currentEdgeProfits, currentArea, currentElevation, problem.Path.Length );
+            currentQuality = problem.GetQuality( currentEdgeProfits, currentArea, currentElevation, currentDistance );
+            if (currentQuality != currentQuality)
+            {
+                Console.WriteLine( "ahhhhh" );
+            }
         }
 
 
@@ -75,6 +79,10 @@ namespace Tour4MeAdvancedProject.Helper
             CurrentProblem.Path.TotalEdgeProfits = currentEdgeProfits;
             CurrentProblem.Path.Quality = currentQuality;
             CurrentProblem.Path.CoveredArea = currentArea;
+            if (currentQuality != currentQuality)
+            {
+                Console.WriteLine( "ahhhhh" );
+            }
         }
 
         public static void UpdateMetadata ( Path visitedPath, Problem p )
@@ -112,6 +120,10 @@ namespace Tour4MeAdvancedProject.Helper
             p.Path.TotalEdgeProfits = totalEdgeProfits;
             //p.Path.TotalEdgeProfits = pathEdges.Sum( x => x.Profit * x.Cost );
             p.Path.Quality = p.GetQuality( p.Path.TotalEdgeProfits, p.Path.CoveredArea, elevationDiff / 2, p.Path.Length );
+            if (p.Path.Quality != p.Path.Quality)
+            {
+                Console.WriteLine( "ahhhhh" );
+            }
 
             // update all current path values
             p.Path.Visited = visited;
@@ -171,7 +183,7 @@ namespace Tour4MeAdvancedProject.Helper
                     Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, tag );
                 }
                 Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
-                Utils.CaculateQualityValues( p, edge, startNodeId, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                Utils.CaculateQualityValues( p, edge, startNodeId, pathEdges.Sum( x => x.Cost ), elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
                 pathEdges.ForEach( x => x.Visited = false );
             }
 
@@ -189,6 +201,10 @@ namespace Tour4MeAdvancedProject.Helper
             returnPath.PathTypes = string.Join( ", ", addedPathTypes );
             returnPath.Surfaces = string.Join( ", ", addedSurfaceTags );
             returnPath.SurroundingTags = string.Join( ", ", addedSurroundings );
+            if (currentQuality != currentQuality)
+            {
+                Console.WriteLine( "ahhhhh" );
+            }
         }
 
     }
