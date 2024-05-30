@@ -15,7 +15,7 @@ namespace Tour4MeAdvancedProject.Solver
         public override SolveStatus Solve ( ref Problem P )
         {
             List<bool> visited = new List<bool>();
-            visited.AddRange( new bool[ P.Graph.VEdges.Count ] );
+            visited.AddRange( new bool[ P.Graph.VEdges.Length ] );
 
             int current = P.Start;
             P.Path.Add( null, current, 0 );

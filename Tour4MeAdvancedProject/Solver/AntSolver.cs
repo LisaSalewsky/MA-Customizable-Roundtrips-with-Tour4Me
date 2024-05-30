@@ -13,11 +13,11 @@ namespace Tour4MeAdvancedProject.Solver
         public int NumberTours { get; set; } = 50;
         public int NumberAnts { get; set; } = 100;
         public List<Ant> Ants { get; set; } = new List<Ant>();
-        public double Alpha { get; set; } = 0.3;
-        public double Beta { get; set; } = 0.7;
+        public double Alpha { get; set; } = 2;
+        public double Beta { get; set; } = 5;
         public double EvaporationRate { get; set; } = 0.6;
         public int EdgeScalingPenalty { get; set; } = 1;
-        public double InitTrailIntensity { get; set; } = (int)0.0001;
+        public double InitTrailIntensity { get; set; } = 0.0001;
         public int TrailPenalty { get; set; } = 1;
         public string NewPheromoneFunction { get; set; } = "Profit";
         public bool UsePenalty { get; set; } = true;
@@ -115,8 +115,9 @@ namespace Tour4MeAdvancedProject.Solver
                 }
                 );
                 // reset all pheromone values set by ants
-                foreach (Edge edge in P.Graph.VEdges)
+                for (int j = 0; j < P.Graph.VEdges.Length; j++)
                 {
+                    Edge edge = P.Graph.VEdges[ j ];
                     if (edge != null)
                     {
                         edge.Visited = false;
@@ -127,15 +128,16 @@ namespace Tour4MeAdvancedProject.Solver
             }
 
 
-            returnedProb = allSolutions.First( s => Math.Abs( s.Path.CoveredArea ) == allSolutions.Max( x => Math.Abs( x.Path.CoveredArea ) ) );
+            returnedProb = allSolutions.First( s => Math.Abs( s.Path.Quality ) == allSolutions.Max( x => Math.Abs( x.Path.Quality ) ) );
             P = returnedProb;
 
             P.Path = new Path( solutionEdges, visitedNodes, P.GetProfit( visitedNodes.ToList() ), P.Path );
-            foreach (Edge edge in P.Graph.VEdges)
+            for (int i = 0; i < P.Graph.VEdges.Length; i++)
             {
+                Edge edge = P.Graph.VEdges[ i ];
                 if (edge != null)
                 {
-                    edge.TrailIntensity = 1;
+                    edge.TrailIntensity = InitTrailIntensity;
                 }
             }
 
@@ -159,59 +161,65 @@ namespace Tour4MeAdvancedProject.Solver
 
         private void PreprocessEdges ( Problem P )
         {
-            double increaseAmount = P.PrefTags.Count == 0 || P.EdgeProfitImportance == 0
+            _ = P.PrefTags.Count == 0 || P.EdgeProfitImportance == 0
                 ? 0
                 : 1 / ( P.PrefTags.Count * P.EdgeProfitImportance );
-            double decreaseAmount = P.AvoidTags.Count == 0 || P.EdgeProfitImportance == 0
+            _ = P.AvoidTags.Count == 0 || P.EdgeProfitImportance == 0
                 ? 0
                 : 1 / ( P.AvoidTags.Count * P.EdgeProfitImportance );
 
             //HashSet<int> visitedNodes = new HashSet<int>();
             //P.Graph.CalculateShortestDistances( P.Start );
-            P.Graph.InitializeShortestPath( P.Start );
 
-            foreach (Edge edge in P.Graph.VEdges)
+            if (P.Graph.VNodes.Any( x => x != null && x.GraphNodeId != P.Start && x.ShortestDistance == 0 ))
             {
+                P.Graph.InitializeShortestPath( P.Start );
+            }
+
+            for (int i = 0; i < P.Graph.VEdges.Length; i++)
+            {
+                Edge edge = P.Graph.VEdges[ i ];
                 if (edge != null)
                 {
                     edge.Visited = false;
-                    edge.Pheromone = 1;
-                    edge.TrailIntensity = 1;
+                    edge.Pheromone = 0;
+                    edge.TrailIntensity = InitTrailIntensity;
                     edge.Quality = 0;
                 }
             }
 
-            _ = Parallel.ForEach( P.Graph.VEdges, edge =>
-            {
-                //    if (edge.SourceNode.ShortestDistance == 0)
-                //    {
-                //        edge.SourceNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.SourceNode.GraphNodeId );
-                //    }
-                //    if (edge.TargetNode.ShortestDistance == 0)
-                //    {
-                //        edge.TargetNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.TargetNode.GraphNodeId );
-                //    }
-                if (edge != null)
-                {
-                    foreach (string tag in edge.Tags)
-                    {
-                        if (P.PrefTags.Contains( tag ))
-                        {
-                            edge.Pheromone += increaseAmount;
-                        }
-                        if (P.AvoidTags.Contains( tag ))
-                        {
-                            edge.Pheromone -= decreaseAmount;
-                        }
-                    }
-                    // don't allow negative pheromone values (for now) TODO maybe change this
-                    edge.TrailIntensity = edge.Pheromone < 0 ? 0 : edge.Pheromone;
-                    if (edge.TrailIntensity < double.MinValue || edge.TrailIntensity > double.MaxValue)
-                    {
-                        Console.WriteLine( "ahhh" );
-                    }
-                }
-            } );
+            //_ = Parallel.ForEach( P.Graph.VEdges, edge =>
+            //{
+            //    //    if (edge.SourceNode.ShortestDistance == 0)
+            //    //    {
+            //    //        edge.SourceNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.SourceNode.GraphNodeId );
+            //    //    }
+            //    //    if (edge.TargetNode.ShortestDistance == 0)
+            //    //    {
+            //    //        edge.TargetNode.ShortestDistance = P.Graph.ShortestPath( P.Start, edge.TargetNode.GraphNodeId );
+            //    //    }
+            //    if (edge != null)
+            //    {
+            //        for (int j = 0; j < edge.Tags.Count; j++)
+            //        {
+            //            string tag = edge.Tags[ j ];
+            //            if (P.PrefTags.Contains( tag ))
+            //            {
+            //                edge.Pheromone += increaseAmount;
+            //            }
+            //            if (P.AvoidTags.Contains( tag ))
+            //            {
+            //                edge.Pheromone -= decreaseAmount;
+            //            }
+            //        }
+            //        // don't allow negative pheromone values (for now) TODO maybe change this
+            //        edge.TrailIntensity = edge.Pheromone < 0 ? 0 : edge.Pheromone;
+            //        if (edge.TrailIntensity < double.MinValue || edge.TrailIntensity > double.MaxValue)
+            //        {
+            //            Console.WriteLine( "ahhh" );
+            //        }
+            //    }
+            //} );
 
         }
 

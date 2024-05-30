@@ -68,20 +68,30 @@ namespace Tour4MeAdvancedProject.Helper
 
                 memoryUsage = currentProcess.WorkingSet64;
             }
-            int numRuns = 100;
+            int numRuns = 20;
             Color[] colors = GenerateColors( numberPaths );
 
             Selection solver = null;
             double coveredAreaImportanceInit = (double)1 / numberPaths;
 
             Graph G = null;
+            double coveredAreaImportance = 1 * coveredAreaImportanceInit;
+            double edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
+            double elevationImportance = ( 1 - coveredAreaImportance ) / 2;
+            DateTime init_time_1 = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            DateTime init_time_2 = DateTime.Now;
 
             for (int i = 1; i <= numberPaths; i++)
             {
-                double coveredAreaImportance = i * coveredAreaImportanceInit;
-                double edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
-                double elevationImportance = ( 1 - coveredAreaImportance ) / 2;
-                DoInnerRuns( pathLength, numberPaths, numberAnts, numberRunsAnt, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, ref G, i, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+                coveredAreaImportance = i * coveredAreaImportanceInit;
+                edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
+                elevationImportance = ( 1 - coveredAreaImportance ) / 2;
+                problem.EdgeProfitImportance = edgeProfitImportance;
+                problem.CoveredAreaImportance = coveredAreaImportance;
+                problem.ElevationImportance = elevationImportance;
+
+                DoInnerRuns( problem, numberPaths, numberAnts, numberRunsAnt, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, i, init_time_1, init_time_2 );
 
                 _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
 
@@ -135,20 +145,29 @@ namespace Tour4MeAdvancedProject.Helper
 
                 memoryUsage = currentProcess.WorkingSet64;
             }
-            int numRuns = 100;
+            int numRuns = 20;
             Color[] colors = GenerateColors( numberPaths );
 
             Selection solver = null;
             double edgeProfitImportanceInit = (double)1 / numberPaths;
 
+            double edgeProfitImportance = 1 * edgeProfitImportanceInit;
+            double coveredAreaImportance = ( 1 - edgeProfitImportance ) / 2;
+            double elevationImportance = ( 1 - edgeProfitImportance ) / 2;
             Graph G = null;
-
+            DateTime init_time_1 = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            DateTime init_time_2 = DateTime.Now;
             for (int i = 1; i <= numberPaths; i++)
             {
-                double edgeProfitImportance = i * edgeProfitImportanceInit;
-                double coveredAreaImportance = ( 1 - edgeProfitImportance ) / 2;
-                double elevationImportance = ( 1 - edgeProfitImportance ) / 2;
-                DoInnerRuns( pathLength, numberPaths, numberAnts, numberRunsAnt, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, ref G, i, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+                edgeProfitImportance = i * edgeProfitImportanceInit;
+                coveredAreaImportance = ( 1 - edgeProfitImportance ) / 2;
+                elevationImportance = ( 1 - edgeProfitImportance ) / 2;
+                problem.EdgeProfitImportance = edgeProfitImportance;
+                problem.CoveredAreaImportance = coveredAreaImportance;
+                problem.ElevationImportance = elevationImportance;
+
+                DoInnerRuns( problem, numberPaths, numberAnts, numberRunsAnt, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, i, init_time_1, init_time_2 );
                 _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
 
             }
@@ -200,20 +219,29 @@ namespace Tour4MeAdvancedProject.Helper
 
                 memoryUsage = currentProcess.WorkingSet64;
             }
-            int numRuns = 100;
+            int numRuns = 20;
             Color[] colors = GenerateColors( numberPaths );
 
             Selection solver = null;
             double elevationImportanceInit = (double)1 / numberPaths;
 
             Graph G = null;
+            double elevationImportance = 1 * elevationImportanceInit;
+            double coveredAreaImportance = ( 1 - elevationImportance ) / 2;
+            double edgeProfitImportance = ( 1 - elevationImportance ) / 2;
+            DateTime init_time_1 = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            DateTime init_time_2 = DateTime.Now;
 
             for (int i = 1; i <= numberPaths; i++)
             {
-                double elevationImportance = i * elevationImportanceInit;
-                double coveredAreaImportance = ( 1 - elevationImportance ) / 2;
-                double edgeProfitImportance = ( 1 - elevationImportance ) / 2;
-                DoInnerRuns( pathLength, numberPaths, numberAnts, numberRunsAnt, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, ref G, i, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+                elevationImportance = i * elevationImportanceInit;
+                coveredAreaImportance = ( 1 - elevationImportance ) / 2;
+                edgeProfitImportance = ( 1 - elevationImportance ) / 2;
+                problem.EdgeProfitImportance = edgeProfitImportance;
+                problem.CoveredAreaImportance = coveredAreaImportance;
+                problem.ElevationImportance = elevationImportance;
+                DoInnerRuns( problem, numberPaths, numberAnts, numberRunsAnt, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, i, init_time_1, init_time_2 );
                 _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
 
             }
@@ -265,20 +293,29 @@ namespace Tour4MeAdvancedProject.Helper
 
                 memoryUsage = currentProcess.WorkingSet64;
             }
-            int numRuns = 100;
+            int numRuns = 20;
             Color[] colors = GenerateColors( numberPaths );
 
             Selection solver = null;
             double elevationImportanceInit = (double)1 / numberPaths;
 
             Graph G = null;
+            double elevationImportance = 1 * elevationImportanceInit;
+            double coveredAreaImportance = ( 1 - elevationImportance ) / 2;
+            double edgeProfitImportance = ( 1 - elevationImportance ) / 2;
+            DateTime init_time_1 = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            DateTime init_time_2 = DateTime.Now;
 
             for (int i = 1; i <= numberPaths; i++)
             {
-                double elevationImportance = i * elevationImportanceInit;
-                double coveredAreaImportance = ( 1 - elevationImportance ) / 2;
-                double edgeProfitImportance = ( 1 - elevationImportance ) / 2;
-                DoInnerRunsSA( pathLength, numberPaths, numberRunsSA, numberRepitiionsSA, initTemperature, coolingFunction, numberWaypoints, distanceScalingCalculationForProbability, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, ref G, i, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+                elevationImportance = i * elevationImportanceInit;
+                coveredAreaImportance = ( 1 - elevationImportance ) / 2;
+                edgeProfitImportance = ( 1 - elevationImportance ) / 2;
+                problem.EdgeProfitImportance = edgeProfitImportance;
+                problem.CoveredAreaImportance = coveredAreaImportance;
+                problem.ElevationImportance = elevationImportance;
+                DoInnerRunsSA( problem, numberPaths, numberRunsSA, numberRepitiionsSA, initTemperature, coolingFunction, numberWaypoints, distanceScalingCalculationForProbability, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, i, init_time_1, init_time_2 );
                 _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
 
             }
@@ -286,7 +323,7 @@ namespace Tour4MeAdvancedProject.Helper
             return jsonBuilder.ToString();
         }
 
-        private void DoInnerRunsSA ( int pathLength, int numberPaths, int numberRunsSA, int numberRepitiionsSA, int initTemperature, string coolingFunction, int numberWaypoints, string distanceScalingCalculationForProbability, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, ref Graph G, int i, double edgeProfitImportance, double coveredAreaImportance, double elevationImportance )
+        private void DoInnerRunsSA ( Problem problem, int numberPaths, int numberRunsSA, int numberRepitiionsSA, int initTemperature, string coolingFunction, int numberWaypoints, string distanceScalingCalculationForProbability, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, int i, DateTime init_time_1, DateTime init_time_2 )
         {
             switch (algorithmEnum)
             {
@@ -366,10 +403,6 @@ namespace Tour4MeAdvancedProject.Helper
             _ = jsonBuilder.Append( "    {\n" );
             _ = jsonBuilder.Append( "    \"tour\": \"Tour " + i + "\",\n" );
             _ = jsonBuilder.Append( "    \"runs\": [\n" );
-            DateTime init_time_1 = DateTime.Now;
-
-            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
-            DateTime init_time_2 = DateTime.Now;
 
             for (int j = 1; j <= numRuns; j++)
             {
@@ -436,7 +469,7 @@ namespace Tour4MeAdvancedProject.Helper
                         _ = jsonBuilder.Append( "    \"CoveredAreaImportance\": " + problem.CoveredAreaImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"Profit\": " + problem.Path.TotalEdgeProfits.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"ProfitImportance\": " + problem.EdgeProfitImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
-                        _ = jsonBuilder.Append( "    \"Elevation\": " + problem.Path.Elevation.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                        _ = jsonBuilder.Append( "    \"Elevation\": " + ( ( problem.MaxElevation - problem.Path.Elevation ) / problem.MaxElevation ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"ElevationImportance\": " + problem.ElevationImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"Quality\": " + problem.Quality.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"InitTime\": " + init_time_int.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
@@ -450,7 +483,7 @@ namespace Tour4MeAdvancedProject.Helper
             }
         }
 
-        private void DoInnerRuns ( int pathLength, int numberPaths, int numberAnts, int numberRunsAnt, double alpha, double beta, double evaporationRate, int edgeScalingPenalty, double initTrailIntensity, int TrailPenalty, string newPheromoneFucntion, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, ref Graph G, int i, double edgeProfitImportance, double coveredAreaImportance, double elevationImportance )
+        private void DoInnerRuns ( Problem problem, int numberPaths, int numberAnts, int numberRunsAnt, double alpha, double beta, double evaporationRate, int edgeScalingPenalty, double initTrailIntensity, int TrailPenalty, string newPheromoneFucntion, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, int i, DateTime init_time_1, DateTime init_time_2 )
         {
             switch (algorithmEnum)
             {
@@ -530,10 +563,6 @@ namespace Tour4MeAdvancedProject.Helper
             _ = jsonBuilder.Append( "    {\n" );
             _ = jsonBuilder.Append( "    \"tour\": \"Tour " + i + "\",\n" );
             _ = jsonBuilder.Append( "    \"runs\": [\n" );
-            DateTime init_time_1 = DateTime.Now;
-
-            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
-            DateTime init_time_2 = DateTime.Now;
 
             for (int j = 1; j <= numRuns; j++)
             {
@@ -599,7 +628,7 @@ namespace Tour4MeAdvancedProject.Helper
                         _ = jsonBuilder.Append( "    \"CoveredAreaImportance\": " + problem.CoveredAreaImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"Profit\": " + problem.Path.TotalEdgeProfits.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"ProfitImportance\": " + problem.EdgeProfitImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
-                        _ = jsonBuilder.Append( "    \"Elevation\": " + problem.Path.Elevation.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                        _ = jsonBuilder.Append( "    \"Elevation\": " + ( ( problem.MaxElevation - problem.Path.Elevation ) / problem.MaxElevation ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"ElevationImportance\": " + problem.ElevationImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"Quality\": " + problem.Path.Quality.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                         _ = jsonBuilder.Append( "    \"InitTime\": " + init_time_int.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );

@@ -20,15 +20,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         private Guid Id;
 
-        public double MaxLat { get; set; }
-        public double MinLat { get; set; }
-        public double MaxLon { get; set; }
-        public double MinLon { get; set; }
+        public double MaxLat { get; set; } = double.MinValue;
+        public double MinLat { get; set; } = double.MaxValue;
+        public double MaxLon { get; set; } = double.MinValue;
+        public double MinLon { get; set; } = double.MaxValue;
         public double CenterLat { get; set; }
         public double CenterLon { get; set; }
 
-        public List<Node> VNodes { get; set; }
-        public List<Edge> VEdges { get; set; }
+        public Node[] VNodes { get; set; }
+        public List<Node> TempVNodes { get; set; }
+        public Edge[] VEdges { get; set; }
+        public List<Edge> TempVEdges { get; set; }
 
         public Dictionary<Guid, int> GIdNode { get; set; }
 
@@ -36,8 +38,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             error = "";
             Id = InID;
-            VNodes = new List<Node>();
-            VEdges = new List<Edge>();
+            TempVNodes = new List<Node>();
+            TempVEdges = new List<Edge>();
             GIdNode = new Dictionary<Guid, int>();
             string connectError = "";
             try
@@ -86,6 +88,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 error = "<script> alert('" + ex.ToString() + "';</script>)\");";
             }
             error += connectError;
+
+            VNodes = TempVNodes.ToArray();
+            VEdges = TempVEdges.ToArray();
         }
 
         private void ConnectToDB ( out string error )
@@ -111,18 +116,19 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             if (VEdges == null)
             {
-                VEdges = new List<Edge>();
+                VEdges = new Edge[] { };
             }
             VNodes[ edge.SourceNode.GraphNodeId ].Incident.Add( edge );
             VNodes[ edge.TargetNode.GraphNodeId ].Incident.Add( edge );
-            VEdges.Add( edge );
+            TempVEdges.Add( edge );
+            VEdges = TempVEdges.ToArray();
         }
         public Graph ( string fileName )
         {
             using (StreamReader file = new StreamReader( fileName ))
             {
-                VNodes = new List<Node>();
-                VEdges = new List<Edge>();
+                TempVNodes = new List<Node>();
+                TempVEdges = new List<Edge>();
                 GIdNode = new Dictionary<Guid, int>();
                 string str;
                 int nNodes = 0;
@@ -150,7 +156,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         nNodes = int.Parse( NextWord( ref str, ' ' ) );
                         nEdges = int.Parse( NextWord( ref str, ' ' ) );
 
-                        VNodes = new List<Node>( nNodes );
+                        TempVNodes = new List<Node>( nNodes );
+                        VNodes = new Node[ nNodes ];
                     }
                     else if (type == 'n')
                     {
@@ -165,7 +172,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         double lon = double.Parse( NextWord( ref str, ' ' ), CultureInfo.InvariantCulture );
 
                         Node node = new Node( cNodes, id, lat, lon );
-                        VNodes.Add( node );
+                        TempVNodes.Add( node );
+                        VNodes = TempVNodes.ToArray();
 
                         GIdNode.Add( id, cNodes );
 
@@ -241,6 +249,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 //    throw new InvalidOperationException($"Error: number of edges ({cEdges}) does not match the file preamble ({nEdges})");
                 //}
             }
+            VNodes = TempVNodes.ToArray();
+            VEdges = TempVEdges.ToArray();
         }
 
         public Graph ( double startLat, double startLon, double radius, string fileName )
@@ -257,8 +267,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 CenterLat = startLat;
                 CenterLon = startLon;
 
-                VNodes = new List<Node>();
-                VEdges = new List<Edge>();
+                TempVNodes = new List<Node>();
+                TempVEdges = new List<Edge>();
                 GIdNode = new Dictionary<Guid, int>();
                 int cNodes = 0;
                 int cEdges = 0;
@@ -266,9 +276,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 //CreateEdgesFromDBMaxMinLatLon( givenMaxLat, givenMaxLon, givenMinLat, givenMinLon, cEdges, out _, out _ );
 
 
-                CreateNodesAndEdgesFromDBCenterRadius( startLat, startLon, radius, cNodes, cEdges, VNodes, GIdNode );
+                CreateNodesAndEdgesFromDBCenterRadius( startLat, startLon, radius, cNodes, cEdges, TempVNodes, GIdNode );
+
+                VNodes = TempVNodes.ToArray();
+                VEdges = TempVEdges.ToArray();
 
                 RemoveAllDeadEndsPlusNewOnes();
+
             }
         }
 
@@ -398,8 +412,8 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         cost += 0.1f;
                     }
 
-                    Node source = VNodes[ sId ];
-                    Node target = VNodes[ tId ];
+                    Node source = TempVNodes[ sId ];
+                    Node target = TempVNodes[ tId ];
 
 
 
@@ -458,7 +472,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             return cNodes;
         }
 
-        private static int CreateNodesFromReader ( int cNodes, SqlCommand command, List<Node> vNodes, Dictionary<Guid, int> gIdNodes )
+        private int CreateNodesFromReader ( int cNodes, SqlCommand command, List<Node> vNodes, Dictionary<Guid, int> gIdNodes )
         {
 
             using (SqlDataReader reader = command.ExecuteReader())
@@ -480,7 +494,17 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
                     Node node = new Node( cNodes, nodeId, latitude, longitude, elevation );
                     vNodes.Add( node );
+                    VNodes = TempVNodes.ToArray();
                     gIdNodes.Add( nodeId, cNodes );
+
+                    if (latitude < MinLat)
+                    {
+                        MinLat = latitude;
+                    }
+                    if (longitude < MinLon)
+                    {
+                        MinLon = longitude;
+                    }
 
                     cNodes++;
                 }
@@ -515,11 +539,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             //double yr = GetDistanceFromLatLon( r.Lat, r.Lon, MinLat, r.Lon ) * ( r.Lat < MinLat ? -1 : 1 );
             //double xr = GetDistanceFromLatLon( r.Lat, r.Lon, r.Lat, MinLon ) * ( r.Lon < MinLon ? -1 : 1 );
 
-            double yl = GetDistanceFromLatLon( l.Lat, l.Lon, CenterLat, l.Lon ) * ( l.Lat < CenterLat ? -1 : 1 );
-            double xl = GetDistanceFromLatLon( l.Lat, l.Lon, l.Lat, CenterLon ) * ( l.Lon < CenterLon ? -1 : 1 );
+            double yl = GetDistanceFromLatLon( l.Lat, l.Lon, MinLat, l.Lon ) * ( l.Lat < MinLat ? -1 : 1 );
+            double xl = GetDistanceFromLatLon( l.Lat, l.Lon, l.Lat, MinLon ) * ( l.Lon < MinLon ? -1 : 1 );
 
-            double yr = GetDistanceFromLatLon( r.Lat, r.Lon, CenterLat, r.Lon ) * ( r.Lat < CenterLat ? -1 : 1 );
-            double xr = GetDistanceFromLatLon( r.Lat, r.Lon, r.Lat, CenterLon ) * ( r.Lon < CenterLon ? -1 : 1 );
+            double yr = GetDistanceFromLatLon( r.Lat, r.Lon, MinLat, r.Lon ) * ( r.Lat < MinLat ? -1 : 1 );
+            double xr = GetDistanceFromLatLon( r.Lat, r.Lon, r.Lat, MinLon ) * ( r.Lon < MinLon ? -1 : 1 );
 
             edge.ShoelaceForward = ( yl + yr ) * ( xl - xr );
             edge.ShoelaceBackward = ( yr + yl ) * ( xr - xl );
@@ -551,11 +575,15 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public bool EdgeExists ( int sId, int tId )
         {
-            foreach (Edge e in VNodes[ sId ].Incident)
+            for (int i = 0; i < VNodes[ sId ].Incident.Count; i++)
             {
-                if (tId == e.SourceNode.GraphNodeId || tId == e.TargetNode.GraphNodeId)
+                Edge e = VNodes[ sId ].Incident[ i ];
+                if (e != null)
                 {
-                    return true;
+                    if (tId == e.SourceNode.GraphNodeId || tId == e.TargetNode.GraphNodeId)
+                    {
+                        return true;
+                    }
                 }
             }
 
@@ -578,16 +606,16 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public List<Tuple<int, Path>> CalculateRing ( int sourceNode, double innerDistance, double outerDistance,
                                                     int nodeLimit, HashSet<int> contained )
         {
-            double[] dist = new double[ VNodes.Count ];
+            double[] dist = new double[ TempVNodes.Count ];
             for (int i = 0; i < dist.Length; i++)
             {
                 dist[ i ] = double.MaxValue;
             }
 
-            double[] actDist = new double[ VNodes.Count ];
+            double[] actDist = new double[ TempVNodes.Count ];
 
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
-            Tuple<int, Edge>[] parent = new Tuple<int, Edge>[ VNodes.Count ];
+            Tuple<int, Edge>[] parent = new Tuple<int, Edge>[ TempVNodes.Count ];
             dist[ sourceNode ] = 0.0;
             actDist[ sourceNode ] = 0.0;
 
@@ -773,7 +801,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double min = double.MaxValue;
             int min_index = -1;
 
-            for (int v = 0; v < VNodes.Count; v++)
+            for (int v = 0; v < VNodes.Length; v++)
             {
                 if (sptSet[ v ] == false && dist[ v ] <= min)
                 {
@@ -786,11 +814,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         }
         public void CalculateShortestDistances ( int start )
         {
-            double[] dist = new double[ VNodes.Count ];
-            double[] queue = new double[ VNodes.Count ];
-            bool[] sptSet = new bool[ VNodes.Count ];
+            double[] dist = new double[ VNodes.Length ];
+            double[] queue = new double[ VNodes.Length ];
+            bool[] sptSet = new bool[ VNodes.Length ];
 
-            for (int i = 0; i < VNodes.Count; i++)
+            for (int i = 0; i < VNodes.Length; i++)
             {
                 dist[ i ] = int.MaxValue;
                 sptSet[ i ] = false;
@@ -801,11 +829,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             VNodes[ start ].ShortestDistance = 0.0;
             queue[ start ] = 0.0;
 
-            for (int count = 0; count < VNodes.Count - 1; count++)
+            for (int count = 0; count < VNodes.Length - 1; count++)
             {
                 int u = MinDistance( dist, sptSet );
                 sptSet[ u ] = true;
-                for (int v = 0; v < VNodes.Count; v++)
+                for (int v = 0; v < VNodes.Length; v++)
                 {
                     if (!sptSet[ v ] && dist[ u ] != int.MaxValue)
                     {
@@ -826,7 +854,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         }
         public void InitializeShortestPath ( int start )
         {
-            double[] dist = new double[ VNodes.Count ];
+            double[] dist = new double[ VNodes.Length ];
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
 
 
@@ -880,7 +908,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public Dictionary<int, double> GetDistancesForViableNodes ( int start, double distance )
         {
             Dictionary<int, double> resutls = new Dictionary<int, double>();
-            double[] dist = new double[ VNodes.Count ];
+            double[] dist = new double[ VNodes.Length ];
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
 
 
@@ -947,7 +975,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public double ShortestPath ( int start, int end )
         {
-            double[] dist = new double[ VNodes.Count ];
+            double[] dist = new double[ VNodes.Length ];
             PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
 
 
@@ -1002,6 +1030,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
             return double.MaxValue;
         }
+
 
         public (List<Edge>, List<int>) GetShortestPath ( int start, int end )
         {
@@ -1183,7 +1212,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
 
             deadEndNodes = VNodes.Where( x => x != null && x.Incident.Count < 2 ).ToHashSet();
-
+            if (deadEndNodes.Count > 0)
+            {
+                Console.WriteLine( "ahhhhhhhhhhh" );
+            }
         }
 
 

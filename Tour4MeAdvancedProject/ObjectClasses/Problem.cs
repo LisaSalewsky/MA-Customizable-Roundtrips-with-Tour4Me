@@ -117,11 +117,11 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             using (StreamWriter outputFile = new StreamWriter( finalPath ))
             {
 
-                ShortestPath = new List<List<double>>( Graph.VNodes.Count );
+                ShortestPath = new List<List<double>>( Graph.TempVNodes.Count );
 
-                for (int source = 0; source < Graph.VNodes.Count; source++)
+                for (int source = 0; source < Graph.TempVNodes.Count; source++)
                 {
-                    ShortestPath.Add( new List<double>( Graph.VNodes.Count ) );
+                    ShortestPath.Add( new List<double>( Graph.TempVNodes.Count ) );
                     Dictionary<int, double> dist = new Dictionary<int, double>();
                     PriorityQueue<Tuple<int, double>> queue = new PriorityQueue<Tuple<int, double>>();
 
@@ -161,7 +161,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         }
                     }
 
-                    for (int target = 0; target < Graph.VNodes.Count; target++)
+                    for (int target = 0; target < Graph.VNodes.Length; target++)
                     {
                         bool containsKey = dist.ContainsKey( target );
                         ShortestPath[ source ].Add( containsKey ? dist[ target ] : double.MaxValue );
@@ -181,7 +181,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                 outputFile.WriteLine( "{" );
                 outputFile.WriteLine( "    \"info\": {" );
                 outputFile.WriteLine( $"        \"graph_name\": \"{graphName}\"," );
-                outputFile.WriteLine( $"        \"n_nodes\": {Graph.VNodes.Count}," );
+                outputFile.WriteLine( $"        \"n_nodes\": {Graph.VNodes.Length}," );
                 outputFile.WriteLine( $"        \"target_distance\": {TargetDistance}," );
                 outputFile.WriteLine( $"        \"center_lat\": {Graph.CenterLat}," );
                 outputFile.WriteLine( $"        \"center_lon\": {Graph.CenterLon}" );
@@ -399,9 +399,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double diff = 1 + Math.Abs( TargetDistance - pathLength );
             int negModifier = area < 0 ? -1 : 1;
             double test =
-                      ( ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
-                      ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation / TargetDistance ) +
-                      ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
+                      ( ( EdgeProfitImportance * 100 * profit ) +
+                      ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation ) +
+                      ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area / Math.PI ) / TargetDistance )
                       )
                       / Math.Pow( diff, 4 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
@@ -412,9 +412,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             int negModifier = area < 0 ? -1 : 1;
             double test = (
-                            ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
-                            ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation / TargetDistance ) +
-                            ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area ) / ( Math.PI * TargetDistance ) )
+                            ( EdgeProfitImportance * 100 * profit ) +
+                            ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation ) +
+                            ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area / Math.PI ) / TargetDistance )
                           ) / TargetDistance;
             if (test == 0)
             {
@@ -427,7 +427,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         public double GetProfit ( Path path )
         {
             //path.Visited = new List<int>( Graph.VEdges.Count );
-            int[] visited = new int[ Graph.VEdges.Count ];
+            int[] visited = new int[ Graph.VEdges.Length ];
             double quality = 0.0;
 
             foreach (Edge edge in path.Edges)

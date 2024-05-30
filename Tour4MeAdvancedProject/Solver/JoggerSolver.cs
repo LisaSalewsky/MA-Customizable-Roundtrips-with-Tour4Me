@@ -27,7 +27,7 @@ namespace Tour4MeAdvancedProject.Solver
 
             double bestQuality = -1;
 
-            int[] visited = new int[ CurrentProblem.Graph.VEdges.Count ];
+            int[] visited = new int[ CurrentProblem.Graph.VEdges.Length ];
             int visitedIndex = 0;
 
             int index = 0;
