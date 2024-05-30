@@ -182,11 +182,19 @@ The
 \subsection{Ant Colony}
 \label{subsec:antColonyImplementation}
 
-\subsection{Genetic Algorithms}
-\label{subsec:geneticAlgorithmsImplementation}
 
 \subsection{Simulated Annealing}
 \label{subsec:simulatedAnnealingImplementation}
+
+
+
+
+The quality of the solution is calculated based on the covered area A and the respective importance (areaImportance), the edge profit (P) and the respective importance (edgeImportance) and all other valuable properties (others) and scaled by the target length of the tour (L). 
+
+\begin{equation}\label{eq:qualitySA}
+	f(i) = \frac{areaImportance * A(i)}{\pi * L(i)^2} + \frac{edgeImportance * P(i)}{L(i)} + others(i)
+\end{equation}
+
 
 \section{Parameter changes}
 \label{sec:parameterChanges}

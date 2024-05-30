@@ -194,10 +194,10 @@ Thus, the ants create a self-reinforcing loop of positive feedback through their
 
 
 This behavior can be replicated in virtual graphs for various routing problems.
-Ant system has been first introduced in 1990 by Dorigo et al\cite{dorigo_ant_1996}.
+Ant system has been first introduced in 1990 by Dorigo et al\cite{dorigo_ant_1996} and the following explanations about calculations are based on their findings.
 In the paper, the authors describe how to use ants for solving the traveling salesman problem (TSP).
 This problem is different from the question of finding a roundtrip with a certain length (plus additional user preferences).
-However, in the paper, they stress the adaptability of ant system approaches, showing both versatility and robustness on different example problems\cite{dorigo_ant_1996}.
+However, in the paper, they stress the adaptability of ant system approaches, showing both versatility and robustness on different example problems.
 
 
 \subsubsection{Calculations}
@@ -211,7 +211,7 @@ They communicate with other ant agents through the pheromone trails, making this
 For the algorithm, a set amount of $m$ ants moves through the graph, tries to find a good tour and places pheromones on edges.
 Every ant has a defined amount of pheromone to place. 
 How much of the pheromone will be laid on a path can be calculated in several different ways. 
-Dorigo et al propose the following three ideas\cite{dorigo_ant_1996}:
+The authors propose the following three ideas:
 
 \begin{equation}\label{eq:antCycle}
 	\Delta\tau_{ij}^k = \begin{cases}
@@ -242,39 +242,39 @@ Here, equation \ref{eq:antCycle} is the default the authors used for solving the
 The constant Q has to be picked according to the problem in question.
 Variable $L_k$ describes the length of the whole tour.
 This property makes sense for the TSP setting, but is relatively useless for the case of tours with a fixed length, as it will be the same value for every ant and every run made.
-In this case, where the user defines the length of the tour, $L_k$ will only scale the values picked for Q\cite{dorigo_ant_1996}.
+In this case, where the user defines the length of the tour, $L_k$ will only scale the values picked for Q.
 
 Equation \ref{eq:antDensity} only uses the constant Q to describe pheromone placement. 
 Here, neither the full tour length nor individual edge costs are taken into account. 
 Pheromone is placed evenly on all edges.
-This way of placing pheromones equates to a not-scaled version of equation \ref{eq:antCycle} with the given use-case of a set length for the tour\cite{dorigo_ant_1996}.
+This way of placing pheromones equates to a not-scaled version of equation \ref{eq:antCycle} with the given use-case of a set length for the tour.
 
 The last equation \ref{eq:antQuantity} divides the constant by the length - or the cost - of each edge when it is used. 
 This division reduces the amount of pheromone placed on longer edges proportionally to shorter edges. 
 While this equation is not influenced directly by the fixed length, this property can still cause the equation to be less useful for tours with a specified length than for TSP.
-Since tours that are meant to cover a fixed distance are different from the TSP, where a shortest path that visits all selected cities is to be found, the last equation seems like the least promising candidate for useful pheromone distribution\cite{dorigo_ant_1996}.
+Since tours that are meant to cover a fixed distance are different from the TSP, where a shortest path that visits all selected cities is to be found, the last equation seems like the least promising candidate for useful pheromone distribution.
 
 The pheromone calculation and placement can be defined with different formulas depending on the problem and what should be optimized. 
 Which option turns out to be the best fitting one will be described in the evaluation chapter \ref{chapter:evaluation}.
 
 
 Using a suitable formula to calculate the pheromone distribution, this value can then be used to calculate the overall distributed pheromone for each edge $(i,j)$ that was placed by all ants during one iteration.
-This value is described by $\Delta\tau_{ij}$ as follows\cite{dorigo_ant_1996}:
+This value is described by $\Delta\tau_{ij}$ as follows:
 
 \begin{equation}\label{eq:deltaTau}
 	\Delta\tau_{ij} = \sum_{k=1}^{m} \Delta\tau_{ij}^k 
 \end{equation}
 
-This overall value can then be used to calculate the so called al.\ intensity\grqq{} of the placed pheromone trail.
+This overall value can then be used to calculate the so called \glqq intensity\grqq{} of the placed pheromone trail.
 Since pheromones evaporate over time, this property has to be modeled as well, using a new parameter $\rho$, which describes how much of the pheromone stays on the trail between two time steps.
 Thus, the overall pheromone intensity can be described by
-
+rc
 
 \begin{equation}\label{eq:trailIntensity}
 	\tau_{ij}(t+n) = \rho \cdot \tau_{ij}(t)+\Delta\tau_{ij}^k 
 \end{equation}
 
-where $\tau_{ij}(t)$ is the previous pheromone intensity and t+n describes the next time step after one full tour was created in n steps\cite{dorigo_ant_1996}.
+where $\tau_{ij}(t)$ is the previous pheromone intensity and t+n describes the next time step after one full tour was created in n steps.
 
 Using these calculations, the pheromone intensity on all paths can be represented. 
 What's left is determining the probability with which ants will choose a certain edge over the other options.
@@ -283,7 +283,7 @@ The tabu-list contains all nodes that have been visited before.
 Since roundtrips should - per default - be round rather than the same path run in two directions, this property is needed to ensure no city is visited more than once.
 In chapter \ref{chapter:evaluation}, different configurations are tested to represent different shapes and allow for more options users can define. 
 Thus, for other shapes, this list is not needed.
-The visibility $\nu_{ij}^k$ is calculated using the length of the edge $d_{ij}$ as follows:
+For the TSP-case, the visibility $\nu_{ij}^k$ is calculated using the length of the edge $d_{ij}$ as follows:
 
 \begin{equation}\label{eq:visibility}
 	\nu_{ij}^k = \frac{1}{d_{ij}}
@@ -300,21 +300,95 @@ And the transition probability is given by
 
 using all previously defined values to calculate visibility $\nu_{ij}^k$, trail intensity $\tau_{ij}$, pheromone distribution $\Delta\tau_{ij}$ and $\Delta\tau_{ij}^k$.
 Here, $\alpha$ and $\beta$ are parameters that influence the weight of visibility and trail intensity.
-Higher values of $\alpha$ increase the significance of the pheromones on the trail (setting $\alpha$ to 0 would lead to completely ignoring the pheromone placed) and higher values of $\beta$ increase the importance of the visibility of an edge (making longer edges less attractive as a result)\cite{dorigo_ant_1996}.
+Higher values of $\alpha$ increase the significance of the pheromones on the trail (setting $\alpha$ to 0 would lead to completely ignoring the pheromone placed) and higher values of $\beta$ increase the importance of the visibility of an edge (making longer edges less attractive as a result).
 These parameters will be experimented with and their influence will be evaluated in chapter \ref{chapter:evaluation}.
 
-In their paper, Dorigo et al suggest middling values for $\alpha$ and $\beta$ in a range of $[0.5,5]$.
+In their paper, Dorigo et al. suggest picking middling values for $\alpha$ and $\beta$ in a range of $[0.5,5]$.
 They furthermore stated that the best tour was achieved using $\rho = 0.5$ and $Q=100$.
-Overall, the results of experimenting with different parameter configurations showed that for very high or very low values of $\alpha$, no good results could be generated \cite{dorigo_ant_1996}.
+Overall, the results of experimenting with different parameter configurations showed that for very high or very low values of $\alpha$, no good results could be generated .
 
 
-
-\# TODO add formulas and description how they help constructing paths
-\# TODO add how to use for my work
+Some of these formulas have to be changed and fitted to the given arc orienteering problem (see section \ref{sec:aop}). 
+The adjusted calculations and explanations of the changes that had to be made can be found in section \ref{subsec:antColonyImplementation}.
 
 
 \subsubsection{Pseudocode}
 \label{subsubsec:antPseudocode}
+
+The original ant colony algorithm in \ref{alg:AntColony} is built for solving TSP instances. 
+A possible structure for an ant colony algorithm is displayed in \ref{alg:AntColony}, based on the framework provided in \cite{dorigo_ant_1996}.
+Therefore, all formulas are centered around a shortest path that connects all cities in the graph.
+Here, the \textit{tabuList} is used to track all visited cities, the probability is calculated using equation \ref{eq:transitionProbability}. 
+NC and $NC_{MAX}$ are used for the loop count and the maximum allowed number of loops respectively.
+
+In the initialization, the base values are set.
+Differences $\Delta\tau_{ij}(t)$ as well as t and NC are set to 0 while the trail intensity $\tau_{ij}(t)$ is assigned an initial value of c.
+The ants are placed on a set of cities.
+Then, the main loop is started in which the ants are moved according to the probability.
+All visited towns are appended to the tabuList, which is full, once all cities are added.
+This completes one tour for all ants.
+
+The next steps are needed to reset and re-calculate the needed values for the next run.
+In the loop, the ants are moved back, the length of their respective tours is calculated and with it the pheromone that is to be placed on the edge ($\Delta\tau_{ij}^k$) for the current ant k.
+Using this pheromone, the final trail intensity for all ants ($\Delta\tau_{ij}$) is updated.
+Furhermore, the new shortest tour is updated, if a new one was found.
+After the individual pheromone values were updated, the trail intensity $\tau_{ij}(t+n)$ hast to be recalculated. 
+For this step, the evaporation rate $\rho$ scales the current trail intensity and the calculated resulting pheromones for all ants are added $\Delta\tau_{ij}$.
+
+The rest of the loop is updating the loop count NC, the time step t and resetting the pheromones for each edge to the initial 0.
+The loop is continued with emptied tabuLists if the maximium count wasn't reached and is ended otherwise, returning the shortest tour found.
+
+
+\# TODO in den Anhang?
+\begin{breakablealgorithm}
+%\begin{algorithm}[ht]
+	\caption{AntColony}
+	\label{alg:AntColony}
+	\begin{algorithmic}[1]
+		\STATE t $\gets$ 0,  NC $\gets$ 0
+		\STATE set for all edges(i,j) initial $\tau_{ij}(t) \gets c$ (trail intensiy), $\Delta \tau_{ij} \gets$ 0 
+		\STATE Place all m ants on n nodes
+		\STATE s (tabuList index) $\gets$ 1
+		\FOR{k = 1 to m }
+			\STATE add town of m to tabuList
+			\WHILE{tabuList not full}
+				\STATE s $\gets$ s+1
+				\FOR{k = 1 to m}
+					\STATE choose nest town to move to with probability $p_{ij}^k(t)$
+					\STATE move kth ant to j
+					\STATE add town j to tabuList
+				\ENDFOR
+			\ENDWHILE
+			\FOR{k = 1 to m }
+				\STATE move kth ant back to tabuList(1)
+				\STATE calculate length $L_k$ of k's tour
+				\STATE Update shortest tour
+				\FOR{edge(i,j) in allEdges}
+					\FOR{k = 1 to m}
+						\STATE $\Delta\tau_{ij}^k = \begin{cases}
+							\frac{Q}{L_k}\\
+							0
+						\end{cases}$
+						\STATE $\Delta\tau_{ij} = \Delta\tau_{ij} + \Delta\tau_{ij}^k$
+					\ENDFOR
+				\ENDFOR
+			\ENDFOR
+			\FOR{edge(i,j) in allEdges}
+				\STATE $\tau_{ij}(t+n)=\rho \cdot \tau_{ij}(t) + \Delta\tau_{ij}$
+			\ENDFOR
+			\STATE t $\gets$ t+1, NC $\gets$ NC+1
+			\FOR{edge(i,j) in allEdges}
+				\STATE reset $\Delta\tau_{ij}(t) \gets 0$
+			\ENDFOR
+			\IF{$NC < NC_{MAX}$ and not stagnating}
+				\STATE empty tabuLists
+			\ELSE
+				\STATE return shortest tour
+			\ENDIF
+		\ENDFOR
+	\end{algorithmic}	
+%\end{algorithm}
+\end{breakablealgorithm}
 
 \subsection{Simulated Annealing}
 \label{subsec:simulatedAnnealingBackground}
@@ -383,10 +457,12 @@ Which of these is to be preferred is dependent on the preferences about the resu
 Greedy and AntColony prioritize edge quality while MinCost mostly optimizes for a rounder shape.
 
 To determine a neighboring solution, there are a few options that can yield good results.
-One approach is to pick two random vertices and switch their position in different ways within the roundtrip path \cite{zhan_list-based_2016}. 
+One approach is to pick two random vertices and switch their position in different ways within the roundtrip path or some variations of this idea \cite{zhan_list-based_2016}. 
 Another is to create waypoints, similarly to how it is done in the MinCost algorithm, but without the length restrictions.
 The generated initial solution can then be used to generate a set of waypoints. 
 Based on this node set, neighboring roundtrips are ones where the tour is modified by removing, adding or moving one of the waypoints.
+
+\# TODO move to implementaition chapter?
 
 To remove a waypoint, the node and the paths that connect this vertex with the neighboring two waypoints need to be deleted. 
 Then, the two ends are connected by a shortest path or a MinCost approach.
@@ -405,25 +481,64 @@ For this operation, the new node has to be found first and the closest waypoint 
 \label{subsubsec:SACalculations}
 
 For SA, a few parameters have to be calculated.
-The temperature schedule can be calculated using an exponential function to decrease the value for each iteration, where f(j) is the quality of the neighboring solution, f(i) the quality of the current solution and T the temperature: 
+First, the temperature and the respective cooling schedule or a function to decrease the value have to be determined.
+Here, an several different functions can be applied. 
+The important criteria are that they decrease the temperature and are fit to the problem.
+For example, a simple function that calculates the Temperature by using the difference of the quality of the neighboring solution f(j) and the quality of the current solution f(i) divided by a random number $r_i$ \cite{zhan_list-based_2016}: 
 
 \begin{equation}\label{eq:temperatureSchedule}
-	T = e^{\frac{f(j)-f(i)}{T}}	
+	T_{i+1} = \frac{- |f(j)-f(i)|}{ln(r_i)}	
 \end{equation}
 
-The quality of the solution is calculated based on the covered area A and the respective importance (areaImportance), the edge profit (P) and the respective importance (edgeImportance) and all other valuable properties (others) and scaled by the target length of the tour (L). 
+Another option is to multiply the current function value with a factor $\alpha$ smaller than 1 \cite{eglese_simulated_1990}:
 
-\begin{equation}\label{eq:qualitySA}
-	f(i) = \frac{areaImportance * A(i)}{\pi * L(i)^2} + \frac{edgeImportance * P(i)}{L(i)} + others(i)
+\begin{equation}\label{eq:temperatureSchedule2}
+	T_{i+1} = \alpha \cdot T_i
 \end{equation}
+
+Or scaling by using a constant b to build a fraction \cite{eglese_simulated_1990}: 
+
+\begin{equation}\label{eq:temperatureSchedule3}
+	T_{i+1} = \frac{T_i}{1 + b \cdot T_i}	
+\end{equation}
+
+There are several other options -- a few of them are listed in the paper by R. W. Eglese \cite{eglese_simulated_1990} -- to calculate the temperature, where the most important part is, that the temperature is decreasing.
+
+The quality function $f$ is highly dependent on the problem and can thus vary by a lot. 
+For TSP, the quality of a tour is determined by it's length.
+For the act orienteering problem by the values that are to be collected when generating a roundtrip. 
+How the quality is calculated for the specific case of this thesis is described in detail in section \ref{subsec:simulatedAnnealingImplementation}.
+
+Another important calculation is the one of the probability, which is used to determine whether or not a solution should be picked even though the quality is worse than the current quality.
+To determine this value, the temperature as well as the quality values of the two solutions are neccessary.
+Here, the difference between the quality of the neighboring solution f(j) and the quality of the current solution f(i) is always negative, since a positive difference would imply $f(j) > f(i)$ and thus result in the neighboring solution being picked automatically.
+Since the probability is only calculated if the difference is negative, the exponent will always be less than 1, resulting in a valid probability function that has a value closer to 1 when the difference is small and closer to 0 when this difference gets bigger.
+
+
+\begin{equation}\label{eq:SAprobCalculation}
+	p = e^{\frac{f(j)-f(i)}{T}}
+\end{equation}
+
 
 
 \subsubsection{Pseudocode}
 \label{subsubsec:SAPseudocode}
 
+The simulated annealing algorithm has a basic structure that always stays the same for every problem.
+This structure is outlined in the pseudocode in \ref{alg:SApseudocode}, based on \cite{eglese_simulated_1990} and \cite{zhan_list-based_2016} and visualized in a flowchart diagram in \ref{fig:SAFlowchart}.
+
+First, an initial roundtrip has to be determined. 
+This calculation can be done with any algorithm that results in a valid solution, for example a greedy approach or the MinCost algorithm that is also used for solving the arc orienteering problem in the original Tour4Me application \ref{subsec:Tour4Me}.
+Furthermore, a starting temperature has to be set, which will be used for the first probability calculations and decreased after the inner loop.
+
+Then, the two loops of the main SA step are run.
+The outer loop is bound by a selectable number of repetitions and the inner loop is bound by the selectable number of runs that should be performed with a fixed temperature.
+While the former controls how many new temperatures are tried -- in the physics analogy this would be how long the material is left to cool -- with decreasing temperatures, the latter controls how many tries are executed before the temperature is adjusted. 
+Alternatively, the outer loop could also have reaching a certain quality value as the stopping condition.
+Performing several calculations in the inner loop with the same temperature can increases the probability to find a better solution for the set temperature as well as the probability to choose a solution with a worse quality.
 
 
-\begin{algorithm}
+\begin{breakablealgorithm}
 	\caption{High level Simulated Annealing}
 	\label{alg:SApseudocode}
 	\begin{algorithmic}[1]
@@ -445,19 +560,10 @@ The quality of the solution is calculated based on the covered area A and the re
 			 \STATE update temperature t $\gets$ T(t)
 		 \ENDFOR
 	\end{algorithmic}
-\end{algorithm}
+\end{breakablealgorithm}
 
 
 
-
-
-
-
-
-
-
-\subsection{Genetic Algorithms}
-\label{subsec:geneticAlgorithmsBackground}
 
 
 
