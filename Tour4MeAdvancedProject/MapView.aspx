@@ -510,7 +510,7 @@
         lon_pad = 0.75 / 6;
         abs_min_lon = lon_dor;
         abs_max_lon = abs_min_lon + lon_gran;
-        const colors = ["red", "green", "blue", "maroon", "purple", "lime", "navy"]
+        const colors = ["red", "darkgreen", "dodgerblue", "forestgreen", "brown", "orange", "darkslateblue", "sienna", "firebrick", "olivedrab"]
 
         var selectedMap = "dor"
 
@@ -980,6 +980,8 @@
 
                         // Define different colors for markers
                         var colors = ['var(--btn-info-color)', 'var(--highlight-color)', 'var(--warning-color)', 'purple', 'black', 'cyan', 'magenta', 'yellow', 'brown', 'gray'];
+
+                        var colors = ["var(--highlight-color)", "darkgreen", "maroon", "forestgreen", "DarkGoldenRod", "brown", "darkorange", "darkblue", "burlywood", "yellowgreen"]
 
 
 

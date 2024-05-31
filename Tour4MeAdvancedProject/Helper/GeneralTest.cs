@@ -266,7 +266,7 @@ namespace Tour4MeAdvancedProject.Helper
             string newPheromoneFucntion,
             int numberRunsSA,
             int numberRepitiionsSA,
-            int initTemperature,
+            double initTemperature,
             string coolingFunction,
             int numberWaypoints,
             string distanceScalingCalculationForProbability )
@@ -323,7 +323,7 @@ namespace Tour4MeAdvancedProject.Helper
             return jsonBuilder.ToString();
         }
 
-        private void DoInnerRunsSA ( Problem problem, int numberPaths, int numberRunsSA, int numberRepitiionsSA, int initTemperature, string coolingFunction, int numberWaypoints, string distanceScalingCalculationForProbability, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, int i, DateTime init_time_1, DateTime init_time_2 )
+        private void DoInnerRunsSA ( Problem problem, int numberPaths, int numberRunsSA, int numberRepitiionsSA, double initTemperature, string coolingFunction, int numberWaypoints, string distanceScalingCalculationForProbability, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, int i, DateTime init_time_1, DateTime init_time_2 )
         {
             switch (algorithmEnum)
             {
@@ -374,27 +374,27 @@ namespace Tour4MeAdvancedProject.Helper
                 case Algo.SimulatedAnnealingMinCost:
                     {
                         // Simmulated Annealing MinCost
-                        solver = new SimmulatedAnnealingSolver();
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
                         break;
 
                     }
                 case Algo.SimulatedAnnealingAnt:
                     {
                         // Simmulated Annealing Ant
-                        solver = new SimmulatedAnnealingSolver();
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
                         break;
                     }
                 case Algo.SimulatedAnnealingEmpty:
                     {
                         // Simmulated Annealing Empty
 
-                        solver = new SimmulatedAnnealingSolver();
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
                         break;
                     }
                 case Algo.SimulatedAnnealingFullyRandom:
                     {
                         // Genetic
-                        solver = new SimmulatedAnnealingSolver();
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
                         break;
                     }
                 default:

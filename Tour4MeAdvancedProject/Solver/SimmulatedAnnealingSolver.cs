@@ -406,6 +406,11 @@ namespace Tour4MeAdvancedProject.Solver
 
                         // calculate cummulative Probabilities for selecting the index
 
+                        if (probabilityList.Count == 0)
+                        {
+                            Console.WriteLine( "ahhhhhhhh" );
+                        }
+
                         cumulativeProbabilities = new Dictionary<int, double>
                         {
                             { probabilityList[ 0 ].Item2, probabilityList[ 0 ].Item1 }

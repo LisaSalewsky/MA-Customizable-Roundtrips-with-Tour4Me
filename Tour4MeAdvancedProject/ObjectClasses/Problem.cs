@@ -399,9 +399,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double diff = 1 + Math.Abs( TargetDistance - pathLength );
             int negModifier = area < 0 ? -1 : 1;
             double test =
-                      ( ( EdgeProfitImportance * 100 * profit ) +
+                      ( ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
                       ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation ) +
-                      ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area / Math.PI ) / TargetDistance )
+                      ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area * Math.PI ) / 2 / TargetDistance )
                       )
                       / Math.Pow( diff, 4 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
@@ -412,9 +412,9 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         {
             int negModifier = area < 0 ? -1 : 1;
             double test = (
-                            ( EdgeProfitImportance * 100 * profit ) +
+                            ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
                             ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation ) +
-                            ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area / Math.PI ) / TargetDistance )
+                            ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area * Math.PI ) / 2 / TargetDistance )
                           ) / TargetDistance;
             if (test == 0)
             {
