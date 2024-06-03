@@ -9,7 +9,7 @@ Reasons for and positive effects of this decision are described in the following
 
 Furthermore, not only the language and data access was changed.
 New options and parameters to improve the customizability of preferences for a generated tour were added as well.
-These changes had to be incorporated into an upgraded front end design (see sections \ref{subsec:interfaceAndFrontendChanges} and \ref{sec:parameterChanges}) as well as into the back end and all solvers (see section \ref{sec:algorithmicChanges}). 
+These changes had to be incorporated into an upgraded front end design (see section \ref{subsec:interfaceAndFrontendChanges}) as well as into the back end and all solvers (see section \ref{sec:algorithmicChanges}). 
 
 
 \section{Application}
@@ -193,7 +193,6 @@ The respective combinations start with greedy or MinCost and then strive to impr
 All following options are direct tour parameters and describe user preferences.
 The length is an estimate of the final tour length, that is never used as a hard stop but allows for tours to be within a range of a few hundred meters longer or shorter than the selected length.
 However, tours are never more than a kilometer longer or shorter than the selected length.
-\# TODO check that this is true lol
 
 
 Surface and path type show selection buttons.
@@ -279,6 +278,18 @@ Removing the outputs for a final version is easily done if needed.
 	\caption{This shows the Route information menu with several folded tours displayed}
 	\label{fig:actualFrontendToureInfoMenuMoreTours}
 \end{figure}
+
+
+
+
+\subsection{Parameter changes}
+\label{subsec:parameterChanges}
+
+To include the parameters that have been added in the front end, a few minor changes had to be made to the existing algorithms. \# TODO check minCost (vsMinCost) spelling
+However, since minCost already uses the quality calculation to determine the tour quality, nothing else had to be changed.
+In the quality calculation, the elevation difference as well as the steepness difference and the respective importance was added and the scaling was changed (see \ref{eq:qualitySA}).
+Other than that, more tags had to be added when creating the problem class, however this was done similarly to the existing tags (path type and surface) and did not need any further changes.
+The greedy algorithm only takes the profit an edge can add into account and thus also did not need any change.
 
 
 \section{Algorithmic changes}
@@ -533,7 +544,6 @@ Then, a waypoint can only be moved or removed.
 Using these boundaries ensures that the resulting tour will not end up way too short while also assuring that not too many distance calculations are needed.
 The number of waypoints determines how many times the distance of a new waypoint is of interest, since for moving and adding, the closest existing waypoint has to be known.
 
-\# TODO create visualizations for waypoints, adding, moving, removing 
 
 Whether a waypoint is moved, removed or a new one is added is picked randomly within the previously given constraints.
 The starting point can never be pick for neither moving nor removing.
@@ -545,7 +555,7 @@ For the fully random version, a distance of 1 is used for every edge.
 Every point that is too far from the starting point is assigned 0 and will be removed from the returned result.
 The respective calculated distances are then scaled by the sum of all distances to sum to 1.
 
-The final selected point is the new waypoint candidate for moving or adding and will determine the waypoint to choose, also for the remove case.
+The final selected point is the new waypoint candidate for moving or adding and will determine the waypoint to choose, also for the remove case (see figures \ref{fig:1WP}-\ref{fig:shortestPathAndAddDone} for a visualization of all options and how these operations alter the tour).
 To pick the waypoint that will be moved or removed or to find the two waypoints between which the new point should be added, all distances have to be calculated.
 The closest waypoint of the current list will then be picked and:
 
@@ -610,15 +620,3 @@ Other than that, no changes are needed.
 Realizing combinations is relatively easy for the given variations, however more complicated combinations are possible.
 Especially combining a genetic meta-heuristic could result in more complex ways of combining algorithms and result in interesting new solutions. 
 This could not be implemented due to time constraints, however possible approaches are discussed in the section about future work (\ref{sec:futureWork}).
-
-
-\section{Parameter changes}
-\label{sec:parameterChanges}
-
-To include the parameters that have been added in the front end, a few minor changes had to be made to the existing algorithms. \# TODO check minCost (vsMinCost) spelling
-However, since minCost already uses the quality calculation to determine the tour quality, nothing else had to be changed.
-In the quality calculation, the elevation difference and the respective importance was added and the scaling was changed (see \ref{eq:qualitySA}).
-Other than that, more tags had to be added when creating the problem class, however this was done similarly to the existing tags (path type and surface) and did not need any further changes.
-The greedy algorithm only takes the profit an edge can add into account and thus also did not need any change.
-
-\# TODO add steepness into quality?? check how to do that

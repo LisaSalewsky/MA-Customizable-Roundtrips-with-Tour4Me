@@ -2,8 +2,64 @@
 \chapter{Conclusion}
 \label{chapter:conclusion}
 
+In conclusion, the implementations of this thesis have achieved the goals set in the introduction (\ref{sec:goal}):
+The previous version of Tour4Me was extended by both parameter options as well as two meta-heuristic approaches. 
+Additionally, combinations of the two new meta-heuristics and the existing algorithms were implemented.
+The front end was changed and matched to the added customization options, creating a better overview and improving the overall layout.
+For most data-points and tour lengths, roundtrips can be created using at least one of the available algorithms. 
+The only points that are no valid starting points are those outside the valid graph or without any connections to valid edges.
+
 \section{Results}
 \label{sec:results}
 
+
+
+
 \section{Future Work}
 \label{sec:futureWork}
+
+For this thesis, several changes have been implemented to create an app that offers many customization options and also utilizes different algorithms to find roundtrips that are suited to the user preferences.
+However, there are still many open ends to optimize and enhance the current solution.
+
+First, there are not too many surrounding information available in the OSM data, despite the fact that the map visualization does have areas colored based on their surroundings.
+Thus, the information are saved at some point and a means to extract them should exist.
+Using the visualization or the data used to find the correct colors could enable a much wider coverage of points with respective surrounding information. 
+Adding these tags will result in many more edges that can be labeled according to the kind of area they are placed in and thus result in a much better portray and filtering of the actual nodes.
+Currently, the limited surrounding information make the chance of these data to impact a tour very slim.
+Only about 8\% of the nodes in Germany can be matched to surrounding information\footnote{\url{https://dashboard.ohsome.org/}, last accessed: 03.06.2024}.
+
+Additionally, the used elevation information could be upgraded to use a more fine grained database, resulting in more precise values. 
+Currently, it is possible to end up with a steepness of over 100\% because of the inaccurate elevation information.
+Better versions could be available from the NASA, however downloading and using them was a lot more complicated than the docker setup from open elevation.
+A more detailed research for better data -- that also can be easily used and queried -- has to be done to determine a good solution for this problem.
+
+Aside from fixing current data issues, several other enhancements and extensions are possible.
+The number of parameters to change the user preferences can be increased. 
+Especially for elevation information, several additional constraints could be used:
+\begin{itemize}
+	\item steepness split into ascending and descending values: This addition is very interesting for people with knee problems. Oftentimes steep ascensions are not a problem, but steep descends put too much strain on their knees. Thus, directed tours that can be bound for both steepness values separately can be extremely useful.
+	\item adding more detailed options: currently, the overall elevation difference in the tour is calculated. However, many other information could be interesting:
+	 A bound on how long any part of the tour is allowed to constantly ascend or descend. This could again be split into two variables.
+	Additionally, the maximum ascend per 50, 100 or 1000 m could be more interesting than a maximum steepness of any small part.
+	\item a visualization of the height profile of the tour: this is mainly a front end extension, but depending on the needed data, the way paths are saved might need to be changed to allow for saving and returning elevation information of the tour for this visualization
+\end{itemize}
+
+Furthermore, many other algorithms -- especially different meta-heuristics -- could be implemented. 
+One particularly interesting approach could be using a genetic algorithm.
+For this, only the genetic algorithm itself as well as several combinations could be interesting. 
+These combinations would demand much more changing than the current combinations, since generations of the algorithms have to be created, mutated and thus optimized. 
+To realize genetic changes, several possible approaches can be thought of. 
+For a combination with the ant algorithm, changing the ant parameters and having the ants with the best results survive and create offspring could greatly increase the quality of the ant solutions.
+Combining with SA to try out different temperatures and cooling schedules, different methods of creating neighboring solutions, or many other base operations could be interesting.
+Again, this combination could yield very different and possibly much better resulting tours.
+
+Aside from these extensions, the runtime is a main part of the implementation that could be enhanced by a lot. 
+Currently, the graph creation takes very long for tours of 10 or more kilometers.
+With the implementation that directly accesses the database and reads nodes and edges sequentially, parallelization is not possible.
+Thus, a different way to access the database, a fully different database or generally better implementation strategies for the import could result in a much better runtime.
+Furthermore, the implemented meta-heuristics can most likely also be improved in terms of the used data structures, implementation strategies and parallelization.
+
+In conclusion, while the current version already adds to the possibilities and enhances the results and customization options of the base application Tour4Me, there are still several interesting extensions as well as many parts that could be enhanced and improved.
+
+
+

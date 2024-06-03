@@ -1,5 +1,5 @@
 % anhang.tex
-\chapter{Source Code}
+\section{Additional Figures}
 
 
 
@@ -72,6 +72,71 @@
 \end{figure}
 
 
+
+\begin{figure}[H]
+	\begin{subfigure}{0.55\textwidth}
+		\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/tour & 1 picked waypoint}
+		\caption{Shows a tour (black) that is separated in 10 waypoints (red) and a new random waypoint (green)}
+		\label{fig:1WP}
+	\end{subfigure}\hfill
+	\begin{subfigure}{0.44\textwidth}
+	\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/tour & 2 picked waypoints}
+	\caption{Shows a tour (black) that is separated in 10 waypoints (red) and two options of new random waypoints (green and blue)}
+	\label{fig:2WP}
+	\end{subfigure}
+	\begin{subfigure}{0.44\textwidth}
+	\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/tour & 2 picked waypoints shortest paths}
+	\caption{Shows a tour (black) that is separated in 10 waypoints (red) and two options of new random waypoints (green and blue) as well as some of their shortest paths \textcolor{white}{a\\a\\a\\a}}
+	\label{fig:2WPandSP}
+	\end{subfigure}\hfill
+	\begin{subfigure}{0.44\textwidth}
+	\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/waypoint, shortest path & neighbors}
+	\caption{Shows a tour (black) that is separated in 10 waypoints (red), a new random waypoint (green), the distance to the closest of the tour waypoints and the distances to the two neighbors (green dotted lines). 
+		The path fragments to the neighbors that will be changed are highlighted in blue.}
+	\label{fig:shortestPathAndneighbors}
+	\end{subfigure}
+	\caption{Visualizations of a tour and waypoints as well as shortest paths.}
+	\label{fig:tourAndWaypointsBase}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{0.55\textwidth}
+		\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/waypoint, shortest path & neighbors - move}
+		\caption{Shows the same tour as in \ref{fig:shortestPathAndneighbors} for the \textit{move} operation. 
+			The path fragments to the neighbors that will be changed are highlighted in blue and crossed out. The new path fragments to be added through the moving operation are the green lines. The dotted arrow visualizes the move operation.}
+		\label{fig:shortestPahtAndMove}
+	\end{subfigure}
+	\begin{subfigure}{0.48\textwidth}
+		\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/waypoint, shortest path & neighbors - changed after move}
+		\caption{Shows the same tour as in \ref{fig:shortestPahtAndMove} after the \textit{move} operation.}
+		\label{fig:shortestPathAndMoveDone}
+	\end{subfigure}\hfill
+	\begin{subfigure}{0.5\textwidth}
+	\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/waypoint, shortest path & neighbors - changed after remove}
+	\caption{Shows the same tour as in \ref{fig:shortestPathAndneighbors} after the \textit{remove} operation. The new path fragments to be added through the removing operation are the green lines.}
+	\label{fig:shortestPahtAndRemoveDone}
+	\end{subfigure}
+	
+	\begin{subfigure}{0.45\textwidth}
+	\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/waypoint, shortest path & neighbors - add}
+	\caption{Shows a tour (black) that is separated in 10 waypoints (red), a new random waypoint (green), the closes tour waypoint and the respective closest of the neighbors (at the end of the blue line fragment). 
+		The path fragment to the neighbor that will be changed is highlighted in blue and crossed out.}
+	\label{fig:shortestPathAndAdd}
+	\end{subfigure}\hfill
+	\begin{subfigure}{0.45\textwidth}
+	\includegraphics[width=0.9\linewidth]{bilder/add, move, remove/waypoint, shortest path & neighbors - changed after add}
+	\caption{Shows the same tour as in \ref{fig:shortestPathAndAdd} after the \textit{add} operation. The new path fragments to be added through the removing operation are the green lines.\textcolor{white}{a\\a\\a\\a}}
+	\label{fig:shortestPathAndAddDone}
+	\end{subfigure}
+	\caption{Visualizations of the add, move and remove operations.}
+	\label{fig:addMoveRemove}
+\end{figure}
+
+
+
+\section{Additional Pseudocode}
 
 
 \begin{breakablealgorithm}
