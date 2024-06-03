@@ -284,23 +284,341 @@ Removing the outputs for a final version is easily done if needed.
 \section{Algorithmic changes}
 \label{sec:algorithmicChanges}
 
+For the tour calculation, two new meta-heuristics were implemented.
+The first one was ant colony, which was modified to match the arc orienteering problem instead of TSP like the original.
+The second meta-heuristic was a version of simulated annealing.
+Here, the calculation of neighboring solutions had to be matched to return roundtrips.
+In the following sections, the changes that had to be made to result in implementations that can be applied to the AOP will be explained.
+For both meta-heuristics, the pseudocode and changed formulas will be explained.
+The base idea and the overall working of the algorithms stays identical to the explanations in \ref{subsec:antColonyBackground} and \ref{subsec:simulatedAnnealingBackground}.
+
+
 \subsection{Ant Colony}
 \label{subsec:antColonyImplementation}
+
+For ant colony, several things had to be changed. 
+First, for solving TSP, finding a shortest path and visiting all specified cities are the main objectives.
+Whereas for AOP, these differ by a lot:
+Here finding a \textit{matching} tour length that maximizes the profit is the important goal. 
+Thus, the pheromone calculation, the trail intensity calculations and the edge visibility had to be changed.
+
+
+In the original paper, the pheromone amount to be placed on the collected edges was calculated based on the tour length the ant built. 
+This scaling resulted in higher pheromone for shorter tours and lower pheromone for longer ones.
+However, this constraint does not apply to the AOP.
+Here, ideally all resulting tours should be approximately of the same length, close to the user selected one.
+Thus, the pheromone amount to be placed is based on the \texttt{edgeProfit} $p$ the edge with the length $l$ will grant the tour:
+\# TODO check if better use quality here?
+
+\begin{equation}
+	\label{eq:newPheromoneCalc}
+	\Delta\tau_{ij}^k = l(i,j) \cdot p(i,j) \cdot Q \text{ if (i,j)} \in \text{tour collected by the ant}
+\end{equation}
+
+Here, the length of the edge from node i to node j is multiplied by the profits the same edge can collect based on the assigned tags, which is multiplied with the pheromone amount, a single ant can place on the trail ($Q$).
+The latter is a means to scale the amount of pheromone placed and also enables the use of different ants for further combinations of ant colony, for example with genetic algorithms (see \ref{sec:futureWork}).
+If the edge has a tag specified as desirable, the \texttt{edgeProfit} $p$ is increased by one.
+If a tag that is specified as undesirabe, the profit will be decreased by one.
+If the edge has no tag that is part of desirable or undesirable tags, the profit is 0.0001.
+Like this, edges with desirabe tags will gain as much profit as they are long. 
+Edges with undesirable tags will lower the profit by their length and edges without tags that are either desirable or undesirable, will impact the profit only by a fraction of their length.
+
+\begin{equation}
+	\label{eq:newProfitCalc}
+	p(i,j) = \begin{cases}
+		1 &\exists tag \in tags(i,j) \text{ tag} \in \text{desirable }\\
+		-1 &\exists tag \in tags(i,j) \text{ tag} \in \text{undesirable }\\
+		0.0001 &\text{ otherwise}
+	\end{cases}
+\end{equation}
+
+The trail intensity itself is calculated the same way as in the original paper (see \ref{eq:trailIntensity}), however, for further calculations in the ant, it is scaled by dividing by the desired length $L$, based on whether or not an edge is visited twice:
+
+\begin{equation}
+	\label{eq:scaledTrailIntensity}
+	\tau'_{i,j} = \begin{cases}
+		 \frac{tau_{i,j}}{L} &\text{edge already visited}\\
+		\tau{i,j} &\text{ otherwise}
+	\end{cases}
+\end{equation}
+
+These updated values are not saved or used for other ants but saved in a separate set, so the penalty will only be applied for the ant that visits the edge twice.
+
+Furthermore, the visibility cannot be based on the length like the original paper did, since all tours should result in a length close to the desired one.
+Thus, for the visibility, the edge quality is determined.
+To calculate the quality, all selectable values have to be taken into account:
+The \texttt{coveredArea} $A$, that maps to the roundness of the tour and the respective selected importance $i_A$, the \texttt{edgeProfit} $p$ and the respective selected importance $i_p$ as well as the elevation difference $e$ from the maximum $e_{max}$ summed with the steepness difference $s$ from the maximum $s_{max}$ and the respective importance $i_e$:
+
+\begin{equation}
+	\label{eq:newEdgeVisibility}
+	\begin{split}
+	\nu_{ij}^k = i_A \cdot 100 \cdot \frac{\sqrt{|A|\cdot \pi} \cdot 2 }{L} 
+	+  i_p \cdot 100 \cdot p
+	+ i_e \cdot \left(\frac{e_{max} - e}{e_{max}} + \frac{s_{max} - s}{s_{max}}\right)
+	\end{split}
+\end{equation}
+
+The respective importance values are multiplied by 100 to scale them from the percentage values to be bigger than one. 
+For the \texttt{covereArea}, to scale the size and account for the quadratic increase, the square root is taken. 
+Then, the whole Area is scaled by the desired length of the tour $L$ to account for the larger value the area will have compared to the edge profits. \# TODO check if this scaling is actually fine!
+The full derivation of the calculation of the scaling is shown in equations \ref{eq:scaleArea1} and \ref{eq:scaleArea2}, where A is the area and U is the circumference of a circle.
+
+
+\begin{minipage}[t][2.5cm][b]{0.4\textwidth}
+	\begin{equation}
+		\label{eq:scaleArea1}
+		\begin{split}
+			U &= 2 \cdot \pi \cdot r\\
+			\frac{U}{\pi \cdot 2} &= r\\
+		\end{split}
+	\end{equation}
+\end{minipage}
+\begin{minipage}[t][2.5cm][b]{0.4\textwidth}
+	\begin{equation}
+		\label{eq:scaleArea2}
+		\begin{split}
+			A &= \pi r^2 \\
+			A &= \pi \cdot \left(\frac{U}{\pi \cdot 2}\right)^2\\
+			A &= \pi \cdot \frac{U^2}{\pi^2 \cdot 2^2}\\
+			A &= \frac{U^2}{\pi \cdot 4}\\
+			A \cdot \pi \cdot 4 &= U^2\\
+			\sqrt{A \cdot \pi} \cdot 2 &= U
+		\end{split}
+	\end{equation}
+\end{minipage}
+
+As in the original paper by Dorigo et al. \cite{dorigo_ant_1996}, the probabilities for the edges are calculated using the visibility and the trail intensity as well as the two parameters $\alpha$ and $\beta$ (see also \ref{eq:transitionProbability}), however, here, the scaled value $\tau'_{ij}$ is used:
+
+\begin{equation}\label{eq:transitionProbability2}
+	p_{ij}^k = \begin{cases}
+		\frac{[\tau'_{ij}(t)]^{\alpha} \cdot [\nu_{ij}]^{\beta}}{\sum_{k \in allowed_k} [\tau'_{ij}(t)]^{\alpha} \cdot [\nu_{ij}]^{\beta}} &\text{if $j \in allowed_k$ }\\
+		0 &\text{otherwise}
+	\end{cases}
+\end{equation}
+
+
+Additionally, there is no tabuList and thus , this list cannot be used as a stopping criterion. 
+Instead, a set number of tours are calculated.
+Furthermore, the ants do not need to save the length of their current tour, as that value is not of any importance for the AOP version. 
+Instead, the full quality of a tour is calculated and saved, so the best found tour for all ants can be determined.
+The ants all have to start at the same position rather than in n different towns. 
+The full updated pseudocode is shown in \ref{alg:AntColonyImplementation}
+
+
+\begin{breakablealgorithm}
+	%\begin{algorithm}[ht]
+	\caption{AntColonyAOP}
+	\label{alg:AntColonyImplementation}
+	\begin{algorithmic}[1]
+		\STATE initialize graph and problem (starting point, graph with nodes max $\frac{2}{3} \cdot L$ distance)
+		\STATE init trailIntensity $\tau_{ij} \gets 0.0001$ for all edges(i,j)
+		\STATE set starting pheromone values $pheromone(i,j) \gets 0$ for all edges(i,j)
+		\STATE generate ants
+		\STATE set current node $\gets$ starting point
+		\FOR{\# runs}
+		\FOR{\# ants}
+		\STATE get all incident edges for current Node
+		\WHILE{edge that doesn't exceed maximum length can be found}
+		\FOR{edge (i,j) in incident edges}
+		\STATE scale edge if already visited ($\tau'_{i,j}$)
+		\STATE calculate \texttt{quality} which resembles the edge visibility using \ref{eq:newEdgeVisibility}
+		\ENDFOR
+		\STATE calculate probability to pick the edge based on \ref{eq:transitionProbability2} and scale them to sum to 1
+		\STATE pick edge based on probability
+		\STATE calculate new pheromone values for the picked edge according to \ref{eq:newPheromoneCalc}
+		\STATE move current node to neighbor according to picked edge 
+		\STATE add edge and node to solution lists
+		\ENDWHILE
+		\ENDFOR
+		\STATE update trail intensities according to \ref{eq:trailIntensity}
+		\STATE pick tour with best quality to use for next run
+		\ENDFOR
+		\STATE pick tour with best quality as result
+	\end{algorithmic}	
+	%\end{algorithm}
+\end{breakablealgorithm}
+
+To calculate the new ant colony implementation, first, the graph and a helper class \texttt{problem} have to be initialized. 
+The graph is created from the database, using the selected starting point and $\frac{2}{3} \cdot L$ to fetch only the needed number of nodes and edges.
+The problem saves all other user inputs:
+
+
+\begin{minipage}[t][2cm][b]{0.3\textwidth}
+	\begin{itemize}
+		\item desirable tags
+		\item undesirable tags
+		\item max tour length
+	
+	\end{itemize}
+\end{minipage}
+\begin{minipage}[t][2cm][b]{0.3\textwidth}
+	\begin{itemize}
+		\item quality (initially 0)
+		\item max elevation
+		\item max steepness
+	\end{itemize}	
+\end{minipage}
+\begin{minipage}[t][2.9cm][b]{0.33\textwidth}
+	\begin{itemize}
+		\item elevationImportance
+		\item edgeProfitImportance
+		\item coveredAreaImportance
+		\item generated solution path
+	\end{itemize}	
+\end{minipage}
+
+\vspace{1cm}
+The edges hold their length, the profit according to the tags, their pheromones and trail intensity. 
+Here, the trail intensity is initialized with 0.0001 as a starting value, so all edges are equally as likely to be picked, however the value has to be bigger than 0 for the probability calculation.
+As in the original paper, the pheromones are initialized with 0.
+
+Then, the ants can be created and initialized. 
+Currently, all ants use the same $\alpha$ and $\beta$ as well as the same base amount of pheromones they can distribute.
+However, the values could be changed throughout the runs, which can be of interest for further combinations.
+
+For a set number of runs, all ants calculate a tour in parallel. 
+To do this, they all start at the selected starting point and then iteratively check the incident edges.
+Only edges that an fully be traversed while not exceeding the maximum selected length will be used here.
+If no edge is short enough to still fit into the tour, the roundtrip will be closed by calculating the shortest path from the last picked node back to the beginning.
+While some edges are still available, they are scaled, and then their visibility and based on that the probability to choose the edge is calculated. 
+Based on these probabilities, one edge is picked, the pheromone values are updated and the ant is moved.
+The current node is updated accordingly. 
+Finally, the picked edge and the new node can be added to the current solution.
+
+After all ants have calculated their full tours, the overall trail intensity is updated, using the evaporation rate and the gathered pheromone updates from all ants. 
+Then, the tour with the highest quality value is picked for further calculation. 
+After the last run, again, the tour with the highest probability is chosen as the final result.
+
 
 
 \subsection{Simulated Annealing}
 \label{subsec:simulatedAnnealingImplementation}
 
+For simulated annealing, all needed changes are to do for the variables that are meant to be determined based on the problem which is to be solved with SA:
+\begin{itemize}
+	\item the quality of a solution
+	\item how to find a neighboring solution
+	\item the initial temperature and the cooling schedule
+\end{itemize} 
 
+Thus, the pseudocode does not change by much, however with that, the exact calculations can be specified. 
+The updated pseudocode only additionally contains building the waypoint list, calculating distances and probabilities (see\ref{alg:SAImplementation})
 
+The quality $f(j)$ of the solution $j$ is -- like for ant colony -- calculated based on the \texttt{coveredArea} $A$ and the respective importance (\texttt{coveredAreaImportance} $i_A$), the \texttt{edgeProfit} $p$ and the respective importance (\texttt{edgeProfitImportance} $i_p$) and the elevation difference $e$ from the maximum $e_{max}$ and the respective importance $i_e$ and scaled by the difference between the actual length $L_{calc}$of the tour from the target length (L). 
 
-The quality of the solution is calculated based on the covered area A and the respective importance (areaImportance), the edge profit (P) and the respective importance (edgeImportance) and all other valuable properties (others) and scaled by the target length of the tour (L). 
-
-\begin{equation}\label{eq:qualitySA}
-	f(i) = \frac{areaImportance * A(i)}{\pi * L(i)^2} + \frac{edgeImportance * P(i)}{L(i)} + others(i)
+\begin{equation}
+	\label{eq:qualitySA}
+	\begin{split}
+		f(j) = \frac{i_A \cdot 100 \cdot \frac{\sqrt{|A|\cdot \pi} \cdot 2 }{L} 
+		+  i_p \cdot 100 \cdot p
+		+ i_e \cdot \left(\frac{e_{max} - e}{e_{max}} + \frac{s_{max} - s}{s_{max}}\right)}{\left| L - L_{calc} \right|}
+	\end{split}
 \end{equation}
+
+The respective importance values are again multiplied by 100 and the  \texttt{coveredArea} is scaled the same as for the ant colony (see \ref{eq:visibility}, \ref{eq:scaleArea1} and \ref{eq:scaleArea2})
+
+The neighboring solution is created based on waypoints, which are used similarly to how they work in the minCost tour creation (see \ref{subsec:Tour4Me}):
+A the waypoints form base points of the tour that are connected using a weighted version of shortest paths. 
+For this calculation, the shortest path of any point to the starting point is determined by dividing the edge length by the profit that can be gained when picking the edge. 
+
+For SA, several different versions have been implemented.
+The first two that are described here start with an empty tour and build the solution with only the starting point.
+In the next section, other combinations and alterations are discussed as well.
+
+The two versions that start with an empty solution are a weighted and a fully random version of the same base idea:
+A random point (with or without a probability distribution) is picked as a new waypoint. 
+Until at least five waypoints have been found, adding or moving the waypoint are the only options available, however when only one waypoint exists, a second one \textit{has} to be added first.
+After that, adding, moving or removing of a waypoint are possible until 15 points are reached.
+Then, a waypoint can only be moved or removed.
+Using these boundaries ensures that the resulting tour will not end up way too short while also assuring that not too many distance calculations are needed.
+The number of waypoints determines how many times the distance of a new waypoint is of interest, since for moving and adding, the closest existing waypoint has to be known.
+
+\# TODO create visualizations for waypoints, adding, moving, removing 
+
+Whether a waypoint is moved, removed or a new one is added is picked randomly within the previously given constraints.
+The starting point can never be pick for neither moving nor removing.
+
+First, a random point is picked from the set of available nodes.
+This set is a smaller version of all available nodes, allowing only nodes that have a shortest distance of at most $\frac{L}{4}$ from the starting point. 
+For the version using a probability distribution, the probabilities are calculated using a scaled version of the distance of every point $j$ from the starting point $s$: $dist(j,s)^2$.
+For the fully random version, a distance of 1 is used for every edge.
+Every point that is too far from the starting point is assigned 0 and will be removed from the returned result.
+The respective calculated distances are then scaled by the sum of all distances to sum to 1.
+
+The final selected point is the new waypoint candidate for moving or adding and will determine the waypoint to choose, also for the remove case.
+To pick the waypoint that will be moved or removed or to find the two waypoints between which the new point should be added, all distances have to be calculated.
+The closest waypoint of the current list will then be picked and:
+
+\begin{itemize}
+	\item \textbf{added:} from the two neighbors of the picked waypoint, the closed one is picked and the new point is added in between, updating the path between the overall closest point to be the shortest path between the waypoint and the new point and updating the path between the closer one of the neighboring waypoints to be the shortest path between the new point and that waypoint (see \ref{alg:SAGenerateNeigborhoodAdd})
+	\item \textbf{moved:} the previous waypoint is deleted, a new shortest path from the predecessor to the new point and a shortest path from the new point to the successor is calculated and the new point is added as the moved version of the selected waypoint (see \ref{alg:SAGenerateNeigborhoodMove})
+	\item \textbf{removed:} the picked waypoint is deleted and a new shortest path between the predecessor and the successor is calculated (see \ref{alg:SAGenerateNeigborhoodRemove})
+\end{itemize}
+
+For the new tour, the overall quality is calculated using \ref{eq:qualitySA}. 
+Then, if the quality is better than the one of the previous tour, the new tour will always be accepted.
+If the quality is worse, the probability with which the tour is accepted anyways is calculated based on \ref{eq:SAprobCalculation}. 
+This step is done for a set number of inner runs, before the temperature is adjusted based on \ref{eq:temperatureSchedule} \# TODO pick working schedule and fix code accordingly
+
+To better illustrate the added steps to choosing and building a solution, the pseudocode fo the inner loop is given in \ref{alg:SAGenerateNeigborhood}:
+
+
+
+\begin{breakablealgorithm}
+	\caption{Generate neighborhood roundtrip (j)}
+	\label{alg:SAGenerateNeigborhood}
+	\begin{algorithmic}[1]
+		\STATE pick random waypoint based on probability distribution
+		\STATE calculate all distances to current waypoints and pick closest
+		\IF{\# waypoints < 3}
+		\STATE add new waypoint between closest and that waypoint's closest neighbor
+		\ELSE \IF{\# waypoints $\leq$ 5}
+		\STATE randomly decide if to add or move
+		\ELSE \IF{5 < \# waypoints < 15 }
+		\STATE randomly decide if to add, remove or move
+		\ELSE 
+		\STATE randomly decide if to remove or move
+		\ENDIF
+		\ENDIF
+		\ENDIF
+		\STATE calculate new quality
+		\STATE return new solution
+	\end{algorithmic}
+\end{breakablealgorithm}
+
+
+\subsection{Combinations}
+\label{subsec:algoCombinations}
+
+In addition to the pure versions of ant colony and SA, a few combinations with the two fo existing algorithms (Greedy and MinCost) as well as a combination of first using ant colony and then applying SA have been implemented.
+For this, only small changes had to be made to the existing code base, which will be shortly illustrated in the following paragraphs.
+
+\paragraph{Ant + Greedy and Ant + MicCost}
+
+To realize the combination of ant with the two already implemented algorithms, the changes were minor.
+First, the respective algorithm has to be run to have a base tour to build the ant algorithm from.
+Then, the initialization has to place trail intensity and pheromones on the edges of the existing tour.
+Lastly, the importance of the trail intensity has to be higher than in the pure ant algorithm to make it more likely that the ants will follow the previous tour.
+
+
+\paragraph{SA + Greedy, SA + MinCost, SA + Ant}
+
+To implement the combinations with simulated annealing, again, the tours have to be calculated first.
+Then, the waypoint list can be created from the base tour that has been built, splitting the tour into 10 waypoints and the paths connecting them. 
+Other than that, no changes are needed.
+
+Realizing combinations is relatively easy for the given variations, however more complicated combinations are possible.
+Especially combining a genetic meta-heuristic could result in more complex ways of combining algorithms and result in interesting new solutions. 
+This could not be implemented due to time constraints, however possible approaches are discussed in the section about future work (\ref{sec:futureWork}).
 
 
 \section{Parameter changes}
 \label{sec:parameterChanges}
 
+To include the parameters that have been added in the front end, a few minor changes had to be made to the existing algorithms. \# TODO check minCost (vsMinCost) spelling
+However, since minCost already uses the quality calculation to determine the tour quality, nothing else had to be changed.
+In the quality calculation, the elevation difference and the respective importance was added and the scaling was changed (see \ref{eq:qualitySA}).
+Other than that, more tags had to be added when creating the problem class, however this was done similarly to the existing tags (path type and surface) and did not need any further changes.
+The greedy algorithm only takes the profit an edge can add into account and thus also did not need any change.
+
+\# TODO add steepness into quality?? check how to do that

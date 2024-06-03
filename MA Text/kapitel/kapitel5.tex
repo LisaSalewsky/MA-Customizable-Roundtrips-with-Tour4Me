@@ -1,3 +1,59 @@
 % kapitel2.tex
 \chapter{Evaluation}
 \label{chapter:evaluation}
+
+%
+%\begin{figure}[!ht]
+%\centering
+%\begin{tikzpicture}
+%	\begin{axis}[
+%		title={Ant Colony Cases},
+%		xlabel={Number of Ants},
+%		ylabel={Covered Area},
+%		width=0.9\textwidth, % Set the width of the plot
+%		enlargelimits=false,
+%		scatter/classes={%
+%			blue={mark=*,blue},
+%			% Add more colors if necessary
+%		}
+%		]
+%		\pgfplotstableread[col sep=comma]{./data/antColonyCasesNumberAntsCovereArea.csv}\datatable
+%		
+%		% Plot data, assuming 'CoveredArea' and 'run_name_ants_Importance' are the column names
+%		\addplot[scatter,only marks, scatter src=explicit symbolic]table[x=Importance, y=CoveredArea, meta=color] {\datatable};
+%		
+%	\end{axis}
+%\end{tikzpicture}
+%\caption{Multiple Line-plots using Tikz}
+%\label{fig:my_label}
+%\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			title={Ant Colony Cases},
+			xlabel={Importance},
+			ylabel={Covered Area},
+			width=0.9\textwidth, % Set the width of the plot
+			enlargelimits=false,
+			]
+			% Read the CSV file
+			\pgfplotstableread[col sep=comma]{./data/antColonyCasesNumberAntsCovereArea.csv}\datatable
+			
+			\addplot[
+			scatter,
+			only marks, mark options={
+				draw=Color,
+				fill=Color,
+			},
+			] table [
+			x=Importance,
+			y=CoveredArea
+			] {\datatable};
+%			\addplot [no markers] table [y={create col/linear regression={y=CoveredArea}}] {./data/antColonyCasesNumberAntsCovereArea.csv};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Multiple Line-plots using Tikz}
+	\label{fig:my_label3e}
+\end{figure}
