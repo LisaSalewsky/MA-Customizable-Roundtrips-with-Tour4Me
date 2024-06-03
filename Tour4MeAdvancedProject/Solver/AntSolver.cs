@@ -107,7 +107,16 @@ namespace Tour4MeAdvancedProject.Solver
                         // calculate one Tour for the current Ant
                         // save the edges that form the solution path in solutionEdges
                         (returnedProb, solutionEdges, visitedNodes) = currentAnt.Tour( tempProblem, UsePenalty, UseBacktracking );
-                        allSolutions.Add( returnedProb );
+
+                        if (returnedProb.Path.Quality > 1)
+                        {
+                            Console.WriteLine( "ahhhhhhh" );
+                        }
+                        Problem temp = new Problem( returnedProb )
+                        {
+                            Path = new Path( returnedProb.Path )
+                        };
+                        allSolutions.Add( temp );
 
                         // now update the pheromone trail (trailInensity)
                         currentAnt.UpdatePheromoneTrail( tempProblem, solutionEdges, EvaporationRate, UsePenalty, InclueAreaCoverage, TrailPenalty );
@@ -125,6 +134,11 @@ namespace Tour4MeAdvancedProject.Solver
                     }
                 }
                 tempProblem = allSolutions.First( s => Math.Abs( s.Path.Quality ) == allSolutions.Max( x => Math.Abs( x.Path.Quality ) ) );
+
+                if (tempProblem.Path.Quality > 1)
+                {
+                    Console.WriteLine( "ahhhhhhh" );
+                }
             }
 
 

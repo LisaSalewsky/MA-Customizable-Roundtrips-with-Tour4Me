@@ -82,7 +82,7 @@ namespace Tour4MeAdvancedProject.Solver
                         Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                     }
                     Utils.CalculateElevationDiffAndSteepness( bestEdge, ref currentPathsMaxSteepness, ref currentElevationDiff );
-                    Utils.CaculateQualityValues( P, bestEdge, startNodeId, length, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                    Utils.CaculateQualityValues( P, bestEdge, startNodeId, length, currentElevationDiff, ref currentEdgeProfits, ref currentPathsMaxSteepness, ref currentArea, ref currentQuality );
 
                 }
             }

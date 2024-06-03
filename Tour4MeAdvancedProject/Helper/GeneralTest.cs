@@ -249,6 +249,76 @@ namespace Tour4MeAdvancedProject.Helper
             return jsonBuilder.ToString();
         }
 
+
+        [WebMethod]
+        [ScriptMethod( UseHttpGet = true )]
+        public string GenerateTestingValuesQualityOverAntsAndRuns (
+            string algorithm,
+            int pathLength,
+            int numberPaths,
+            int numberAnts,
+            int numberRunsAnt,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            double initTrailIntensity,
+            int TrailPenalty,
+            string newPheromoneFucntion,
+            int numberRunsSA,
+            int numberRepitiionsSA,
+            int initTemperature,
+            string coolingFunction,
+            int numberWaypoints,
+            string distanceScalingCalculationForProbability )
+        {
+            Process currentProcess = Process.GetCurrentProcess();
+            long memoryUsage = -1;
+            StringBuilder jsonBuilder = new StringBuilder();
+
+
+            _ = jsonBuilder.Append( "[\n" );
+            Console.WriteLine( "start" );
+
+            SolveStatus status = SolveStatus.Unsolved;
+            string algo = "";
+
+            _ = Enum.TryParse( algorithm, out Algo algorithmEnum );
+            Console.WriteLine( algo );
+            Console.WriteLine( status );
+
+            if (!currentProcess.HasExited)
+            {
+                // Refresh the current process property values.
+                currentProcess.Refresh();
+
+                memoryUsage = currentProcess.WorkingSet64;
+            }
+            int numRuns = 20;
+            Color[] colors = GenerateColors( numberPaths );
+
+            Selection solver = null;
+            _ = (double)1 / numberPaths;
+
+            Graph G = null;
+            double elevationImportance = 0.33;
+            double coveredAreaImportance = 0.33;
+            double edgeProfitImportance = 0.33;
+            DateTime init_time_1 = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            DateTime init_time_2 = DateTime.Now;
+
+            for (int i = 1; i <= numberPaths; i++)
+            {
+                DoInnerRuns( problem, numberPaths, numberAnts, numberRunsAnt, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, i, init_time_1, init_time_2 );
+                _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+
+            }
+
+            return jsonBuilder.ToString();
+        }
+
+
         [WebMethod]
         [ScriptMethod( UseHttpGet = true )]
         public string GenerateTestingValuesSACoveredArea (
@@ -648,8 +718,8 @@ namespace Tour4MeAdvancedProject.Helper
             double lon = 7.406319;
             double distance = length;
             double elevation = 100;
-            double steepness = 0.05;
-            string[] tagsHIn = new string[] { };
+            double steepness = 1.0;
+            string[] tagsHIn = new string[] { "Asphalt,d" };
             List<string> tagsSIn = new List<string>() { "Paved,d",
                                                         "Cobblestone,d",
                                                         "Gravel,d",

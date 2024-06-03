@@ -810,7 +810,7 @@ namespace Tour4MeAdvancedProject.Solver
                 recalculateProbs = true;
             }
 
-            currentPath.Quality = problem.GetQuality( problem.GetProfit( currentPath.Visited ), problem.GetArea( currentPath.Visited ), currentPath.Elevation, currentPath.Length );
+            currentPath.Quality = problem.GetQuality( problem.GetProfit( currentPath.Visited ), problem.GetArea( currentPath.Visited ), currentPath.Elevation, currentPath.Steepness, currentPath.Length );
             currentWaypointId = 0;
             return currentPath;
         }

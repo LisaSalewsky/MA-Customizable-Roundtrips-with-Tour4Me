@@ -394,26 +394,31 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
         }
 
-        public double GetQuality ( double profit, double area, double elevation, double pathLength )
+        public double GetQuality ( double profit, double area, double elevation, double steepness, double pathLength )
         {
             double diff = 1 + Math.Abs( TargetDistance - pathLength );
             int negModifier = area < 0 ? -1 : 1;
-            double test =
-                      ( ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
-                      ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation ) +
-                      ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area * Math.PI ) / 2 / TargetDistance )
-                      )
+            double test = (
+                            ( EdgeProfitImportance * 100 * profit ) +
+                            ( ElevationImportance / 2 * 100 * ( ( MaxElevation - elevation ) / MaxElevation ) ) +
+                            ( ElevationImportance / 2 * 100 * ( MaxSteepness - ( steepness / 100 ) ) / MaxSteepness ) +
+                            ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area * Math.PI ) * 2 / TargetDistance )
+                          )
                       / Math.Pow( diff, 4 )
                     ; /// Math.Abs( TargetDistance - Path.Length );
+            if (test > 1)
+            {
+                Console.WriteLine( "ahhhhh" );
+            }
             return test;
         }
 
-        public double GetEdgeQuality ( double profit, double area, double elevation )
+        public double GetEdgeQuality ( double profit, double area, double elevation, double steepness )
         {
             int negModifier = area < 0 ? -1 : 1;
             double test = (
                             ( EdgeProfitImportance * 100 * profit / TargetDistance ) +
-                            ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation ) +
+                            ( ( ElevationImportance * 100 * ( MaxElevation - elevation ) / MaxElevation ) + ( ( MaxSteepness - ( steepness / 100 ) ) / MaxSteepness ) ) +
                             ( CoveredAreaImportance * 100 * Math.Sqrt( negModifier * area * Math.PI ) / 2 / TargetDistance )
                           ) / TargetDistance;
             if (test == 0)

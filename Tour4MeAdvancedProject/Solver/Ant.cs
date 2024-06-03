@@ -172,6 +172,10 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     }
 
                     Utils.UpdateCurrentProblemPathMetadata( ref CurrentProblem, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+                    if (CurrentProblem.Path.Quality > 1)
+                    {
+                        Console.WriteLine( "ahhhhhhhhhh" );
+                    }
 
                     return (CurrentProblem, CurrentProblem.Path.Edges, CurrentProblem.Path.Visited);
                 }
@@ -213,7 +217,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
         }
 
-        private void CalculateNewPheromoneValues ( ref Problem CurrentProblem, ref double currentElevationDiff, bool usePenalty, Node[] vNodes, HashSet<int> visited, double currentDistance, Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed, float sumOfAllowed, double profit, double area, double elevation, out double profitOut, out double areaOut, out double elevationOut )
+        private void CalculateNewPheromoneValues ( ref Problem CurrentProblem, ref double currentElevationDiff, ref double steepness, bool usePenalty, Node[] vNodes, HashSet<int> visited, double currentDistance, Dictionary<Edge, float> edgeProbabilities, Node currentNode, List<Edge> allowed, float sumOfAllowed, double profit, double area, double elevation, out double profitOut, out double areaOut, out double elevationOut )
         {
             List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode.GraphNodeId, CurrentProblem, currentElevationDiff );
             profitOut = profit;
@@ -222,6 +226,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double newProfit = profit;
             double newArea = area;
             double newElevation = elevation;
+            double newSteepness = steepness;
 
             foreach (Edge edge in allowed)
             {
@@ -237,12 +242,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     newProfit = profit + ( edge.Cost * edge.Profit );
                     newArea = area + ( edge.SourceNode == currentNode ? edge.ShoelaceForward : edge.ShoelaceBackward );
                     newElevation = elevation + ( Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2 );
+                    double edgeSteepness = Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation );
+                    newSteepness = edgeSteepness > newSteepness ? edgeSteepness : newSteepness;
 
                     //edge.Quality = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
 
                     //double edgeValue = edge.Cost * edge.TrailIntensity;
                     //double edgeVisibility = 1 / edge.Cost;
-                    double edgeVisibility = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
+                    double edgeVisibility = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation, newSteepness );
 
                     int negModifier = newArea < 0 ? -1 : 1;
 
@@ -304,6 +311,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             double newArea = 0;
             double newElevation = 0;
             double newDistance = 0;
+            double newSteepness = 0;
 
 
             for (int i = 0; i < allowed.Count; i++)
@@ -323,11 +331,13 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     newArea = area + ( edge.SourceNode == currentNode ? edge.ShoelaceForward : edge.ShoelaceBackward );
                     newElevation = elevation + Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation );
                     newDistance = currentDistance + edge.Cost;
+                    double edgeSteepness = Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation );
+                    newSteepness = edgeSteepness > newSteepness ? edgeSteepness : newSteepness;
 
                     //edge.Quality = CurrentProblem.GetQuality( newProfit, newArea, newElevation, newDistance );
                     //edge.Quality = CurrentProblem.GetQuality( profit, area, elevation, );
                     //edgeVisibility = edge.Quality;
-                    edgeVisibility = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
+                    edgeVisibility = CurrentProblem.GetEdgeQuality( newProfit, newArea, newElevation, newSteepness );
 
                     int negModifier = area < 0 ? -1 : 1;
                     int visNegModifier = edgeVisibility < 0 ? -1 : 1;
@@ -438,26 +448,26 @@ namespace Tour4MeAdvancedProject.ObjectClasses
         private float PrecomputeSumOverAllAllowedEdges ( List<Edge> allowed, Node[] vNodes, HashSet<int> visited, int currentNode, double currentDistance, double profit, double area, double elevation, ref Problem currentProblem, ref double currentElevationDiff )
         {
 
-            List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode, currentProblem, currentElevationDiff );
-            // precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
+            //List<Edge> scaledEdges = ScaleTrailIntensity( vNodes, visited, currentNode, currentProblem, currentElevationDiff );
+            //// precompute sum of (trailintensity^alpha * edge visibility^beta) over all allowed edges 
             float sumOfAllowed = 0;
-            double newProfit = profit;
-            double newArea = area;
-            double newElevation = elevation;
-            for (int i = 0; i < allowed.Count; i++)
-            {
-                Edge edge = allowed[ i ];
-                newProfit = profit + ( edge.Cost * edge.Profit );
-                newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
-                newElevation = elevation + ( Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2 );
+            //double newProfit = profit;
+            //double newArea = area;
+            //double newElevation = elevation;
+            //for (int i = 0; i < allowed.Count; i++)
+            //{
+            //    Edge edge = allowed[ i ];
+            //    newProfit = profit + ( edge.Cost * edge.Profit );
+            //    newArea = area + ( edge.ShoelaceForward >= 0 ? edge.ShoelaceForward : edge.ShoelaceBackward );
+            //    newElevation = elevation + ( Math.Abs( edge.SourceNode.Elevation - edge.TargetNode.Elevation ) / 2 );
 
-                //edge.Quality = currentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
-                float trailIntensityPowAlpha = (float)Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha );
-                double edgeVisibility = currentProblem.GetEdgeQuality( newProfit, newArea, newElevation ) * currentProblem.EdgeProfitImportance;
-                float visibilityPowBeta = (float)Math.Pow( edgeVisibility, Beta );
+            //    //edge.Quality = currentProblem.GetEdgeQuality( newProfit, newArea, newElevation );
+            //    float trailIntensityPowAlpha = (float)Math.Pow( scaledEdges.Find( x => x.Id == edge.Id ).TrailIntensity, Alpha );
+            //    double edgeVisibility = currentProblem.GetEdgeQuality( newProfit, newArea, newElevation ) * currentProblem.EdgeProfitImportance;
+            //    float visibilityPowBeta = (float)Math.Pow( edgeVisibility, Beta );
 
-                sumOfAllowed += trailIntensityPowAlpha * visibilityPowBeta;
-            }
+            //    sumOfAllowed += trailIntensityPowAlpha * visibilityPowBeta;
+            //}
 
             return sumOfAllowed;
         }
@@ -496,7 +506,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             }
 
             Utils.CalculateElevationDiffAndSteepness( pickedEdge, ref maxSteepness, ref currentElevationDiff );
-            Utils.CaculateQualityValues( problem, pickedEdge, currentNode, currentDistance, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+            Utils.CaculateQualityValues( problem, pickedEdge, currentNode, currentDistance, currentElevationDiff, ref maxSteepness, ref currentEdgeProfits, ref currentArea, ref currentQuality );
             pickedEdge.Visited = true;
 
 
@@ -527,7 +537,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                     Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
                 }
                 Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref currentElevationDiff );
-                Utils.CaculateQualityValues( problem, edge, startNodeId, currentDistance + edge.Cost, currentElevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                Utils.CaculateQualityValues( problem, edge, startNodeId, currentDistance + edge.Cost, currentElevationDiff, ref maxSteepness, ref currentEdgeProfits, ref currentArea, ref currentQuality );
 
             }
             edges.ForEach( x => x.Visited = false );

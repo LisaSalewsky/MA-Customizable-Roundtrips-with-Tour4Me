@@ -32,7 +32,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
 
         public Path ( Path p )
         {
-            Edges = new List<Edge>( p.Edges );
+            Edges = new List<Edge>( p.Edges.ConvertAll( edge => (Edge)edge.Clone() ) );
             Visited = new List<int>( p.Visited );
             Quality = p.Quality;
             Length = p.Length;
