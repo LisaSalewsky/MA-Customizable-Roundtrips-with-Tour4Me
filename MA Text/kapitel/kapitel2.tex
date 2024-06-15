@@ -2,12 +2,12 @@
 \chapter{Fundamentals and Background}
 \label{chapter:fundamentals}
 
-As stated in the \href{chapter:introduction}{introduction}, most routing algorithms focus on shortest paths between two or more points.
+As stated in the \href{chapter:introduction}{introduction}, most routing algorithms focus on finding shortest paths between two or more points.
 Many of those have been reviewed in several different surveys (see for example \cite{madkour_survey_2017, wayahdi_greedy_2021}).
-Additionally, there have been many more heuristic approaches, like local search variants \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} or different neighborhood based ideas \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} that offer faster results in exchange for not necessarily finding the one best solution, but only close approximations.
+Additionally, there have been many heuristic approaches, like local search variants \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} or different neighborhood based ideas \cite{braysy_vehicle_2005, irnich_sequential_2006, ropke_heuristic_2005} that offer faster results in exchange for not necessarily finding the one best solution, but only close approximations.
 Much research has been done and is still ongoing for these kinds of problems, stemming from the fact that many graph routing problems (for example the traveling salesman problem (TSP) \cite{gendreau_handbook_2010}, the vehicle routing problem (VRP)  \cite{braysy_vehicle_2005, irnich_sequential_2006} or the arc orienteering Problem (AOP) \cite{agarwal_correlated_2023, buchin_tour4me_2022}) are NP-hard \cite{reinelt_traveling_2003}.
  
-Furthermore, finding a shortest path is important in various parts of daily life.
+Finding a shortest path is important in various parts of daily life.
 Whether the problem is discovering the best (shortest, quickest, most convenient) way to get to work or to a supermarket by car or bike, a good way to minimize travel time by bus or any other trip from one place to another.
 The examples for shortest path problems are numerous.
 Additionally, shortest paths are not limited to real-world networks but can also prove useful for social networks or any form of digital network \cite{potamias_fast_2009}.
@@ -26,7 +26,7 @@ Furthermore, a start- and endpoint have to be determined.
 For roundtrips, these two points are defined by the same vertex, so only the starting point $s$ needs to be selected.
 
 In a graph $G=(V,E)$, vertex positions are denoted by $v_{ij}$.
-Whether an edge is part of a path or not is given by $\chi_{ij}$
+Whether or not an edge is part of a path is given by $\chi_{ij}$.
 Based on Souffiau et al., the objective is to maximize 
 
 \begin{equation}
@@ -97,91 +97,86 @@ Since the shortest path problem has been well-studied and still continues to adv
 The above tree offers a systematic approach to classify problems and most fall into one of two categories: they are either single-source shortest paths (SSSP, on the leftmost branch the two bottom left items) or all-pairs shortest paths(APSP, on the leftmost branch the two bottom right items).
 
 
-The first  - SSSP - only uses one single starting point and tries to find the one shortest path between this point and one or all other vertices.
-These kinds of problems have common use cases in many daily routing problems. 
-One to one paths are already described in this chapter's introduction - finding shortest paths to a specified destination \cite{sanders_shortest_2019}.
-One to all paths can be useful for cases like fire departments or the police that might need a map of quickest routes for every place in their jurisdiction \cite{sanders_shortest_2019}.
+The first approach -- SSSP -- uses a single starting point and aims to find the one shortest path between this point and one or all other vertices.
+These problems are commonly encountered in many everyday routing scenarios. 
+One-to-one paths, which involve finding the shortest path to a specified destination, have already been discussed in this chapter's introduction \cite{sanders_shortest_2019}.
+One-to-all paths can be useful for cases like fire departments or the police, which may need a map of quickest routes to every place in their jurisdiction \cite{sanders_shortest_2019}.
 
-The second aims to find shortest paths between all vertices of a graph - starting from a specified vertex or from every vertex to every other, which can be necessary for transportation networks and similar use cases. 
-All to one path calculations can be useful in scenarios where an accident happens and out of all available emergency vehicles, the ones with the shortest paths have to be determined \cite{khamayseh_efficient_2015}.
-For all to all paths, many traffic-load calculation problems come to mind. 
-For example cases where trains have to be distributed along the rail network \cite{curtis_rewire_2012}.
-
-
+The second aims to find the shortest paths between all vertices in a graph -- either from a specified vertex or from every vertex to every other vertex. 
+This is essential for transportation networks and similar use cases. 
+All-to-one path calculations can be useful in scenarios where, following an accident, the nearest out of all available emergency vehicles -- with the shortest path -- needs to be determined \cite{khamayseh_efficient_2015}.
+For all-to-all paths, many traffic-load calculation problems arise, such as distributing trains along the rail network \cite{curtis_rewire_2012}.
 Aside from these two categories, many more can be found to describe and sort types of approaches. 
 
 
-Which of these shortest path algorithms performs best is typically dependent on the type of graph the implementation is being used on, the graph's structure and the specific problem to be solved. 
-A graph can be categorized as planar or not, directed or undirected, weighted or not, and carry only non-negative weights or allow negative ones as well, they can contain cycles or be acyclic and many more. 
-These different types determine which algorithms can be used as well as which will return better results.
-Some algorithms like Dijkstra can - without modifications - only be used on a specific type of graph. 
-In this case, the graph needs to have only non negative edges.
-Others are modified versions, created specifically to fix problems like graphs with negative edges. 
+Which of these shortest path algorithms performs best typically depends on the type of graph the implementation is used on, the graph's structure, and the specific problem to be solved. 
+A graph can be categorized in different ways: planar or non-planar, directed or undirected, weighted or unweighted, and containing only non-negative weights or allowing negative ones as well.
+They can contain cycles or be acyclic among other categorizations. 
+These different types determine which algorithms can be used and which will yield better results.
+Some algorithms like Dijkstra can only be used on a specific type of graph without modifications. 
+In this case, the graph needs to only contain non-negative edges.
+Others are modified versions, specifically designed to handle issues like graphs with negative edges. 
 
 
 \section{Heuristic Approaches}
 \label{sec:metaHeuristics}
 
-Additionally to exact approaches, heuristics can be used to improve the runtime of an algorithm.
+In addition to exact approaches, heuristics can be used to improve the runtime of an algorithm.
 A heuristic is a technique that is based on experience or statistical insights \cite{gendreau_handbook_2010}.
-The downside of using such an approach is, that there will no longer be a guarantee that the result is the global optimum, as heuristics specifically only find partial or approximate solutions to a given problem. 
-In many cases where exact algorithms would take too much time or space to find the actual optimal solution, heuristics can be used to find the best possible solution within the given bounds.
+The downside of using such an approach is that there is no longer a guarantee that the result will be the global optimum, as heuristics specifically find only partial or approximate solutions to a given problem. 
+In many cases where exact algorithms would take too much time or space to find the optimal solution, heuristics can be used to find the best possible solution within the given constraints.
 
-For these heuristics, several different ideas have been formed. 
-These can then be categorized into construction heuristics, improvement heuristics and meta-heuristics \cite{laporte_5_2002,ropke_heuristic_2005}.
-However, differentiating between these different types is not always trivial and oftentimes, the line is blurred.
+For these heuristics, several different ideas have been developed. 
+These can be categorized into construction heuristics, improvement heuristics, and meta-heuristics \cite{laporte_5_2002,ropke_heuristic_2005}.
+However, differentiating between these types is not always trivial and the distinctions are often blurred.
 
 Construction heuristics build their solution from a starting point until a certain boundary is reached. 
-They typically don't have a separate improvement phase.
-Improvement heuristics try to improve an already existing solution.
-They perform improvement steps several times until a specified boundary is reached.
-These boundaries can be e.g. a time limit or reaching the threshold for a good enough approximation.
+They typically do not have a separate improvement phase.
+Improvement heuristics aim to improve an already existing solution.
+They perform improvement steps repeatedly until a specified boundary is met, such as a time limit or reaching the threshold for a good enough approximation.
 (Iterative) Local Search and Neighborhoods are examples of improvement heuristics that can be used to reach a more optimized solution.
 
-Meta-heuristics are a form of heuristic approaches.
-As such, they also try to find an approximate solution to a problem that is as optimal as possible.
-The distinction between classical heuristics and meta-heuristics is, that the latter are combined with additional strategies.
-These are used to enable the meta-heuristics to not produce only solution that are locally optimal, but to broaden the search space they can use for finding optima.
+Meta-heuristics are a type of heuristic approaches, that also seeks to find an approximate solution to a problem that is as optimal as possible.
+The distinction between classical heuristics and meta-heuristics is that the latter are combined with additional strategies.
+These are used to enable the meta-heuristics to not only produce solutions that are locally optimal, but to broaden the search space they can use for finding optima.
 
-Classical heuristics oftentimes carry the inherent risk of only finding a local optimum that can be far from the actual global one.
-To reduce this risk, higher level approaches are necessary.
-These can include using several neighborhood structures to broaden the search space or entirely new concepts like the Ant Colony approach or Genetic Algorithms. 
-
-The meta-heuristic ideas that will be used in this thesis will be explained in the following subsections.
+Classical heuristics often carry the inherent risk of finding only a local optimum which may be far from the global one.
+To mitigate this risk, higher-level approaches are necessary.
+These can include using multiple neighborhood structures, to broaden the search space or entirely new concepts like the Ant Colony approach or Genetic Algorithms. 
+The meta-heuristic ideas used in this thesis will be explained in the following subsections.
 
 
 
 \subsection{Ant Colony}
 \label{subsec:antColonyBackground}
 
-Ant Colony is a meta-heuristic approach that is based on biological ants, ant colonies and how they search food.
-Real ants start off by walking around on random paths starting from their nest. 
-When they discover a food source, they pick up the food and walk back to their nest.
-On this way, they distribute a substance called pheromones.
+Ant Colony is a meta-heuristic approach that is inspired by the behavior of biological ants, their colonies, and how they search for food.
+Real ants start by leaving their nests and walking around randomly. 
+When they discover a food source, they pick up the food and return to their nest.
+On this way, they distribute a substance called pheromone.
 These can then be detected by other ants and indicate to them, that a path leads to a potentially good food source. 
-Other ants then are more likely to follow a path with more pheromone placed on the respective edges and will in turn lay down their pheromone as well, leading to an accumulation of the pheromones on good paths.
-Over time, the pheromones dissipate and when they aren't renewed, will evaporate completely, decreasing the attractiveness of the corresponding path \cite{gendreau_handbook_2010, dorigo_ant_1996}. 
+Other ants then are more likely to follow a path with more pheromone placed on the respective edges and will in turn lay down their pheromone as well, leading to an accumulation of the pheromone on good paths.
+Over time the pheromone dissipate and, if not renewed, will eventually evaporate completely, reducing the attractiveness of the corresponding path \cite{gendreau_handbook_2010, dorigo_ant_1996}. 
 
 Furthermore, pheromone distribution also inherently leads to using shorter paths. 
 When several ants have to choose between paths, they will first select at random.
-However, as soon as one ant discovers the food, turns around and distributes pheromone on the way back, this process automatically increases the likelihood of the respective path being taken by other ants.
-Here, the shorter paths will be first to receive more pheromones as the ants returning will be quicker.
-Due to the faster accumulation, more ants will choose this shorter path and thus place even more pheromone on it, leading to a self-reinforcing loop that converges when all ants choose the best path only.
-Then, all worse paths will loose all their pheromone over time and leave the best result as the only remaining path \cite{gendreau_handbook_2010, dorigo_ant_1996}.
+However, once an ant discovers the food source, returns towards the nest and distributes pheromone along the way back, this process automatically increases the likelihood of the respective path being taken by other ants.
+Shorter paths will receive more pheromone as the ants returning will be quicker, leading to a faster distribution of pheromone.
+Consequently, more ants will choose this shorter path and thus deposit even more pheromone on it, leading to a self-reinforcing loop that converges when all ants choose the best path only.
+Eventually the pheromone on all paths that are less good will evaporate over time, leaving the best route as the only remaining option \cite{gendreau_handbook_2010, dorigo_ant_1996}.
 
-To illustrate pheromone distribution, an example illustrates in figure \ref{fig:antSystemExampleIllustration} how real ants find food and establish the best path towards the source. 
-In part \textbf{a} on the left side, there are many ants that run between two points A and E. 
-These could be the nest and an interesting food source.
+To illustrate pheromone distribution, figure \ref{fig:antSystemExampleIllustration} shows how real ants find food and establish a good path to the source. 
+In part \textbf{a} on the left side, there are many ants that move between two points, A and E, which could represent the nest and a food source.
 In part \textbf{b} in the middle, an obstacle has been added.
-This construction now leaves the ants with a choice, which path to follow. 
-In the beginning, the likelihood of picking either path will be around 50\%.
-While taking the path, the ants distribute pheromones on it. 
+This construction now gives the ants a choice of which path to follow. 
+Initially, the likelihood of choosing either path is around 50\%.
+While taking the path, the ants distribute pheromone on it. 
 On the shorter route, the ants will end up reaching the food source earlier, thus returning quicker than the ones who took the long path and distribute more pheromone on the shorter path.
 For the first few ants, there will be almost no change in the attractiveness of either path.
-However, the more ants take the short tour and return quicker, the more pheromone will accumulate on that path.
-This new pheromone placement and distribution leads to a shift in the attractiveness, making the shorter path more likely to be chosen by later ants.
-These ants will in turn again increase the amount of pheromones placed, making the path even more attractive.
-Thus, the ants create a self-reinforcing loop of positive feedback through their pheromones which eventually leads to a state where all ants always choose the shorter option.
+However, as more ants take the shorter route and return quicker, the more pheromone will accumulate on that path.
+This increased pheromone concentration leads to a shift in the attractiveness, making the shorter path more attractive and more likely to be chosen by later ants.
+These ants will in turn again increase the amount of pheromone placed, making the path even more attractive.
+Thus, the ants create a self-reinforcing loop of positive feedback through their pheromone which eventually leads to a state where all ants constantly choose the shorter path.
 
 
 \begin{figure}[H]
@@ -195,7 +190,7 @@ Thus, the ants create a self-reinforcing loop of positive feedback through their
 
 This behavior can be replicated in virtual graphs for various routing problems.
 Ant system has been first introduced in 1990 by Dorigo et al\cite{dorigo_ant_1996} and the following explanations about calculations are based on their findings.
-In the paper, the authors describe how to use ants for solving the traveling salesman problem (TSP).
+In their paper, the authors describe how to use ants for solving the traveling salesman problem (TSP).
 This problem is different from the question of finding a roundtrip with a certain length (plus additional user preferences).
 However, in the paper, they stress the adaptability of ant system approaches, showing both versatility and robustness on different example problems.
 
@@ -208,7 +203,7 @@ Ants are very simple agents.
 They can only do two things:
 Pick the next node to move to and place pheromone on a path.
 They communicate with other ant agents through the pheromone trails, making this process a decentralized way of communication without the need for a central agent.
-For the algorithm, a set amount of $m$ ants moves through the graph, tries to find a good tour and places pheromones on edges.
+For the algorithm, a set amount of $m$ ants moves through the graph, tries to find a good route, and places \enquote{pheromone} on edges.
 Every ant has a defined amount of pheromone to place. 
 How much of the pheromone will be laid on a path can be calculated in several different ways. 
 The authors propose the following three ideas:
@@ -223,7 +218,7 @@ The authors propose the following three ideas:
 
 \begin{equation}\label{eq:antDensity}
 	\Delta\tau_{ij}^k = \begin{cases}
-	Q &\text{if the kth ant goes from i to j between time} \\
+	Q &\text{if the k-th ant goes from i to j between time} \\
 	&\text{t to t+1} \\
 	0 &\text{otherwise}
 \end{cases}	
@@ -232,30 +227,28 @@ The authors propose the following three ideas:
 
 \begin{equation}\label{eq:antQuantity}
 	\Delta\tau_{ij}^k = \begin{cases}
-	\frac{Q}{d_{ij}} &\text{if the kth ant goes from i to j between time} \\
+	\frac{Q}{d_{ij}} &\text{if the k/th ant goes from i to j between time} \\
 		&\text{to t+1} \\\
 	0 &\text{otherwise}
 \end{cases}	
 \end{equation}
 
-Here, equation \ref{eq:antCycle} is the default the authors used for solving the TSP.
-The constant Q has to be picked according to the problem in question.
-Variable $L_k$ describes the length of the whole tour.
-This property makes sense for the TSP setting, but is relatively useless for the case of tours with a fixed length, as it will be the same value for every ant and every run made.
-In this case, where the user defines the length of the tour, $L_k$ will only scale the values picked for Q.
+Equation \ref{eq:antCycle} is the default formula used by the authors for solving the TSP.
+The constant Q must be chosen according to the problem in question.
+The variable $L_k$ describes the length of the entire tour.
+This property is useful for the TSP setting, but is relatively meaningless for tours with a fixed length, as it remains the same value for every ant and every run made.
+In cases, where the user defines the length of the tour, $L_k$ will only scale the values chosen for Q.
 
-Equation \ref{eq:antDensity} only uses the constant Q to describe pheromone placement. 
-Here, neither the full tour length nor individual edge costs are taken into account. 
-Pheromone is placed evenly on all edges.
-This way of placing pheromones equates to a not-scaled version of equation \ref{eq:antCycle} with the given use-case of a set length for the tour.
+Equation \ref{eq:antDensity} uses only the constant Q to describe pheromone placement, without considering the full tour length or individual edge costs. 
+Pheromone is placed evenly on all edges, making this method equivalent to an unscaled version of equation \ref{eq:antCycle} for a fixed length tour.
 
-The last equation \ref{eq:antQuantity} divides the constant by the length - or the cost - of each edge when it is used. 
+The last equation \ref{eq:antQuantity} divides the constant by the length i.e. the cost of each edge. 
 This division reduces the amount of pheromone placed on longer edges proportionally to shorter edges. 
-While this equation is not influenced directly by the fixed length, this property can still cause the equation to be less useful for tours with a specified length than for TSP.
-Since tours that are meant to cover a fixed distance are different from the TSP, where a shortest path that visits all selected cities is to be found, the last equation seems like the least promising candidate for useful pheromone distribution.
+Although this equation is not influenced directly by the fixed length, this property may still be less useful for tours with a specified length than for TSP.
+Since tours that are meant to cover a fixed distance differ from the TSP, where the goal is to find a shortest path that visits all selected cities, equation \ref{eq:antQuantity} seems the least promising candidate for effective pheromone distribution.
 
-The pheromone calculation and placement can be defined with different formulas depending on the problem and what should be optimized. 
-Which option turns out to be the best fitting one will be described in the evaluation chapter \ref{chapter:evaluation}.
+The calculation and placement of pheromone can be defined with different formulas depending on the problem and the optimization goal. 
+The most suitable option will be determined in the evaluation (chapter \ref{chapter:evaluation}).
 
 
 Using a suitable formula to calculate the pheromone distribution, this value can then be used to calculate the overall distributed pheromone for each edge $(i,j)$ that was placed by all ants during one iteration.
@@ -266,7 +259,7 @@ This value is described by $\Delta\tau_{ij}$ as follows:
 \end{equation}
 
 This overall value can then be used to calculate the so called \glqq intensity\grqq{} of the placed pheromone trail.
-Since pheromones evaporate over time, this property has to be modeled as well, using a new parameter $\rho$, which describes how much of the pheromone stays on the trail between two time steps.
+Since pheromone evaporate over time, this property has to be modeled as well, using a new parameter $\rho$, which describes how much of the pheromone stays on the trail between two time steps.
 Thus, the overall pheromone intensity can be described by
 rc
 
@@ -277,11 +270,10 @@ rc
 where $\tau_{ij}(t)$ is the previous pheromone intensity and t+n describes the next time step after one full tour was created in n steps.
 
 Using these calculations, the pheromone intensity on all paths can be represented. 
-What's left is determining the probability with which ants will choose a certain edge over the other options.
-For this calculation, two more properties are needed: the visibility of an edge and a tabu-list (or rather a list of allowed nodes).
-The tabu-list contains all nodes that have been visited before.
-Since roundtrips should - per default - be round rather than the same path run in two directions, this property is needed to ensure no city is visited more than once.
-In chapter \ref{chapter:evaluation}, different configurations are tested to represent different shapes and allow for more options users can define. 
+The next step is to determine the probability with which ants will choose a certain edge over other options.
+For this calculation, two more properties are needed: the visibility of an edge and a \textit{tabuList} (or a list of allowed nodes).
+The tabuList contains all nodes that have been visited before ensuring that no city is visited more than once, which is necessary for round trips to remain circular rather than repeating the same path in both directions.
+In chapter \ref{chapter:evaluation}, various configurations are tested to represent different shapes and allow for more  user-defined options. 
 Thus, for other shapes, this list is not needed.
 For the TSP-case, the visibility $\nu_{ij}^k$ is calculated using the length of the edge $d_{ij}$ as follows:
 
@@ -300,16 +292,16 @@ And the transition probability is given by
 
 using all previously defined values to calculate visibility $\nu_{ij}^k$, trail intensity $\tau_{ij}$, pheromone distribution $\Delta\tau_{ij}$ and $\Delta\tau_{ij}^k$.
 Here, $\alpha$ and $\beta$ are parameters that influence the weight of visibility and trail intensity.
-Higher values of $\alpha$ increase the significance of the pheromones on the trail (setting $\alpha$ to 0 would lead to completely ignoring the pheromone placed) and higher values of $\beta$ increase the importance of the visibility of an edge (making longer edges less attractive as a result).
+Higher values of $\alpha$ increase the significance of the pheromone on the trail (setting $\alpha$ to 0 would lead to completely ignoring the pheromone placed), and higher values of $\beta$ increase the importance of the visibility of an edge (making longer edges less attractive).
 These parameters will be experimented with and their influence will be evaluated in chapter \ref{chapter:evaluation}.
 
-In their paper, Dorigo et al. suggest picking middling values for $\alpha$ and $\beta$ in a range of $[0.5,5]$.
-They furthermore stated that the best tour was achieved using $\rho = 0.5$ and $Q=100$.
-Overall, the results of experimenting with different parameter configurations showed that for very high or very low values of $\alpha$, no good results could be generated .
+In their paper, Dorigo et al. suggest picking middling values for $\alpha$ and $\beta$ in the range of $[0.5,5]$.
+They further stated that the best tour was achieved using $\rho = 0.5$ and $Q=100$.
+Overall, the results of experimenting with different parameter configurations showed that for very high or very low values of $\alpha$, no good results could be generated.
 
 
-Some of these formulas have to be changed and fitted to the given arc orienteering problem (see section \ref{sec:aop}). 
-The adjusted calculations and explanations of the changes that had to be made can be found in section \ref{subsec:antColonyImplementation}.
+Some of these formulas must be adjusted and fitted to the given arc orienteering problem (see section \ref{sec:aop}). 
+The adjusted calculations and explanations of the changes made can be found in section \ref{subsec:antColonyImplementation}.
 
 
 \subsubsection{Pseudocode}
@@ -318,8 +310,8 @@ The adjusted calculations and explanations of the changes that had to be made ca
 The original ant colony algorithm in \ref{alg:AntColony} is built for solving TSP instances. 
 A possible structure for an ant colony algorithm is displayed in \ref{alg:AntColony}, based on the framework provided in \cite{dorigo_ant_1996}.
 Therefore, all formulas are centered around a shortest path that connects all cities in the graph.
-Here, the \textit{tabuList} is used to track all visited cities, the probability is calculated using equation \ref{eq:transitionProbability}. 
-NC and $NC_{MAX}$ are used for the loop count and the maximum allowed number of loops respectively.
+Here, the tabuList is used to track all visited cities, the probability is calculated using equation \ref{eq:transitionProbability}. 
+NC and $NC_{MAX}$ are used for the loop count and the maximum number of loops allowed respectively.
 
 In the initialization, the base values are set.
 Differences $\Delta\tau_{ij}(t)$ as well as t and NC are set to 0 while the trail intensity $\tau_{ij}(t)$ is assigned an initial value of c.
@@ -331,12 +323,12 @@ This completes one tour for all ants.
 The next steps are needed to reset and re-calculate the needed values for the next run.
 In the loop, the ants are moved back, the length of their respective tours is calculated and with it the pheromone that is to be placed on the edge ($\Delta\tau_{ij}^k$) for the current ant k.
 Using this pheromone, the final trail intensity for all ants ($\Delta\tau_{ij}$) is updated.
-Furhermore, the new shortest tour is updated, if a new one was found.
-After the individual pheromone values were updated, the trail intensity $\tau_{ij}(t+n)$ hast to be recalculated. 
-For this step, the evaporation rate $\rho$ scales the current trail intensity and the calculated resulting pheromones for all ants are added $\Delta\tau_{ij}$.
+Furthermore, the new shortest tour, if one was found, is updated.
+After the individual pheromone values are updated, the trail intensity $\tau_{ij}(t+n)$ hast to be recalculated. 
+For this step, the evaporation rate $\rho$ scales the current trail intensity and the calculated resulting pheromone for all ants are added $\Delta\tau_{ij}$.
 
-The rest of the loop is updating the loop count NC, the time step t and resetting the pheromones for each edge to the initial 0.
-The loop is continued with emptied tabuLists if the maximium count wasn't reached and is ended otherwise, returning the shortest tour found.
+The rest of the loop is updating the loop count NC, the time step t, and resetting the pheromone for each edge to the initial 0.
+The loop is continued with emptied tabuList if the maximum count was not reached and is ended otherwise, returning the shortest tour found.
 
 
 \# TODO in den Anhang?
@@ -355,12 +347,12 @@ The loop is continued with emptied tabuLists if the maximium count wasn't reache
 				\STATE s $\gets$ s+1
 				\FOR{k = 1 to m}
 					\STATE choose nest town to move to with probability $p_{ij}^k(t)$
-					\STATE move kth ant to j
+					\STATE move k-th ant to j
 					\STATE add town j to tabuList
 				\ENDFOR
 			\ENDWHILE
 			\FOR{k = 1 to m }
-				\STATE move kth ant back to tabuList(1)
+				\STATE move k-th ant back to tabuList(1)
 				\STATE calculate length $L_k$ of k's tour
 				\STATE Update shortest tour
 				\FOR{edge(i,j) in allEdges}
@@ -400,8 +392,8 @@ Low energy is needed to achieve the stable solid state of a crystal \cite{delaha
 
 The physical process is split into two general steps:
 \begin{itemize}
-	\item melting the solid through heating
-	\item cooling the material to a specified temperature
+	\item Melting the solid through heating
+	\item Cooling the material to a specified temperature
 \end{itemize}
 The basic concept is, that given a sufficiently high starting temperature to which the material is heated and a long enough cooling time, the material can reach a stable solid state. 
 
@@ -414,65 +406,63 @@ The basic concept is, that given a sufficiently high starting temperature to whi
 
 
 The above figure shows the effects of different cooling schedules on a material and the type of solid state this material will obtain as a result.
-In the upper part, the top left image shows a liquid state, in which molecules are free and can move around.
-Cooling down too quickly hinders the atoms to move into proper positions, resulting in an unordered, non-symmetrical state, which is meta-stable (top right).
+The top left image shows a liquid state, in which molecules are free and can move around.
+Cooling down quickly hinders the atoms to move into proper positions, resulting in an unordered, non-symmetrical state, which is meta-stable (top right).
 In contrast, the lower part depicts a slower cooling process, where the atoms are given enough time to move into symmetrical form (bottom right).
 This state is equivalent with a minimum energy state, resulting in a stable crystal structure and a highly durable solid material. 
 
-Based on this analogy, simulated annealing was developed as a concept to solve NP-hard computational problems by improving local search variants \cite{aarts_simulated_2005, eglese_simulated_1990}.
-Local search approaches a very good at finding locally optimal solutions, but can easily fail to find a global optimum.
-Simulated annealing addresses this problem with the underlying idea based on the two steps of heating and slow cooling.
+Based on this analogy, SA was developed as a concept to solve NP-hard computational problems by improving local search variants \cite{aarts_simulated_2005, eglese_simulated_1990}.
+Local search approaches are good at finding locally optimal solutions, but can easily fail to find a global optimum.
+SA addresses this problem with the underlying idea based on the two steps of heating and slow cooling.
 What makes SA different from a basic local search is, that it allows -- with a certain probability (temperature) -- for worse solutions to be accepted.
 
-First, some basic solution for the problem is needed.
-For the use case of this thesis, a basic solution will be a roundtrip.
-Furthermore, a function which determines the quality of the solution is needed, so that comparing different solutions to each other is possible. 
+First, a basic solution for the problem is needed.
+For the use case of this thesis, a basic solution is a roundtrip.
+Furthermore, a function which determines the quality of the solution is needed, so that comparing different solutions becomes possible. 
 Starting from the initial roundtrip, neighboring solutions need to be generated and their quality will be assessed using the quality function.
 Any neighboring roundtrip which yields a better result will be accepted as the new solution that has to be improved.
 Worse roundtrips can also be accepted based on a cooling schedule.
 
-The schedule contains an initial temperature and a function to calculate the cooling of this value, lowering it over time.
+The schedule contains an initial temperature and a function to calculate the cooling of this value, gradually reducing the temperature over time.
 In the beginning, the solution is likely to be further away from a global optimum.
-Thus, a higher temperature allows for an increased likelihood to accept solutions with a lower quality, which in turn allows to escape local optima.
-The longer SA runs, the lower the temperature gets, lowering the likelihood of accepting worse solutions while nearing the global optimum. 
-To do this, several nested runs are needed.
-In an outer loop, the temperature changes and gets updated with lower values.
-In an inner loop, several possible neighborhoods are tested for one temperature state. 
-Solutions that are better than the previous one are always chosen.
-Solutions that are worse than the previous one are chosen based on the temperature.
+Therefore, a higher temperature allows for an increased likelihood to accept solutions with a lower quality, which in turn allows to escape local optima.
+As SA progresses, the temperature decreases, reducing the likelihood of accepting inferior solutions as the algorithm approaches the global optimum. 
+Achieving this requires several nested runs:
+An outer loop updates the temperature with lower values while an inner loop tests several possible neighborhoods for each temperature state. 
+Solutions that are better than the previous one are always chosen, while solutions that are worse than the previous one are selected based on the temperature.
 
 
 For SA to yield a good result, several parameters need to be set. 
-First, a starting roundtrip, which builds the base, has to be calculated.
-Then, initial temperature as well as the cooling formula have to be determined.
-Furthermore, a neighboring roundtrip has to be found, as well as a formula for calculating the quality of all found solutions.
-Additionally, the number of runs has to be decided, while keeping both the runtime as well as the quality of the resulting tour in mind.
+First, a starting roundtrip is calculated to establish the baseline.
+Then, the initial temperature and the cooling formula are determined.
+Furthermore, a neighboring roundtrip has to be identified, along with a formula to assess the quality of all solutions found.
+The number of runs is also decided, while both, the runtime and the quality of the resulting tour are taken into account.
 
-For some of the parameters -- like the initial temperature and the cooling formula --, thorough testing of different configurations is needed.
-For others, only a limited set of options is interesting.
-Determining a neighboring roundtrip as well as an initial solution are the two parameters that have a narrow array of possibilities to calculate them.
+For some parameters, such as the initial temperature and the cooling formula, thorough testing of different configurations is necessary.
+For others, only a limited set of options is relevant.
+Determining a neighboring roundtrip as well as an initial solution are parameters with a narrow array of calculation possibilities:
 
 For an initial solution, the implemented algorithms -- AntColony, Greedy and MinCost (see \ref{subsec:Tour4Me}) -- can calculate a base roundtrip.
-Which of these is to be preferred is dependent on the preferences about the resulting shape. 
-Greedy and AntColony prioritize edge quality while MinCost mostly optimizes for a rounder shape.
+Which of these is the preferred depends on the preferences of the resulting shape. 
+Greedy and AntColony prioritize edge quality, while MinCost primarily optimizes for a rounder shape.
 
 To determine a neighboring solution, there are a few options that can yield good results.
-One approach is to pick two random vertices and switch their position in different ways within the roundtrip path or some variations of this idea \cite{zhan_list-based_2016}. 
-Another is to create waypoints, similarly to how it is done in the MinCost algorithm, but without the length restrictions.
+One approach is to randomly select two vertices and switch their position in different ways within the roundtrip path or variations of this idea \cite{zhan_list-based_2016}. 
+Another approach is to create waypoints, similar to how it is done in the MinCost algorithm but without the length restrictions.
 The generated initial solution can then be used to generate a set of waypoints. 
-Based on this node set, neighboring roundtrips are ones where the tour is modified by removing, adding or moving one of the waypoints.
+Based on this node set, neighboring roundtrips are ones where the tour is modified by removing, adding, or moving one of the waypoints.
 
 \# TODO move to implementaition chapter?
 
-To remove a waypoint, the node and the paths that connect this vertex with the neighboring two waypoints need to be deleted. 
-Then, the two ends are connected by a shortest path or a MinCost approach.
-For adding a waypoint, first, a suitable node needs to be determined. 
-This choice can be done either randomly or based on a probability distribution that gives higher probabilities to nodes closer to the path and lowers in value the further away a node is.
-After a suitable node was picked, the closest waypoint and the best neighbor needs to be found.
-This selection is done by calculating the shortest paths from the new waypoint to all existing ones.
-Then, the connection between the two picked nodes has to be removed and a the new waypoint needs to be joined up with the two nodes that now frame the gap. 
-Moving is the combination of removal and adding.
-For this operation, the new node has to be found first and the closest waypoint will be the one to remove.
+To remove a waypoint, the node and the paths connecting this vertex to the two neighboring waypoints need to be deleted. 
+The two ends are then reconnected using either a shortest path or a MinCost approach.
+To add a waypoint, a suitable node needs to be determined, first. 
+This choice can be done either randomly or based on a probability distribution that gives higher probabilities to nodes closer to the path and decreases in value the further away a node is.
+Once a suitable node is chosen, the closest waypoint and the best neighbor needs to be identified.
+This selection is done by calculating the shortest paths from the new waypoint to all existing waypoints.
+The connection between the two selected nodes is then removed, and the new waypoint is connected to the two nodes that now frame the gap. 
+Moving a waypoint involves both removal and addition:
+First, the new node is found, and then the closest waypoint is removed.
 
 
 
@@ -480,39 +470,38 @@ For this operation, the new node has to be found first and the closest waypoint 
 \subsubsection{Calculations}
 \label{subsubsec:SACalculations}
 
-For SA, a few parameters have to be calculated.
-First, the temperature and the respective cooling schedule or a function to decrease the value have to be determined.
-Here, an several different functions can be applied. 
-The important criteria are that they decrease the temperature and are fit to the problem.
-For example, a simple function that calculates the Temperature by using the difference of the quality of the neighboring solution f(j) and the quality of the current solution f(i) divided by a random number $r_i$ \cite{zhan_list-based_2016}: 
+For SA, several parameters need to be calculated.
+First, the initial temperature and the respective cooling schedule or a function to decrease the value have to be determined.
+Various functions can be applied, provided that they decrease the temperature and are suited to the problem.
+For example, a simple function that calculates the temperature by using the difference between the quality of the neighboring solution \textit{f(j)} and the quality of the current solution \textit{f(i)}, divided by a random number $r_i$ \cite{zhan_list-based_2016}: 
 
 \begin{equation}\label{eq:temperatureSchedule}
 	T_{i+1} = \frac{- |f(j)-f(i)|}{ln(r_i)}	
 \end{equation}
 
-Another option is to multiply the current function value with a factor $\alpha$ smaller than 1 \cite{eglese_simulated_1990}:
+Another option is to multiply the current temperature by a factor $\alpha$ smaller than 1 \cite{eglese_simulated_1990}:
 
 \begin{equation}\label{eq:temperatureSchedule2}
 	T_{i+1} = \alpha \cdot T_i
 \end{equation}
 
-Or scaling by using a constant b to build a fraction \cite{eglese_simulated_1990}: 
+Or scaling by using a constant b to form a fraction \cite{eglese_simulated_1990}: 
 
 \begin{equation}\label{eq:temperatureSchedule3}
 	T_{i+1} = \frac{T_i}{1 + b \cdot T_i}	
 \end{equation}
 
-There are several other options -- a few of them are listed in the paper by R. W. Eglese \cite{eglese_simulated_1990} -- to calculate the temperature, where the most important part is, that the temperature is decreasing.
+Several other options exist as listed in the paper by R. W. Eglese \cite{eglese_simulated_1990} to calculate the temperature, where the key criterion is, that the temperature decreases over time.
 
-The quality function $f$ is highly dependent on the problem and can thus vary by a lot. 
-For TSP, the quality of a tour is determined by it's length.
-For the act orienteering problem by the values that are to be collected when generating a roundtrip. 
-How the quality is calculated for the specific case of this thesis is described in detail in section \ref{subsec:simulatedAnnealingImplementation}.
+The quality function $f$ is highly dependent on the problem at had and can thus vary significantly. 
+For the TSP, the quality of a tour is determined by the respective length.
+For the AOP, the quialty is determined by the values that are to be collected when generating a roundtrip. 
+How the quality is calculated for the specific case in this thesis is described in detail in section \ref{subsec:simulatedAnnealingImplementation}.
 
-Another important calculation is the one of the probability, which is used to determine whether or not a solution should be picked even though the quality is worse than the current quality.
-To determine this value, the temperature as well as the quality values of the two solutions are neccessary.
-Here, the difference between the quality of the neighboring solution f(j) and the quality of the current solution f(i) is always negative, since a positive difference would imply $f(j) > f(i)$ and thus result in the neighboring solution being picked automatically.
-Since the probability is only calculated if the difference is negative, the exponent will always be less than 1, resulting in a valid probability function that has a value closer to 1 when the difference is small and closer to 0 when this difference gets bigger.
+Another important calculation is the probability of accepting a worse solution.
+This probability is determined by using the temperature and the quality values of the two solutions.
+The difference between the quality of the neighboring solution \textit{f(j)} and the current solution \textit{f(i)} is always negative, because a positive difference implies $f(j) > f(i)$, resulting in the neighboring solution being chosen automatically.
+Since the probability is calculated only when the difference is negative, the exponent will always be less than 1, resulting in a valid probability function that has a value closer to 1 when the difference is small and closer to 0 when this difference is large.
 
 
 \begin{equation}\label{eq:SAprobCalculation}
@@ -524,18 +513,19 @@ Since the probability is only calculated if the difference is negative, the expo
 \subsubsection{Pseudocode}
 \label{subsubsec:SAPseudocode}
 
-The simulated annealing algorithm has a basic structure that always stays the same for every problem.
-This structure is outlined in the pseudocode in \ref{alg:SApseudocode}, based on \cite{eglese_simulated_1990} and \cite{zhan_list-based_2016} and visualized in a flowchart diagram in \ref{fig:SAFlowchart}.
+The SA algorithm has a basic structure that remains consistent across different problems.
+This structure is outlined in the pseudocode in \ref{alg:SApseudocode}, based on \cite{eglese_simulated_1990} and \cite{zhan_list-based_2016} and visualized in a flowchart diagram in figure \ref{fig:SAFlowchart}.
 
 First, an initial roundtrip has to be determined. 
-This calculation can be done with any algorithm that results in a valid solution, for example a greedy approach or the MinCost algorithm that is also used for solving the arc orienteering problem in the original Tour4Me application \ref{subsec:Tour4Me}.
-Furthermore, a starting temperature has to be set, which will be used for the first probability calculations and decreased after the inner loop.
+This calculation can be performed using any algorithm that produces a valid solution, such as a greedy approach or the MinCost algorithm, which is also used for solving the AOP in the original Tour4Me application (see section \ref{subsec:Tour4Me}).
+Furthermore, a starting temperature must be set, which will be used for the initial probability calculations and then decreased after the inner loop.
 
-Then, the two loops of the main SA step are run.
-The outer loop is bound by a selectable number of repetitions and the inner loop is bound by the selectable number of runs that should be performed with a fixed temperature.
-While the former controls how many new temperatures are tried -- in the physics analogy this would be how long the material is left to cool -- with decreasing temperatures, the latter controls how many tries are executed before the temperature is adjusted. 
-Alternatively, the outer loop could also have reaching a certain quality value as the stopping condition.
-Performing several calculations in the inner loop with the same temperature can increases the probability to find a better solution for the set temperature as well as the probability to choose a solution with a worse quality.
+Next, the two loops of the main SA step are executed.
+The outer loop is bound by a selectable number of repetitions, while the inner loop is bound by a selectable number of runs that should be performed with a fixed temperature.
+The outer loop controls how many new temperatures are tested -- in the physics analogy this would be how long the material is left to cool -- with decreasing temperatures.
+The inner loop controls the number of attempts made before the temperature is adjusted. 
+Alternatively, the outer loop can use reaching a certain quality value as the stopping condition.
+Performing several calculations in the inner loop with the same temperature can increase the probability of finding a better solution for the set temperature, as well as the likelihood of choosing a solution with a worse quality.
 
 
 \begin{breakablealgorithm}

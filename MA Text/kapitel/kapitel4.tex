@@ -2,56 +2,58 @@
 \chapter{Implemented Changes}
 \label{chapter:implementedChanges}
 
-This work extends Tour4Me\footnote{\url{http://tour4me.cs.tu-dortmund.de/}}, which is an application written in C++, HTML and JavaScript. 
+This work extends Tour4Me\footnote{\url{http://tour4me.cs.tu-dortmund.de/}}, an application originally written in C++, HTML, and JavaScript. 
 The implemented interface of this extension uses C\# as programming language to enable easy porting of the web application to a desktop or mobile application.
-To improve the query times and allow for easier coverage of the whole world (see \ref{sec:futureWork}), a database that offers features of a spacial database was added. 
-Reasons for and positive effects of this decision are described in the following section.
+To improve query times and allow for comprehensive global coverage (see \ref{sec:futureWork}), a database that offers features of a spacial database was added. 
+The reasons for and positive effects of this decision are described in the following section.
 
-Furthermore, not only the language and data access was changed.
+Furthermore, several modifications were made beyond just the programming language and data access.
 New options and parameters to improve the customizability of preferences for a generated tour were added as well.
-These changes had to be incorporated into an upgraded front end design (see section \ref{subsec:interfaceAndFrontendChanges}) as well as into the back end and all solvers (see section \ref{sec:algorithmicChanges}). 
+These changes required updates to the front-end design (see section \ref{subsec:interfaceAndFrontendChanges}) as well as the back-end and all solvers (see section \ref{sec:algorithmicChanges}). 
 
 
 \section{Application}
 \label{sec:application}
 
-To include the various changes, the whole application -- including the front end representation, the back end implementation and the data retrieval -- was changed.
-The Open Street Map (OSM) data are downloaded and stored in a database from which the graph for calculating the roundtrips is build.
-Furthermore, the design of the front end was changed to improve the overview and general user experience as well as to allow for the addition of new customization options.
-Lastly, the algorithms to choose from have been extended by two additional meta-heuristic approaches.
+To incorporate these various changes, the entire application was changed -- including the front-end representation, back-end implementation, and data retrieval process.
+The Open Street Map (OSM) data are downloaded and stored in a database from which the graph for calculating roundtrips is build.
+The front-end design was changed to improve the overview and general user experience as well as to accommodate new customization options.
+Finally, the algorithm selection was extended by two additional meta-heuristic approaches.
 
 \subsection{New Architecture}
 \label{sec:newArchitecture}
 
-For the new application, the architecture had to be re-structured.
+For the new application, the architecture had to be restructured.
 An illustration of the new design is shown in figure \ref{fig:architecture}.
-Instead of reading the data for the graph from a static \textit{.txt} file, which contains all the nodes and edges for Dortmund, a database is used to manage the nodes, edges, their additional information and the relationships between them. 
-It can be filled with the data needed by using an import python script that creates an osmnx-graph\footnote{\url{https://osmnx.readthedocs.io/en/stable/}, last accessed: 15.04.2024}\footnote{\url{https://networkx.org/}, last accessed: 22.03.2024}\footnote{\url{https://wiki.openstreetmap.org}, last accessed: 22.03.2024}\footnote{\url{https://wiki.openstreetmap.org/wiki/Main_Page}, last accessed: 19.04.2024} for a user specified location. 
-From this graph, the nodes and edges can be extracted alongside their additional information.
-For the current use case, nodes are stored with their OSM-ID, which is transformed into a UUID, their latitude and longitude coordinates as well as their elevation profile and tags of the surroundings they are placed in.
-The elevation data has to be acquired from a different source than OSM, since they do not use a height profile. 
-A few open source providers were available, but ultimately, Open-Elevation\footnote{\url{https://open-elevation.com/}, last accessed: 20.03.2024} was used. 
+Instead of reading the data for the graph from a static \textit{.txt} file, containing all nodes and edges for Dortmund, a database is used to manage nodes, edges, additional information, and the relationships between them. 
+This database can be populated using an import python script that creates an osmnx-graph\footnote{\url{https://osmnx.readthedocs.io/en/stable/}, last accessed: 15.04.2024}\footnote{\url{https://networkx.org/}, last accessed: 22.03.2024}\footnote{\url{https://wiki.openstreetmap.org}, last accessed: 22.03.2024}\footnote{\url{https://wiki.openstreetmap.org/wiki/Main_Page}, last accessed: 19.04.2024} for a user-specified location. 
+From this graph, the nodes and edges are extracted along with their additional information.
+For the current use case, nodes are stored with their OSM-ID, which is converted into a UUID, their latitude and longitude coordinates, their elevation profile, and tags of the surroundings they are placed in.
+Since OSM does not provide height profiles, elevation data is sourced from  Open-Elevation\footnote{\url{https://open-elevation.com/}, last accessed: 20.03.2024}. 
 
-Since most open source providers have a limited bandwidth to supply users with data based on their API-calls, the opportunity to use a locally hosted version that Open-Elevation offered was very important to assure usability.
-When using the python script to create and fill the database and its tables, the Open-Elevation data needs to be available.
+Given that most open source providers have a limited bandwidth to supply users with data based on their API-calls, the opportunity to use a locally hosted version that Open-Elevation offered was crucial to assure usability.
+The python script used to create and fill the database and its tables, requires access to the Open-Elevation data.
 A local docker container with the respective data can be used to access the needed information without being bound to the servers and their throughput boundaries. 
-Even though the accuracy of the version that can be hosted locally is not ideal, it was the easiest method that did not rely on querying a website and being limited by their API-call restrictions.
-In the section future work (\ref{sec:futureWork}), a few other options of including other data sources are discussed.
-
-The used database is Microsoft SQL Server Management Studio\footnote{\url{https://learn.microsoft.com/en-us/sql/sql-server/sql-docs-navigation-guide?view=sql-server-ver16}, last accessed: 22.03.2024}, which can handle spatial data, supports spatial queries and works well in combination with the C\# implementation.
-
-The back end is implemented in C\#\footnote{\url{https://learn.microsoft.com/en-us/dotnet/csharp/}, last accessed: 22.03.2024}, as this language allows for the opportunity to also create a mobile- or desktop application in addition to the web application that already exists (see \ref{sec:futureWork}).
-Furthermore, C\# allows for using SQL queries and filtering using LINQ for easy runtime database querying\footnote{\url{https://docs.telerik.com/devtools/aspnet-ajax/controls/grid/asp.net-3.5-features/linq-to-sql---binding-and-automatic-crud-operations}, last accessed: 22.03.2024}.
-Here, the Tour4Me application was automatically translated from C++ to C\# using ChatGPT. 
-This translation is not part of the thesis and only allows for easier extension, since the basic structures that are used in Tour4Me did not need to be re-implemented from scratch.
+Even though the accuracy of the locally hosted version is not ideal, it is the most practical method that did not rely on querying a website and being limited by their API-call restrictions.
 
 
-The front end is implemented using HTML\footnote{\url{https://devdocs.io/html/}, last accessed: 22.03.2024}, CSS\footnote{\url{https://devdocs.io/css/}, last accessed: 22.03.2024}, JavaScript\footnote{\url{https://devdocs.io/javascript/}, last accessed: 22.03.2024} and C\# code behind. 
+Section \ref{sec:futureWork} discusses other data source options for further work.
+The database used is Microsoft SQL Server Management Studio\footnote{\url{https://learn.microsoft.com/en-us/sql/sql-server/sql-docs-navigation-guide?view=sql-server-ver16}, last accessed: 22.03.2024}, which can handle spatial data, supports spatial queries, and works well in combination with the C\# implementation.
+
+The back-end is implemented in C\#\footnote{\url{https://learn.microsoft.com/en-us/dotnet/csharp/}, last accessed: 22.03.2024}, allowing for the creation of a mobile- or desktop application in addition to the existing web application (see section \ref{sec:futureWork}).
+C\# supports SQL queries and filtering using LINQ for easy runtime database querying\footnote{\url{https://docs.telerik.com/devtools/aspnet-ajax/controls/grid/asp.net-3.5-features/linq-to-sql---binding-and-automatic-crud-operations}, last accessed: 22.03.2024}.
+\# TODO do I need to specify this?
+
+The Tour4Me application was automatically translated from C++ to C\# using ChatGPT\footnote{\url{https://chatgpt.com/}, last accessed 14.06.2024}. 
+This translation is not part of the thesis and only allows for easier extension since the basic structures used in Tour4Me did not need to be reimplemented from scratch.
+
+
+The front-end is implemented using HTML\footnote{\url{https://devdocs.io/html/}, last accessed: 22.03.2024}, CSS\footnote{\url{https://devdocs.io/css/}, last accessed: 22.03.2024}, JavaScript\footnote{\url{https://devdocs.io/javascript/}, last accessed: 22.03.2024}, and C\# code behind. 
 The base-styling is done using bootstrap\footnote{\url{https://getbootstrap.com/docs/4.3/getting-started/introduction/}, last accessed: 22.03.2024}, but additional custom CSS is added to create a nature-based color palette (\#TODO references to color theory stuff?) as well as several custom effects and transitions for the side and bottom menus.
-To realize the communication between front end and back end, Ajax-queries\footnote{\url{https://api.jquery.com/category/ajax/}. last accessed: 22.03.2024} are used.
+The communication between the front-end and back-end is handled using  Ajax-queries\footnote{\url{https://api.jquery.com/category/ajax/}. last accessed: 22.03.2024}.
 
-The map is a leaflet\footnote{\url{https://leafletjs.com/}, last accessed: 20.03.2024} visualization that shows Open Street Map data.
-The leaflet map allows to set markers, add a search bar, create polygons - which are used to illustrate the generated routes - and offers an open source map view. 
+The map is visualized using leaflet\footnote{\url{https://leafletjs.com/}, last accessed: 20.03.2024}, which displays Open Street Map data.
+The leaflet map allows for setting markers, adding a search bar, creating polygons to illustrate the generated routes, and offers an open source map view. 
 
 
 \begin{figure}[ht]
@@ -63,36 +65,38 @@ The leaflet map allows to set markers, add a search bar, create polygons - which
 
 
 In the above visualization, the whole application, the distinct parts and features as well as communications between them are illustrated. 
-The front end is realized as a web application, running in the browser, but the visualization can also be customized to be executable as a mobile or desktop application (see \ref{sec:futureWork}). 
-In the visualized map, the marker can be set to the current location - if the permission to access the user's location data is granted.
-However, simply searching for a specific address, drag-and-dropping the marker on the map, or scrolling the map and selecting a position by clicking on the place to mark are also possible. 
-Furthermore, the visualization of the calculated tours is also realized using the map and a polygon built from the respective points.
-These tours can be toggled to be shown or hidden, so an easier overview is possible after generating several tours.
-For debug purposes, there is a feature to show the whole graph that is being used for the calculation using the currently selected maximum length.
+The front-end runs as a web application in the browser but the visualization can also be customized to be executable as a mobile or desktop application (see section \ref{sec:futureWork}). 
+In the visualized map, a marker can be set to the current location if the user grants permission to access their location data.
+Searching for a specific address, drag-and-dropping the marker on the map, or scrolling the map and selecting a position by clicking on the place to mark are also possible. 
+The visualization of the calculated tours is realized using the map and polygons built from the respective points.
+These tours can be toggled on or off to allow for an easier after generating several tours.
+For debugging purposes, there is a feature to show the entire graph that is being used for the calculation with the currently selected maximum length.
 
-In addition to the main feature -- the map -- the front end also contains two menus:
+In addition to the map the front-end contains two menus:
 One holding the parameters the user can use to customize the tours according to their preferences and the information menu containing a report of the core data of the calculated path that is being visualized. 
-A more detailed description of the front end design, concept sketches and the final implementation are outlined in subsection \ref{subsec:interfaceAndFrontendChanges}.
+A more detailed description of the front-end design, concept sketches, and the final implementation are outlined in subsection \ref{subsec:interfaceAndFrontendChanges}.
 
-The back end manages all solvers that have been implemented, the database objects and intermediate objects like the graph that is created from the nodes, edges and their connections. 
-Furthermore the back end is responsible for handling the parameters the user chose, selecting the correct solver and generally managing the ajax requests received from the front end. 
+The back-end manages all solvers that have been implemented, the database objects, and intermediate objects like the graph that is created from the nodes, edges, and their connections. 
+The back-end also handles the parameters, selecting the correct solver, and generally managing the ajax requests received from the front-end. 
 The database objects are generated when building the graph by accessing the database and using the stored values.
 
 Finally, the database is filled using a python script that queries OSM-data to fetch all nodes and edges for a user-selected place.
-For this example, the data for Dortmund were retrieved.
-In addition to the OSM data, using the latitude and longitude, elevation data are obtained from the docker server. 
+For this example, data for Dortmund were retrieved.
+Additionally, elevation data are obtained from a Docker server using the latitude and longitude coordinates.
+
+
 
 \subsection{Database}
 \label{subsection:database}
 
 The database is a relational database using Microsoft SQL server, administered in Microsoft SQL Server Management Studio.
-This database also allows to use spatial data, which was an important feature for storing and processing the nodes and edges.
-Using the spatial features enables the possibilities to filter nodes within a given radius, retrieving only a relevant subset of data points.
-This filtering option within the database significantly speeds up the data retrieval as well as the graph creation.
+This database supports spatial data, which is a crucial feature for storing and processing the nodes and edges.
+Utilizing spatial features allows for filtering nodes within a specific radius, retrieving only a relevant subset of data points.
+This filtering option within the database significantly enhances the data retrieval speed and the graph creation efficiency.
 Compared to the previous method of generating a fixed graph for the city of Dortmund, the database offers further important advantages:
 Far more nodes than only points within Dortmund can be used.
-Even though the database creation and the adding of points is relatively slow, this is a process that only needs to be run once -- before the application can be used -- and does not affect the tour calculation. 
-Once the data has been added, all points can be accessed without needing to retrieve the whole database.
+Although the database creation and the adding of points is relatively slow, this process is a one-time operation performed before the application is used and does not impact the tour calculation. 
+Once the data has been added, all points can be accessed without needing to retrieve the entire database.
 
 To create the database, a python script is used. \# TODO if added, describe parameters and how to use the script with them
 This script first creates an osmnx graph from OSM data using the \texttt{graph\textunderscore from\textunderscore place} function
@@ -137,33 +141,33 @@ The excluded types are used for the following street types according to the OSM 
 \footnotetext{\url{https://wiki.openstreetmap.org/wiki/Key:highway}, last accessed: 19.04.2024}
 
 Next, the elevation data has to be added for the nodes of this graph.
-These information are not part of osmnx but need to be retrieved from a different source.
+These information are not part of osmnx and need to be retrieved from a different source.
 For this thesis, Open Elevation\footnote{\url{https://open-elevation.com/}, last accessed: 20.03.2024} was used.
 The data were downloaded and hosted in a local docker that could be queried instead of the API.
 
 Then, the surroundings information need to be obtained. 
 These information are provided by OSM, however they are not saved for nodes.
-So, a different query that retrieves areas and then matches the respective tags to the saved nodes by matching the IDs has to be executed.
+A different query that retrieves areas and matches the respective tags to the saved nodes by matching the IDs has to be executed.
 
 After gathering all the neccessary information, the script first checks if the database already contains matching tables and if not, generates them.
 Then the nodes and edges that have been retrieved from osmnx can be iterated and inserted into the database using basic SQL.
 During the iteration over the edges, the references between nodes and edges can be created (inserting edges into the IncidentEdges table that manages nodes and all their incident edges as well as adding references to the source- and target node when entering the edge data).
-Using these references later enables the back end code to easily access the endpoints of a graph or gather the incident edges for a node. 
+Using these references later enables the back-end code to easily access the endpoints of a graph or gather the incident edges for a node. 
 
 
 
-\subsection{Interface and Front end changes}
+\subsection{Interface and front-end changes}
 \label{subsec:interfaceAndFrontendChanges}
 
-The front end was updated from the existing version of Tour4Me to allow for a better overview after adding in several additional option for the user to select from. 
-First, a conceptual idea see figures (\ref{fig:frontendConcept} to \ref{fig:frontendConceptResultsCloseup}) was built, mapping out the general structure of the new interface. 
-Here, the main changes were focused on replacing the previous pop-ups through permanent menus.
-On the side, a burger-menu button was added that allows for a side menu to be folded and unfolded to show the customization options (see \ref{fig:frontendSideMenuCloseups}). 
-The result view was moved from an overlay on the map to a foldable footer menu (\ref{fig:frontendConceptResultsCloseup}). 
+The front-end was updated from the existing version of Tour4Me to allow for a better overview after adding several additional option for the user to select from. 
+First, a conceptual idea (see figures \ref{fig:frontendConcept} to \ref{fig:frontendConceptResultsCloseup}) was built, mapping out the general structure of the new interface. 
+The main changes focused on replacing the previous pop-ups through permanent menus.
+On the side, a burger-menu button was added that allows for a side menu to be folded and unfolded to show the customization options (see figure \ref{fig:frontendSideMenuCloseups}). 
+The result view was moved from an overlay on the map to a foldable footer menu (see figure \ref{fig:frontendConceptResultsCloseup}). 
 Furthermore, the displayed tours and the respective information can now be unfolded additionally in this footer menu.
 Previously, the tour information (including the length and other relevant data) was only accessible through a popup. 
 
-Displaying all the resulting data while giving the option to fold and unfold them allows the user easier access as well as enables easier comparison between different tours.
+Displaying all the resulting data while giving the option to fold and unfold them allows the user easier access and enables easier comparison between different tours.
 Previously, only the data of a single tour could be shown in the popup. 
 Now, the information of all tours are visible at the same time. 
 
@@ -172,44 +176,44 @@ Now, the information of all tours are visible at the same time.
 \# TODO move this to the appendix maybe?
 \begin{figure}[H]
 	\includegraphics[width=0.9\linewidth]{bilder/Concept new Frontend design.png}
-	\caption{Design concept for the front end view, including descriptions for drop-downs and pop-ups}
+	\caption{Design concept for the front-end view, including descriptions for drop-downs and pop-ups}
 	\label{fig:frontendConcept}
 \end{figure}
 
 
 
-The new interface now has a more botanic color scheme, using mainly dark greens, browns and blue while the text is off-white.
+The new interface has a more botanic color scheme, using mainly dark greens, browns, and blue while the text is off-white.
 The side menu \textit{options} displays a wider selection of preference settings.
 In figure \ref{fig:actualFrontendSideMenu}, the side menu is visualized. 
-The uppermost drop down (see \ref{fig:actualFrontendSideMenuActivity}) can be used to set a pre-selection that fills in the following fields with suggested default values. 
-These values can always be customized afterwards, but could offer a higher usability.
-The next selection shows all currently implemented algorithms (see \ref{fig:actualFrontendSideMenuAlgorithm}).
-Depending on the choice, the results will turn out differently.
-While greedy always only prioritizes the maximum edge profit and ignores the roundness of the tour, MinCost does the exact opposite.
+The uppermost drop down (see figure \ref{fig:actualFrontendSideMenuActivity}) can be used to set a pre-selection that fills in the following fields with suggested default values. 
+These default values can always be customized afterwards but can offer a higher usability.
+The next selection shows all currently implemented algorithms (see figure \ref{fig:actualFrontendSideMenuAlgorithm}).
+The results will turn out differently, depending on the choice.
+While greedy always prioritizes the maximum edge profit only and ignores the roundness of the tour, MinCost does the exact opposite.
 AntColony is more focused on edge profit, but also takes elevation and roundness into account.
-And finally simulated annealing produces results that are mostly focused on roundness while still taking edge profits and elevation into consideration. 
+Finally SA produces results that mostly focus on roundness while still taking edge profits and elevation into consideration. 
 The respective combinations start with greedy or MinCost and then strive to improve them. 
 
 All following options are direct tour parameters and describe user preferences.
-The length is an estimate of the final tour length, that is never used as a hard stop but allows for tours to be within a range of a few hundred meters longer or shorter than the selected length.
+The length is an estimate of the final tour length and is never used as a hard stop but allows for tours to be within a range of a few hundred meters longer or shorter than the selected length.
 However, tours are never more than a kilometer longer or shorter than the selected length.
 
 
-Surface and path type show selection buttons.
+The options for choosing the ground surface and the path type are implemented using selection buttons.
 These buttons can be neutral (when they only show a white border), positive (colored in green) or negative (colored in red). 
-A neutral button describes properties that are neither preferable nor undesirable while green marks preferred values and red marks undesirable values.
+A neutral button describes properties that are neither preferable nor undesirable while green marks preferred values and red marks undesired values.
 Surfaces describe properties of the ground, path types characterize the type of street.
-In OSM, there are many other options, however some are already filtered (for example highways) and others are not of much interest and would only result in an overwhelmingly large selection.
-Surroundings have a drop down menu to select a general type -- the forest, grasslands or other options -- that will then display the respective tags to display (see \ref{fig:actualFrontendSideMenuSurroundings}). 
+In OSM, there are many other options, however some are already filtered (for example highways) and others are not of significant interest and would only result in an overwhelmingly large selection.
+Surroundings have a drop down menu to select a general type -- forest, grasslands, or other options -- that will then display the respective tags to display (see figure \ref{fig:actualFrontendSideMenuSurroundings}). 
 This approach was used to minimize the number of tags and allow for an easier overview for the user.
 
-The tour shape offers the options to pick a round tour, a U-turn, a complex tour or do a custom selection (see \ref{fig:actualFrontendSideMenuTourShape}). 
+The tour shape offers the options to choose a round tour, a U-turn, a complex tour, or do a custom selection (see \ref{fig:actualFrontendSideMenuTourShape}). 
 Round tours have the highest importance (80 \%)on the roundness of a tour and split the remaining 20\% between elevation and edge profits. 
 This makes rounder tours more likely to be calculated.
 U-turns can have a special implementation that ensures for a slightly different path back to the beginning, but currently simply levels the importance of edge profits and elevation while ignoring the covered area.
-Complex tours are similar, but don't fully remove the importance of the area. 
+Complex tours are similar, but do not fully remove the importance of the area. 
 For the custom selection, three sliders are displayed.
-These slider inputs are linked so they influence each other, ensuring that the three probabilities always sum to 100\%.
+The slider inputs are linked so they influence each other, ensuring that the three probabilities always sum to 100\%.
 
 Below the tour shape, elevation and steepness can be selected. 
 The elevation describes the maximum difference in elevation for the whole tour. 
@@ -219,9 +223,9 @@ With the inaccuracy of the elevation data, this can sometimes be impossible.
 In these cases, creating any tour, even if it exceeds the limit is seen as more desirable than having no result at all.
 
 At the bottom, the maximum runtime can be chosen, however no algorithm runs as long as 30 seconds with the current settings.
-Clicking the button \glqq Compute Path\grqq{} will then trigger a query to the back end, where all the selected information are processed, the matching solver is selected and a tour is calculated.
-The resulting roundtrip is then parsed into the latitude and longitude values of the nodes that form the tour and returned to the front end.
-Here, the latitude and longitude values can then be displayed and connected to form a polygon that visualizes the resulting tour.
+Clicking the button \glqq Compute Path\grqq{} will then a query to the back-end, where all the selected information are processed, the matching solver is selected, and a tour is calculated.
+The resulting roundtrip is then parsed into the latitude and longitude values of the nodes that form the tour and returned to the front-end.
+Here, the latitude and longitude values can be displayed and connected to form a polygon that visualizes the resulting tour.
 
 \begin{figure}[H]
 	\centering
@@ -264,11 +268,11 @@ Furthermore, there are two buttons to toggle the visibility of the polyline in t
 	\label{fig:actualFrontendToureInfoMenuOneTour}
 \end{figure}
 
-Clicking on the tour name will fold (see \ref{fig:actualFrontendToureInfoMenuMoreTours}) and unfold (see \ref{fig:actualFrontendToureInfoMenuOneTour}) the respective information.
+Clicking on the tour name will fold (see figure \ref{fig:actualFrontendToureInfoMenuMoreTours}) and unfold (see figure \ref{fig:actualFrontendToureInfoMenuOneTour}) the respective information.
 In this view, the final overall length, elevation, maximum steepness, collected Edge profits, total quality, covered area and for reference the maximum possible covered area given the same extreme points as the current tour has.
-On the right side, the collected path types and surfaces, surroundings and the time it took to initialize the graph and to calculate the tour as well as the memory consumption are displayed.
-The last three values are not as interesting for the typical user but allow for a deeper insight into the calculation. 
-Removing the outputs for a final version is easily done if needed. 
+On the right side, the collected path types and surfaces, surroundings, and the time it took to initialize the graph and to calculate the tour as well as the memory consumption are displayed.
+The last three values are not of interest to the typical user but allow for a deeper insight into the calculation. 
+Removing the outputs for a final version can be easily done if needed. 
 
 
 
@@ -285,39 +289,39 @@ Removing the outputs for a final version is easily done if needed.
 \subsection{Parameter changes}
 \label{subsec:parameterChanges}
 
-To include the parameters that have been added in the front end, a few minor changes had to be made to the existing algorithms. \# TODO check minCost (vsMinCost) spelling
-However, since minCost already uses the quality calculation to determine the tour quality, nothing else had to be changed.
-In the quality calculation, the elevation difference as well as the steepness difference and the respective importance was added and the scaling was changed (see \ref{eq:qualitySA}).
-Other than that, more tags had to be added when creating the problem class, however this was done similarly to the existing tags (path type and surface) and did not need any further changes.
-The greedy algorithm only takes the profit an edge can add into account and thus also did not need any change.
+To include the parameters that have been added in the front-end, a few minor changes had to be made to the existing algorithms. \# TODO check MinCost (vsMinCost) spelling
+However, since MinCost already uses the quality calculation to determine the tours quality, nothing else had to be changed.
+In the quality calculation the elevation difference, steepness difference, and the respective importance were added and the scaling was changed (see equation \ref{eq:qualitySA}).
+Aside from that, more tags had to be added when creating the problem class, however this was done similarly to the existing tags (path type and surface) and did not need any further changes.
+The greedy algorithm only takes the profit an edge can add into account and thus did not need any change.
 
 
 \section{Algorithmic changes}
 \label{sec:algorithmicChanges}
 
 For the tour calculation, two new meta-heuristics were implemented.
-The first one was ant colony, which was modified to match the arc orienteering problem instead of TSP like the original.
-The second meta-heuristic was a version of simulated annealing.
+The first one was ant colony, which was modified to match the AOP instead of TSP like the original.
+The second meta-heuristic was a version of SA.
 Here, the calculation of neighboring solutions had to be matched to return roundtrips.
-In the following sections, the changes that had to be made to result in implementations that can be applied to the AOP will be explained.
+In the following sections the changes that had to be made to result in implementations that can be applied to the AOP will be described.
 For both meta-heuristics, the pseudocode and changed formulas will be explained.
-The base idea and the overall working of the algorithms stays identical to the explanations in \ref{subsec:antColonyBackground} and \ref{subsec:simulatedAnnealingBackground}.
+The base idea and the overall working of the algorithms stays identical to the explanations in sections \ref{subsec:antColonyBackground} and \ref{subsec:simulatedAnnealingBackground}.
 
 
 \subsection{Ant Colony}
 \label{subsec:antColonyImplementation}
 
-For ant colony, several things had to be changed. 
+For ant colony, several things had to be adjusted. 
 First, for solving TSP, finding a shortest path and visiting all specified cities are the main objectives.
 Whereas for AOP, these differ by a lot:
 Here finding a \textit{matching} tour length that maximizes the profit is the important goal. 
 Thus, the pheromone calculation, the trail intensity calculations and the edge visibility had to be changed.
 
 
-In the original paper, the pheromone amount to be placed on the collected edges was calculated based on the tour length the ant built. 
-This scaling resulted in higher pheromone for shorter tours and lower pheromone for longer ones.
+In the original paper, the pheromone amount to be placed on the collected edges was calculated based on the length of the tour the pheromone each ant can place on an edge. 
+This scaling resulted in higher pheromone density for shorter tours and lower pheromone density for longer ones.
 However, this constraint does not apply to the AOP.
-Here, ideally all resulting tours should be approximately of the same length, close to the user selected one.
+Here, ideally all resulting tours should be approximately of the same length, close to the user-selected one.
 Thus, the pheromone amount to be placed is based on the \texttt{edgeProfit} $p$ the edge with the length $l$ will grant the tour:
 \# TODO check if better use quality here?
 
@@ -326,7 +330,7 @@ Thus, the pheromone amount to be placed is based on the \texttt{edgeProfit} $p$ 
 	\Delta\tau_{ij}^k = l(i,j) \cdot p(i,j) \cdot Q \text{ if (i,j)} \in \text{tour collected by the ant}
 \end{equation}
 
-Here, the length of the edge from node i to node j is multiplied by the profits the same edge can collect based on the assigned tags, which is multiplied with the pheromone amount, a single ant can place on the trail ($Q$).
+The length of the edge from node \textit{i} to node \textit{j} is multiplied by the profits the same edge can collect based on the assigned tags, which is multiplied with the pheromone amount, a single ant can place on the trail ($Q$).
 The latter is a means to scale the amount of pheromone placed and also enables the use of different ants for further combinations of ant colony, for example with genetic algorithms (see \ref{sec:futureWork}).
 If the edge has a tag specified as desirable, the \texttt{edgeProfit} $p$ is increased by one.
 If a tag that is specified as undesirabe, the profit will be decreased by one.
@@ -358,7 +362,7 @@ These updated values are not saved or used for other ants but saved in a separat
 Furthermore, the visibility cannot be based on the length like the original paper did, since all tours should result in a length close to the desired one.
 Thus, for the visibility, the edge quality is determined.
 To calculate the quality, all selectable values have to be taken into account:
-The \texttt{coveredArea} $A$, that maps to the roundness of the tour and the respective selected importance $i_A$, the \texttt{edgeProfit} $p$ and the respective selected importance $i_p$ as well as the elevation difference $e$ from the maximum $e_{max}$ summed with the steepness difference $s$ from the maximum $s_{max}$ and the respective importance $i_e$:
+The \texttt{coveredArea} $A$, that maps the roundness of the tour and the respective selected importance $i_A$, the \texttt{edgeProfit} $p$, and the respective selected importance $i_p$ as well as the elevation difference $e$ from the maximum $e_{max}$ summed with the steepness difference $s$ from the maximum $s_{max}$ and the respective importance $i_e$:
 
 \begin{equation}
 	\label{eq:newEdgeVisibility}
@@ -370,8 +374,8 @@ The \texttt{coveredArea} $A$, that maps to the roundness of the tour and the res
 \end{equation}
 
 The respective importance values are multiplied by 100 to scale them from the percentage values to be bigger than one. 
-For the \texttt{covereArea}, to scale the size and account for the quadratic increase, the square root is taken. 
-Then, the whole Area is scaled by the desired length of the tour $L$ to account for the larger value the area will have compared to the edge profits. \# TODO check if this scaling is actually fine!
+For the \texttt{covereArea}, the square root is taken in order to scale the size and account for the quadratic increase. 
+The whole area is then scaled by the desired length of the tour $L$ to account for the larger value the area will have compared to the edge profits. \# TODO check if this scaling is actually fine!
 The full derivation of the calculation of the scaling is shown in equations \ref{eq:scaleArea1} and \ref{eq:scaleArea2}, where A is the area and U is the circumference of a circle.
 
 
@@ -408,7 +412,7 @@ As in the original paper by Dorigo et al. \cite{dorigo_ant_1996}, the probabilit
 \end{equation}
 
 
-Additionally, there is no tabuList and thus , this list cannot be used as a stopping criterion. 
+Additionally, there is no tabuList and thus, this list cannot be used as a stopping criterion. 
 Instead, a set number of tours are calculated.
 Furthermore, the ants do not need to save the length of their current tour, as that value is not of any importance for the AOP version. 
 Instead, the full quality of a tour is calculated and saved, so the best found tour for all ants can be determined.
@@ -449,8 +453,8 @@ The full updated pseudocode is shown in \ref{alg:AntColonyImplementation}
 	%\end{algorithm}
 \end{breakablealgorithm}
 
-To calculate the new ant colony implementation, first, the graph and a helper class \texttt{problem} have to be initialized. 
-The graph is created from the database, using the selected starting point and $\frac{2}{3} \cdot L$ to fetch only the needed number of nodes and edges.
+To calculate the new ant colony implementation, the graph and a helper class \texttt{problem} have to be initialized first. 
+The graph is created from the database, using the selected starting point and $\frac{2}{3} \cdot L$ to only fetch the needed number of nodes and edges.
 The problem saves all other user inputs:
 
 
@@ -479,33 +483,33 @@ The problem saves all other user inputs:
 \end{minipage}
 
 \vspace{1cm}
-The edges hold their length, the profit according to the tags, their pheromones and trail intensity. 
+The edges hold their length, the profit according to the tags, their pheromone and trail intensity. 
 Here, the trail intensity is initialized with 0.0001 as a starting value, so all edges are equally as likely to be picked, however the value has to be bigger than 0 for the probability calculation.
-As in the original paper, the pheromones are initialized with 0.
+As in the original paper, the pheromone are initialized with 0.
 
-Then, the ants can be created and initialized. 
-Currently, all ants use the same $\alpha$ and $\beta$ as well as the same base amount of pheromones they can distribute.
+The ants can then be created and initialized. 
+All ants use the same $\alpha$ and $\beta$ as well as the same base amount of pheromone they can distribute.
 However, the values could be changed throughout the runs, which can be of interest for further combinations.
 
 For a set number of runs, all ants calculate a tour in parallel. 
 To do this, they all start at the selected starting point and then iteratively check the incident edges.
-Only edges that an fully be traversed while not exceeding the maximum selected length will be used here.
+Only edges that can fully be traversed while not exceeding the maximum length selected will be used here.
 If no edge is short enough to still fit into the tour, the roundtrip will be closed by calculating the shortest path from the last picked node back to the beginning.
-While some edges are still available, they are scaled, and then their visibility and based on that the probability to choose the edge is calculated. 
+While some edges are still available, they are scaled and then their visibility, and based on that the probability to choose the edge is calculated. 
 Based on these probabilities, one edge is picked, the pheromone values are updated and the ant is moved.
 The current node is updated accordingly. 
 Finally, the picked edge and the new node can be added to the current solution.
 
 After all ants have calculated their full tours, the overall trail intensity is updated, using the evaporation rate and the gathered pheromone updates from all ants. 
 Then, the tour with the highest quality value is picked for further calculation. 
-After the last run, again, the tour with the highest probability is chosen as the final result.
+After the last run the tour with the highest probability is chosen as the final result.
 
 
 
 \subsection{Simulated Annealing}
 \label{subsec:simulatedAnnealingImplementation}
 
-For simulated annealing, all needed changes are to do for the variables that are meant to be determined based on the problem which is to be solved with SA:
+For SA, all needed changes are for the variables that are meant to be determined based on the problem which is to be solved with SA:
 \begin{itemize}
 	\item the quality of a solution
 	\item how to find a neighboring solution
@@ -515,7 +519,7 @@ For simulated annealing, all needed changes are to do for the variables that are
 Thus, the pseudocode does not change by much, however with that, the exact calculations can be specified. 
 The updated pseudocode only additionally contains building the waypoint list, calculating distances and probabilities (see\ref{alg:SAImplementation})
 
-The quality $f(j)$ of the solution $j$ is -- like for ant colony -- calculated based on the \texttt{coveredArea} $A$ and the respective importance (\texttt{coveredAreaImportance} $i_A$), the \texttt{edgeProfit} $p$ and the respective importance (\texttt{edgeProfitImportance} $i_p$) and the elevation difference $e$ from the maximum $e_{max}$ and the respective importance $i_e$ and scaled by the difference between the actual length $L_{calc}$of the tour from the target length (L). 
+The quality $f(j)$ of the solution $j$ is -- like for ant colony -- calculated based on the \texttt{coveredArea} $A$ and the respective importance (\texttt{coveredAreaImportance} $i_A$), the \texttt{edgeProfit} $p$ and the respective importance (\texttt{edgeProfitImportance} $i_p$), and the elevation difference $e$ from the maximum $e_{max}$ and the respective importance $i_e$ and scaled by the difference between the actual length $L_{calc}$of the tour from the target length (L). 
 
 \begin{equation}
 	\label{eq:qualitySA}
@@ -528,9 +532,9 @@ The quality $f(j)$ of the solution $j$ is -- like for ant colony -- calculated b
 
 The respective importance values are again multiplied by 100 and the  \texttt{coveredArea} is scaled the same as for the ant colony (see \ref{eq:visibility}, \ref{eq:scaleArea1} and \ref{eq:scaleArea2})
 
-The neighboring solution is created based on waypoints, which are used similarly to how they work in the minCost tour creation (see \ref{subsec:Tour4Me}):
-A the waypoints form base points of the tour that are connected using a weighted version of shortest paths. 
-For this calculation, the shortest path of any point to the starting point is determined by dividing the edge length by the profit that can be gained when picking the edge. 
+The neighboring solution is created based on waypoints, which are used similarly to how they work in the MinCost tour creation (see \ref{subsec:Tour4Me}):
+A the waypoints form base points of the tour are connected using a weighted version of shortest paths. 
+For this calculation, the shortest path of any point to the starting point is determined by dividing the edge length by the profit that can be gained when choosing the edge. 
 
 For SA, several different versions have been implemented.
 The first two that are described here start with an empty tour and build the solution with only the starting point.
@@ -538,17 +542,17 @@ In the next section, other combinations and alterations are discussed as well.
 
 The two versions that start with an empty solution are a weighted and a fully random version of the same base idea:
 A random point (with or without a probability distribution) is picked as a new waypoint. 
-Until at least five waypoints have been found, adding or moving the waypoint are the only options available, however when only one waypoint exists, a second one \textit{has} to be added first.
-After that, adding, moving or removing of a waypoint are possible until 15 points are reached.
-Then, a waypoint can only be moved or removed.
-Using these boundaries ensures that the resulting tour will not end up way too short while also assuring that not too many distance calculations are needed.
+Until at least five waypoints have been found, adding or moving a waypoint are the only options available, however when only one waypoint exists, a second one \textit{must} be added first.
+After that, adding, moving, and removing of a waypoint are possible until 15 points are reached.
+After that, a waypoint can only be moved or removed.
+Using these boundaries ensures that the resulting tour will not end up too short while also assuring that not too many distance calculations are needed.
 The number of waypoints determines how many times the distance of a new waypoint is of interest, since for moving and adding, the closest existing waypoint has to be known.
 
 
-Whether a waypoint is moved, removed or a new one is added is picked randomly within the previously given constraints.
-The starting point can never be pick for neither moving nor removing.
+Whether a waypoint is moved, removed, or a new one is added is picked randomly within the previously given constraints.
+The starting point can neither be chosen for moving nor for removing.
 
-First, a random point is picked from the set of available nodes.
+First, a random point is selected from the set of available nodes.
 This set is a smaller version of all available nodes, allowing only nodes that have a shortest distance of at most $\frac{L}{4}$ from the starting point. 
 For the version using a probability distribution, the probabilities are calculated using a scaled version of the distance of every point $j$ from the starting point $s$: $dist(j,s)^2$.
 For the fully random version, a distance of 1 is used for every edge.
@@ -560,7 +564,7 @@ To pick the waypoint that will be moved or removed or to find the two waypoints 
 The closest waypoint of the current list will then be picked and:
 
 \begin{itemize}
-	\item \textbf{added:} from the two neighbors of the picked waypoint, the closed one is picked and the new point is added in between, updating the path between the overall closest point to be the shortest path between the waypoint and the new point and updating the path between the closer one of the neighboring waypoints to be the shortest path between the new point and that waypoint (see \ref{alg:SAGenerateNeigborhoodAdd})
+	\item \textbf{added:} from the two neighbors of the selected waypoint, the closest one is picked and the new point is added in between, updating the path between the overall closest point to be the shortest path between the waypoint and the new point and updating the path between the closer one of the neighboring waypoints to be the shortest path between the new point and that waypoint (see \ref{alg:SAGenerateNeigborhoodAdd})
 	\item \textbf{moved:} the previous waypoint is deleted, a new shortest path from the predecessor to the new point and a shortest path from the new point to the successor is calculated and the new point is added as the moved version of the selected waypoint (see \ref{alg:SAGenerateNeigborhoodMove})
 	\item \textbf{removed:} the picked waypoint is deleted and a new shortest path between the predecessor and the successor is calculated (see \ref{alg:SAGenerateNeigborhoodRemove})
 \end{itemize}
@@ -603,17 +607,17 @@ To better illustrate the added steps to choosing and building a solution, the ps
 In addition to the pure versions of ant colony and SA, a few combinations with the two fo existing algorithms (Greedy and MinCost) as well as a combination of first using ant colony and then applying SA have been implemented.
 For this, only small changes had to be made to the existing code base, which will be shortly illustrated in the following paragraphs.
 
-\paragraph{Ant + Greedy and Ant + MicCost}
+\paragraph{Ant + Greedy and Ant + MinCost}
 
-To realize the combination of ant with the two already implemented algorithms, the changes were minor.
-First, the respective algorithm has to be run to have a base tour to build the ant algorithm from.
-Then, the initialization has to place trail intensity and pheromones on the edges of the existing tour.
+To realize the combination of ant with the two already implemented algorithms, the changes are minor.
+First, the respective algorithm has to be run to create a base tour to build the ant algorithm from.
+Then, the initialization has to place trail intensity and pheromone on the edges of the existing tour.
 Lastly, the importance of the trail intensity has to be higher than in the pure ant algorithm to make it more likely that the ants will follow the previous tour.
 
 
 \paragraph{SA + Greedy, SA + MinCost, SA + Ant}
 
-To implement the combinations with simulated annealing, again, the tours have to be calculated first.
+To implement the combinations with SA, the tours have to be calculated first.
 Then, the waypoint list can be created from the base tour that has been built, splitting the tour into 10 waypoints and the paths connecting them. 
 Other than that, no changes are needed.
 
