@@ -15,6 +15,11 @@ namespace Tour4MeAdvancedProject.Solver
             return SolveStatus.Unsolved;
         }
 
+        public virtual int SolveMaxTime ( ref Problem p, int maxTime )
+        {
+            return -1;
+        }
+
         public List<int> GetPath ()
         {
             return OutputPath;

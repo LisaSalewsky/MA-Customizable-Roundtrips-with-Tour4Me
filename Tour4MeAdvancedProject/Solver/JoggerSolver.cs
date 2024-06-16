@@ -207,6 +207,14 @@ namespace Tour4MeAdvancedProject.Solver
             return bestQuality == -1 ? SolveStatus.Unsolved : SolveStatus.Feasible;
         }
 
+        public override int SolveMaxTime ( ref Problem p, int maxTime )
+        {
+            DateTime calc_time_1 = DateTime.Now;
+            _ = Solve( ref p );
+            int time = ( DateTime.Now - calc_time_1 ).Seconds;
+            return time;
+        }
+
     }
 
 }

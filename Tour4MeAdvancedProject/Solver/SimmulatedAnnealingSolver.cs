@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.UI.WebControls;
 using Tour4MeAdvancedProject.Helper;
 using Tour4MeAdvancedProject.ObjectClasses;
@@ -20,6 +21,7 @@ namespace Tour4MeAdvancedProject.Solver
         public Random Random { get; set; } = new Random();
         public int NumberwaypointList { get; set; } = 10;
         public string DistanceScalingCalculationForProbability { get; set; } = "Random";
+        public Algo AlgoToCombineWith { get; set; }
 
 
 
@@ -32,13 +34,14 @@ namespace Tour4MeAdvancedProject.Solver
             Temperature = temp;
             NumberwaypointList = waypointList;
         }
-        public SimmulatedAnnealingSolver ( int runs, int repetitions, double temp, int waypointList, string distanceScalingCalculationForProbability ) : this( runs, repetitions, temp, waypointList )
+        public SimmulatedAnnealingSolver ( int runs, int repetitions, double temp, int waypointList, string distanceScalingCalculationForProbability, Algo algoToUse ) : this( runs, repetitions, temp, waypointList )
         {
             Runs = runs;
             Repetitions = repetitions;
             Temperature = temp;
             NumberwaypointList = waypointList;
             DistanceScalingCalculationForProbability = distanceScalingCalculationForProbability;
+            AlgoToCombineWith = algoToUse;
         }
 
         public SolveStatus Solve ( ref Problem P, Algo algo )
@@ -394,6 +397,12 @@ namespace Tour4MeAdvancedProject.Solver
                         closestNode = graphNodes
                                 .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) )
                                 .FirstOrDefault();
+
+                        List<Tuple<double, int>> probCopy = new List<Tuple<double, int>>();
+                        foreach (Tuple<double, int> elem in probabilityList)
+                        {
+                            probCopy.Add( Tuple.Create( elem.Item1, elem.Item2 ) );
+                        }
                         if (Algo == Algo.SimulatedAnnealingFullyRandom)
                         {
                             probabilityList = CalculateFullyRandomDistribution( closestNode, problem, availableNodes, waypointList );
@@ -408,6 +417,7 @@ namespace Tour4MeAdvancedProject.Solver
 
                         if (probabilityList.Count == 0)
                         {
+                            probabilityList = probCopy;
                             Console.WriteLine( "ahhhhhhhh" );
                         }
 
@@ -453,6 +463,867 @@ namespace Tour4MeAdvancedProject.Solver
 
             return SolveStatus.Feasible;
         }
+
+
+
+        public override int SolveMaxTime ( ref Problem P, int maxTime )
+        {
+            bool useDatastructure = false;
+            bool calculatePointsOfInterest = false;
+            int time = -1;
+
+
+            SolveStatus status = SolveStatus.Unsolved;
+            switch (AlgoToCombineWith)
+            {
+                case Algo.Greedy:
+                    {
+                        // Greedy
+                        SelectionSolver solver = new SelectionSolver();
+                        status = solver.Solve( ref P );
+                        break;
+                    }
+                case Algo.minCost:
+                    {
+                        // minCost
+                        JoggerSolver solver = new JoggerSolver();
+                        status = solver.Solve( ref P );
+                        break;
+                    }
+                case Algo.ILS:
+                    {
+                        // ILS
+                        //ILS solver = new ILS();
+                        //status = solver.Solve( ref problem);
+                        break;
+                    }
+                case Algo.AntColony:
+                    {
+                        // Ant
+                        AntSolver solver = new AntSolver();
+                        status = solver.Solve( ref P );
+                        break;
+                    }
+                case Algo.AntMinCost:
+                    {
+                        // Ant Combined
+                        AntCombined solver = new AntCombined();
+                        status = solver.Solve( ref P, Algo.minCost );
+                        break;
+                    }
+                case Algo.AntGreedy:
+                    {
+                        // Ant Combined
+                        AntCombined solver = new AntCombined();
+                        status = solver.Solve( ref P, Algo.Greedy );
+                        break;
+                    }
+                case Algo.SimulatedAnnealingEmpty:
+                case Algo.SimulatedAnnealingFullyRandom:
+                default:
+                    {
+                        Path emptyPath = new Path( Tuple.Create( P.CenterLat, P.CenterLon ) );
+                        emptyPath.Visited.Add( P.Start );
+
+                        P.Path = emptyPath;
+                        status = SolveStatus.Feasible;
+                        break;
+                    }
+
+            }
+
+            HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
+            HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
+            HashSet<string> addedSurroundings = new HashSet<string>();
+
+            foreach (Edge edge in P.Path.Edges)
+            {
+                foreach (string currentTag in edge.Tags)
+                {
+                    Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
+                }
+            }
+
+            double currentQuality = 0;
+            double length = P.Path.Length;
+            double currentArea = P.Path.CoveredArea;
+            double currentEdgeProfits = P.Path.TotalEdgeProfits;
+            double currentPathsMaxSteepness = P.Path.Steepness;
+            double currentElevationDiff = P.Path.Elevation;
+            Tuple<double, double>[] boundingCoordinates = P.Path.BoundingCoordinates;
+            Tuple<double, double> startCoordinates;
+
+            //Algo = Algo.SimulatedAnnealingFullyRandom;
+
+            if (status == SolveStatus.Feasible || status == SolveStatus.Optimal)
+            {
+                #region prepare needed values
+
+
+                P.Graph.InitializeShortestPath( P.Start );
+
+                //NumberwaypointList = P.Path.Visited.Count() / 10;
+                currentQuality = P.Path.Quality;
+
+
+                Problem problem = new Problem( P, P.Path );
+                // dict of the index where to find Node(Id) in the List of all visited nodes
+                // and a tuple containing the nodeId and the list of nodes to the next waypoint
+                List<Waypoint> waypointList = new List<Waypoint>();
+
+                Random rnd = new Random();
+
+                // find waypoint idxs
+                waypointList = FindWaypointIndexes( P, waypointList );
+
+                double lonL = boundingCoordinates[ 0 ].Item2;
+                double latB = boundingCoordinates[ 1 ].Item1;
+                double latT = boundingCoordinates[ 2 ].Item1;
+                double lonR = boundingCoordinates[ 3 ].Item2;
+
+
+                startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                    startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+                foreach (int node in problem.Path.Visited)
+                {
+                    problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
+                }
+                problem.Path.BoundingCoordinates = boundingCoordinates;
+
+                double targetDist = P.TargetDistance;
+                Coordinate pathMiddle = new Coordinate( ( latT + latB ) / 2, ( lonR + lonL ) / 2 );
+                List<Node> graphNodes = P.Graph.VNodes.Where( x => x != null && x.ShortestDistance < problem.TargetDistance ).ToList();
+
+
+                // Query the tree for nearest neighbors
+                IOrderedEnumerable<Node> orderedNodes = graphNodes
+                                    .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) );
+                Node closestNode = orderedNodes.FirstOrDefault();
+                HashSet<Node> availableNodes = graphNodes.Where( x => x != null &&
+                                                                !waypointList.Any( y => y.NodeID == x.GraphNodeId ) ).ToHashSet();
+                List<Tuple<double, int>> probabilityList;
+
+                if (Algo == Algo.SimulatedAnnealingFullyRandom)
+                {
+                    probabilityList = CalculateFullyRandomDistribution( closestNode, P, availableNodes, waypointList );
+                }
+                else
+                {
+                    // calculate cummulative Probabilities for selecting the index
+                    probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes, waypointList, calculatePointsOfInterest );
+                }
+                Dictionary<int, double> cumulativeProbabilities = new Dictionary<int, double>
+                {
+                    { probabilityList[ 0 ].Item2, probabilityList[ 0 ].Item1 }
+                };
+                double prevItem = cumulativeProbabilities.FirstOrDefault().Value;
+                for (int i = 1; i < probabilityList.Count; i++)
+                {
+                    if (probabilityList[ i ].Item1 > 0)
+                    {
+                        prevItem += probabilityList[ i ].Item1;
+                        cumulativeProbabilities.Add( probabilityList[ i ].Item2, prevItem );
+                    }
+                    //cumulativeProbabilities[ i ] = cumulativeProbabilities[ i - 1 ] + probabilityList[ i ].Item1;
+                }
+                List<Waypoint> waypointListBackup = new List<Waypoint>();
+                foreach (Waypoint wp in waypointList)
+                {
+                    waypointListBackup.Add( (Waypoint)wp.Clone() );
+                }
+                Dictionary<int, double> cumulativeProbabilitiesBackup = new Dictionary<int, double>();
+                bool alreadyRecalculated = false;
+
+                bool pathChanged = false;
+                bool recalculateProbs = false;
+
+                Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict = new Dictionary<int, Dictionary<int, double>>();
+
+
+                Node[] viableNodes;
+
+                if (useDatastructure)
+                {
+                    viableNodes = availableNodes.Where( x => x != null && probabilityList.Any( y => y.Item2 == x.GraphNodeId ) ).ToArray();
+                    waypointAllDistancesForNodeIdDict.Add( waypointList[ 0 ].NodeID, new Dictionary<int, double>() );
+                    foreach (Node viableNode in viableNodes)
+                    {
+                        waypointAllDistancesForNodeIdDict[ waypointList[ 0 ].NodeID ].Add( viableNode.GraphNodeId, viableNode.ShortestDistance );
+                    }
+                }
+
+
+                Tuple<string, int> waypointChangeAndIdx = Tuple.Create( "", -1 );
+                #endregion
+
+                DateTime calc_time_1 = DateTime.Now;
+                // do the simulated annealing runs
+                time = ( DateTime.Now - calc_time_1 ).Seconds;
+                while (time < maxTime)
+                {
+                    double diff = 0;
+                    for (int j = 0; j < Repetitions; j++)
+                    {
+
+                        Path neighboringSolution = GenerateNeighborSolution( problem, useDatastructure, ref waypointList, ref cumulativeProbabilities, ref availableNodes, rnd, waypointAllDistancesForNodeIdDict, out recalculateProbs, ref waypointChangeAndIdx, out int currentWaypointId ); // , out alreadyRecalculated );
+
+                        double neighborQuality = neighboringSolution.Quality;
+
+                        diff = neighborQuality - currentQuality;
+
+                        // if the quality of the initial solution was worse than of the new one, always pick the new one
+                        if (diff > 0)
+                        {
+                            problem.Path = new Path( neighboringSolution );
+                            problem.Quality = neighborQuality;
+                            currentQuality = neighborQuality;
+                            waypointListBackup = new List<Waypoint>();
+                            foreach (Waypoint wp in waypointList)
+                            {
+                                waypointListBackup.Add( (Waypoint)wp.Clone() );
+                            }
+
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+                            pathChanged = true;
+
+                            if (useDatastructure)
+                            {
+                                viableNodes = availableNodes.Where( x => x != null && probabilityList.Any( y => y.Item2 == x.GraphNodeId ) ).ToArray();
+                                UpdateDistances( problem, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
+                            }
+                        }
+                        // if the quality of the new solution was worse than of the initial one, pick the new one with a chance
+                        else
+                        {
+                            // calculate probability of choosing the new ( worse ) soution
+                            double probs = Math.Exp( diff / Temperature );
+                            // generate a rondom value between 0 and 1
+                            double rand = Random.NextDouble();
+
+                            // if the random value exceeds the probability, choose the new ( worse ) solution
+                            if (rand < probs)
+                            {
+                                problem.Path = new Path( neighboringSolution );
+                                problem.Quality = neighborQuality;
+                                currentQuality = neighborQuality;
+                                waypointListBackup = new List<Waypoint>();
+                                foreach (Waypoint wp in waypointList)
+                                {
+                                    waypointListBackup.Add( (Waypoint)wp.Clone() );
+                                }
+
+                                if (useDatastructure)
+                                {
+                                    viableNodes = availableNodes.Where( x => x != null && probabilityList.Any( y => y.Item2 == x.GraphNodeId ) ).ToArray();
+                                    UpdateDistances( problem, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
+                                }
+
+                                cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+                                pathChanged = true;
+                            }
+                        }
+                        if (!pathChanged)
+                        {
+                            List<Waypoint> old = new List<Waypoint>( waypointList );
+                            waypointList = new List<Waypoint>();
+                            foreach (Waypoint wp in waypointListBackup)
+                            {
+                                waypointList.Add( (Waypoint)wp.Clone() );
+                            }
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+
+                        }
+                        else if (problem.Path.Length > problem.TargetDistance + 1000 && !alreadyRecalculated)
+                        {
+
+                            startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                            P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+                            foreach (int node in problem.Path.Visited)
+                            {
+                                problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
+                            }
+                            problem.Path.BoundingCoordinates = boundingCoordinates;
+
+                            lonL = boundingCoordinates[ 0 ].Item2;
+                            latB = boundingCoordinates[ 1 ].Item1;
+                            latT = boundingCoordinates[ 2 ].Item1;
+                            lonR = boundingCoordinates[ 3 ].Item2;
+                            pathMiddle = new Coordinate( ( latT + latB ) / 2, ( lonR + lonL ) / 2 );
+                            closestNode = graphNodes
+                                    .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) )
+                                    .FirstOrDefault();
+                            if (Algo == Algo.SimulatedAnnealingFullyRandom)
+                            {
+                                probabilityList = CalculateFullyRandomDistribution( closestNode, problem, availableNodes, waypointList );
+                            }
+                            else
+                            {
+                                // calculate cummulative Probabilities for selecting the index
+                                probabilityList = CalculateProbabilityDistribution( closestNode, problem, availableNodes, waypointList, calculatePointsOfInterest );
+                            }
+
+                            // calculate cummulative Probabilities for selecting the index
+                            cumulativeProbabilities = new Dictionary<int, double>
+                            {
+                                [ 0 ] = probabilityList[ 0 ].Item1
+                            };
+                            for (int l = 1; l < probabilityList.Count; l++)
+                            {
+                                if (probabilityList[ l ].Item1 > 0)
+                                {
+                                    prevItem += probabilityList[ l ].Item1;
+                                    if (cumulativeProbabilities.ContainsKey( probabilityList[ l ].Item2 ))
+                                    {
+                                        cumulativeProbabilities[ probabilityList[ l ].Item2 ] = prevItem;
+                                    }
+                                    else
+                                    {
+                                        cumulativeProbabilities.Add( probabilityList[ l ].Item2, prevItem );
+                                    }
+                                }
+                            }
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+                            alreadyRecalculated = true;
+                        }
+                        pathChanged = false;
+                    }
+                    // change temperature according to difference in quality and normalize by maxTemperetature
+                    Temperature *= Math.Exp( -2 );
+
+
+                    if (recalculateProbs && !alreadyRecalculated)
+                    {
+
+                        startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                        P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+                        foreach (int node in problem.Path.Visited)
+                        {
+                            problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
+                        }
+                        problem.Path.BoundingCoordinates = boundingCoordinates;
+
+                        lonL = boundingCoordinates[ 0 ].Item2;
+                        latB = boundingCoordinates[ 1 ].Item1;
+                        latT = boundingCoordinates[ 2 ].Item1;
+                        lonR = boundingCoordinates[ 3 ].Item2;
+                        pathMiddle = new Coordinate( ( latT + latB ) / 2, ( lonR + lonL ) / 2 );
+                        closestNode = graphNodes
+                                .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) )
+                                .FirstOrDefault();
+
+                        List<Tuple<double, int>> probCopy = new List<Tuple<double, int>>();
+                        foreach (Tuple<double, int> elem in probabilityList)
+                        {
+                            probCopy.Add( Tuple.Create( elem.Item1, elem.Item2 ) );
+                        }
+                        if (Algo == Algo.SimulatedAnnealingFullyRandom)
+                        {
+                            probabilityList = CalculateFullyRandomDistribution( closestNode, problem, availableNodes, waypointList );
+                        }
+                        else
+                        {
+                            // calculate cummulative Probabilities for selecting the index
+                            probabilityList = CalculateProbabilityDistribution( closestNode, problem, availableNodes, waypointList, calculatePointsOfInterest );
+                        }
+
+                        // calculate cummulative Probabilities for selecting the index
+
+                        if (probabilityList.Count == 0)
+                        {
+                            probabilityList = probCopy;
+                            Console.WriteLine( "ahhhhhhhh" );
+                        }
+
+                        cumulativeProbabilities = new Dictionary<int, double>
+                        {
+                            { probabilityList[ 0 ].Item2, probabilityList[ 0 ].Item1 }
+                        };
+                        prevItem = cumulativeProbabilities.FirstOrDefault().Value;
+                        for (int l = 1; l < probabilityList.Count; l++)
+                        {
+                            if (cumulativeProbabilities.ContainsKey( probabilityList[ l ].Item2 ))
+                            {
+                                cumulativeProbabilities[ probabilityList[ l ].Item2 ] = prevItem;
+                            }
+                            else
+                            {
+                                cumulativeProbabilities.Add( probabilityList[ l ].Item2, prevItem );
+                            }
+                        }
+                        cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+                        alreadyRecalculated = true;
+                    }
+
+
+                    time = ( DateTime.Now - calc_time_1 ).Seconds;
+                }
+
+                P = problem;
+            }
+
+            //Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+
+            startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+            P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+            boundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+            foreach (int node in P.Path.Visited)
+            {
+                P.Path.UpdateBoundingCoordinates( ref boundingCoordinates, P.Graph.VNodes[ node ] );
+            }
+            P.Path.BoundingCoordinates = boundingCoordinates;
+
+
+            Utils.UpdateMetadata( P.Path, P );
+
+            return time;
+        }
+
+
+        public SolveStatus SolveStepwiseFeedback ( ref Problem P, ref StringBuilder[] jsonBuilders )
+        {
+
+            bool useDatastructure = false;
+            bool calculatePointsOfInterest = false;
+
+
+
+            SolveStatus status = SolveStatus.Unsolved;
+            switch (Algo)
+            {
+                case Algo.Greedy:
+                    {
+                        // Greedy
+                        SelectionSolver solver = new SelectionSolver();
+                        status = solver.Solve( ref P );
+                        break;
+                    }
+                case Algo.minCost:
+                    {
+                        // minCost
+                        JoggerSolver solver = new JoggerSolver();
+                        status = solver.Solve( ref P );
+                        break;
+                    }
+                case Algo.ILS:
+                    {
+                        // ILS
+                        //ILS solver = new ILS();
+                        //status = solver.Solve( ref problem);
+                        break;
+                    }
+                case Algo.AntColony:
+                    {
+                        // Ant
+                        AntSolver solver = new AntSolver();
+                        status = solver.Solve( ref P );
+                        break;
+                    }
+                case Algo.AntMinCost:
+                    {
+                        // Ant Combined
+                        AntCombined solver = new AntCombined();
+                        status = solver.Solve( ref P, Algo.minCost );
+                        break;
+                    }
+                case Algo.AntGreedy:
+                    {
+                        // Ant Combined
+                        AntCombined solver = new AntCombined();
+                        status = solver.Solve( ref P, Algo.Greedy );
+                        break;
+                    }
+                case Algo.SimulatedAnnealingEmpty:
+                case Algo.SimulatedAnnealingFullyRandom:
+                default:
+                    {
+                        Path emptyPath = new Path( Tuple.Create( P.CenterLat, P.CenterLon ) );
+                        emptyPath.Visited.Add( P.Start );
+
+                        P.Path = emptyPath;
+                        status = SolveStatus.Feasible;
+                        break;
+                    }
+
+            }
+
+            HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
+            HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
+            HashSet<string> addedSurroundings = new HashSet<string>();
+
+            foreach (Edge edge in P.Path.Edges)
+            {
+                foreach (string currentTag in edge.Tags)
+                {
+                    Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, currentTag );
+                }
+            }
+
+            double currentQuality = 0;
+            double length = P.Path.Length;
+            double currentArea = P.Path.CoveredArea;
+            double currentEdgeProfits = P.Path.TotalEdgeProfits;
+            double currentPathsMaxSteepness = P.Path.Steepness;
+            double currentElevationDiff = P.Path.Elevation;
+            Tuple<double, double>[] boundingCoordinates = P.Path.BoundingCoordinates;
+            Tuple<double, double> startCoordinates;
+
+
+            startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+            Path overallBest = new Path( startCoordinates )
+            {
+                Quality = -1
+            };
+            //Algo = Algo.SimulatedAnnealingFullyRandom;
+
+            if (status == SolveStatus.Feasible || status == SolveStatus.Optimal)
+            {
+                #region prepare needed values
+
+
+                P.Graph.InitializeShortestPath( P.Start );
+
+                //NumberwaypointList = P.Path.Visited.Count() / 10;
+                currentQuality = P.Path.Quality;
+
+
+                Problem problem = new Problem( P, P.Path );
+                // dict of the index where to find Node(Id) in the List of all visited nodes
+                // and a tuple containing the nodeId and the list of nodes to the next waypoint
+                List<Waypoint> waypointList = new List<Waypoint>();
+
+                Random rnd = new Random();
+
+                // find waypoint idxs
+                waypointList = FindWaypointIndexes( P, waypointList );
+
+                double lonL = boundingCoordinates[ 0 ].Item2;
+                double latB = boundingCoordinates[ 1 ].Item1;
+                double latT = boundingCoordinates[ 2 ].Item1;
+                double lonR = boundingCoordinates[ 3 ].Item2;
+
+
+                startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                    startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+                foreach (int node in problem.Path.Visited)
+                {
+                    problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
+                }
+                problem.Path.BoundingCoordinates = boundingCoordinates;
+
+                double targetDist = P.TargetDistance;
+                Coordinate pathMiddle = new Coordinate( ( latT + latB ) / 2, ( lonR + lonL ) / 2 );
+                List<Node> graphNodes = P.Graph.VNodes.Where( x => x != null && x.ShortestDistance < problem.TargetDistance ).ToList();
+
+
+                // Query the tree for nearest neighbors
+                IOrderedEnumerable<Node> orderedNodes = graphNodes
+                                    .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) );
+                Node closestNode = orderedNodes.FirstOrDefault();
+                HashSet<Node> availableNodes = graphNodes.Where( x => x != null &&
+                                                                !waypointList.Any( y => y.NodeID == x.GraphNodeId ) ).ToHashSet();
+                List<Tuple<double, int>> probabilityList;
+
+                if (Algo == Algo.SimulatedAnnealingFullyRandom)
+                {
+                    probabilityList = CalculateFullyRandomDistribution( closestNode, P, availableNodes, waypointList );
+                }
+                else
+                {
+                    // calculate cummulative Probabilities for selecting the index
+                    probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes, waypointList, calculatePointsOfInterest );
+                }
+                Dictionary<int, double> cumulativeProbabilities = new Dictionary<int, double>
+                {
+                    { probabilityList[ 0 ].Item2, probabilityList[ 0 ].Item1 }
+                };
+                double prevItem = cumulativeProbabilities.FirstOrDefault().Value;
+                for (int i = 1; i < probabilityList.Count; i++)
+                {
+                    if (probabilityList[ i ].Item1 > 0)
+                    {
+                        prevItem += probabilityList[ i ].Item1;
+                        cumulativeProbabilities.Add( probabilityList[ i ].Item2, prevItem );
+                    }
+                    //cumulativeProbabilities[ i ] = cumulativeProbabilities[ i - 1 ] + probabilityList[ i ].Item1;
+                }
+                List<Waypoint> waypointListBackup = new List<Waypoint>();
+                foreach (Waypoint wp in waypointList)
+                {
+                    waypointListBackup.Add( (Waypoint)wp.Clone() );
+                }
+                Dictionary<int, double> cumulativeProbabilitiesBackup = new Dictionary<int, double>();
+                bool alreadyRecalculated = false;
+
+                bool pathChanged = false;
+                bool recalculateProbs = false;
+
+                Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict = new Dictionary<int, Dictionary<int, double>>();
+
+
+                Node[] viableNodes;
+
+                if (useDatastructure)
+                {
+                    viableNodes = availableNodes.Where( x => x != null && probabilityList.Any( y => y.Item2 == x.GraphNodeId ) ).ToArray();
+                    waypointAllDistancesForNodeIdDict.Add( waypointList[ 0 ].NodeID, new Dictionary<int, double>() );
+                    foreach (Node viableNode in viableNodes)
+                    {
+                        waypointAllDistancesForNodeIdDict[ waypointList[ 0 ].NodeID ].Add( viableNode.GraphNodeId, viableNode.ShortestDistance );
+                    }
+                }
+
+
+                Tuple<string, int> waypointChangeAndIdx = Tuple.Create( "", -1 );
+                #endregion
+
+                // do the simulated annealing runs
+
+                for (int i = 0; i < Runs; i++)
+                {
+                    double diff = 0;
+                    for (int j = 0; j < Repetitions; j++)
+                    {
+
+                        Path neighboringSolution = GenerateNeighborSolution( problem, useDatastructure, ref waypointList, ref cumulativeProbabilities, ref availableNodes, rnd, waypointAllDistancesForNodeIdDict, out recalculateProbs, ref waypointChangeAndIdx, out int currentWaypointId ); // , out alreadyRecalculated );
+
+                        double neighborQuality = neighboringSolution.Quality;
+
+                        diff = neighborQuality - currentQuality;
+
+                        // if the quality of the initial solution was worse than of the new one, always pick the new one
+                        if (diff > 0)
+                        {
+                            problem.Path = new Path( neighboringSolution );
+                            problem.Quality = neighborQuality;
+                            currentQuality = neighborQuality;
+                            waypointListBackup = new List<Waypoint>();
+                            foreach (Waypoint wp in waypointList)
+                            {
+                                waypointListBackup.Add( (Waypoint)wp.Clone() );
+                            }
+
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+                            pathChanged = true;
+
+                            if (useDatastructure)
+                            {
+                                viableNodes = availableNodes.Where( x => x != null && probabilityList.Any( y => y.Item2 == x.GraphNodeId ) ).ToArray();
+                                UpdateDistances( problem, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
+                            }
+                        }
+                        // if the quality of the new solution was worse than of the initial one, pick the new one with a chance
+                        else
+                        {
+                            // calculate probability of choosing the new ( worse ) soution
+                            double probs = Math.Exp( diff / Temperature );
+                            // generate a rondom value between 0 and 1
+                            double rand = Random.NextDouble();
+
+                            // if the random value exceeds the probability, choose the new ( worse ) solution
+                            if (rand < probs)
+                            {
+                                problem.Path = new Path( neighboringSolution );
+                                problem.Quality = neighborQuality;
+                                currentQuality = neighborQuality;
+                                waypointListBackup = new List<Waypoint>();
+                                foreach (Waypoint wp in waypointList)
+                                {
+                                    waypointListBackup.Add( (Waypoint)wp.Clone() );
+                                }
+
+                                if (useDatastructure)
+                                {
+                                    viableNodes = availableNodes.Where( x => x != null && probabilityList.Any( y => y.Item2 == x.GraphNodeId ) ).ToArray();
+                                    UpdateDistances( problem, ref waypointAllDistancesForNodeIdDict, waypointChangeAndIdx, viableNodes, currentWaypointId );
+                                }
+
+                                cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+                                pathChanged = true;
+                            }
+                        }
+                        if (!pathChanged)
+                        {
+                            List<Waypoint> old = new List<Waypoint>( waypointList );
+                            waypointList = new List<Waypoint>();
+                            foreach (Waypoint wp in waypointListBackup)
+                            {
+                                waypointList.Add( (Waypoint)wp.Clone() );
+                            }
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+
+                        }
+                        else if (problem.Path.Length > problem.TargetDistance + 1000 && !alreadyRecalculated)
+                        {
+
+                            startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                            P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+                            foreach (int node in problem.Path.Visited)
+                            {
+                                problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
+                            }
+                            problem.Path.BoundingCoordinates = boundingCoordinates;
+
+                            lonL = boundingCoordinates[ 0 ].Item2;
+                            latB = boundingCoordinates[ 1 ].Item1;
+                            latT = boundingCoordinates[ 2 ].Item1;
+                            lonR = boundingCoordinates[ 3 ].Item2;
+                            pathMiddle = new Coordinate( ( latT + latB ) / 2, ( lonR + lonL ) / 2 );
+                            closestNode = graphNodes
+                                    .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) )
+                                    .FirstOrDefault();
+                            if (Algo == Algo.SimulatedAnnealingFullyRandom)
+                            {
+                                probabilityList = CalculateFullyRandomDistribution( closestNode, problem, availableNodes, waypointList );
+                            }
+                            else
+                            {
+                                // calculate cummulative Probabilities for selecting the index
+                                probabilityList = CalculateProbabilityDistribution( closestNode, problem, availableNodes, waypointList, calculatePointsOfInterest );
+                            }
+
+                            // calculate cummulative Probabilities for selecting the index
+                            cumulativeProbabilities = new Dictionary<int, double>
+                            {
+                                [ 0 ] = probabilityList[ 0 ].Item1
+                            };
+                            for (int l = 1; l < probabilityList.Count; l++)
+                            {
+                                if (probabilityList[ l ].Item1 > 0)
+                                {
+                                    prevItem += probabilityList[ l ].Item1;
+                                    if (cumulativeProbabilities.ContainsKey( probabilityList[ l ].Item2 ))
+                                    {
+                                        cumulativeProbabilities[ probabilityList[ l ].Item2 ] = prevItem;
+                                    }
+                                    else
+                                    {
+                                        cumulativeProbabilities.Add( probabilityList[ l ].Item2, prevItem );
+                                    }
+                                }
+                            }
+                            cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+                            alreadyRecalculated = true;
+                        }
+                        pathChanged = false;
+                    }
+                    // change temperature according to difference in quality and normalize by maxTemperetature
+                    Temperature *= Math.Exp( -2 );
+
+                    if (overallBest.Quality < problem.Path.Quality)
+                    {
+                        overallBest = new Path( problem.Path );
+                    }
+
+                    _ = jsonBuilders[ i ].Append( "    {\n" );
+                    _ = jsonBuilders[ i ].Append( "    \"run\": \"Run " + i + "\",\n" );
+                    _ = jsonBuilders[ i ].Append( "    \"runNumber\": " + i + ",\n" );
+                    int negModifier = problem.Path.CoveredArea < 0 ? -1 : 1;
+                    _ = jsonBuilders[ i ].Append( "    \"CoveredArea\": " + ( negModifier * problem.Path.CoveredArea ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                    _ = jsonBuilders[ i ].Append( "    \"Profit\": " + problem.Path.TotalEdgeProfits.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                    _ = jsonBuilders[ i ].Append( "    \"Elevation\": " + ( ( problem.MaxElevation - problem.Path.Elevation ) / problem.MaxElevation ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                    _ = jsonBuilders[ i ].Append( "    \"Quality\": " + problem.Path.Quality.ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+
+                    //_ = i == Runs - 1 ? jsonBuilders[ i ].Append( "\n    }\n ]" ) : jsonBuilders[ i ].Append( "\n    },\n" );
+
+                    if (recalculateProbs && !alreadyRecalculated)
+                    {
+
+                        startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+                        P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+                        foreach (int node in problem.Path.Visited)
+                        {
+                            problem.Path.UpdateBoundingCoordinates( ref boundingCoordinates, problem.Graph.VNodes[ node ] );
+                        }
+                        problem.Path.BoundingCoordinates = boundingCoordinates;
+
+                        lonL = boundingCoordinates[ 0 ].Item2;
+                        latB = boundingCoordinates[ 1 ].Item1;
+                        latT = boundingCoordinates[ 2 ].Item1;
+                        lonR = boundingCoordinates[ 3 ].Item2;
+                        pathMiddle = new Coordinate( ( latT + latB ) / 2, ( lonR + lonL ) / 2 );
+                        closestNode = graphNodes
+                                .OrderBy( node => pathMiddle.Distance( new Coordinate( node.Lat, node.Lon ) ) )
+                                .FirstOrDefault();
+
+                        List<Tuple<double, int>> probCopy = new List<Tuple<double, int>>();
+                        foreach (Tuple<double, int> elem in probabilityList)
+                        {
+                            probCopy.Add( Tuple.Create( elem.Item1, elem.Item2 ) );
+                        }
+                        if (Algo == Algo.SimulatedAnnealingFullyRandom)
+                        {
+                            probabilityList = CalculateFullyRandomDistribution( closestNode, problem, availableNodes, waypointList );
+                        }
+                        else
+                        {
+                            // calculate cummulative Probabilities for selecting the index
+                            probabilityList = CalculateProbabilityDistribution( closestNode, problem, availableNodes, waypointList, calculatePointsOfInterest );
+                        }
+
+                        // calculate cummulative Probabilities for selecting the index
+
+                        if (probabilityList.Count == 0)
+                        {
+                            probabilityList = probCopy;
+                            Console.WriteLine( "ahhhhhhhh" );
+                        }
+
+                        cumulativeProbabilities = new Dictionary<int, double>
+                        {
+                            { probabilityList[ 0 ].Item2, probabilityList[ 0 ].Item1 }
+                        };
+                        prevItem = cumulativeProbabilities.FirstOrDefault().Value;
+                        for (int l = 1; l < probabilityList.Count; l++)
+                        {
+                            if (cumulativeProbabilities.ContainsKey( probabilityList[ l ].Item2 ))
+                            {
+                                cumulativeProbabilities[ probabilityList[ l ].Item2 ] = prevItem;
+                            }
+                            else
+                            {
+                                cumulativeProbabilities.Add( probabilityList[ l ].Item2, prevItem );
+                            }
+                        }
+                        cumulativeProbabilitiesBackup = new Dictionary<int, double>( cumulativeProbabilities );
+                        alreadyRecalculated = true;
+                    }
+                }
+                problem.Path = overallBest;
+                P = problem;
+            }
+
+            //Utils.UpdateCurrentProblemPathMetadata( ref P, addedSurfaceTags, addedPathTypes, addedSurroundings, currentEdgeProfits, currentArea, currentQuality, currentPathsMaxSteepness, currentElevationDiff, boudingCoordinates );
+
+            startCoordinates = Tuple.Create( P.Graph.VNodes[ P.Start ].Lat, P.Graph.VNodes[ P.Start ].Lon );
+            P.Path.BoundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+            boundingCoordinates = new Tuple<double, double>[] {
+                            startCoordinates , startCoordinates , startCoordinates , startCoordinates  };
+            foreach (int node in P.Path.Visited)
+            {
+                P.Path.UpdateBoundingCoordinates( ref boundingCoordinates, P.Graph.VNodes[ node ] );
+            }
+            P.Path.BoundingCoordinates = boundingCoordinates;
+
+
+            Utils.UpdateMetadata( P.Path, P );
+
+            return SolveStatus.Feasible;
+        }
+
+
+
+
+
+
 
         private static void UpdateDistances ( Problem problem, ref Dictionary<int, Dictionary<int, double>> waypointAllDistancesForNodeIdDict, Tuple<string, int> waypointChangeAndIdx, Node[] viableNodes, int newWaypointId )
         {
@@ -1112,7 +1983,6 @@ namespace Tour4MeAdvancedProject.Solver
 
             return returnPath;
         }
-
 
         private Path RemoveAndAddWaypoint ( ref HashSet<Node> availableNodes, List<Waypoint> waypointList, Problem p, Node newWaypoint, Tuple<int, int> predSuccwaypointList )
         {

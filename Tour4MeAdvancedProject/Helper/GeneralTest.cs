@@ -318,10 +318,226 @@ namespace Tour4MeAdvancedProject.Helper
             return jsonBuilder.ToString();
         }
 
+        [WebMethod]
+        [ScriptMethod( UseHttpGet = true )]
+        public string GenerateTestingValuesStepwiseResults (
+            string algorithm,
+            int pathLength,
+            int numberPaths,
+            int numberAnts,
+            int numberRunsAnt,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            double initTrailIntensity,
+            int TrailPenalty,
+            string newPheromoneFucntion,
+            int numberRunsSA,
+            int numberRepitiionsSA,
+            int initTemperature,
+            string coolingFunction,
+            int numberWaypoints,
+            string distanceScalingCalculationForProbability )
+        {
+            Process currentProcess = Process.GetCurrentProcess();
+            long memoryUsage = -1;
+            StringBuilder jsonBuilder = new StringBuilder();
+
+
+            _ = jsonBuilder.Append( "[\n" );
+            Console.WriteLine( "start" );
+
+            SolveStatus status = SolveStatus.Unsolved;
+            string algo = "";
+
+            _ = Enum.TryParse( algorithm, out Algo algorithmEnum );
+            Console.WriteLine( algo );
+            Console.WriteLine( status );
+
+            if (!currentProcess.HasExited)
+            {
+                // Refresh the current process property values.
+                currentProcess.Refresh();
+
+                memoryUsage = currentProcess.WorkingSet64;
+            }
+            int numRuns = 20;
+            Color[] colors = GenerateColors( numberPaths );
+
+            Selection solver = null;
+            double coveredAreaImportanceInit = (double)1 / numberPaths;
+
+            Graph G = null;
+            double coveredAreaImportance = 1 * coveredAreaImportanceInit;
+            double edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
+            double elevationImportance = ( 1 - coveredAreaImportance ) / 2;
+            _ = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            _ = DateTime.Now;
+
+            DoInnerRunsStepwise( problem, numberPaths, numberAnts, numberRunsAnt, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, 1 );
+
+            //_ = jsonBuilder.Append( "\n    }\n ]" );
+
+
+
+            return jsonBuilder.ToString();
+        }
+
 
         [WebMethod]
         [ScriptMethod( UseHttpGet = true )]
         public string GenerateTestingValuesSACoveredArea (
+            string algorithm,
+            int pathLength,
+            int numberPaths,
+            int numberAnts,
+            int numberRunsAnt,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            double initTrailIntensity,
+            int TrailPenalty,
+            string newPheromoneFucntion,
+            int numberRunsSA,
+            int numberRepitiionsSA,
+            double initTemperature,
+            string coolingFunction,
+            int numberWaypoints,
+            string distanceScalingCalculationForProbability )
+        {
+            Process currentProcess = Process.GetCurrentProcess();
+            long memoryUsage = -1;
+            StringBuilder jsonBuilder = new StringBuilder();
+
+
+            _ = jsonBuilder.Append( "[\n" );
+            Console.WriteLine( "start" );
+
+            SolveStatus status = SolveStatus.Unsolved;
+            string algo = "";
+
+            _ = Enum.TryParse( algorithm, out Algo algorithmEnum );
+            Console.WriteLine( algo );
+            Console.WriteLine( status );
+
+            if (!currentProcess.HasExited)
+            {
+                // Refresh the current process property values.
+                currentProcess.Refresh();
+
+                memoryUsage = currentProcess.WorkingSet64;
+            }
+            int numRuns = 20;
+            Color[] colors = GenerateColors( numberPaths );
+
+            Selection solver = null;
+            double coveredAreaImportanceInit = (double)1 / numberPaths;
+
+            Graph G = null;
+            double coveredAreaImportance = 1 * coveredAreaImportanceInit;
+            double elevationImportance = ( 1 - coveredAreaImportance ) / 2;
+            double edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
+            DateTime init_time_1 = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            DateTime init_time_2 = DateTime.Now;
+
+            for (int i = 1; i <= numberPaths; i++)
+            {
+                coveredAreaImportance = i * coveredAreaImportanceInit;
+                elevationImportance = ( 1 - coveredAreaImportance ) / 2;
+                edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
+                problem.EdgeProfitImportance = edgeProfitImportance;
+                problem.CoveredAreaImportance = coveredAreaImportance;
+                problem.ElevationImportance = elevationImportance;
+                DoInnerRunsSA( problem, numberPaths, numberRunsSA, numberRepitiionsSA, initTemperature, coolingFunction, numberWaypoints, distanceScalingCalculationForProbability, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, i, init_time_1, init_time_2 );
+                _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+
+            }
+
+            return jsonBuilder.ToString();
+        }
+
+        [WebMethod]
+        [ScriptMethod( UseHttpGet = true )]
+        public string GenerateTestingValuesSAProfit (
+            string algorithm,
+            int pathLength,
+            int numberPaths,
+            int numberAnts,
+            int numberRunsAnt,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            double initTrailIntensity,
+            int TrailPenalty,
+            string newPheromoneFucntion,
+            int numberRunsSA,
+            int numberRepitiionsSA,
+            double initTemperature,
+            string coolingFunction,
+            int numberWaypoints,
+            string distanceScalingCalculationForProbability )
+        {
+            Process currentProcess = Process.GetCurrentProcess();
+            long memoryUsage = -1;
+            StringBuilder jsonBuilder = new StringBuilder();
+
+
+            _ = jsonBuilder.Append( "[\n" );
+            Console.WriteLine( "start" );
+
+            SolveStatus status = SolveStatus.Unsolved;
+            string algo = "";
+
+            _ = Enum.TryParse( algorithm, out Algo algorithmEnum );
+            Console.WriteLine( algo );
+            Console.WriteLine( status );
+
+            if (!currentProcess.HasExited)
+            {
+                // Refresh the current process property values.
+                currentProcess.Refresh();
+
+                memoryUsage = currentProcess.WorkingSet64;
+            }
+            int numRuns = 20;
+            Color[] colors = GenerateColors( numberPaths );
+
+            Selection solver = null;
+            double profitImportanceInit = (double)1 / numberPaths;
+
+            Graph G = null;
+            double edgeProfitImportance = 1 * profitImportanceInit;
+            double coveredAreaImportance = ( 1 - edgeProfitImportance ) / 2;
+            double elevationImportance = ( 1 - edgeProfitImportance ) / 2;
+            DateTime init_time_1 = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            DateTime init_time_2 = DateTime.Now;
+
+            for (int i = 1; i <= numberPaths; i++)
+            {
+                edgeProfitImportance = i * profitImportanceInit;
+                coveredAreaImportance = ( 1 - edgeProfitImportance ) / 2;
+                elevationImportance = ( 1 - edgeProfitImportance ) / 2;
+                problem.EdgeProfitImportance = edgeProfitImportance;
+                problem.CoveredAreaImportance = coveredAreaImportance;
+                problem.ElevationImportance = elevationImportance;
+                DoInnerRunsSA( problem, numberPaths, numberRunsSA, numberRepitiionsSA, initTemperature, coolingFunction, numberWaypoints, distanceScalingCalculationForProbability, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, i, init_time_1, init_time_2 );
+                _ = i == numberPaths ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+
+            }
+
+            return jsonBuilder.ToString();
+        }
+
+
+        [WebMethod]
+        [ScriptMethod( UseHttpGet = true )]
+        public string GenerateTestingValuesSAElevation (
             string algorithm,
             int pathLength,
             int numberPaths,
@@ -393,6 +609,329 @@ namespace Tour4MeAdvancedProject.Helper
             return jsonBuilder.ToString();
         }
 
+
+        [WebMethod]
+        [ScriptMethod( UseHttpGet = true )]
+        public string GenerateTestingValuesStepwiseResultsSA (
+            string algorithm,
+            int pathLength,
+            int numberPaths,
+            int numberAnts,
+            int numberRunsAnt,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            double initTrailIntensity,
+            int TrailPenalty,
+            string newPheromoneFucntion,
+            int numberRunsSA,
+            int numberRepitiionsSA,
+            int initTemperature,
+            string coolingFunction,
+            int numberWaypoints,
+            string distanceScalingCalculationForProbability )
+        {
+            Process currentProcess = Process.GetCurrentProcess();
+            long memoryUsage = -1;
+            StringBuilder jsonBuilder = new StringBuilder();
+
+
+            _ = jsonBuilder.Append( "[\n" );
+            Console.WriteLine( "start" );
+
+            SolveStatus status = SolveStatus.Unsolved;
+            string algo = "";
+
+            _ = Enum.TryParse( algorithm, out Algo algorithmEnum );
+            Console.WriteLine( algo );
+            Console.WriteLine( status );
+
+            if (!currentProcess.HasExited)
+            {
+                // Refresh the current process property values.
+                currentProcess.Refresh();
+
+                memoryUsage = currentProcess.WorkingSet64;
+            }
+            int numRuns = 20;
+            Color[] colors = GenerateColors( numberPaths );
+
+            Selection solver = null;
+            double coveredAreaImportanceInit = (double)1 / numberPaths;
+
+            Graph G = null;
+            double coveredAreaImportance = 1 * coveredAreaImportanceInit;
+            double edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
+            double elevationImportance = ( 1 - coveredAreaImportance ) / 2;
+            _ = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            _ = DateTime.Now;
+
+            DoInnerRunsStepwiseSA( problem, numberPaths, numberRunsSA, numberRepitiionsSA, initTemperature, coolingFunction, numberWaypoints, distanceScalingCalculationForProbability, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, 1 );
+
+            //_ = jsonBuilder.Append( "\n    }\n ]" );
+
+
+
+            return jsonBuilder.ToString();
+        }
+
+
+
+
+
+        [WebMethod]
+        [ScriptMethod( UseHttpGet = true )]
+        public string GenerateTestingValuesMaxTimeAlgorithms (
+            string algorithm,
+            int pathLength,
+            int numberPaths,
+            int numberAnts,
+            int numberRunsAnt,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            double initTrailIntensity,
+            int TrailPenalty,
+            string newPheromoneFucntion,
+            int numberRunsSA,
+            int numberRepitiionsSA,
+            int initTemperature,
+            string coolingFunction,
+            int numberWaypoints,
+            string distanceScalingCalculationForProbability,
+            int maxTime )
+        {
+            Process currentProcess = Process.GetCurrentProcess();
+            long memoryUsage = -1;
+            StringBuilder jsonBuilder = new StringBuilder();
+
+
+            _ = jsonBuilder.Append( "[\n" );
+            Console.WriteLine( "start" );
+
+            SolveStatus status = SolveStatus.Unsolved;
+            string algo = "";
+
+            _ = Enum.TryParse( algorithm, out Algo algorithmEnum );
+            Console.WriteLine( algo );
+            Console.WriteLine( status );
+
+            if (!currentProcess.HasExited)
+            {
+                // Refresh the current process property values.
+                currentProcess.Refresh();
+
+                memoryUsage = currentProcess.WorkingSet64;
+            }
+            int numRuns = 20;
+            Color[] colors = GenerateColors( numberPaths );
+
+            Selection solver = null;
+            double coveredAreaImportanceInit = (double)1 / numberPaths;
+
+            Graph G = null;
+            double coveredAreaImportance = 1 * coveredAreaImportanceInit;
+            double edgeProfitImportance = ( 1 - coveredAreaImportance ) / 2;
+            double elevationImportance = ( 1 - coveredAreaImportance ) / 2;
+            _ = DateTime.Now;
+            Problem problem = InitializeGraphAndProblem( ref G, pathLength, edgeProfitImportance, coveredAreaImportance, elevationImportance );
+            _ = DateTime.Now;
+
+            //DoInnerRunsStepwiseSA( problem, numberPaths, numberRunsSA, numberRepitiionsSA, initTemperature, coolingFunction, numberWaypoints, distanceScalingCalculationForProbability, memoryUsage, jsonBuilder, algorithmEnum, numRuns, colors, ref solver, 1 );
+
+            DoInnerRunsMaxTime( problem,
+                maxTime,
+                numberAnts,
+                numberRunsAnt,
+                alpha,
+                beta,
+                evaporationRate,
+                edgeScalingPenalty,
+                initTrailIntensity,
+                TrailPenalty,
+                newPheromoneFucntion,
+                numberRunsSA,
+                numberRepitiionsSA,
+                initTemperature,
+                coolingFunction,
+                numberWaypoints,
+                distanceScalingCalculationForProbability,
+                memoryUsage,
+                jsonBuilder,
+                algorithmEnum,
+                numRuns,
+                colors,
+                ref solver,
+                1 );
+
+            //_ = jsonBuilder.Append( "\n    }\n ]" );
+
+
+
+            return jsonBuilder.ToString();
+        }
+
+
+
+
+        private void DoInnerRunsMaxTime ( Problem problem,
+            int maxSeconds,
+            int numberAnts,
+            int numberRunsAnt,
+            double alpha,
+            double beta,
+            double evaporationRate,
+            int edgeScalingPenalty,
+            double initTrailIntensity,
+            int TrailPenalty,
+            string newPheromoneFucntion,
+            int numberRunsSA,
+            int numberRepitiionsSA,
+            double initTemperature,
+            string coolingFunction,
+            int numberWaypoints,
+            string distanceScalingCalculationForProbability,
+            long memoryUsage,
+            StringBuilder jsonBuilder,
+            Algo algorithmEnum,
+            int numRuns,
+            Color[] colors,
+            ref Selection solver,
+            int i )
+        {
+
+            switch (algorithmEnum)
+            {
+                case Algo.Greedy:
+                    {
+                        // Greedy
+                        solver = new SelectionSolver();
+                        break;
+                    }
+                case Algo.minCost:
+                    {
+                        // minCost
+                        solver = new JoggerSolver();
+                        break;
+                    }
+                case Algo.ILS:
+                    {
+                        // ILS
+                        //ILS solver = new ILS();
+                        //status = solver.Solve( ref problem);
+                        _ = Algo.ILS.ToString();
+                        break;
+                    }
+                case Algo.AntColony:
+                    {
+                        // Ant
+                        solver = new AntSolver( numberRunsAnt, numberAnts, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion );
+                        break;
+                    }
+                case Algo.AntMinCost:
+                    {
+                        // Ant MinCost
+                        solver = new AntCombined( numberRunsAnt, numberAnts, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, Algo.minCost );
+                        break;
+                    }
+                case Algo.AntGreedy:
+                    {
+                        // Ant Greedy
+                        solver = new AntCombined( numberRunsAnt, numberAnts, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion, Algo.Greedy );
+                        break;
+                    }
+                case Algo.SimulatedAnnealingGreedy:
+                    {
+                        // Simmulated Annealing Greedy
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.Greedy );
+                        break;
+                    }
+                case Algo.SimulatedAnnealingMinCost:
+                    {
+                        // Simmulated Annealing MinCost
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.minCost );
+                        break;
+
+                    }
+                case Algo.SimulatedAnnealingAnt:
+                    {
+                        // Simmulated Annealing Ant
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.AntColony );
+                        break;
+                    }
+                case Algo.SimulatedAnnealingEmpty:
+                    {
+                        // Simmulated Annealing Empty
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.SimulatedAnnealingEmpty );
+                        break;
+                    }
+                case Algo.SimulatedAnnealingFullyRandom:
+                    {
+                        // Genetic
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.SimulatedAnnealingFullyRandom );
+                        break;
+                    }
+                default:
+                    break;
+            }
+            _ = jsonBuilder.Append( "    {\n" );
+            _ = jsonBuilder.Append( "    \"tour\": \"Tour " + i + "\",\n" );
+            _ = jsonBuilder.Append( "    \"runs\": [\n" );
+
+
+            for (int j = 1; j <= numRuns; j++)
+            {
+                Path newPath = new Path( Tuple.Create( problem.CenterLat, problem.CenterLon ) );
+                problem.Path = newPath;
+
+                int time = solver.SolveMaxTime( ref problem, maxSeconds );
+
+
+                _ = jsonBuilder.Append( "    {\n" );
+                _ = jsonBuilder.Append( "    \"run\": \"Run " + i + "\",\n" );
+                _ = jsonBuilder.Append( "    \"color\": " + ConvertColorToString( colors[ i - 1 ] ) + ",\n" );
+
+                int negModifier = problem.Path.CoveredArea < 0 ? -1 : 1;
+                _ = jsonBuilder.Append( "    \"CoveredArea\": " + ( negModifier * problem.Path.CoveredArea ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+
+                _ = jsonBuilder.Append( "    \"CoveredAreaImportance\": " + problem.CoveredAreaImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                _ = jsonBuilder.Append( "    \"Profit\": " + problem.Path.TotalEdgeProfits.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                _ = jsonBuilder.Append( "    \"ProfitImportance\": " + problem.EdgeProfitImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                _ = jsonBuilder.Append( "    \"Elevation\": " + ( ( problem.MaxElevation - problem.Path.Elevation ) / problem.MaxElevation ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                _ = jsonBuilder.Append( "    \"ElevationImportance\": " + problem.ElevationImportance.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                _ = jsonBuilder.Append( "    \"Quality\": " + problem.Path.Quality.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                _ = jsonBuilder.Append( "    \"MemoryUse\": " + memoryUsage.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                _ = jsonBuilder.Append( "    \"ActualTime\": " + time );
+
+                _ = j == numRuns ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+
+            }
+
+            _ = jsonBuilder.Append( "\n    }\n ]" );
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private void DoInnerRunsSA ( Problem problem, int numberPaths, int numberRunsSA, int numberRepitiionsSA, double initTemperature, string coolingFunction, int numberWaypoints, string distanceScalingCalculationForProbability, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, int i, DateTime init_time_1, DateTime init_time_2 )
         {
             switch (algorithmEnum)
@@ -438,33 +977,33 @@ namespace Tour4MeAdvancedProject.Helper
                 case Algo.SimulatedAnnealingGreedy:
                     {
                         // Simmulated Annealing Greedy
-                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.Greedy );
                         break;
                     }
                 case Algo.SimulatedAnnealingMinCost:
                     {
                         // Simmulated Annealing MinCost
-                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.minCost );
                         break;
 
                     }
                 case Algo.SimulatedAnnealingAnt:
                     {
                         // Simmulated Annealing Ant
-                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.AntColony );
                         break;
                     }
                 case Algo.SimulatedAnnealingEmpty:
                     {
                         // Simmulated Annealing Empty
 
-                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.SimulatedAnnealingEmpty );
                         break;
                     }
                 case Algo.SimulatedAnnealingFullyRandom:
                     {
                         // Genetic
-                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability );
+                        solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.SimulatedAnnealingFullyRandom );
                         break;
                     }
                 default:
@@ -712,6 +1251,77 @@ namespace Tour4MeAdvancedProject.Helper
             }
         }
 
+        private void DoInnerRunsStepwiseSA ( Problem problem, int numberPaths, int numberRunsSA, int numberRepitiionsSA, double initTemperature, string coolingFunction, int numberWaypoints, string distanceScalingCalculationForProbability, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, int i )
+        {
+            StringBuilder[] jsonBuilders = new StringBuilder[ numberRunsSA ];
+
+            for (int l = 0; l < numberRunsSA; l++)
+            {
+                jsonBuilders[ l ] = new StringBuilder();
+            }
+
+            for (int j = 1; j <= numRuns; j++)
+            {
+                solver = new SimmulatedAnnealingSolver( numberRunsSA, numberRepitiionsSA, initTemperature, numberWaypoints, distanceScalingCalculationForProbability, Algo.SimulatedAnnealingEmpty );
+
+                Path newPath = new Path( Tuple.Create( problem.CenterLat, problem.CenterLon ) );
+                problem.Path = newPath;
+                _ = ( (SimmulatedAnnealingSolver)solver ).SolveStepwiseFeedback( ref problem, ref jsonBuilders );
+
+                for (int c = 0; c < numberRunsSA; c++)
+                {
+                    _ = j == numRuns ? jsonBuilders[ c ].Append( "\n    }\n ]" ) : jsonBuilders[ c ].Append( "\n    },\n" );
+                }
+
+
+
+            }
+            for (int k = 0; k < numberRunsSA; k++)
+            {
+                _ = jsonBuilder.Append( "    {\n" );
+                _ = jsonBuilder.Append( "    \"tour\": \"Tour " + k + "\",\n" );
+                _ = jsonBuilder.Append( "    \"runs\": [\n" );
+
+                _ = jsonBuilder.Append( jsonBuilders[ k ].ToString() );
+
+                _ = k == numberRunsSA - 1 ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+            }
+        }
+        private void DoInnerRunsStepwise ( Problem problem, int numberPaths, int numberAnts, int numberRunsAnt, double alpha, double beta, double evaporationRate, int edgeScalingPenalty, double initTrailIntensity, int TrailPenalty, string newPheromoneFucntion, long memoryUsage, StringBuilder jsonBuilder, Algo algorithmEnum, int numRuns, Color[] colors, ref Selection solver, int i )
+        {
+            StringBuilder[] jsonBuilders = new StringBuilder[ numberRunsAnt ];
+
+            for (int l = 0; l < numberRunsAnt; l++)
+            {
+                jsonBuilders[ l ] = new StringBuilder();
+            }
+
+            for (int j = 1; j <= numRuns; j++)
+            {
+                solver = new AntSolver( numberRunsAnt, numberAnts, alpha, beta, evaporationRate, edgeScalingPenalty, initTrailIntensity, TrailPenalty, newPheromoneFucntion );
+
+
+                Path newPath = new Path( Tuple.Create( problem.CenterLat, problem.CenterLon ) );
+                problem.Path = newPath;
+                _ = ( (AntSolver)solver ).SolveStepwiseFeedback( ref problem, ref jsonBuilders );
+                for (int c = 0; c < numberRunsAnt; c++)
+                {
+                    _ = j == numRuns ? jsonBuilders[ c ].Append( "\n    }\n ]" ) : jsonBuilders[ c ].Append( "\n    },\n" );
+                }
+
+            }
+
+            for (int k = 0; k < numberRunsAnt; k++)
+            {
+                _ = jsonBuilder.Append( "    {\n" );
+                _ = jsonBuilder.Append( "    \"tour\": \"Tour " + k + "\",\n" );
+                _ = jsonBuilder.Append( "    \"runs\": [\n" );
+
+                _ = jsonBuilder.Append( jsonBuilders[ k ].ToString() );
+
+                _ = k == numberRunsAnt - 1 ? jsonBuilder.Append( "\n    }\n ]" ) : jsonBuilder.Append( "\n    },\n" );
+            }
+        }
         private static Problem InitializeGraphAndProblem ( ref Graph G, int length, double edgeProfitImportance, double coveredAreaImportance, double elevationImportance )
         {
             double lat = 51.489808;
@@ -956,7 +1566,7 @@ namespace Tour4MeAdvancedProject.Helper
                                 ? Color.FromArgb( alpha, t, p, v )
                                 : Color.FromArgb( alpha, v, p, q );
         }
-        public List<KeyValuePair<string, string>> GenerateOutputString ( Problem P )
+        public static List<KeyValuePair<string, string>> GenerateOutputString ( Problem P )
         {
 
             List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
