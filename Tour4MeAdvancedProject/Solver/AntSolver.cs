@@ -411,10 +411,10 @@ namespace Tour4MeAdvancedProject.Solver
                 _ = jsonBuilders[ i ].Append( "    \"run\": \"Run " + i + "\",\n" );
                 _ = jsonBuilders[ i ].Append( "    \"runNumber\": " + i + ",\n" );
                 int negModifier = tempProblem.Path.CoveredArea < 0 ? -1 : 1;
-                _ = jsonBuilders[ i ].Append( "    \"CoveredArea\": " + ( negModifier * tempProblem.Path.CoveredArea ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                _ = jsonBuilders[ i ].Append( "    \"CoveredArea\": " + ( negModifier * Math.Round( tempProblem.Path.CoveredArea ) ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                 _ = jsonBuilders[ i ].Append( "    \"Profit\": " + tempProblem.Path.TotalEdgeProfits.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                 _ = jsonBuilders[ i ].Append( "    \"Elevation\": " + ( ( tempProblem.MaxElevation - tempProblem.Path.Elevation ) / tempProblem.MaxElevation ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
-                _ = jsonBuilders[ i ].Append( "    \"Quality\": " + tempProblem.Path.Quality.ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+                _ = jsonBuilders[ i ].Append( "    \"Quality\": " + Math.Round( tempProblem.Path.Quality * 1000, 4 ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
 
                 //_ = i == NumberTours - 1 ? jsonBuilders[ i ].Append( "\n    }\n ]" ) : jsonBuilders[ i ].Append( "\n    },\n" );
             }

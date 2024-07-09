@@ -21,6 +21,7 @@ namespace Tour4MeAdvancedProject.Solver
         public Random Random { get; set; } = new Random();
         public int NumberwaypointList { get; set; } = 10;
         public string DistanceScalingCalculationForProbability { get; set; } = "Random";
+        public string CoolingFunction { get; set; } = "Exp";
         public Algo AlgoToCombineWith { get; set; }
 
 
@@ -34,13 +35,14 @@ namespace Tour4MeAdvancedProject.Solver
             Temperature = temp;
             NumberwaypointList = waypointList;
         }
-        public SimmulatedAnnealingSolver ( int runs, int repetitions, double temp, int waypointList, string distanceScalingCalculationForProbability, Algo algoToUse ) : this( runs, repetitions, temp, waypointList )
+        public SimmulatedAnnealingSolver ( int runs, int repetitions, double temp, int waypointList, string distanceScalingCalculationForProbability, string coolingFunction, Algo algoToUse ) : this( runs, repetitions, temp, waypointList )
         {
             Runs = runs;
             Repetitions = repetitions;
             Temperature = temp;
             NumberwaypointList = waypointList;
             DistanceScalingCalculationForProbability = distanceScalingCalculationForProbability;
+            CoolingFunction = coolingFunction;
             AlgoToCombineWith = algoToUse;
         }
 
@@ -247,6 +249,7 @@ namespace Tour4MeAdvancedProject.Solver
                 for (int i = 0; i < Runs; i++)
                 {
                     double diff = 0;
+                    double rand = -1;
                     for (int j = 0; j < Repetitions; j++)
                     {
 
@@ -283,7 +286,7 @@ namespace Tour4MeAdvancedProject.Solver
                             // calculate probability of choosing the new ( worse ) soution
                             double probs = Math.Exp( diff / Temperature );
                             // generate a rondom value between 0 and 1
-                            double rand = Random.NextDouble();
+                            rand = Random.NextDouble();
 
                             // if the random value exceeds the probability, choose the new ( worse ) solution
                             if (rand < probs)
@@ -374,7 +377,23 @@ namespace Tour4MeAdvancedProject.Solver
                         pathChanged = false;
                     }
                     // change temperature according to difference in quality and normalize by maxTemperetature
-                    Temperature *= Math.Exp( -2 );
+
+                    if (CoolingFunction == "scaleTemp")
+                    {
+                        Temperature = 0.5 * Temperature;
+                    }
+                    else if (CoolingFunction == "diffFraction")
+                    {
+                        Temperature = diff / Math.Log( rand );
+                    }
+                    else if (CoolingFunction == "tempFractionFactor")
+                    {
+                        Temperature /= 1 + Temperature;
+                    }
+                    else
+                    {
+                        Temperature *= Math.Exp( -2 );
+                    }
 
 
                     if (recalculateProbs && !alreadyRecalculated)
@@ -602,7 +621,7 @@ namespace Tour4MeAdvancedProject.Solver
                 Node closestNode = orderedNodes.FirstOrDefault();
                 HashSet<Node> availableNodes = graphNodes.Where( x => x != null &&
                                                                 !waypointList.Any( y => y.NodeID == x.GraphNodeId ) ).ToHashSet();
-                List<Tuple<double, int>> probabilityList;
+                List<Tuple<double, int>> probabilityList = new List<Tuple<double, int>>();
 
                 if (Algo == Algo.SimulatedAnnealingFullyRandom)
                 {
@@ -613,6 +632,10 @@ namespace Tour4MeAdvancedProject.Solver
                     // calculate cummulative Probabilities for selecting the index
                     probabilityList = CalculateProbabilityDistribution( closestNode, P, availableNodes, waypointList, calculatePointsOfInterest );
                 }
+                if (probabilityList.Count == 0)
+                { probabilityList = CalculateFullyRandomDistribution( closestNode, P, availableNodes, waypointList ); }
+
+
                 Dictionary<int, double> cumulativeProbabilities = new Dictionary<int, double>
                 {
                     { probabilityList[ 0 ].Item2, probabilityList[ 0 ].Item1 }
@@ -663,6 +686,7 @@ namespace Tour4MeAdvancedProject.Solver
                 while (time < maxTime)
                 {
                     double diff = 0;
+                    double rand = -1;
                     for (int j = 0; j < Repetitions; j++)
                     {
 
@@ -699,7 +723,7 @@ namespace Tour4MeAdvancedProject.Solver
                             // calculate probability of choosing the new ( worse ) soution
                             double probs = Math.Exp( diff / Temperature );
                             // generate a rondom value between 0 and 1
-                            double rand = Random.NextDouble();
+                            rand = Random.NextDouble();
 
                             // if the random value exceeds the probability, choose the new ( worse ) solution
                             if (rand < probs)
@@ -790,7 +814,23 @@ namespace Tour4MeAdvancedProject.Solver
                         pathChanged = false;
                     }
                     // change temperature according to difference in quality and normalize by maxTemperetature
-                    Temperature *= Math.Exp( -2 );
+
+                    if (CoolingFunction == "scaleTemp")
+                    {
+                        Temperature = 0.5 * Temperature;
+                    }
+                    else if (CoolingFunction == "diffFraction")
+                    {
+                        Temperature = Math.Abs( diff ) / Math.Log( rand );
+                    }
+                    else if (CoolingFunction == "tempFractionFactor")
+                    {
+                        Temperature /= 1 + Temperature;
+                    }
+                    else
+                    {
+                        Temperature *= Math.Exp( -2 );
+                    }
 
 
                     if (recalculateProbs && !alreadyRecalculated)
@@ -890,6 +930,7 @@ namespace Tour4MeAdvancedProject.Solver
             bool useDatastructure = false;
             bool calculatePointsOfInterest = false;
 
+            int time = -1;
 
 
             SolveStatus status = SolveStatus.Unsolved;
@@ -1084,9 +1125,13 @@ namespace Tour4MeAdvancedProject.Solver
 
                 // do the simulated annealing runs
 
+                DateTime calc_time_1 = DateTime.Now;
+                // do the simulated annealing runs
+                time = ( DateTime.Now - calc_time_1 ).Seconds;
                 for (int i = 0; i < Runs; i++)
                 {
                     double diff = 0;
+                    double rand = -1;
                     for (int j = 0; j < Repetitions; j++)
                     {
 
@@ -1123,7 +1168,7 @@ namespace Tour4MeAdvancedProject.Solver
                             // calculate probability of choosing the new ( worse ) soution
                             double probs = Math.Exp( diff / Temperature );
                             // generate a rondom value between 0 and 1
-                            double rand = Random.NextDouble();
+                            rand = Random.NextDouble();
 
                             // if the random value exceeds the probability, choose the new ( worse ) solution
                             if (rand < probs)
@@ -1214,21 +1259,39 @@ namespace Tour4MeAdvancedProject.Solver
                         pathChanged = false;
                     }
                     // change temperature according to difference in quality and normalize by maxTemperetature
-                    Temperature *= Math.Exp( -2 );
+                    if (CoolingFunction == "scaleTemp")
+                    {
+                        Temperature = 0.5 * Temperature;
+                    }
+                    else if (CoolingFunction == "diffFraction")
+                    {
+                        Temperature = diff / Math.Log( rand );
+                    }
+                    else if (CoolingFunction == "tempFractionFactor")
+                    {
+                        Temperature /= 1 + Temperature;
+                    }
+                    else
+                    {
+                        Temperature *= Math.Exp( -2 );
+                    }
+
 
                     if (overallBest.Quality < problem.Path.Quality)
                     {
                         overallBest = new Path( problem.Path );
                     }
 
+                    time = ( DateTime.Now - calc_time_1 ).Seconds;
                     _ = jsonBuilders[ i ].Append( "    {\n" );
                     _ = jsonBuilders[ i ].Append( "    \"run\": \"Run " + i + "\",\n" );
                     _ = jsonBuilders[ i ].Append( "    \"runNumber\": " + i + ",\n" );
                     int negModifier = problem.Path.CoveredArea < 0 ? -1 : 1;
-                    _ = jsonBuilders[ i ].Append( "    \"CoveredArea\": " + ( negModifier * problem.Path.CoveredArea ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                    _ = jsonBuilders[ i ].Append( "    \"CoveredArea\": " + ( negModifier * Math.Round( problem.Path.CoveredArea ) ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                     _ = jsonBuilders[ i ].Append( "    \"Profit\": " + problem.Path.TotalEdgeProfits.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
                     _ = jsonBuilders[ i ].Append( "    \"Elevation\": " + ( ( problem.MaxElevation - problem.Path.Elevation ) / problem.MaxElevation ).ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
-                    _ = jsonBuilders[ i ].Append( "    \"Quality\": " + problem.Path.Quality.ToString( System.Globalization.CultureInfo.InvariantCulture ) );
+                    _ = jsonBuilders[ i ].Append( "    \"Time\": " + time.ToString( System.Globalization.CultureInfo.InvariantCulture ) + ",\n" );
+                    _ = jsonBuilders[ i ].Append( "    \"Quality\": " + Math.Round( problem.Path.Quality * 1000, 4 ).ToString( System.Globalization.CultureInfo.InvariantCulture ) );
 
                     //_ = i == Runs - 1 ? jsonBuilders[ i ].Append( "\n    }\n ]" ) : jsonBuilders[ i ].Append( "\n    },\n" );
 

@@ -169,7 +169,7 @@ namespace Tour4MeAdvancedProject.Solver
 
 
 
-        public int SolveMaxTime ( ref Problem problem, int maxTime )
+        public override int SolveMaxTime ( ref Problem problem, int maxTime )
         {
             switch (AlgoToCombineWith)
             {
@@ -293,7 +293,6 @@ namespace Tour4MeAdvancedProject.Solver
 
             return time;
         }
-
 
 
         private void PreprocessEdges ( Problem P )
