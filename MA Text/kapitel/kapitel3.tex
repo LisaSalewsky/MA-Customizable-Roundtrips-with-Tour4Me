@@ -8,38 +8,38 @@
 As stated before, existing tools that can calculate roundtrips leave out certain data like the elevation of nodes or path types of edges.
 The absence of these information impacts the quality of the created routes for individual users or even whole user groups. 
 For example, people who prefer running with little to no elevation might end up with a route that takes them uphill for half of the distance.
-While this path may still be a suitable choice for other users -- such as joggers who prefer more challenging routes or those who want to hike and enjoy ascending -- the constant elevation gain can be undesirable for beginners.
-Some people could prefer to choose whether they are running through the city or in a park depending on the elevation level.
+While this path may be a suitable choice for other users -- such as joggers who prefer more challenging routes or those who want to hike and enjoy ascending -- the constant elevation gain can be undesirable for beginners.
+Some people might prefer to choose whether they are running through the city or in a park depending on the elevation level.
 For these users, the created route would be highly unfavorable, even though the result matches other constraints for what is considered a nice roundtrip.
-Therefore, giving the user as many options to customize as possible without becoming overwhelming van be a crucial point. 
+Therefore, giving the user as many customization options as possible without becoming overwhelming van be a crucial point. 
 
 
 The goal of this thesis is to develop a usable application for computing running or cycling roundtrips of (almost) arbitrary length. 
-In this context \enquote{usable} means an app that operates in real time, produces routes of the desired length, and prioritizes paths based on the user's input. 
-To achieve this goal, this thesis is an extension of the already existing prototype Tour4Me \cite{buchin_tour4me_2022} and adds meta-heuristic approaches that have been deemed the most fitting for this purpose. 
+In this context \enquote{usable} means an app that operates in real-time, produces routes of the desired length, and prioritizes paths based on the user's input. 
+To achieve this goal, this thesis is an extension of the already existing prototype Tour4Me \cite{buchin_tour4me_2022} and adds meta-heuristic approaches that have been considered the most fitting for this purpose. 
 
 First, an interface for testing the new approaches was built. 
-For adding in user options like the length of the desired roundtrip, as well as other preference inputs, an additional overlay was needed.
+To add user options like the length of the desired roundtrip, as well as other preference inputs, an additional overlay was needed.
 Based on this interface, different algorithms were added and compared with each other to identify the ones that produced promising outputs.
 However, the definitions of a high quality result can vary significantly based on the criteria used. 
-An ideal algorithm would be fast, consistently generate a route and incorporate all user preferences.
+An ideal algorithm would be fast, consistently generate a route, and incorporate all user preferences.
 However, achieving all these objectives with a single algorithm is not possible. 
 Therefore, various approaches have been implemented and analyzed according to how well they meet the mentioned criteria. 
 
-The realized approaches are ant colony \cite{babaoglu_anthill_2002, dorigo_ant_1996, gendreau_handbook_2010, wang_application_2014} and simulated annealing \cite{aarts_simulated_2005, delahaye_simulated_2019, eglese_simulated_1990, zhan_list-based_2016}
+The implemented approaches include ant colony \cite{babaoglu_anthill_2002, dorigo_ant_1996, gendreau_handbook_2010, wang_application_2014} and simulated annealing \cite{aarts_simulated_2005, delahaye_simulated_2019, eglese_simulated_1990, zhan_list-based_2016}
 Both of these have been implemented as a standalone solution as well as in combination with the previous greedy algorithm and the MinCost implementation.
 
-After the most suitable algorithms as well as relatively good parameter configurations  for this application had been determined, they needed to be integrated into the already existing Tour4Me application. The aim for the app was to calculate a high-quality tour for any typical roundtrip request for running and cycling.
+After determining the most suitable algorithms as well as the most fitting parameter configurations for these algorithms, they needed to be integrated into the already existing Tour4Me application. The aim for the app was to calculate a high-quality tour for any typical roundtrip request for running and cycling.
 
 In addition to finding suitable algorithms that allow for fast and reliable computation of all typical roundtrips, working on the interface and data used also improved the usefulness of the app.
-Improving the interface, adding more options like elevation data, including more information (for example previously used routes) etc. have been equally important changes to increase the usability.
+Improving the interface and adding more options like elevation data, including more information (for example previously used routes) etc. have been equally important changes to increase the usability.
 There are several opportunities to improve the app not only by changing the used algorithms but also through adding user selection options and upgrading the GUI.
-The extension of available inputs and sliders to better specify tour parameters is an alternative approach towards the goal of making Tour4Me more usable.
-Enhancing the interface and overall refining the usability builds a different pillar of improving the app aside from adding more or faster algorithms.
+Extending available inputs and sliders to better specify tour parameters represents an alternative approach towards the goal of making Tour4Me more usable.
+Enhancing the interface and overall refining the usability constitutes another pillar of improving the app aside from adding more or faster algorithms.
 
-Overall, the goal of this thesis is thus, to build a user friendly application that can compute roundtrips for various outdoor activities.
-The resulting web application is able to calculate tours for (almost) any length, take user preferences into account and operate in real time.
-This thesis focuses primarily on adding customization options and the respective front-end changes as well as the implementation of AntColony and simulated annealing as two meta-heuristic approaches for solving the problem.
+Overall, the goal of this thesis is to build a user friendly application that can compute roundtrips for various outdoor activities.
+This thesis focuses primarily on adding customization options and the respective front-end changes as well as the implementation of ant colony and simulated annealing as two meta-heuristic approaches for solving the problem.
+The resulting web application is able to calculate tours for (almost) any length, take user preferences into account, and operate in real time.
 
 
 \# TODO check tempus and formulation
@@ -52,5 +52,30 @@ This thesis focuses primarily on adding customization options and the respective
 
 \section{Structure}
 \label{sec:structure}
+
+The next chapter describes the needed background and fundamentals.
+First, a short overview over shortest path algorithms and the existing options is presented.
+Afterwards, the Arc Orienteering Problem, which builds the basis for calculating paths that optimize for other values than their respective length, is presented and described in detail.
+Then, the fundamentals for the two implemented algorithms ant colony and simulated annealing are explained.
+
+Chapter three details the implemented changes, first describing the overall architecture of the software as well as naming all used technologies and languages.
+Then the added database and data acquisition as well as the needed processing are described.
+Afterwards, the front-end changes, and new parameters are explained.
+The last section of the third chapter gives details about the implemented algorithms and specifies where changes to the given literature where needed.
+Furthermore the implemented combinations are described.
+
+In the fourth chapter, several test cases are conducted and their results presented and analyzed.
+For both implemented base algorithms, several parameter configurations had to be determined.
+Additionally, the effect of the customization options have been analyzed and displayed. 
+Lastly, the chapter shows a comparison of all implemented algorithms and their quality change over time.
+
+The last chapter sums up all results and again details how the set goals have been met.
+Afterwards, several ideas for future work are presented.
+
+
+
+
+
+
 
 
