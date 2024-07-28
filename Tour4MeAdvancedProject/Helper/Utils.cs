@@ -141,6 +141,61 @@ namespace Tour4MeAdvancedProject.Helper
             p.Path.SurroundingTags = string.Join( ", ", addedSurroundings );
         }
 
+        public static void UpdatePathMetadata ( Path visitedPath, Problem p )
+        {
+
+            HashSet<SurfaceTag> addedSurfaceTags = new HashSet<SurfaceTag>();
+            HashSet<HighwayTag> addedPathTypes = new HashSet<HighwayTag>();
+            HashSet<string> addedSurroundings = new HashSet<string>();
+            double elevationDiff = 0;
+            double maxSteepness = 0;
+            List<int> visited = visitedPath.Visited;
+
+            List<Edge> pathEdges = visitedPath.Edges;
+            visitedPath.Length = pathEdges.Sum( x => x.Cost );
+
+            double totalEdgeProfits = 0;
+            int i = 0;
+            foreach (Edge edge in pathEdges)
+            {
+                int startNodeId = visited[ i ];
+                i++;
+                foreach (string tag in edge.Tags)
+                {
+                    Utils.AddTags( ref addedSurfaceTags, ref addedPathTypes, ref addedSurroundings, tag );
+                }
+                Utils.CalculateElevationDiffAndSteepness( edge, ref maxSteepness, ref elevationDiff );
+                //Utils.CaculateQualityValues( p, edge, startNodeId, elevationDiff, ref currentEdgeProfits, ref currentArea, ref currentQuality );
+                totalEdgeProfits += !edge.Visited ? edge.Profit * edge.Cost : 0;
+                edge.Visited = true;
+            }
+            pathEdges.ForEach( x => x.Visited = false );
+
+            visitedPath.CoveredArea = p.GetArea( visited );
+
+            visitedPath.TotalEdgeProfits = totalEdgeProfits;
+            //p.Path.TotalEdgeProfits = pathEdges.Sum( x => x.Profit * x.Cost );
+            visitedPath.Quality = p.GetQuality( visitedPath.TotalEdgeProfits, visitedPath.CoveredArea, elevationDiff / 2, maxSteepness, visitedPath.Length );
+            if (visitedPath.Quality != visitedPath.Quality)
+            {
+                Console.WriteLine( "ahhhhh" );
+            }
+
+            // update all current path values
+            visitedPath.Visited = visited;
+            visitedPath.Edges = pathEdges;
+            visitedPath.Elevation = elevationDiff;
+            visitedPath.Steepness = maxSteepness;
+            //p.Path.CoveredArea = currentArea;
+            //p.Path.TotalEdgeProfits = currentEdgeProfits;
+            //p.Path.Quality = currentQuality;
+            visitedPath.PathTypes = string.Join( ", ", addedPathTypes );
+            visitedPath.Surfaces = string.Join( ", ", addedSurfaceTags );
+            visitedPath.SurroundingTags = string.Join( ", ", addedSurroundings );
+        }
+
+
+
         public static void UpdateMetadata ( Problem p, List<Waypoint> waypointList, List<int> nodeIdsL, List<int> nodeIdsR, ref Path returnPath )
         {
 

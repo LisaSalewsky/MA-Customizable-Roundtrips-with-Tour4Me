@@ -58,7 +58,8 @@
                     </label> 
                 </div>
                 <div class="form-group col-sm-8  label-no-padding">
-                    <select id="activity" name="activity"  class="form-control form-control-sm sidemenu-elements">
+                    <select id="activity" name="activity"  class="form-control form-control-sm sidemenu-elements"
+                        onselect="changeActivityButtonSelection(this.value)" onchange="changeActivityButtonSelection(this.value)">
                         <option value="select"> Select</option>
                         <option value="running"> Running</option>
                         <option value="cycling"> Cycling</option>
@@ -681,6 +682,48 @@
 
         }
 
+
+
+
+
+        function changeActivityButtonSelection(newSelection) {
+            var elevationField = document.getElementById('elevation');
+            var steepnessField = document.getElementById('steepness');
+            var surroundingsDropdown = document.getElementById('surroundings');
+            var tourShapeDropdown = document.getElementById('shape');
+            switch (newSelection) {
+                case 'running':
+                    elevationField.value = 50;
+                    steepnessField.value = 30;
+                    tourShapeDropdown.value = 0;
+                    surroundingsDropdown.value = 'Forest';
+                    changeSurroundingsButtonSelection('Forest');
+                    break;
+                case 'cycling':
+                    elevationField.value = 30;
+                    steepnessField.value = 10;
+                    tourShapeDropdown.value = 0;
+                    surroundingsDropdown.value = 'Grassland';
+                    changeSurroundingsButtonSelection('Grassland');
+                    break;
+                case 'hiking':
+                    elevationField.value = 150;
+                    steepnessField.value = 100;
+                    surroundingsDropdown.value = 'Mountains';
+                    changeSurroundingsButtonSelection('Mountains');
+                    tourShapeDropdown.value = 0;
+                    break;
+                default:
+                    elevationField.value = null;
+                    steepnessField.value = null;
+                    surroundingsDropdown.value = 'Select';
+                    changeSurroundingsButtonSelection('Select');
+                    tourShapeDropdown.value = 'select';
+                    break;
+            }
+
+        }
+
         $.ajax({
             type: 'POST',
             url: "MapView.aspx/RenderGraph",
@@ -981,7 +1024,7 @@
                         // Define different colors for markers
                         var colors = ['var(--btn-info-color)', 'var(--highlight-color)', 'var(--warning-color)', 'purple', 'black', 'cyan', 'magenta', 'yellow', 'brown', 'gray'];
 
-                        var colors = ["var(--highlight-color)", "darkgreen", "maroon", "forestgreen", "DarkGoldenRod", "brown", "darkorange", "darkblue", "burlywood", "yellowgreen"]
+                        var colors = ["darkgreen", "maroon", "darkorange", "forestgreen", "DarkGoldenRod", "brown", "darkblue", "burlywood", "var(--highlight-color)", "yellowgreen"]
 
 
 

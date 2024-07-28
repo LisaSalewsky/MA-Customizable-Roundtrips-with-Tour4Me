@@ -352,7 +352,7 @@ namespace Tour4MeAdvancedProject.ObjectClasses
             Metadata.Add( "Path Types: " + ( Path.PathTypes.Length == 0 ? "None available" : Path.PathTypes ) );
             Metadata.Add( "Surfaces: " + ( Path.Surfaces.Length == 0 ? "None available" : Path.Surfaces ) );
             Metadata.Add( "Shape: " + ( negmodifier * Math.Round( Path.CoveredArea ) ) );
-            Metadata.Add( "Quality: " + Math.Round( Path.Quality * 100000, 4 ) );
+            Metadata.Add( "Quality: " + Math.Round( Path.Quality * 1000, 4 ) );
             Metadata.Add( "TotalEdgeProfits: " + Math.Round( Path.TotalEdgeProfits, 4 ) );
             Metadata.Add( "MaximumPossibleArea: " + Math.Round( perfectEllipsoidArea ) );
 
@@ -383,13 +383,14 @@ namespace Tour4MeAdvancedProject.ObjectClasses
                         string formattedTag = char.ToUpper( tag[ 0 ] ) + tag.Substring( 1 );
                         if (Math.Abs( edge.Profit - 0.0001 ) < double.Epsilon && PrefTags.Contains( formattedTag ))
                         {
-                            edge.Profit = 1;
+                            edge.Profit += 1;
                         }
                         if (AvoidTags.Contains( formattedTag ))
                         {
-                            edge.Profit = -1;
+                            edge.Profit += -1;
                         }
                     }
+                    edge.Profit += edge.Profit >= 1 ? 1 : ( edge.Profit < 0 ? -1 : 0.0001 );
                 }
             }
         }

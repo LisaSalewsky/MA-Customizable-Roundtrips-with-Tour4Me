@@ -14,9 +14,9 @@ namespace Tour4MeAdvancedProject.Solver
     {
         public Algo Algo { get; set; } = Algo.Greedy;
         // runs with changing temperature
-        public int Runs { get; set; } = 50;
+        public int Runs { get; set; } = 100;
         // repetitions at each temperature
-        public int Repetitions { get; set; } = 5;
+        public int Repetitions { get; set; } = 10;
         public double Temperature { get; set; } = 0.9;
         public Random Random { get; set; } = new Random();
         public int NumberwaypointList { get; set; } = 10;
@@ -255,7 +255,7 @@ namespace Tour4MeAdvancedProject.Solver
 
                         Path neighboringSolution = GenerateNeighborSolution( problem, useDatastructure, ref waypointList, ref cumulativeProbabilities, ref availableNodes, rnd, waypointAllDistancesForNodeIdDict, out recalculateProbs, ref waypointChangeAndIdx, out int currentWaypointId ); // , out alreadyRecalculated );
 
-                        double neighborQuality = neighboringSolution.Quality;
+                        double neighborQuality = Algo == Algo.minCost || Algo == Algo.Greedy ? neighboringSolution.Quality * 10000 : neighboringSolution.Quality * 1;
 
                         diff = neighborQuality - currentQuality;
 
@@ -787,6 +787,9 @@ namespace Tour4MeAdvancedProject.Solver
                                 // calculate cummulative Probabilities for selecting the index
                                 probabilityList = CalculateProbabilityDistribution( closestNode, problem, availableNodes, waypointList, calculatePointsOfInterest );
                             }
+                            if (probabilityList.Count == 0)
+                            { probabilityList = CalculateFullyRandomDistribution( closestNode, problem, availableNodes, waypointList ); }
+
 
                             // calculate cummulative Probabilities for selecting the index
                             cumulativeProbabilities = new Dictionary<int, double>
@@ -1745,7 +1748,13 @@ namespace Tour4MeAdvancedProject.Solver
             }
 
             currentPath.Quality = problem.GetQuality( problem.GetProfit( currentPath.Visited ), problem.GetArea( currentPath.Visited ), currentPath.Elevation, currentPath.Steepness, currentPath.Length );
+            Utils.UpdatePathMetadata( currentPath, problem );
             currentWaypointId = 0;
+
+            if (currentPath.Quality > 1000)
+            {
+                Console.WriteLine( "ahhhhhhhhhhhhhhhh" );
+            }
             return currentPath;
         }
 
