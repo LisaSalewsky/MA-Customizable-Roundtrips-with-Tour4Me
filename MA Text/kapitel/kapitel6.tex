@@ -2,148 +2,154 @@
 \chapter{Conclusion}
 \label{chapter:conclusion}
 
-In conclusion, the implementations of this thesis have achieved the goals set in the introduction (\ref{sec:goal}):
-The previous version of Tour4Me was extended by both parameter options as well as two meta-heuristic approaches. 
-Additionally, combinations of the two new meta-heuristics and the existing algorithms were implemented.
-The front-end was changed and matched to the added customization options, creating a better overview and improving the overall layout.
-For most data-points and tour lengths, roundtrips can be created using at least one of the available algorithms. 
-The only points that are not considered as valid starting points are those outside the valid graph or without any connections to valid edges.
+In conclusion, the implementations presented in this thesis have successfully achieved the goals set in the introduction (\ref{sec:goal}):
+The previous version of Tour4Me was extended by both parameter options as well as two metaheuristic approaches. 
+Additionally, combinations of these new metaheuristics and the existing algorithms were implemented.
+The front-end was redesigned and matched to the added customization options, resulting in a better overview and improving the overall layout.
+For the majority of data-points and tour lengths, creating roundtrips is now possible, using at least one of the available algorithms. 
+The only exceptions are points that fall outside the valid graph or those lacking any connections to valid edges, which are not considered as valid starting points.
 
 \section{Results}
 \label{sec:results}
 
-Overall, several results can be reported.
-The goal of this thesis was to build a user friendly application that can compute roundtrips for various outdoor activities.
-This goal included both improving the interface as well as adding more customization and algorithmic options.
-Thus, three areas have to be analyzed to gather the results.
+Overall, several significant outcomes can be reported.
+The primary goal of this thesis was to develop a user-friendly application capable of computing roundtrips for various outdoor activities.
+This goal included enhancing the interface and incorporating more customization and algorithmic options.
+To evaluate the results, three areas need to be examined.
 
-\paragraph{Front-end and new customization options}
+\paragraph{Front-end and New Customization Options}
 
-The front-end was fully remodeled, changing all pop-up dialogue windows to foldable menus.
-These menus are split into a side menu, which contains all customization options, and the bottom menu, which displays the information for the generated tours. 
-Other than the pop-up dialogues, using foldable menus allows the user to constantly view all options, if needed.
-Furthermore, moving the customizations to a side menu changes the way the options are displayed. 
-Thus, it is easier to offer additional customization options without the view seeming too cluttered.
+The front-end was fully remodeled, replacing all pop-up dialogue windows with foldable menus.
+These menus are divided into a side menu, which contains all customization options, and a bottom menu, which displays information about the generated tours. 
+Unlike the pop-up dialogues, using foldable menus allows the user to keep all options visible as needed.
+Furthermore, relocating the customization options to a side menu prevents the interface from appearing too cluttered, which makes offering additional customization options easier.
 
-To further prevent the user from feeling overloaded with options, preset activities and default values have been selected.
-For example if the user selects \enquote{hiking} as activity, the elevation is set to 150 meters and the steepness to 100\%.
-For the tour shape, the round shape is picked as a default.
-The surroundings are pre-selected with mountain values and for path types, cycleways and residential areas are set to be undesirable whereas footways, paths and tracks are desirable.
-Similar presets can be chosen for running or cycling, which will fill in most options with matching values for the respective activity.
+To further prevent the user from feeling overwhelmed with options, preset activities and default values were established.
+For example, when a user selects \enquote{hiking} as an activity, the elevation is set to 150 meters and the steepness to 100\%.
+The default tour shape is set to the round option.
+The surroundings are pre-selected with mountain values.
+Path types such as cycleways and residential areas are deemed undesirable, while footways, paths, and tracks are preferred.
+Similar presets are available for running or cycling, filling in most options with values suited to the respective activity.
 
-Additionally, several options are hidden until the user actively selects to view more. 
-The tour shape can be chosen from the three options of round, u-turn, and complex, but a fourth customization option is also presented.
-Choosing this case shows three additional sliders with which the user can change the importances for covered area (roundness), elevation and edge profits according to their own preferences.
-The surrounding variables are also only displayed if the user chooses to pick one of the higher level options that are presented in the respecitve drop down menu.
-To further assist users in their understanding and usage of the app and all options, information buttons have been added to every customization option.
-These buttons show, when hovering over them with the mouse, a short explanation of what the respective option does and how changing or using the parameter will impact the results.
+Moreover, several options remain hidden until the user opts to view them. 
+The tour shape can be chosen from the three options of round, U-turn, and complex, but a fourth customization option is also available.
+Choosing this case reveals three additional sliders with which the user can change the importances for covered area (roundness), elevation and edge profits according to their preferences.
+The surrounding variables are also only displayed if the user chooses to pick one of the higher level options that are presented in the respective drop-down menu.
+To enhance comprehension and usability, information buttons were added to each customization option, providing brief explanations of their functions and effects when hovered over with the mouse.
 
-Generally, only the length and a tour shape have to be selected to be able to generate a tour.
-Thus, even users who do not need or want as many customization options can still easily use the new interface.
-
-
-The new footer menu offers a set of information for the generated tours, allowing the user to easily check if all important variables have been taken into account. 
-Moreover, this menu enables the user to compare different tours to each other, display the best ones and delete unwanted results.
+In general, only the length and a tour shape need to be selected to generate a tour.
+Thus, even users who do not need or want as many customization options can still easily navigate and utilize the new interface.
 
 
-Lastly, a search bar has been added to the map, allowing the user to search for a specific location without the need to move over the map and look for the desired starting point manually.
-This feature is especially helpful, when more cities have been added to the database and more than just Dortmund is covered by the app.
-Having to move the map manually, zooming and scrolling can be tedious and less user friendly.
+The new footer menu offers a set of information for the generated tours, allowing users to easily check if all important variables have been taken into account. 
+Moreover, this menu enables users to compare different tours, display the best ones, and delete unwanted results.
+A search bar has also been added to the map, allowing users to search for a specific starting point without having to manually navigate the map.
+This feature becomes particularly useful, when more cities are included in the database beyond Dortmund.
+Manually moving the map, zooming, and scrolling the map can be tedious and less user-friendly.
 
 
-All in all, several changes have been implemented to create a more user friendly interface and thus make the whole app more usable.
-Especially integrating many additional customization options made this remodeling necessary.
-The new design has a nature theme color scheme and aims to be easy to use.
-All added options have an added explanation, and as many parameters as possible are hidden until the user needs them.
-The menus are self explaining and can be folded and unfolded according to the users preferences.
+Several changes have been implemented to create a more user-friendly interface, making the whole app more usable overall.
+Integrating many additional customization options made this remodeling necessary.
+The new design features a nature-themed color scheme and aims for ease of use.
+Every added option includes an explanation, and as many parameters as possible are hidden until needed.
+The menus are self explaining and can be folded and unfolded according to the user's preferences.
 
 
-\paragraph{Algorithmic changes}
+\paragraph{Algorithmic Changes}
 
 Two new algorithms and five additional combinations have been implemented.
-All of these algorithms showed an increase in their quality and for all analyzed algorithms, the importances impacted the resulting values.
+All of these algorithms demonstrated an increase in their quality over time and for all analyzed algorithms, the importances impacted the resulting values.
 The new algorithms allow the user to change the resulting tour according to their preferences.
-Both MinCost and greedy show very little change when the imporances are changed.
-However both ant colony as well as SA showed an increase in covered area, elevation measure, and edge profit, when the respective importance was increased.
+Both MinCost and Greedy show very little change when the importances are adjusted.
+However, Ant Colony and SA showed an increase in covered area, elevation measure, and edge profit when the respective importance was increased.
 
-Overall, SA and MinCost as well as the combination of these two algorithms return very good results with a high covered area.
-When users specifically desire a u-turn or even a complex tour with many turns, ant colony could be more suitable to achieve the desired shapes.
+Overall, SA, MinCost, and their combinations return very good results with a high covered area.
+For users specifically desiring a U-turn or even a complex tour with many turns, Ant Colony could be more suitable for achieving the desired shapes.
 
-Finally, the goal to be able to calculate tours for (almost) any length while taking user preferences into account and operating in real time was mostly reached.
-For very long tours of more than 10 kilometers, the algorithms is rather slow when building the graph from the database.
-This issue is included in the following chapter, where ideas are given for speeding up the graph creation.
-Other than that, with the calculated parameters for ant colony (25 runs and 100 ants per run) and for SA (10 inner repetitions and 250 runs), very good results can be generated quickly.
-The SA calculations do take a bit more time (see figure \ref{fig:SATimeOverRuns}), but using fewer runs still yields very good results and cuts down the run time significantly.
-
-\begin{figure}
-	\centering
-	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/SACasesTempFctionTimeMed.svg}
-	\caption{SA time over runs (median)}
-	\label{fig:SATimeOverRuns}
-\end{figure}
+The goal of calculating tours for (almost) any length while considering user preferences and operating in real-time was largely achieved.
+For very long tours of more than 10 kilometers, the algorithms are relatively slow in building the graph from the database.
+This issue is discussed in Section \ref{sec:futureWork}, which provides ideas for speeding up the graph creation.
+Other than that, with the calculated parameters for Ant Colony (25 runs and 100 ants per run) and SA (10 inner repetitions and 250 runs), very good results can be generated quickly.
+The SA calculations take a bit more time (see Figure \ref{fig:SATimeOverRuns}), but using fewer runs still yields very good results and significantly reduces the run time.
 
 
-The new algorithms all take user preferences into account and all of them can generate results for almost any length and starting point.
-Lengths that exceed the available data and starting points that are either outside the current data table or at dead ends cannot be covered yet.
-But other than those exceptions, any length and starting point return a tour.
 
-All in all, the three areas have resulted in improved versions of the previous Tour4Me.
-The front-end is more user friendly and displays new customization options.
-These new options are considered when calculating tours and the newly implemented algorithms take the values into account with the respective selected importance.
+The new algorithms consider user preferences and can generate results for almost any length and starting point.
+Lengths exceeding the available data and starting points outside the current data table or at dead ends cannot be covered yet.
+However, with those exceptions, any length and starting point will return a tour.
+
+In conclusion, the improvements across these three areas have resulted in enhanced versions of the previous Tour4Me application.
+The front-end is more user-friendly and displays new customization options.
+These new options are considered when calculating tours and the newly implemented algorithms take the user-selected importance values into account.
 
 
 
 \section{Future Work}
 \label{sec:futureWork}
 
-For this thesis, several changes have been implemented to create an app that offers many customization options and also utilizes different algorithms to find roundtrips that are suited to the users preferences.
-However, there are still many open ends to optimize and enhance the current solution.
+For this thesis, several changes were implemented to develop an app offering extensive customization options and also utilizing different algorithms to find roundtrips that are suited to the user's preferences.
+However, there remain several areas for optimization and enhancement.
 
-First, there are only a few surrounding information available in the OSM data, despite the fact that the map visualization does have areas colored based on their surroundings.
-Thus, the information are saved at some point and a means to extract them should exist.
+First, there are only few surrounding information available in the OSM data, despite the fact that the map visualization does have areas colored based on their surroundings.
+This coloring implies that the information is stored somewhere, and a method to extract them should exist.
 Using the visualization or the data used to find the correct colors could enable a much wider coverage of points with respective surrounding information. 
-Adding these tags will result in many more edges that can be labeled according to the kind of area they are placed in and thus result in a much better portray and filtering of the actual nodes.
-Currently, the limited surrounding information make the chance of these data to impact a tour very slim.
+Adding these tags would result in many more edges being labeled according to the area they are in, leading to a more accurate portrayal and filtering of the actual nodes.
+Currently, the limited surrounding information makes the chance of this data impacting a tour very slim.
 Only about 8\% of the nodes in Germany can be matched to surrounding information\footnote{\url{https://dashboard.ohsome.org/}, last accessed: 03.06.2024}.
 
-Additionally, the used elevation information could be upgraded to use a more fine grained database, resulting in more precise values. 
-Currently, it is possible to end up with a steepness of over 100\% because of the inaccurate elevation information.
-Better versions could be available from the NASA, however downloading and using them was a lot more complicated than the docker setup from open elevation.
-A more detailed research for better data -- that can also be easily used and queried -- has to be done to determine a good solution for this problem.
+Additionally, the elevation data used could be upgraded to a more fine grained database, resulting in more precise values. 
+Currently, a tour could end up with a steepness of over 100\%, while the real points differ only slightly in their elevation, due to the inaccurate elevation information.
+Superior versions might be available from NASA, however downloading and using them proved more complicated than the docker setup from Open-Elevation.
+More detailed research is needed to find better data that can be easily used and queried to provide a reliable solution.
 
 Aside from fixing current data issues, several other enhancements and extensions are possible.
-The number of parameters to change the user preferences can be increased. 
-Especially for elevation information, several additional constraints could be used:
+The number of parameters to adjust user preferences can be increased, particularly for elevation information.
+Several additional constraints could be implemented:
 \begin{itemize}
-	\item steepness split into ascending and descending values: This addition is very interesting for people with knee problems. Oftentimes steep ascensions are not a problem, but steep descends put too much strain on their knees. Thus, directed tours that can be bound for both steepness values separately can be extremely useful.
-	\item adding more detailed options: currently, the overall elevation difference in the tour is calculated. However, many other information could be interesting:
-	 A bound on how long any part of the tour is allowed to constantly ascend or descend. This could again be split into two variables.
-	Additionally, the maximum ascend per 50, 100, or 1000 m could be more interesting than a maximum steepness of any small part.
-	\item a visualization of the height profile of the tour: this is mainly a front-end extension, but depending on the needed data, the way paths are saved might need to be changed to allow for saving and returning elevation information of the tour for this visualization.
+	\item Steepness split into ascending and descending values: This feature would be beneficial for individuals with knee problems, as oftentimes steep ascents might not be problematic, but steep descents can strain their knees. Directed tours that can be adjusted for both steepness values separately would be extremely useful.
+	\item Adding more detailed options: Currently, the overall elevation difference in the tour is calculated, but many other information could be useful:
+	For example a limit on how long any part of the tour is allowed to continuously ascend or descend, which could be split into two variables.
+	Additionally, the maximum ascent per 50, 100, or 1000 m could be more interesting than a maximum steepness of any small part.
+	\item A visualization of the height profile of the tour: This profile view is mainly a front-end extension, but depending on the required data, the way paths are saved might need to be changed to allow for saving and returning elevation information of the tour for this visualization.
 \end{itemize}
 
-Furthermore, many other algorithms -- especially different meta-heuristics -- could be implemented. 
-One particularly interesting approach could be using a genetic algorithm.
-For this, only the genetic algorithm itself as well as several combinations could be of interest. 
-These combinations would demand much more changing than the current combinations, since generations of the algorithms have to be created, mutated, and optimized. 
+Additionally, as highlighted in the evaluation (see Chapter \ref{chapter:evaluation}), several other test cases could be executed.
+For Ant Colony, the parameters for the pheromone amount of every ant, evaporation rate, penalty scaling and trail intensity were fixed for all test cases.
+Adjusting these variables could impact both the quality of the results and the overall run time.
+Similarly, for SA, variation in the initial temperature and the number of Waypoints could be explored.
+Furthermore, the way neighboring solutions are determined or the calculated probability distribution could be changed.
+These parameters are at the core of SA and could change the results significantly.
+
+Aside from testing algorithm-specific configurations, different tour lengths and other tag combinations could be tested as well.
+The current test configuration uses only desirable tags, but experimenting with marking some values as undesirable and adding other desirable tag values could reveal how these tags influence the resulting tour.
+The same is true for the allowed maximum steepness, maximum elevation, and the general starting point.
+These values have been set to fixed values to assure for similar test cases, but building a tour from varying starting points and changing the allowed steepness and elevation could significantly impact the results as well.
+
+Overall, there are several test cases that can be explored without needing to extend the current application.
+Finding a good configuration of all parameters could improve the results in terms of achieved quality but also regarding the covered area, elevation, and edge profit returned for respective high importance values. 
+
+
+Furthermore, many other algorithms, particularly different metaheuristics, could be implemented. 
+One promising approach is the use of genetic algorithms.
+This extension would involve not only the genetic algorithm itself but also several combinations. 
+These combinations would require more substantial modifications than the current ones, since generations of the algorithms have to be created, mutated, and optimized. 
 To realize genetic changes, several possible approaches can be thought of. 
 For a combination with the ant algorithm, changing the ant parameters and having the ants with the best results survive and create offspring could greatly increase the quality of the ant solutions.
-Combining with SA to try out different temperatures and cooling schedules, different methods of creating neighboring solutions, or many other base operations could be interesting.
-Again, this combination could yield very different and possibly much better resulting tours.
+Combining genetic algorithms with SA to experiment with different temperatures, cooling schedules, different methods of creating neighboring solutions, and other base operations could also yield interesting and possibly significantly improved results.
 
-Another possibility is to include existing tour data. 
+Another possibility is to integrate existing tour data. 
 Apps like Komoot provide user-generated tours that could be beneficial for some users.
 Furthermore, many hiking trails or predefined cycling tours have been created by cities.
-Using these routes can increase to options to choose from and also provide a base set of tours to run the implemented algorithms on.
+Using these routes can increase the options to choose from and also provide a base set of tours to run the implemented algorithms on.
 
 
-Aside from these extensions, the runtime is a main part of the implementation that could be enhanced by a lot. 
-Currently, the graph creation takes very long when calculating tours of 10 or more kilometers.
+Improving runtime is another crucial area for enhancement.
+Currently, graph creation takes a long time when calculating tours of 10 kilometers or more.
 With the implementation that directly accesses the database and reads nodes and edges sequentially, parallelization is not possible.
-Thus, a different way to access the database, a fully different database, or generally better implementation strategies for the import could result in a much better runtime.
-Furthermore, the implemented meta-heuristics can most likely also be improved in terms of the used data structures, implementation strategies, and parallelization.
+Adopting a different method of database access, using a different database altogether, or implementing better import strategies could significantly improve run time.
+Additionally, the metaheuristics used could benefit from optimization in terms of data structures, implementation strategies, and parallelization.
 
-In conclusion, while the current version already adds to the possibilities and enhances the results and customization options of the base application Tour4Me, there are still several interesting extensions as well as many parts that can be enhanced and improved on.
-
+In conclusion, while the current version of the app enhances the possibilities and customization options of the base application Tour4Me, there remain several interesting extensions, and numerous areas for improvement.
+These enhancements will further refine the application's functionality and user experience.
 
 

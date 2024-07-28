@@ -9,12 +9,34 @@
 \usepackage{mathtools}
 \usepackage{listings}
 
+\usepackage{adjustbox}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
 \pgfplotsset{compat=newest}
 \usepackage{filecontents}
 \usepackage{chngcntr}
+\usepackage{csvsimple}
+\usepackage{svg}
+\usepackage{pdfpages}
+\setsvg{inkscape={"D:/Program Files/Inkscape/bin/inkscape.com"}}
+\newcommand{\round}[2]{\pgfmathparse{round(#1*10^#2)/10^#2}\pgfmathprintnumber{\pgfmathresult}}
+
+
+\usepackage{lipsum}
+
+%   Reduce the margin of the summary:
+\def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
+\let\endchangemargin=\endlist 
+
+%   Generate the environment for the abstract:
+%\newcommand\summaryname{Abstract}
+%\newenvironment{abstract}%
+%{\small\begin{center}%
+%		\bfseries{\summaryname} \end{center}}
+
+\newenvironment{abstract}{}{}
+\usepackage{abstract}
 
 % Theorem-Umgebungen
 \usepackage[amsmath,thmmarks]{ntheorem}
@@ -25,7 +47,7 @@
 
 
 \usepackage[style=numeric , isbn=false, url=false,
-doi=true, backend=biber,defernumbers=false,uniquename=false, autolang=hyphen,bibencoding=UTF-8]{biblatex}
+doi=true, backend=biber, defernumbers=false, uniquename=false, autolang=hyphen, minnames=99, maxnames=99, bibencoding=UTF-8]{biblatex}
 \addbibresource{literatur/LS11Buchin.bib}
 \AtEveryBibitem{%
 	\clearfield{note}%

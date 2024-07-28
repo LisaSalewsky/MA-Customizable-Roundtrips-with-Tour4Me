@@ -2,59 +2,72 @@
 \chapter{Evaluation}
 \label{chapter:evaluation}
 
-The following chapter presents a general analysis of the overall performance of ant colony, SA and all implemented combinations.
-In this analysis, several different parameters are tested to find fitting combinations of variables and achieve results of high quality.
-For ant colony, several different variables could be changed and tested. 
-However, analyzing any possible option would be too much for the frame of this thesis.
+This chapter presents a comprehensive analysis of the overall performance of Ant Colony, SA, and their implemented combinations.
+In this analysis, several different parameter combinations are tested to achieve results of high quality.
+The performance of Ant Colony is influenced by various parameters that could be changed and tested. 
+However, analyzing all possible options would exceed the scope of this thesis.
 Thus, the most important parameters with the highest impact on the results have been chosen.
-For SA, most variables could be tested in different combinations, however the way a neighborhood was constructed has not been varied at all, since only two different options have been implemented (using a probability distribution or picking waypoints randomly).
-Furthermore, the implemented combinations of ant colony with greedy and MinCost, as well as the combinations of SA with greedy, MinCost, and ant colony have been analyzed in comparison to each other. 
+For SA, most variables could be tested in different combinations, however, the way a neighborhood was constructed has not been varied at all, since only two different options have been implemented (using a probability distribution or picking Waypoints randomly).
+Furthermore, the implemented combinations of Ant Colony with Greedy and MinCost, as well as the combinations of SA with Greedy, MinCost, and Ant Colony have been analyzed in comparison to each other. 
 
 
-Both for ant colony as well as for SA, determining the number of outer loops as well as the number of ants per outer run for ant colony and the number of repetitions per outer run for SA are very important parameters.
-Furthermore, using the variables that can be changed by the user (importances of covered area, elevation, and edge profit) and analyzing their impact on the respective value as well as the quality are interesting factors to look into.
-
+For both Ant Colony and SA, determining the number of outer loops as well as the number of ants per outer run for Ant Colony and the number of repetitions per outer run for SA are crucial parameters.
+Furthermore, using the variables that can be changed by the user (importances of covered area, elevation, and edge profit) and analyzing their impact on the respective value as well as the overall quality are interesting factors to examine.
 Thus, these test cases are performed for both algorithms.
-First, the number of outer runs that are needed to achieve relatively good results for both algorithms (see pseudocode \ref{alg:AntColonyImplementation} and \ref{alg:SAImplementation} respectively) are determined.
-Next, the inner loops and how the number of ants or the number of inner repetitions impacts the quality are analyzed.
-Lastly, the impact of each quality feature (covered area, edge profit and elevation/steepness) depending on the respective importance is visualized.
-Furthermore, the influence of each of these features on the quality is analyzed as well.
 
-To achieve the following graphs, 30 test runs have been done if not stated otherwise. 
-Most of the plots show the median of these 30 runs, however sometimes the average showed clearer results.
-For every case, the used base parameters that have not been varied are described.
-However, some parameters are not changed at all and always used for every run, namely
+First, the number of outer runs that are needed to achieve relatively good results for both algorithms (see pseudocode \ref{alg:AntColonyImplementation} and \ref{alg:SAImplementation} respectively) is determined.
+Next, the inner loops and how the number of ants or the number of inner repetitions affects the quality are analyzed.
+Additionally, the impact of each quality feature (covered area, edge profit and elevation) depending on the respective importance is visualized.
+Lastly, the influence of each of these features on the quality is analyzed as well.
+
+To achieve the following graphs, 30 test runs were conducted per varied variable unless stated otherwise.
+The number of test runs is relatively small since conducting more tests per value would have been too time consuming.
+Due to this small number of trials, the median results are presented and described.
+However, for most cases, the average results are additionally presented in the appendix.
+For both algorithms, to determine the number of outer runs, 100 test cases were conducted, making the average results more reliable.
+Thus for these two cases, the average graphs were plotted.
+
+For every case, the used base parameters that have not been varied are described in the corresponding paragraphs.
+Some parameters remained constant across all test runs, specifically:
+
 \begin{itemize}
-	\item the tour length of 4000m
-	\item the desired tags for path type, surface, and surroundings
+	\item The starting point in front of Otto-Hahn-Straße 14
+	\item The tour length of 4000m
+	\item The desired tags for path type, surface, and surroundings
 	\begin{itemize}
-		\item for path type: Asphalt
-		\item for surface: Paved, Cobblestone, Gravel, Unpaved, Compacted, FineGravel, Rock, and Pebblestone
-		\item for surroundings: forest: tree
+		\item Path type: asphalt
+		\item Surface: paved, cobblestone, gravel, unpaved, compacted, fine gravel, rock, and pebblestone
+		\item Surroundings: forest: tree
 	\end{itemize}
-	\item for ant colony additionally:
+	\item A maximum elevation of 100m
+	\item A maximum steepness of 100\% 
+	\item For Ant Colony, additional parameters include:
 	\begin{itemize}
-		\item the evaporation rate of 0.4
-		\item the size of the scaling value in case a penalty was needed (e.g. for using an edge twice) of 100
-		\item the initial trail intensity of 0.0001
-		\item the pheromone amount every ant can place per edge of 10
+		\item The evaporation rate of 0.4
+		\item The scaling value for penalties, in case a penalty was needed (e.g. using an edge twice) of 100
+		\item The initial trail intensity of 0.0001
+		\item The pheromone amount every ant can place per edge of 10
 	\end{itemize}
-	\item for SA additionally:
+	\item For SA, additional parameters include: 
 	\begin{itemize}
-		\item the initial temperature value of 0.9
-		\item the number of waypoints used to split up initial solutions of 10
+		\item The initial temperature value of 0.9
+		\item The number of Waypoints used to split up initial solutions of 10
 	\end{itemize}
 \end{itemize}
 
-In all graphs the x-axis shows the varied parameter and the y-axis the resulting values that will be analyzed.
-Only for ant colony, test runs with two varied parameters (namely $\alpha$ and $\beta$) have been done.
-For these cases, the x- and y-axis show the varied parameters and the z-axis the resulting values that will be analyzed.
-To give a better overview over the results, several different views for this case have been created.
+The choice for the steepness was made due to the coarse grained elevation values.
+The inaccuracy of this data resulted in many parts with a calculated steepness exceeding 100\% which did not represent the reality.
+Therefore, a high percentage was chosen to minimize the influence of the inaccurate data.
+
+In all graphs, the x-axis represents the varied parameter and the y-axis shows the resulting values that will be analyzed.
+Only for Ant Colony, test runs with two varied parameters (namely $\alpha$ and $\beta$) were conducted.
+In these cases, the x- and y-axes show the varied parameters and the z-axis shows the resulting values that will be analyzed.
+To provide a clearer overview of the results, several different views for these cases have been created.
 
 
-\section{Ant colony}
+\section{Ant Colony}
 %
-%To calculate a solution with ant colony, several variables have to be selected for the various calculations (see sections \ref{subsec:antColonyBackground} and \ref{subsec:antColonyImplementation}). 
+%To calculate a solution with Ant Colony, several variables have to be selected for the various calculations (see sections \ref{subsec:antColonyBackground} and \ref{subsec:antColonyImplementation}). 
 %The relevant equations are listed below.
 %All parameters that had to be set to a fitting value are highlighted in bold:
 %
@@ -71,89 +84,82 @@ To give a better overview over the results, several different views for this cas
 %		\end{cases}
 %\end{align}
 %	
-%The pheromone amount to be placed ($\Delta\tau_{ij}^k$) is based on the edgeProfit $p(i,j)$ (see equation \ref{eq:newProfitCalc}) the edge with the length $l(i,j)$ will grant the tour
+%The pheromone amount to be placed ($\Delta\tau_{ij}^k$) is based on the edgeProfit $p(i,j)$ (see Equation \ref{eq:newProfitCalc}) the edge with the length $l(i,j)$ will grant the tour
 %The length $l(i,j)$ of the edge from node \textit{i} to node \textit{j} is multiplied by the profits $p(i,j)$ the same edge can collect based on the assigned tags, which is multiplied with the pheromone amount $Q = 10$, a single ant can place on the trail.
 
 
-For ant colony, the first test cases resolved around finding good values for $\alpha$ and $\beta$, as these two parameters have a large impact on all following results.
-After selecting the values, the test cases that have been stated in the introduction (number outer runs and ants per run, and impact of the importances on the respective value and the overall quality) are performed.
+For Ant Colony, the initial test cases focused on finding good values for $\alpha$ and $\beta$, as these two parameters significantly influenced all following results.
+After determining suitable values for $\alpha$ and $\beta$, the test cases outlined in the introduction, i.e. the number of outer runs, ants per run, and impact of the importances on the respective value and the overall quality, were performed.
 
-For ant colony, the visibility is calculated based on the respective importances for covered area ($i_A$), edge profit ($i_p$) and elevation ($i_e$).
+The visibility for Ant Colony is calculated based on the respective importances for covered area ($i_A$), edge profit ($i_p$), and elevation and steepness ($i_e$).
 These parameters are varied in increments of 0.1 for one optimization option in all cases where the importance is plotted.
-When the covered area importance is plotted, the importances of the edge profit and elevation are half of the remaining importance.
-For example if covered area importance of 0.2 is selected, 0.8 are remaining.
-Thus, the importance for edge profit and elevation are each set to 0.4.
+When plotting the covered area importance, the importances of the edge profit and elevation are set to half of the remaining importance.
+For example, if covered area importance of 0.2 is selected, the remaining importance is 0.8 and thus, the importance for edge profit and elevation are each set to 0.4.
 
 
 
-\paragraph{$\mathbf{\alpha}$ and $\mathbf{\beta}$}
+\paragraph{\boldmath${\alpha}$ and \boldmath${\beta}$}
 
-Before any test case can be ran, fitting values for $\alpha$ and $\beta$ need to be determined.
-Since these variables influence the probability of choosing an edge, they impact the whole algorithm.
-All of the test cases have been performed with 100 ants per run and 25 outer iterations.
-The importances have all been set to 0.33. 
+Before running any test cases on user-defined parameters, fitting values for $\alpha$ and $\beta$ need to be determined.
+These parameters influence the probability of choosing an edge and impact the entire algorithm.
+All test cases were performed with 100 ants per run and 25 outer iterations, with the importances set to 0.33 each. 
 According to Dorigo et al. \cite{dorigo_ant_1996}, the values of $\alpha$ and $\beta$ should be in the range of $[0.5,5]$.
-Thus, to attain good results, three scenarios have been created:
+To identify good values, five scenarios were created:
 \begin{itemize}
-	\item $\alpha$ set to 1 and $\beta$ varying in $[0.5, 5]$
 	\item $\beta$ set to 1 and $\alpha$ varying in $[0.5, 5]$
-	\item $\alpha$ and $\beta$ varying in $[0.5, 5]$
+	\item $\alpha$ set to 1 and $\beta$ varying in $[0.5, 5]$
+	\item Both $\alpha$ and $\beta$ varying in $[0.5, 5]$
+	\item $\beta$ set to 1.5 and $\alpha$ varying in $[0.5, 5]$
+	\item $\alpha$ set to 0.8 and $\beta$ varying in $[0.5, 5]$
 \end{itemize}
 
 
-For the three listed cases, the corresponding graphs are visualized in figures \ref{fig:antColonyCasesAlphaVariedMed} to \ref{fig:antColonyCasesAlphaAndBetaVariedMedAll} and additional visualizations can be found in the appendix (figures \ref{fig:antColonyCasesAlphaVariedAvg} to \ref{fig:antColonyCasesAlphaAndBetaVariedAvgAll})
-The first figure (\ref{fig:antColonyCasesAlphaVariedMed}) shows the median of 30 test runs for  $\beta = 1$ and a varying $\alpha$ where the steps started in 0.1 increments between 0.5 and 1.0 and then continued in 0.5 increments from 1.0 to 5.0.
+For the five listed cases, the corresponding graphs are visualized in Figures \ref{fig:antColonyCasesAlphaVariedMed} to \ref{fig:antColonyCasesBetaVariedAlpha08} and additional visualizations can be found in the appendix (Figures \ref{fig:antColonyCasesAlphaVariedAvg} to \ref{fig:antColonyCasesAlphaAndBetaVariedAvgAll}).
+The first Figure (\ref{fig:antColonyCasesAlphaVariedMed}) shows the median quality results of 30 test runs for $\beta = 1$ per $\alpha$, where the steps started in 0.1 increments between 0.5 and 1.0 and then continued in 0.5 increments from 1.0 to 5.0.
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesAlphaVariedMed.svg}
-	\caption{Ant colony quality values over varied alpha (median)}
+	\caption{Ant colony median quality values over varied $\alpha$, $\beta = 1$}
 	\label{fig:antColonyCasesAlphaVariedMed}
 \end{figure}
 
 
-The graph shows, that for the set $\beta$, the best results can be achieved with a very low $\alpha$ between 0.5 and 2.0.
+The results as shown in Graph \ref{fig:antColonyCasesAlphaVariedMed} indicate that for a constant $\beta = 1$, the best outcomes can be achieved with a low $\alpha$ between 0.5 and 2.0, and with $\alpha = 3.5$.
 
-In the second figure, the same is shown for $\alpha = 1$ and a varying $\beta$.
-Again, between 0.5 and 1.0, the steps increased by 0.1 and from 1.0 to 5.0, the steps increased by 0.5.
+Similarly, the second figure displays results for $\alpha = 1$ and a varying $\beta$.
+Again, between 0.5 and 1.0, the steps on the x-axis increased by 0.1, and by 0.5 from 1.0 to 5.0.
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesBetaVariedMed.svg}
-	\caption{Ant colony quality values over varied beta (median)}
+	\caption{Ant colony median quality values over varied $\beta$, $\alpha = 1$}
 	\label{fig:antColonyCasesBetaVariedMed}
 \end{figure}
 
-This graph indicates that a low $\beta \leq 1$ or $\beta = 3$ could yield good results.
-However, since both graphs have a set second variable, the results could be dependent on the respective value.
-To get a better overview over the effects of both $\alpha$ and $\beta$, additional test cases have been run where both variables varied in the interval $[0.5, 5]$.
+Graph \ref{fig:antColonyCasesBetaVariedMed} indicates that a low $\beta$ of  $0.5, 1.5$, or $\beta = 3.5$ could yield good results.
+However, since both graphs have a constant second variable, the results could be dependent on the respective value.
+To get a better overview over the effects of both $\alpha$ and $\beta$, additional test cases were run where both variables varied in the interval $[0.5, 5]$.
 Again, the step size between 0.5 and 1.0 was 0.1 and the step size between 1.0 and 5.0 was 0.5.
 
-The applied color map highlights low values in blue and purple, middling values in magenta and pink and high values in orange and yellow.
-Blue being the lowest and yellow the highest values.
+The applied color map highlights low values in blue and purple, middling values in magenta and pink, and high values in orange and yellow.
+%Blue being the lowest and yellow the highest values.
 In the top subfigure, the different points of the median of all test cases can be seen.
-The two figures below show a surface plot of the same test case, subfigure \ref{fig:antColonyCasesAlphaAndBetaVariedMedSurface} in a side view, subfigure \ref{fig:antColonyCasesAlphaAndBetaVariedMedTopDown} in a top down view. 
-All three figures show yellow points for a combination of very low $\alpha$ and low $\beta$ values with $\alpha < 1.0$ and $\beta \leq 3.0$, for very high values of $beta$ ($\beta \geq 4.0$) and middling values of $\alpha$ ($2 \leq \alpha \leq 4.5$) and one high value for $\alpha = 5$ and $\beta = 2.5$.
+The two figures below show a surface plot of the same test case, Subfigure \ref{fig:antColonyCasesAlphaAndBetaVariedMedSurface} in a side view, and Subfigure \ref{fig:antColonyCasesAlphaAndBetaVariedMedTopDown} in a top-down view. 
+All three figures show yellow points for a combination of very low $\alpha$ and low $\beta$ values with $\alpha < 1.0$ and $\beta \leq 3.0$, for very high values of $\beta$ ($\beta \geq 4.0$) and $\alpha$ values in a range of $2 \leq \alpha \leq 4.5$, and one high value for $\alpha = 5$ and $\beta = 2.5$.
 
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[H]{\textwidth}
-		\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesAlphaAndBetaVariedMed.svg}
-		\caption{Ant colony quality values over varied alpha and beta (median)}
-		\label{fig:antColonyCasesAlphaAndBetaVariedMed}
-	\end{subfigure}
-	
-	\begin{subfigure}{\textwidth}
-		\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceMed.svg}
-		\caption{Ant colony quality values over varied alpha and beta surface plot (median)}
+\begin{figure}
+	\begin{subfigure}{0.48\textwidth}
+		\includesvg[width=\textwidth]{bilder/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceMed.svg}
+		\caption{Ant colony median quality values over varied $\alpha$ and $\beta$ surface plot}
 		\label{fig:antColonyCasesAlphaAndBetaVariedMedSurface}
 	\end{subfigure}
-	
-	\begin{subfigure}{\textwidth}
-		\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceMedTopDown.svg}
-		\caption{Ant colony quality values over varied alpha and beta surface plot top down view (median)}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\includesvg[width=\textwidth]{bilder/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceMedTopDown.svg}
+		\caption{Ant colony median quality values over varied $\alpha$ and $\beta$ surface plot top-down view}
 		\label{fig:antColonyCasesAlphaAndBetaVariedMedTopDown}
 	\end{subfigure}
 	\caption{Plot of varied $\alpha$ and $\beta$ in different views}
@@ -162,24 +168,47 @@ All three figures show yellow points for a combination of very low $\alpha$ and 
 
 
 
+The median quality plots in Graph \ref{fig:antColonyCasesAlphaAndBetaVariedMedAll} provide several potential options for $\alpha$ and $\beta$. 
+However, the plots of the average qualities (see Figure \ref{fig:antColonyCasesAlphaAndBetaVariedAvgAll}) show a peak at $\alpha = 0.8$ and $\beta = 1.5$, aligning with one of the options shown in the median quality plots in Figure \ref{fig:antColonyCasesAlphaAndBetaVariedMedAll}.
+
+Furthermore, tests with $\alpha$ set to 0.8 and a varying $\beta$ as well as with $\beta$ set to 1.5 and a varying $\alpha$ have been conducted.
+The results are shown in Figures \ref{fig:antColonyCasesAlphaVariedBeta15} and \ref{fig:antColonyCasesBetaVariedAlpha08}.
 
 
-These median plots leave several options for $\alpha$ and $\beta$ to choose from. 
-However, the plots of the averages (see figure \ref{fig:antColonyCasesAlphaAndBetaVariedAvgAll}) show a peak at $\alpha = 0.5$ and $\beta = 1.5$, which matches one of the options shown in the median plots in figure \ref{fig:antColonyCasesAlphaAndBetaVariedMedAll}.
-Using these results, $\alpha$ and $\beta$ were chosen to be set to $\alpha = 0.5$ and $\beta = 1.5$.
-
-\paragraph{Quality over runs}
-
-The first test that has been conducted visualizes how many runs of the outer loop of ant colony are needed before the quality increase slows to a plateau. 
-In the following figure, the results of the average from 100 tests are shown, each executed with 100 ants. 
-The \enquote{Run}-axis displays the number of runs in the outer loop, the \enquote{Quality}-axis shows the resulting quality value.
-This figure displays the average of the conducted 100 runs.
-
-
-\begin{figure}[H]
+\begin{figure}
 	\centering
-	\includesvg[width=0.9\textwidth]{bilder/plots/antColonyCasesNumberRunsQualityAvgWithoutFittedLine.svg}
-	\caption{Ant colony quality over runs (average)}
+	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesAlphaVariedBeta15Med.svg}
+	\caption{Ant colony median quality values over varied $\alpha$, $\beta = 1.5$}
+	\label{fig:antColonyCasesAlphaVariedBeta15}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesBetaVariedAlpha08Med.svg}
+	\caption{Ant colony median quality values over varied $\beta$, $\alpha = 0.8$}
+	\label{fig:antColonyCasesBetaVariedAlpha08}
+\end{figure}
+
+
+The plots in Graphs \ref{fig:antColonyCasesAlphaVariedBeta15} and \ref{fig:antColonyCasesBetaVariedAlpha08} show that for a constant $\beta$ of 1.5, higher quality values can be found for $ 0.6 \leq \alpha \leq 0.8$ and $\alpha = 4$.
+Of these possible options, the peak for $\alpha = 0.8$ matches the results of Figures \ref{fig:antColonyCasesAlphaAndBetaVariedMedAll}.
+More high values present in the second plot (see Figure \ref{fig:antColonyCasesBetaVariedAlpha08}) where $\alpha$ was set to 0.8:
+For $\beta = 0.6$ , $0.9 \leq \beta \leq 1.5$ and $3.5 \leq \beta \leq 4$, high quality values are returned.
+Of these possible options, the peak for $\beta = 1.5$ matches the results of Figure \ref{fig:antColonyCasesAlphaAndBetaVariedMedAll}, highlighting that these choices result in a higher quality of the returned tour.
+Based on these results, $\alpha$ and $\beta$ were chosen to be set to $\alpha = 0.8$ and $\beta = 1.5$ for the following test cases.
+
+
+\paragraph{Quality Over Runs}
+
+The next conducted test (see Figure \ref{fig:AntColonyQualityRuns}) visualizes how many runs of the outer loop of Ant Colony are needed before the quality increase slows to a plateau. 
+The respective figure shows the results of the average quality values from 100 tests per outer loop run, each executed with 100 ants. 
+The \enquote{Run}-axis displays the number of runs in the outer loop, while the \enquote{Quality}-axis indicates the resulting quality value.
+
+
+\begin{figure}
+	\centering
+	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesNumberRunsQualityAvgWithoutFittedLine.svg}
+	\caption{Ant colony average quality values over runs}
 	\label{fig:AntColonyQualityRuns}
 \end{figure}
 
@@ -189,178 +218,183 @@ This figure displays the average of the conducted 100 runs.
 %	\label{fig:AntColonyQualityRunsLogFunc}
 %\end{figure}
 
-The above figure has a steep increase in quality for 1 to 5 runs.
-After this, the increase slows to a near plateau and remains on a relatively even level for the following displayed runs. 
-The graph indicates, that after 10-15 runs, no significant increase in quality is achieved, even with a much larger number of runs. 
-Thus, using 20 iterations for the following test cases should be enough to generate good results.
+Figure \ref{fig:AntColonyQualityRuns} shows a steep increase in quality for 1 to 5 runs.
+After this initial phase, the increase slows to a near plateau and remains relatively even for the subsequent runs. 
+The graph indicates that after 10-15 runs, no significant increase in quality is achieved, even with a larger number of runs. 
+Thus, 20 iterations were deemed to be sufficient for generating good results in the following test cases.
 
 
-Next, the number of ants and how they impact the quality of a given solution is shown. 
-The graph displays the median of the results of 30 test runs.
-Especially for fewer ants, some outliers of exceptionally high qualities can be seen. 
-This is more obvious in the plot that shows all runs (see figure \ref{fig:AntColonyQualityAntsAll} in the appendix).
-However, the increase in the median is genuine for 100 to 500 ants, showing that overall, the more ants are used, the better the results get.
+Next, the number of ants and how they impact the quality of a given solution was examined. 
+Graph \ref{fig:AntColonyQualityAnts} displays the median quality values of the results of 30 test runs per selected number of ants.
+Notably, some outliers of exceptionally high qualities are evident with fewer ants. 
+These outliers are more apparent in the plot that shows all runs (see Figure \ref{fig:AntColonyQualityAntsAll} in the appendix).
+However, the increase in median quality values from 100 to 500 ants demonstrates that, overall, more ants result in better outcomes.
 
-For the following use cases, 100 ants have been chosen, since the case with 100 ants is the first that does not show a single outlier, but several higher quality values and a relatively high median value. 
-Using more ants increases the run time, which is already relatively long for just 100 ants and the selected 20 iteration. 
+For the following use cases, 100 ants were selected, since the case with 100 ants was the first that did not show a single outlier, but several higher quality values and a relatively high median value. 
+Although using more ants improves the results, the run time, which is already relatively long for just 100 ants and the selected 20 iterations, also increases. 
 
-\begin{figure}[H]
+%(see Figure \ref{fig:}) \#TODO add time plot!!!
+
+
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesNumAntsMed.svg}
-	\caption{Ant colony quality over number ants (median)}
+	\caption{Ant colony median quality values over number ants}
 	\label{fig:AntColonyQualityAnts}
 \end{figure}
 
 
 
 
-\paragraph{Covered area}
+\paragraph{Covered Area}
 
-To analyze the impact of the covered area importance on the resulting covered area as well as on the general quality, for both cases, tests have been run.
-The first figure shows the median results for 30 test runs per importance value as well as the respective lines of best fit for the covered area importance values.
-The second figure shows the results with the same configuration for the median of the overall quality.
+To analyze the impact of the covered area importance on both the resulting covered area and general quality, several tests were conducted.
+The first Figure (\ref{fig:AntColonyAreaMed}) shows the median covered area results for 30 test runs per importance value and the respective lines of best fit for the covered area importance values.
+The second Figure (\ref{fig:AntColonyAreaQualityMed}) shows the results of the median quality values with the same configuration.
 Graphs displaying the respective average values can be found in the appendix (see \ref{fig:AntColonyAreaAvg} and \ref{fig:AntColonyAreaQualityAvg}).
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesCoveredAreaMed.svg}
-	\caption{Ant colony covered area over covered area importance (median)}
+	\caption{Ant colony median covered area values over covered area importance}
 	\label{fig:AntColonyAreaMed}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesCoveredAreaQualityMed.svg}
-	\caption{Ant colony quality over covered area importance (median)}
+	\caption{Ant colony median quality values over covered area importance}
 	\label{fig:AntColonyAreaQualityMed}
 \end{figure}
 
-The upper graph highlights, that the higher the importance of the covered area, the higher the returned area values.
-Only for the case of a single ant, the graph is decreasing, which indicates that with one ant, the randomness is too large to achieve the expected results.
-The plotted points (blue) underline this observation, as they vary a lot, oscilating between high and low values.
-For all other cases (10, 50, and 100 ants), an increase can be observed.
-This increase is especially steep for 100 ants, resulting in the highest returned area values for an importance of $\geq 0.4$.
+Graph \ref{fig:AntColonyAreaMed} highlights that increasing the importance of the covered area, correlates with higher returned area values.
+Only in the case of a single ant does the graph show a decrease, indicating that with one ant, the randomness is too great to achieve the expected results.
+This observation is underscored by the plotted points (blue), which oscillate significantly between high and low values.
+For all other cases (10, 50, and 100 ants), an increase in covered area is observed.
+With the steepest increase for 100 ants, resulting in the highest returned area values for an importance of $\geq 0.4$.
 
 
-The lower graph shows how the quality changes with a varying importance for the covered area.
-In this visualization, a larger increase in quality can bee observed for 1 and 10 ants, a slight increase for 50 ants and a decrease for 100 ants.
-This development can be due to the fact that the area is not the most impactful value in determining the quality.
-Since the overall quality is used to calculate the visibility and thus the probability of choosing the next point during the tour creation, this development highlights, that ant colony is negatively affected by a high importance of the covered area.
+Graph \ref{fig:AntColonyAreaQualityMed} illustrates how the quality changes with varying importance for the covered area.
+In this visualization, a substantial increase in quality can be observed for 1 and 10 ants, a slight increase for 50 ants, and a decrease for 100 ants.
+This development suggests that the covered area is not the most impactful value in determining the quality.
+Since overall quality is used to calculate the probability of choosing the next point during tour creation, this development indicates, that Ant Colony is negatively affected by a high importance of the covered area.
 
 
-This result changes, when only the covered area is taken into account and both elevation importance as well as edge profit importance are set to 0 (see figure \ref{fig:AntColonyAreaOnlyQualityMed}).
-In this following graph, with increasing covered area importance, both the covered area as well as the overall quality increase, which is due to the fact that neither the edge profit nor the elevation change have any impact on the quality.
+This result changes, when only the covered area is considered and both elevation importance and edge profit importance are set to 0 (see Figure \ref{fig:AntColonyAreaOnlyQualityMed}).
+In the respective graph, with increasing covered area importance, the overall quality increases, indicating that neither the edge profit nor the elevation change impacts the quality, as was expected.
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesCoveredAreaOnlyQualityMed.svg}
-	\caption{Ant colony quality over covered area importance (median), elevation importance and edge profit importance both set to 0}
+	\caption{Ant colony median quality values over covered area importance, elevation importance and edge profit importance both set to 0}
 	\label{fig:AntColonyAreaOnlyQualityMed}
 \end{figure}
 
-Overall, these results show that the covered area does impact the quality.
-However, the edge profit and elevation have a much bigger impact on the overall result, which is to be expected, given that the ants always pick the next edge with the highest probability.
-The probability is calculated using covered area, elevation, and edge profit, but value the current quality increase higher than the overall quality increase.
+Overall, these results show that while the covered area does impact the quality, edge profit and elevation have a much more significant impact on the overall result.
+This larger impact is expected, as ants typically choose the next edge with the highest probability.
+The probability is calculated using covered area, elevation, and edge profit, but the current quality increase is valued higher than the overall quality increase.
 
-All of the graphs show, that the quality values are lower when more ants are used.
-However, the covered area is mostly larger the more ants are used -- especially when the extreme points are taken into account.
-As the graph that analyzed how the number of ants influences the quality shows, especially with fewer ants, many fluctuations can be seen.
-Thus, even though the quality seems mostly lower, using 100 ants yields more reliably good results.
+All of the graphs show that quality values are lower when more ants are used.
+However, the covered area is generally larger with more ants -- especially when considering extreme points.
+The graph analyzing the influence of the number of ants on the quality (Figure \ref{fig:AntColonyQualityAnts}) shows, that there are many fluctuations with fewer ants.
+Thus, although the quality seems mostly lower, using 100 ants yields more reliably good results.
 
 \paragraph{Elevation}
 
 
-To analyze the impact of the elevation importance on the resulting elevation as well as on the general quality, for both cases, tests have been run.
-The first figure shows the median results for 30 test runs per importance value as well as the respective lines of best fit for the elevation importance values.
-The second figure shows the results with the same configuration for the general quality.
+To analyze the impact of the elevation importance on both the resulting elevation and on the general quality, several tests were conducted.
+The first Figure (\ref{fig:AntColonyElevationMed}) shows the median elevation results for 30 test runs per importance value along with the respective lines of best fit for the elevation importance values.
+The second figure (\ref{fig:AntColonyQualityElevationMed}) shows the results of the median general quality values with the same configuration.
 Graphs displaying the respective average values can be found in the appendix (see figures \ref{fig:AntColonyElevationAvg} and \ref{fig:AntColonyQualityElevationAvg}).
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesElevationMed.svg}
-	\caption{Ant colony elevation over elevation importance (median)}
+	\caption{Ant colony median elevation values over elevation importance}
 	\label{fig:AntColonyElevationMed}
 \end{figure}
 
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesElevationQualityMed.svg}
-	\caption{Ant colony quality over elevation importance (median)}
+	\caption{Ant colony median quality values over elevation importance}
 	\label{fig:AntColonyQualityElevationMed}
 \end{figure}
 
 
-The upper graph highlights, that the higher the importance of the elevation, the higher the returned elevation values are. 
-For this case, the returned values are not height meters, but describe the elevation measure, which was used in the quality calculation (see equation \ref{eq:visibility}).
+Graph \ref{fig:AntColonyElevationMed} highlights that as the importance of the elevation increases, the returned elevation value also rises. 
+For this case, the returned values are not height meters but describe the elevation measure used in the quality calculation (see Equation \ref{eq:visibility}).
 Similarly to the covered area, using fewer ants results in a slightly decreasing value when the importance is increased. 
-In this graph, a downwards slope can be seen for 1 and 10 ants and only a very slight increase for 50 ants.
+This graph shows a downward slope for 1 and 10 ants and only a very slight increase for 50 ants.
 The only case that shows a definitive increase with higher importance is the one where 100 ants are used.
 Again, this behavior as well as the fact that the overall elevation measure is the lowest for the 100 ants can be explained by a less varying result which does not have as many outliers.
 
 
-The second graph shows that for the elevation importance, the quality also increases with a higher importance on the elevation.
-In this visualization, all qualities are increasing with the importance.
+Graph \ref{fig:AntColonyQualityElevationMed} shows that for higher elevation importance the quality also increases.
+In this visualization, all qualities increase with the importance.
 Furthermore, the result for 100 ants has the second highest quality results.
-With increasing elevation importance values, the quality increases, indicating, that the elevation has a larger impact on the quality than the covered area when using the ant colony algorithm. 
+With rising elevation importance values, the quality increases, indicating that elevation has a larger impact on the quality than the covered area when using the Ant Colony algorithm. 
 
 
 
 
-\paragraph{Edge profit}
+\paragraph{Edge Profit}
 
-To analyze the impact of the edge profit importance on the resulting edge profit as well as on the general quality, for both cases, tests have been run.
-The first figure shows the median results for 30 test runs per importance value as well as the respective lines of best fit for the edge profit importance values.
-The second figure shows the results with the same configuration for the general quality.
+To analyze the impact of the edge profit importance on both the resulting edge profit and on the general quality, several tests were conducted.
+The first Figure (\ref{fig:AntColonyProfitMed}) shows the median edge profit results for 30 test runs per importance value, along with the respective lines of best fit for the edge profit importance values.
+The second Figure (\ref{fig:AntColonyQualityProfitMed}) shows the results of the median quality values with the same configuration.
 Graphs displaying the respective average values can be found in the appendix (see figures \ref{fig:AntColonyProfitAvg} and \ref{fig:AntColonyQualityProfitAvg}).
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesProfitMed.svg}
-	\caption{Ant colony edge profit over edge profit importance (median)}
+	\caption{Ant colony median edge profit values over edge profit importance}
 	\label{fig:AntColonyProfitMed}
 \end{figure}
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/AntFinal/antColonyCasesProfitQualityMed.svg}
-	\caption{Ant colony quality over edge profit importance (median)}
+	\caption{Ant colony median quality values over edge profit importance}
 	\label{fig:AntColonyQualityProfitMed}
 \end{figure}
 
 
-The upper graph highlights, that the higher the importance of the edge profit, the higher the returned edge profit values are. 
-Again, the increase can only be seen when 100 ants are used. 
+Graph \ref{fig:AntColonyProfitMed} highlights that higher importance of the edge profit, results in increased edge profit values. 
+Again, this increase is only evident when 100 ants are used. 
 With fewer ants, the importance decreases the resulting edge profit values.
-These results as well as the fact that the resulting profit is in this graph again lower than for fewer ants is due to the higher variability when fewer ants are used.
-For 100 ants, the higher the edge profit importance, the higher the resulting edge profits.
+These results, as well as the fact that the resulting profit is again lower than for fewer ants, are due to the higher variability when fewer ants are used.
+For 100 ants, increasing the edge profit importance results in higher edge profits.
 
 
-The second graph shows that for 100 ants, the quality increases significantly with the importance of the edge profit.
+Graph \ref{fig:AntColonyQualityProfitMed} shows that for 100 ants, the quality increases significantly with the importance of the edge profit.
 For fewer ants, the results are more mixed.
 For 1 and 50 ants, a significant decrease can be seen.
-For 10 ants, the quality increases sligthly.
-These results highlight, how variable the returned quality is when only a few ants are used.
+For 10 ants, the quality increases slightly.
+These results highlight how variable the returned quality is when only a few ants are used.
 The result for the 100 ants fits into the results for the covered area, showing that the edge profit is more important for the resulting quality than the covered area. 
-Both the elevation as well as the edge profit increase the quality when their importances are increased.
-However, the edge profit graph shows -- just like the graph for elevation values -- that the overall quality is mostly lower when more ants are used.
+Both the elevation and the edge profit increase the quality when their importances are increased.
+However, the edge profit graph shows that the overall quality is mostly lower when more ants are used.
+This behavior is equivalent to the graph for elevation values.
 
 
-Overall, all graphs show that all three user defined values that contribute to the quality rise with an increase in their respective importance.
-The quality can decrease with extreme selections, however, the overall resulting tour does take the selected user preferences, which correspond to the importances into account.
-All in all, the graphs show, that with fewer ants, a high variability can cause results that do not match the expectations.
+Overall, all graphs show that all three user-defined values contributing to the quality rise with an increase in their respective importance.
+The quality only decreases for high covered area importances.
+The overall resulting tour does take the selected user preferences, which correspond to the importances into account.
+All in all, the graphs show that with fewer ants, high variability can cause results that do not match expectations.
 However, for the selected 100 ants, all cases display the expected behavior.
-Furthermore, the test cases have shown, that for ant colony to achieve good results, the covered area is less important than the elevation and edge profits.
-This can be due to the fact that for every single ant, the decision which edge to choose are local.
-Thus, both the elevation as well as the edge profit have a larger weight than the covered area, which is a more global variable.
+Furthermore, the test cases have shown that for Ant Colony to achieve good results, the covered area is less important than the elevation and edge profits.
+This result can be attributed to the fact that for every single ant, the decision of which edge to choose is local.
+Thus, both the elevation and the edge profit have a larger weight than the covered area, which is a more global variable.
 
 
-\section{Simulated annealing}
+\section{Simulated Annealing}
 
 %To calculate a solution, several variables have to be selected for the various calculations (see sections \ref{subsec:simulatedAnnealingBackground} and \ref{subsec:simulatedAnnealingImplementation}). 
 %First, a temperature function had to be determined.
@@ -368,9 +402,10 @@ Thus, both the elevation as well as the edge profit have a larger weight than th
 %Furthermore, the number of inner runs has to be set.
 %For these cases, 10 inner runs have been performed.
 
-For SA, the first test cases resolved around determining a good temperature function. 
-Since the way the temperature decreases is very important for the overall probability with which a worse solution is picked, this is the most important variable to select.
-For the temperature, four different functions have been selected according to the options presented in section \ref{subsec:simulatedAnnealingBackground}:
+For SA, the initial test cases focused on determining a good temperature function. 
+The rate at which the temperature decreases is crucial as this development significantly influences the probability of accepting a worse solution, making this parameter the most vital variable to configure.
+Four different functions were selected based on the options presented in Section \ref{subsec:simulatedAnnealingBackground}:
+
 \begin{itemize}
 	\item $	T_{i+1} = \frac{- |f(j)-f(i)|}{ln(r_i)}	$
 	\item $T_{i+1} = 0.5 \cdot T_i$
@@ -378,250 +413,254 @@ For the temperature, four different functions have been selected according to th
 	\item $T_{i+1} = \frac{T_i}{1 + T_i}$
 \end{itemize}
 
-Again, the test cases that have to be executed are the ones that have been stated in this chapters introduction (the number of outer runs, of inner repetitions and the influence of the importances on the respective variables and the overall quality).
-For SA, the user defined importances are used in the quality calculation and always effect the returned results.
-The test for the needed number of runs and the one to determine a suitable temperature function have been executed in the same test case.
-For the importances, three cases have been constructed and executed, the same way the tests have been done for ant colony.
+The test cases were executed according to the parameters outlined in this chapter's introduction, including the number of outer iterations, inner repetitions, and the influence of the importances on the respective variables and the overall quality.
+For SA, the user-defined importances are incorporated into the quality calculation and consistently impact the returned results.
 
 
+The tests for the needed number of runs and the determination of a suitable temperature function have been executed in the same test case.
+For the importances, three cases have been constructed and executed, the same way the tests have been done for Ant Colony.
+The evaluation for the necessary number of runs and the suitable temperature function as well as for the importances were concluded and tested following the same methodology used for Ant Colony tests.
 
-\paragraph{Quality over runs and repetitions}
 
-To determine how many runs are needed and which temperature function should be chosen for relatively good results, the quality over number of runs performed has been plotted for the four different temperature functions.
-The following figure shows the results of the average from 100 test runs using 10 inner repetitions and importances of 0.33 each.
-The \enquote{Run}-axis displays the number of runs in the outer loop, the \enquote{Quality}-axis shows the resulting quality value.
-This figure displays the average of the conducted 100 runs.
+\paragraph{Quality Over Runs and Repetitions}
 
-\begin{figure}[H]
+To determine a good number of runs and a fitting temperature function for achieving relatively good results, the median quality over number of runs performed has been plotted for the four different temperature functions in Figure \ref{fig:SAQualityRuns}.
+The respective figure presents the average quality values from 100 test runs per outer loop run, each using 10 inner repetitions with importances of 0.33 each.
+The \enquote{Run}-axis displays the number of runs in the outer loop, while the \enquote{Quality}-axis shows the resulting quality value.
+
+\begin{figure}
+	\makebox[\textwidth][c]{
+	\includesvg[width=1.2\textwidth]{bilder/plots/SAFinal/SACasesTempFctionAvg.svg}}
 	\centering
-	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/SACasesTempFctionAvg.svg}
-	\caption{SA quality over runs (average)}
+	\caption{SA average quality values over runs}
 	\label{fig:SAQualityRuns}
 \end{figure}
 
-This figure shows several important results:
-First, calculating the temperature by multiplying with a factor -- in this case $e^{-2}$ -- gives the best resulting quality.
-Furthermore, after 200 runs, a plateau is reached for most functions, except  $ T_{i+1} = \frac{- |f(j)-f(i)|}{ln(r_i)} $ (green), which displays that using $ T_{i+1} = \frac{- |f(j)-f(i)|}{ln(r_i)} $ to calculate the temperature does not increase the quality at all.
-Rather, this temperature function stays on a relatively even level with some outliers where the quality increases temporarily.
-In all increasing cases, \enquote{steps}, where the quality stays the same for a few runs before increasing again, can be seen.
-These steps are most obvious in the yellow curve, but also appear in the blue and red graph.
-This behavior is due to the fact that SA finds local optima.
-The algorithm can escapes these locally optimal values eventually with more runs.
-The obvious steps show where these local optima can be found.
-Furthermore, the steps often overlap for the different temperature functions.
-
-\begin{figure}[H]
-	\centering
-	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/GenerateTestingValuesSARepititionsMed.svg}
-	\caption{SA quality over repetitions (median)}
-	\label{fig:SAQualityRepititions}
-\end{figure}
-
-This figure shows how using more repetitions with the same temperature configuration can influence the quality.
-Overall, no plateau can be seen in the median plot. 
-However, using too many internal repetitions increases the runtime by a lot.
-And given that the first figure showed a plateau at 250 runs, using 10 repetitions already caused an average runtime of (see also table \ref{tab:SAQualityRepetitionsAvg}), using more internal repetitions would have increased the runtime too much.
-
-Using these results, the following tests have been performed with the temperature function that yielded the best results ($T_{i+1} = e^{-2} \cdot T_i$), 10 internal repetitions, and 250 runs.
+Figure \ref{fig:SAQualityRuns} presents several important findings:
+First, calculating the temperature using a multiplying factor -- in this case $e^{-2}$ -- yields the best resulting quality.
+Furthermore, for most functions, a plateau is reached after 200 runs, except for the function denoted as $ T_{i+1} = \frac{- |f(j)-f(i)|}{ln(r_i)} $ (green).
+This function does not improve the quality at all, but rather remains relatively stable with some outliers where the quality increases temporarily.
+In all other cases, where quality improvements occur, there are noticeable \enquote{steps} where the quality remains consistent for a few runs before increasing again.
+These steps are most noticeable in the yellow curve but are also evident in the blue and red graphs.
+This stepping behavior arises because the SA tends to find local optima.
+The algorithm can eventually escape these local optima with more runs.
+The obvious steps indicate where these local optima occur.
+Furthermore, these steps often overlap across the different temperature functions.
 
 
-\paragraph{Covered area}
 
-To analyze the impact of the covered area importance on the resulting covered area as well as on the general quality, for both cases, tests have been run.
-The first figure shows the median results for 30 test runs per importance value as well as the respective lines of best fit for the covered area importance values.
-The second figure shows the results with the same configuration for the median of the overall quality.
+Using more internal repetitions increases the quality (see Figure \ref{fig:SAQualityRepititions}), but also inevitably significantly increases the run time.
+Given that the first figure shows a plateau at 250 runs and using 10 repetitions already yielded a median runtime of 22 seconds (see Figure \ref{fig:SATimeOverRuns}), using more internal repetitions would have increased the runtime excessively.
+Based on these results, the following tests have been performed with the temperature function that yielded the best results ($T_{i+1} = e^{-2} \cdot T_i$), 10 internal repetitions, and 250 runs.
+
+
+\paragraph{Covered Area}
+
+To analyze the impact of the covered area importance on both the resulting covered area and on the general quality, several tests were conducted.
+The first Figure (\ref{fig:SAAreaMed}) shows the median covered area results for 30 test runs per importance value, along with the respective lines of best fit for the covered area importance values.
+The second Figure \ref{fig:SAAreaQualityMed} presents the median results for overall quality with the same configuration.
 Graphs displaying the respective average values can be found in the appendix (see \ref{fig:SAAreaAvg} and \ref{fig:SAAreaQualityAvg}).
 
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/SACasesNumberRunsCoveredAreaMed.svg}
-	\caption{Simulated annealing covered area over covered area importance (median)}
+	\caption{Simulated Annealing median covered area values over covered area importance}
 	\label{fig:SAAreaMed}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/SACasesNumberRunsCoveredAreaQualityMed.svg}
-	\caption{Simulated annealing quality over covered area importance (median)}
+	\caption{Simulated Annealing median quality values over covered area importance}
 	\label{fig:SAAreaQualityMed}
 \end{figure}
 
 
-The upper graph highlights, that the higher the importance of the covered area, the higher the returned area values.
-The covered area for 1, 5 and 10 runs is much lower than for 50, 100 and 150 runs and thus all the resulting lines of best fit overlap.
-For the three cases with larger resulting covered area values, an increase can be seen the higher the importance value is.
-Most importantly, for SA, the more runs are done, the higher the returned area values in general.
+Graph \ref{fig:SAAreaMed} highlights that the higher the importance of the covered area, the higher the returned area values.
+For 1, 5, and 10 runs, the covered area is significantly lower than for 50, 100, and 250 runs causing the three resulting lines of best fit for fewer runs to overlap.
+In the three cases with larger resulting covered area values, an increase can be seen as the importance value rises.
+Most importantly, for SA, the more runs that are performed, the higher the returned area values generally are.
 
 
-The lower graph shows how the quality changes with a varying importance for the covered area.
-In this graphs again, the results for 1, 5 and 10 runs all overlap, because the quality values are too low to be distinctly visible.
-For 250 runs, a slight increase in the resulting quality can be seen, however using fewer runs, the quality mostly decreases when the importance of the covered area is nearing 100\%.
-This behavior shows, that with fewer runs, the area can impact the resulting quality negatively, however for 250 runs, the impact is distinctly positive, showing that the covered are is relatively important for the quality of SA.
+Graph \ref{fig:SAAreaQualityMed} shows how the quality changes with a varying importance for the covered area.
+Here, the results for 1, 5, and 10 runs all overlap because the quality values are too low to be distinctly visible, similarly to the figure displaying the results for covered area.
+For 250 runs, a slight increase in the resulting quality can be seen, however, with fewer runs, the quality mostly decreases as the importance of the covered area nears 100\%.
+This behavior indicates that with fewer runs, the area can negatively impact the resulting quality.
+However, for 250 runs, the impact is distinctly positive, showing that the covered area is relatively important for the quality of SA.
 
 
 \paragraph{Elevation}
 
-To analyze the impact of the elevation importance on the resulting elevation as well as on the general quality, for both cases, tests have been run.
-The first figure shows the median for 30 test runs per importance value as well as the respective lines of best fit for the elevation importance values.
-The second figure shows the results with the same configuration for the general quality.
-Graphs displaying the respective average values can be found in the appendix (see figures \ref{fig:SAElevationAvg} and \ref{fig:SAQualityElevationAvg})
+To analyze the impact of the elevation importance on both the resulting elevation and on the general quality, several tests were conducted.
+The first Figure \ref{fig:SAElevationMed} shows the median elevation results for 30 test runs per importance value, along with the respective lines of best fit for the elevation importance values.
+The second Figure \ref{fig:SAQualityElevationMed} presents the results of the median general quality values with the same configuration.
+Graphs displaying the respective average values can be found in the appendix (see figures \ref{fig:SAElevationAvg} and \ref{fig:SAQualityElevationAvg}).
 
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/SACasesNumberRunsElevationMed.svg}
-	\caption{Simulated annealing elevation over elevation importance (median)}
+	\caption{Simulated Annealing median elevation values over elevation importance}
 	\label{fig:SAElevationMed}
 \end{figure}
 
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/SACasesNumberRunsElevationQualityMed.svg}
-	\caption{Simulated annealing quality over elevation importance (median)}
+	\caption{Simulated Annealing median quality values over elevation importance}
 	\label{fig:SAQualityElevationMed}
 \end{figure}
 
-The upper graph shows, that the elevation importance does not change the elevation resulting values at all.
-Rather, all results are the same value when the median is taken. 
-In the average graph, this does look slightly different, however this result shows, that the elevation does not have much of an impact.
-This can be due to the selected starting point.
-Since for all these test runs, the SA with an empty starting solution and a probability function has been used, it is possible, that due to the probability functions, not many different options were available in the selected area, resulting in most returned paths having the exact same elevation values, no matter how many runs or what importance was chosen.
-In the average plot (see figure \ref{fig:SAElevationAvg}), a slight increase in the elevation value can be seen for most runs.
-The results of 10 and 50 runs are slightly decreasing, which again can be due to the fact that not enough runs have been performed to reach a solution that fits the chosen importances better.
-However, the overall area where the tests have been performed does limit the available options which shows on the very small variablity of the elevation values.
-All results are between 0.43 and 0.49, showing overall very similar elevation values.
+Graph \ref{fig:SAElevationMed} shows that the elevation importance does not change the elevation resulting values at all.
+Instead, all results converge to the same value when considering the median. 
+In the average graph, this development does look slightly different, however, this result shows, that the elevation does not have a significant impact.
+This smaller impact could be due to the selected starting point.
+Given that the SA with an empty starting solution and a probability function was used for all test runs, the possibility arises, that the probability functions did not offer many different options within the selected area, resulting in most returned paths having the same elevation values regardless of the number of runs or of the importance level chosen.
+In the average graph (see Figure \ref{fig:SAElevationAvg}), there is a slight increase in the elevation value for most runs.
+The results for 10 and 50 runs are slightly decreasing, which could be due to not performing enough runs to reach a solution that better fits the chosen importances.
+However, the overall area where the tests were performed limits the available options, leading to minimal variability in the elevation values.
+All results are between 0.43 and 0.49, indicating very similar elevation values overall.
 
 
-The second graph shows that for the elevation importance, the quality distinctly increases, especially for 100 and 250 runs. 
-The results for 1, 10 and 50 runs overlap for this case as well.
-Here, the increase in quality can be due to the fact that the edge profits and covered area have lower importances, increasing the influence of the elevation result, indicating that the returned elevation result has already been very good.
+Graph \ref{fig:SAQualityElevationMed} shows that for the elevation importance, the quality distinctly increases, especially for 100 and 250 runs. 
+The results for 1, 10, and 50 runs overlap for this case as well.
+The increase in quality can be attributed to the lower importance of the edge profits and covered area, which increase the influence of the elevation result, indicating that the returned elevation result has already been very good.
 
 
 
-\paragraph{Edge profit}
+\paragraph{Edge Profit}
 
 
-To analyze the impact of the edge profit importance on the resulting edge profit as well as on the general quality, for both cases, tests have been run.
-The first figure shows the median results for 30 test runs per importance value as well as the respective lines of best fit for the edge profit importance values.
-The second figure shows the results with the same configuration for the general quality.
+To analyze the impact of the edge profit importance on both the resulting edge profit as well as on the general quality, several tests were conducted.
+The first Figure (\ref{fig:SAProfitMed}) shows the median edge profit results for 30 test runs per importance value and the respective lines of best fit for the edge profit importance values.
+The second Figure (\ref{fig:SAQualityProfitMed}) shows the results of the general quality values with the same configuration.
 Graphs displaying the respective average values can be found in the appendix (see figures \ref{fig:SAProfitAvg} and \ref{fig:SAQualityProfitAvg}).
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/SACasesNumberRunsProfitMed.svg}
-	\caption{Simulated annealing edge profit over edge profit importance (median)}
+	\caption{Simulated Annealing median edge profit values over edge profit importance}
 	\label{fig:SAProfitMed}
 \end{figure}
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/SAFinal/SACasesNumberRunsProfitQualityMed.svg}
-	\caption{Simulated annealing quality over edge profit importance (median)}
+	\caption{Simulated Annealing median quality values over edge profit importance}
 	\label{fig:SAQualityProfitMed}
 \end{figure}
 
 
 
 
-The upper graph highlights, that the higher the importance of the edge profit, the higher the returned edge profit values are. 
-Again, the increase is only prevalent for 250 runs, where for fewer runs, a slight decrease can be observed. 
-As with the covered area, this is most likely because not enough runs could be executed to reach a solution, which has an increase in the edge profits and the quality.
+Graph \ref{fig:SAProfitMed} highlights that increasing the importance of the edge profit rises the returned edge profit values by a tiny amount. 
+This increase is only prevalent for 250 runs, while for fewer runs, a slight, and for 50 runs even a steep decrease can be observed. 
+As with the covered area, this development is most likely because not enough runs could be executed to reach a solution that results in an increase in the edge profits and the quality.
+Overall, the changes are within a very small spectrum of possible results, with most graphs varying by less than 0.0001 and only the graph for 50 runs varying by 0.0003.
+This highlights the results of the elevation graphs, that not much variability was possible for the specific configuration used for testing.
 
 
-The second graph shows that for 250 repetitions, the quality decreases slightly with the importance of the edge profit.
-For fewer repetitions, the results are increasing slightly.
-This highlights, that for simulated annealing, optimizing for the edge profit does negatively impact the overall quality that is returned. 
-Especially when viewed in combination with the results for the covered area, this result stresses that the edge profits are less relevant for a good quality of SA.
-
-
-Overall, all graphs show that all three user defined values that contribute to the quality rise with an increase in the respective importance.
-Furthermore, the covered area increases the quality slightly, while the edge profits cause a slight decrease.
-This shows, that the more global variable covered area is more important for the quality of simulated annealing, which overall focuses on optimizing a global result.
-The elevation had a large impact for the given test case.
-This might be due to the fact that the elevation result was generally very good for all calculated solutions and thus had a more positive impact the higher the elevation importance was valued.
+Graph \ref{fig:SAQualityProfitMed} shows that for 250 repetitions, the quality decreases with the importance of the edge profit.
+For fewer repetitions, the resulting qualities stay on a relatively even level.
+In the respective average plot (see Figure \ref{fig:SAQualityProfitAvg}), this decrease and the difference in total value between the quality result for an edge profit importance of 0.1 and an edge profit importance of 1.0 is not as large as in the median plot.
+The overall quality is, however, still decreasing.
+This result highlights that for Simulated Annealing, optimizing for the edge profit negatively impacts the overall quality. 
+Especially when viewed in combination with the results for the covered area, this finding indicates that the edge profits are less relevant for achieving high quality outcomes using SA.
 
 
 
+Overall, all graphs demonstrate that the three user defined importances contribute to a respective rise of the returned value in the resulting tour.
+The covered area increases the quality slightly, while the edge profits cause a slight decrease.
+This behavior implies that the more global variable covered area is more important for the quality of Simulated Annealing, which overall focuses on optimizing a global result.
+The elevation had a significant impact for the given test case, likely because the elevation result was generally very good for all calculated solutions, thus having a more positive impact as the elevation importance was valued higher.
 
 
-\section{All algorithms}
 
-Lastly, all implemented algorithms, including the combinations, are plotted for varying maximum run times. 
-For all algorithms, the previously specified configurations have been set for the variables.
-For ant colony and the combinations, 100 ants were used. 
-In case of SA and al combinations, 10 inner repetitions were set.
-All test cases have been executed with importances of 0.33 for all three quality values.
-The maximum time the algorithms could run was varied using the values 1, 2, 5, 10, 15, 20, and 30 seconds.
-For each maximum time, 30 test runs were conducted.
 
-\begin{figure}[H]
+
+\section{All Algorithms}
+
+Lastly, all implemented algorithms, including the combinations, were evaluated across varying maximum run times. 
+Each algorithm was configured as previously specified: 
+For Ant Colony and the respective combinations, 100 ants were used, for SA and all respective combinations, 10 inner repetitions were selected.
+All test cases were executed with equal importances of 0.33 for all the quality values.
+The maximum run times tested were 1, 2, 5, 10, 15, 20, and 30 seconds, with each maximum time being tested over 30 test runs.
+
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/All/AllCasesTimeQualityMed.svg}
-	\caption{All implemented algorithms quality over time (median)}
+	\caption{All implemented algorithms' median quality values over time}
 	\label{fig:AllOverTime}
 \end{figure}
 
 
-The first figure shows the median of the 30 test runs for all algorithms except the pre-implemented Greedy and MinCost, since these two algorithms always have a very fast run time and do not increase in quality if more time is granted.
-The ant algorithms as well as both combinations all return very low quality results in comparison to the simulated annealing ones and do not show a large increase in quality. 
+Figure \ref{fig:AllOverTime} shows the median quality values of the 30 test runs for all algorithms per allowed maximum run time.
+The ant algorithms, including both of their combinations did all produce low quality results compared to the Simulated Annealing ones and did not show a significant increase in quality. 
+To better illustrate these changes, two separate graphs were plotted. 
 
-Thus, two separate graphs have been plotted to show the change more clearly. 
 
-
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/All/AllCasesAntTimeQualityMed.svg}
-	\caption{All ant variants quality over time (median)}
+	\caption{All ant variants' median quality values over time}
 	\label{fig:AllOverTimeAnt}
 \end{figure}
 
 
-The second figure displays the results for the three ant colony versions, using only ant colony, or a combination with either the greedy or the MinCost tour as a base.
-Both combinations show a large increase in quality over time, indicating that the base tours are optimized considerably by the ants.
-However, for the basic ant tour, only a slight increase can be noted.
-Overall, all quality values are much lower than the SA results, even thought an increase can be seen for all cases.
+Figure \ref{fig:AllOverTimeAnt} displays the performance of the three Ant Colony versions, using only Ant Colony or a combination with either the Greedy or the MinCost tour as a base.
+Both combinations show a large improvement in quality over time, indicating that the base tours are optimized considerably by the ants.
+However, the basic Ant Colony algorithm, only shows a slight quality increase.
+Overall, all quality values are much lower than the SA results, even though an increase can be seen for all cases.
 
-The results indicate, that ant colony is not the most suited for finding a good tour.
-Even though the algorithm does take all user configurations into account, the local decisions every ant takes result in a relatively low quality.
+The results indicate that Ant Colony is not the most suited for finding a good tour.
+Even though the algorithm does take all user configurations into account, the local decisions every ant made, result in a relatively low overall quality.
 
 
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\includesvg[width=0.9\textwidth]{bilder/plots/All/AllCasesSATimeQualityMed.svg}
-	\caption{All SA variants quality over time (median)}
+	\caption{All SA variants' median quality values over time}
 	\label{fig:AllOverTimeSA}
 \end{figure}
 
 
-The last plot shows a more detailed view for only the SA variations. 
-In this graph, the SimulatedAnnealingEmpty is the normal SA algorithm that was used for all other test cases.
+The final plot (Figure \ref{fig:AllOverTimeSA}) provides a more detailed comparison of the various SA implementations. 
+In this graph, the \texttt{SimulatedAnnealingEmpty} is the standard SA algorithm used in all previous test cases.
 This implementation started with an empty base tour and a probability configuration.
-After building a first tour, the probability configuration was updated to both allow picking up nodes that are further away in the beginning as well as ensuring that only nodes closer to the then generated tour were picked later.
-The fully random version also started with an empty tour, but did not use a probability distribution for choosing the next node to include.
-All other three combinations used the respective referenced algorithm as a base tour to optimize.
+The fully random version also started with an empty tour but lacks a probability distribution for node selection.
+The other three combinations used their respective referenced algorithm as base tours to optimize.
 
-This graph shows that for the MinCost algorithm, no significant improvement could be made. 
-However, even using the lowest allowed run times, the result is still of much higher quality than the ant colony optimized one.
-Furthermore, the empty solution with a probability distribution has the overall lowest quality and only a small increase over time.
-The fully random version shows a slightly steeper increase, however both algorithms that start with an empty configuration stay at the lowest quality.
-Both the combination with the greedy base tour as well as with the ant colony have a very steep increase. 
+This graph indicates that the combination of MinCost and the SA algorithm did not significantly improve. 
+However, using the shortest allowed run times, the result is still of much higher quality than the Ant Colony optimized one.
+Furthermore, the empty solution with a probability distribution had the lowest overall quality, with only minor improvements over time.
+The fully random version showed a slightly steeper increase but both algorithms that start with an empty configuration remained at the lowest quality level.
+However, the combination with the Greedy base tour as well as with the Ant Colony have a very steep increase. 
 
-Overall, the graphs show, that the combination of MinCost and simulated annealing results in a very good solution even for short run times. 
-Even though all other algorithms increase in quality over time, only the combination of ant colony and simulated annealing increases enough to exceed the quality of the MinCost-Simulated annealing combination.
-However, the results can look very differently for other importance combinations.
-MinCost starts with a tour which has a very high covered area value.
-This value can already impact the quality greatly, which then is increased by using simulated annealing.
-When the covered area importance is set very low, the resulting tour could quickly be less optimal using this combination.
+Overall, the graphs show, that the combination of MinCost and Simulated Annealing results in a very good solution even for short run times.
+The pink line that displays the results of this combination is the same as the results for MinCost alone (see Figure \ref{fig:AllGreedyMinCost}), indicating, that for the median of all results, no improvement could be made on the MinCost result.
+However, the average graphs show a different behavior (see Figures \ref{fig:AllAverage} and \ref{fig:AllSAAverage}).
+In these graphs, all SA variants exceed the quality of the MinCost result after a runtime of at most 12 seconds.
+This different behavior for the averages indicates that there are some tours that can significantly improve the quality of MinCost, but not enough higher quality tours were calculated to achieve the same results in the median.
+The varying results could be due to the starting point or other starting conditions such as the selected maximum elevation or the selected desirable tags.
 
-\#TODO more test cases for different configurations? 
+ 
+While all other algorithms show some quality improvements over time, only the combination of Ant Colony and Simulated Annealing improves enough to exceed the quality of the MinCost-Simulated Annealing combination.
+However, the results could look very differently for other importance combinations.
+The MinCost algorithm starts with a tour that has a very high covered area value, greatly impacting the initial quality, which is then further enhanced by using Simulated Annealing.
+When the covered area importance is set very low, using this combination can quickly result in a less optimal tour.
+
+
+The conducted test cases do not cover all possible parameters, configurations and are far from covering all combinations.
+For all algorithms, especially the combinations of Ant Colony and Simulated Annealing with other algorithms, several additional test cases are possible.
+However, conducting more than the presented cases significantly exceeds the time frame of this thesis and thus has to be part of possible future work (see Section \ref{sec:futureWork}).
 
 
 
