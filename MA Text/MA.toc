@@ -1,0 +1,83 @@
+\babel@toc {english}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Related Work}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Tour4Me}{3}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Roundtrip Paths}{5}{subsection.1.1.2}%
+\contentsline {subsubsection}{Computing Running Routes}{6}{section*.3}%
+\contentsline {subsubsection}{Computing Cycling Routes}{6}{section*.4}%
+\contentsline {subsubsection}{RouteLoops \& RouteYou}{8}{section*.5}%
+\contentsline {subsection}{\numberline {1.1.3}Other Running Related Research}{8}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}Apps That Assist with Sports}{9}{subsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.1.5}Other tour optimization ideas}{10}{subsection.1.1.5}%
+\contentsline {section}{\numberline {1.2}Goal and Methodology}{10}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Structure}{12}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Fundamentals and Background}{13}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Arc Orienteering Problem}{13}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Shortest Path Algorithms}{14}{section.2.2}%
+\contentsline {paragraph}{SSSP}{14}{section*.7}%
+\contentsline {paragraph}{APSP}{15}{section*.8}%
+\contentsline {section}{\numberline {2.3}Heuristic Approaches}{16}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Ant Colony}{17}{subsection.2.3.1}%
+\contentsline {subsubsection}{Calculations}{18}{section*.10}%
+\contentsline {paragraph}{Trail Intensity Calculation}{19}{section*.11}%
+\contentsline {paragraph}{Visibility and Transition Probability Calculation}{20}{section*.12}%
+\contentsline {subsubsection}{Algorithm details}{21}{section*.13}%
+\contentsline {subsection}{\numberline {2.3.2}Simulated Annealing}{21}{subsection.2.3.2}%
+\contentsline {paragraph}{Basic Structure of SA}{23}{section*.15}%
+\contentsline {subsubsection}{Calculations}{23}{section*.16}%
+\contentsline {subsubsection}{Algorithm details}{24}{section*.17}%
+\contentsline {chapter}{\numberline {3}Implemented Changes}{27}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Application}{27}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}New Architecture}{28}{subsection.3.1.1}%
+\contentsline {paragraph}{Back-end}{28}{section*.18}%
+\contentsline {paragraph}{Front-end}{29}{section*.19}%
+\contentsline {paragraph}{Application Structure}{29}{figure.caption.21}%
+\contentsline {subsection}{\numberline {3.1.2}Database}{30}{subsection.3.1.2}%
+\contentsline {paragraph}{Gathering OSM Data}{30}{section*.22}%
+\contentsline {paragraph}{Adding Elevation Data}{31}{section*.24}%
+\contentsline {subsection}{\numberline {3.1.3}Interface and Front-end Changes}{32}{subsection.3.1.3}%
+\contentsline {paragraph}{Front-end Concept}{32}{figure.caption.26}%
+\contentsline {paragraph}{Implemented Changes for the Option Menu}{33}{section*.27}%
+\contentsline {paragraph}{Route Information Overview}{34}{section*.29}%
+\contentsline {subsection}{\numberline {3.1.4}Parameter Changes}{36}{subsection.3.1.4}%
+\contentsline {section}{\numberline {3.2}Algorithmic Changes}{37}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Ant Colony}{37}{subsection.3.2.1}%
+\contentsline {paragraph}{Pheromone Calculation}{38}{section*.32}%
+\contentsline {paragraph}{Trail Intensity Calculation}{38}{section*.33}%
+\contentsline {paragraph}{Visibility Calculation}{39}{section*.34}%
+\contentsline {paragraph}{Probability Calculation}{39}{section*.35}%
+\contentsline {paragraph}{Other Changes}{40}{section*.36}%
+\contentsline {subsection}{\numberline {3.2.2}Simulated Annealing}{41}{subsection.3.2.2}%
+\contentsline {paragraph}{Quality Calculation}{42}{section*.37}%
+\contentsline {paragraph}{Determining a Neighboring Solution}{42}{section*.38}%
+\contentsline {paragraph}{Using Waypoints}{43}{section*.39}%
+\contentsline {paragraph}{Adding a Waypoint}{44}{section*.41}%
+\contentsline {paragraph}{Moving a Waypoint}{44}{section*.43}%
+\contentsline {paragraph}{Removing a Waypoint}{46}{section*.45}%
+\contentsline {subsection}{\numberline {3.2.3}Combinations}{47}{subsection.3.2.3}%
+\contentsline {paragraph}{Ant Colony + Greedy and Ant Colony + MinCost}{47}{section*.47}%
+\contentsline {paragraph}{SA + Greedy, SA + MinCost, SA + Ant Colony}{47}{section*.48}%
+\contentsline {chapter}{\numberline {4}Evaluation}{49}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Ant Colony}{51}{section.4.1}%
+\contentsline {paragraph}{\boldmath ${\alpha }$ and \boldmath ${\beta }$}{51}{section*.49}%
+\contentsline {paragraph}{Quality Over Runs}{55}{section*.55}%
+\contentsline {paragraph}{Covered Area}{55}{section*.58}%
+\contentsline {paragraph}{Elevation}{58}{section*.62}%
+\contentsline {paragraph}{Edge Profit}{59}{section*.65}%
+\contentsline {section}{\numberline {4.2}Simulated Annealing}{60}{section.4.2}%
+\contentsline {paragraph}{Quality Over Runs and Repetitions}{61}{section*.68}%
+\contentsline {paragraph}{Covered Area}{62}{section*.70}%
+\contentsline {paragraph}{Elevation}{63}{section*.73}%
+\contentsline {paragraph}{Edge Profit}{64}{section*.76}%
+\contentsline {section}{\numberline {4.3}All Algorithms}{66}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Conclusion}{71}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Results}{71}{section.5.1}%
+\contentsline {paragraph}{Front-end and New Customization Options}{71}{section*.82}%
+\contentsline {paragraph}{Algorithmic Changes}{72}{section*.83}%
+\contentsline {section}{\numberline {5.2}Future Work}{73}{section.5.2}%
+\contentsline {chapter}{Bibliography}{vi}{chapter*.84}%
+\contentsline {chapter}{\numberline {A}Additional Figures}{vii}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Additional Pseudocode}{xix}{appendix.B}%
+\contentsline {chapter}{Affidavit}{xxii}{ALC@unique.131}%

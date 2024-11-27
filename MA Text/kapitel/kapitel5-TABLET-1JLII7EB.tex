@@ -1,0 +1,20 @@
+% kapitel2.tex
+\chapter{Evaluation}
+\label{chapter:evaluation}
+
+
+%
+%\begin{table}[ht]
+%	\begin{tabular}{r|c|c|c|c|c|c}
+%		\bfseries Algorithm & \bfseries MaxTime & \bfseries Quality & \bfseries Importance & \bfseries CoveredArea & \bfseries Elevation & \bfseries Profit
+%	\csvreader[head to column names]{./data/AllCasesTimeQualityAvg.csv}{}
+%	{\\\hline\csvcoli & \MaxTime & \Quality & \Importance & \CoveredArea & \Elevation & \Profit}
+%	\end{tabular}	
+%\end{table}
+
+
+\begin{table}[ht!]
+	\caption{test}
+	% \centering\tiny\renewcommand*{\arraystretch}{1.4} 
+	\csvautobooktabular[separator = comma]{./data/AllCasesTimeQuality.csv}
+\end{table}

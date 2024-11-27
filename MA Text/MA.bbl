@@ -1,0 +1,3033 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{aarts_simulated_2005}{incollection}{}{}
+      \name{author}{3}{}{%
+        {{hash=5b38b801addca4a6325f2d846600b40f}{%
+           family={Aarts},
+           familyi={A\bibinitperiod},
+           given={Emile\bibnamedelimb H.\bibnamedelimi L.},
+           giveni={E\bibinitperiod\bibinitdelim H\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=e3fcfc587e49ae8cb0d4e8fd358c3ec5}{%
+           family={Korst},
+           familyi={K\bibinitperiod},
+           given={Jan\bibnamedelimb H.\bibnamedelimi M.},
+           giveni={J\bibinitperiod\bibinitdelim H\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=c80b3b657944a86c08c23ea1edb8bd0f}{%
+           family={Michiels},
+           familyi={M\bibinitperiod},
+           given={Wil},
+           giveni={W\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=261fd21c11569e6ab51c85474c63d42a}{%
+           family={Burke},
+           familyi={B\bibinitperiod},
+           given={Edmund\bibnamedelima K.},
+           giveni={E\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=efb6f4558def9112948d61982965294c}{%
+           family={Kendall},
+           familyi={K\bibinitperiod},
+           given={Graham},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Boston, {MA}}%
+      }
+      \list{publisher}{1}{%
+        {Springer {US}}%
+      }
+      \strng{namehash}{07825cfd743ce3c519bedbbdd23b9acf}
+      \strng{fullhash}{07825cfd743ce3c519bedbbdd23b9acf}
+      \strng{fullhashraw}{07825cfd743ce3c519bedbbdd23b9acf}
+      \strng{bibnamehash}{07825cfd743ce3c519bedbbdd23b9acf}
+      \strng{authorbibnamehash}{07825cfd743ce3c519bedbbdd23b9acf}
+      \strng{authornamehash}{07825cfd743ce3c519bedbbdd23b9acf}
+      \strng{authorfullhash}{07825cfd743ce3c519bedbbdd23b9acf}
+      \strng{authorfullhashraw}{07825cfd743ce3c519bedbbdd23b9acf}
+      \strng{editorbibnamehash}{d04a7ce9d22fb0544c8c915ebdaf90c1}
+      \strng{editornamehash}{d04a7ce9d22fb0544c8c915ebdaf90c1}
+      \strng{editorfullhash}{d04a7ce9d22fb0544c8c915ebdaf90c1}
+      \strng{editorfullhashraw}{d04a7ce9d22fb0544c8c915ebdaf90c1}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Search Methodologies: Introductory Tutorials in Optimization and Decision Support Techniques}
+      \field{isbn}{978-0-387-28356-2}
+      \field{langid}{english}
+      \field{title}{Simulated Annealing}
+      \field{urlday}{10}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{year}{2005}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{187\bibrangedash 210}
+      \range{pages}{24}
+      \verb{doi}
+      \verb https://doi.org/10.1007/0-387-28356-0_7
+      \endverb
+      \verb{file}
+      \verb Aarts et al. - 2005 - Simulated Annealing.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\2NZKBNFT\\Aarts et al. - 2005 - Simulated Annealing.pdf:application/pdf
+      \endverb
+      \keyw{Travel Salesman Problem,Local Search,Markov Chain,Simulated Annealing}
+    \endentry
+    \entry{agarwal_correlated_2023}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=f4e18a8c3e990de645beb8f7848007b8}{%
+           family={Agarwal},
+           familyi={A\bibinitperiod},
+           given={Saurav},
+           giveni={S\bibinitperiod}}}%
+        {{hash=c2a2203f83774b0b7e517eaaf2b6f27e}{%
+           family={Akella},
+           familyi={A\bibinitperiod},
+           given={Srinivas},
+           giveni={S\bibinitperiod}}}%
+      }
+      \name{editor}{5}{}{%
+        {{hash=10b09a560dbab6229987301f9a193d77}{%
+           family={{LaValle}},
+           familyi={L\bibinitperiod},
+           given={Steven\bibnamedelima M.},
+           giveni={S\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=ea6fecb55b58d4981c2bd27957b5cfff}{%
+           family={O’Kane},
+           familyi={O\bibinitperiod},
+           given={Jason\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=d3199805405eb5c111fa54dbabb686bf}{%
+           family={Otte},
+           familyi={O\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ad742818738efaa3c358f9def3944504}{%
+           family={Sadigh},
+           familyi={S\bibinitperiod},
+           given={Dorsa},
+           giveni={D\bibinitperiod}}}%
+        {{hash=202a74e07c41169655eeaa41286db545}{%
+           family={Tokekar},
+           familyi={T\bibinitperiod},
+           given={Pratap},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{c2cc23012a87664946283ec65eda12c7}
+      \strng{fullhash}{c2cc23012a87664946283ec65eda12c7}
+      \strng{fullhashraw}{c2cc23012a87664946283ec65eda12c7}
+      \strng{bibnamehash}{c2cc23012a87664946283ec65eda12c7}
+      \strng{authorbibnamehash}{c2cc23012a87664946283ec65eda12c7}
+      \strng{authornamehash}{c2cc23012a87664946283ec65eda12c7}
+      \strng{authorfullhash}{c2cc23012a87664946283ec65eda12c7}
+      \strng{authorfullhashraw}{c2cc23012a87664946283ec65eda12c7}
+      \strng{editorbibnamehash}{62a58b090e4201abcb0eacde021d518f}
+      \strng{editornamehash}{62a58b090e4201abcb0eacde021d518f}
+      \strng{editorfullhash}{62a58b090e4201abcb0eacde021d518f}
+      \strng{editorfullhashraw}{62a58b090e4201abcb0eacde021d518f}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Algorithmic Foundations of Robotics {XV}}
+      \field{isbn}{978-3-031-21090-7}
+      \field{langid}{english}
+      \field{title}{The Correlated Arc Orienteering Problem}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \field{pages}{402\bibrangedash 418}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1007/978-3-031-21090-7_24
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\N9NJRPWM\\Agarwal and Akella - 2023 - The Correlated Arc Orienteering Problem.pdf:application/pdf
+      \endverb
+      \keyw{Arc routing,Informative path planning,Orienteering problem}
+    \endentry
+    \entry{alivand_analyzing_2015}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=ba8817170274a57a183dfd7df9b3257a}{%
+           family={Alivand},
+           familyi={A\bibinitperiod},
+           given={Majid},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ecf2efd6be6ff62d7055652417d60fa7}{%
+           family={Hochmair},
+           familyi={H\bibinitperiod},
+           given={Hartwig\bibnamedelima H.},
+           giveni={H\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=8975e13fe1c2530d91d5d0968d397536}{%
+           family={Srinivasan},
+           familyi={S\bibinitperiod},
+           given={Sivaramakrishnan},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{9e40a306f9f2fce1342515aa44bba1f9}
+      \strng{fullhash}{9e40a306f9f2fce1342515aa44bba1f9}
+      \strng{fullhashraw}{9e40a306f9f2fce1342515aa44bba1f9}
+      \strng{bibnamehash}{9e40a306f9f2fce1342515aa44bba1f9}
+      \strng{authorbibnamehash}{9e40a306f9f2fce1342515aa44bba1f9}
+      \strng{authornamehash}{9e40a306f9f2fce1342515aa44bba1f9}
+      \strng{authorfullhash}{9e40a306f9f2fce1342515aa44bba1f9}
+      \strng{authorfullhashraw}{9e40a306f9f2fce1342515aa44bba1f9}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0198-9715}
+      \field{journaltitle}{Computers, Environment and Urban Systems}
+      \field{shortjournal}{Computers, Environment and Urban Systems}
+      \field{title}{Analyzing how travelers choose scenic routes using route choice models}
+      \field{urlday}{22}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{50}
+      \field{year}{2015}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{41\bibrangedash 52}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1016/j.compenvurbsys.2014.10.004
+      \endverb
+      \verb{file}
+      \verb ScienceDirect Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\907\\Alivand et al. - 2015 - Analyzing how travelers choose scenic routes using.pdf:application/pdf;ScienceDirect Snapshot:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\910\\S0198971514001136.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S0198971514001136
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S0198971514001136
+      \endverb
+      \keyw{Geo-tagged photos,Path Size Logit,Route choice model,Scenic route,{VGI},Viewshed analysis}
+    \endentry
+    \entry{babaoglu_anthill_2002}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=076295e13847a1c03f06d3d9dbf0f4f1}{%
+           family={Babaoglu},
+           familyi={B\bibinitperiod},
+           given={Ozalp},
+           giveni={O\bibinitperiod}}}%
+        {{hash=7148ac1bf4c5d6de52f17e5fc80c3682}{%
+           family={Meling},
+           familyi={M\bibinitperiod},
+           given={Hein},
+           giveni={H\bibinitperiod}}}%
+        {{hash=1a3f8ab08478a43150277c1aee0ca9ea}{%
+           family={Montresor},
+           familyi={M\bibinitperiod},
+           given={Alberto},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Vienna, Austria}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{89e02e5a8e450f725afc68f73e079a5f}
+      \strng{fullhash}{89e02e5a8e450f725afc68f73e079a5f}
+      \strng{fullhashraw}{89e02e5a8e450f725afc68f73e079a5f}
+      \strng{bibnamehash}{89e02e5a8e450f725afc68f73e079a5f}
+      \strng{authorbibnamehash}{89e02e5a8e450f725afc68f73e079a5f}
+      \strng{authornamehash}{89e02e5a8e450f725afc68f73e079a5f}
+      \strng{authorfullhash}{89e02e5a8e450f725afc68f73e079a5f}
+      \strng{authorfullhashraw}{89e02e5a8e450f725afc68f73e079a5f}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{Proceedings 22nd International Conference on Distributed Computing Systems}
+      \field{eventtitle}{Proceedings 22nd International Conference on Distributed Computing Systems}
+      \field{shorttitle}{Anthill}
+      \field{title}{Anthill: a framework for the development of agent-based peer-to-peer systems}
+      \field{urlday}{22}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{year}{2002}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{15\bibrangedash 22}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/ICDCS.2002.1022238
+      \endverb
+      \verb{file}
+      \verb IEEE Xplore Abstract Record:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\855\\1022238.html:text/html;IEEE Xplore Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\853\\Babaoglu et al. - 2002 - Anthill a framework for the development of agent-.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/abstract/document/1022238?casa_token=jbaWnJiN4kUAAAAA:6apl0gGSFXWPi8DZoI9kfTY90nhFnuqL1j4uU-GohmkAlI3m9qmUAqn5PKxgOIxJ5k-QVnQd
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/abstract/document/1022238?casa_token=jbaWnJiN4kUAAAAA:6apl0gGSFXWPi8DZoI9kfTY90nhFnuqL1j4uU-GohmkAlI3m9qmUAqn5PKxgOIxJ5k-QVnQd
+      \endverb
+    \endentry
+    \entry{bast_route_2016}{incollection}{}{}
+      \name{author}{8}{}{%
+        {{hash=290975a975be135e8cb0595bc2948be5}{%
+           family={Bast},
+           familyi={B\bibinitperiod},
+           given={Hannah},
+           giveni={H\bibinitperiod}}}%
+        {{hash=bc775b0bfe2f5eba2c0d55106a052b55}{%
+           family={Delling},
+           familyi={D\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=4fd950036c2ebe0835e6b88be61af1b7}{%
+           family={Goldberg},
+           familyi={G\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=678f615920a98d1c8763d50fc7df7947}{%
+           family={Müller-Hannemann},
+           familyi={M\bibinithyphendelim H\bibinitperiod},
+           given={Matthias},
+           giveni={M\bibinitperiod}}}%
+        {{hash=58fb32d0e500e97fc503f4e75953eaaf}{%
+           family={Pajor},
+           familyi={P\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod}}}%
+        {{hash=be6c7f12620ef1a8d1d85d96d476a158}{%
+           family={Sanders},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=f2f741491852a3b5c3ad17d40825e753}{%
+           family={Wagner},
+           familyi={W\bibinitperiod},
+           given={Dorothea},
+           giveni={D\bibinitperiod}}}%
+        {{hash=8839683a16ad350312493c2e29f35b86}{%
+           family={Werneck},
+           familyi={W\bibinitperiod},
+           given={Renato\bibnamedelima F.},
+           giveni={R\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=69a77fd5a3809c4ff3c4b339246d135d}{%
+           family={Kliemann},
+           familyi={K\bibinitperiod},
+           given={Lasse},
+           giveni={L\bibinitperiod}}}%
+        {{hash=be6c7f12620ef1a8d1d85d96d476a158}{%
+           family={Sanders},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{404052b68c1e534ffb8a29e2f1430494}
+      \strng{fullhash}{404052b68c1e534ffb8a29e2f1430494}
+      \strng{fullhashraw}{404052b68c1e534ffb8a29e2f1430494}
+      \strng{bibnamehash}{404052b68c1e534ffb8a29e2f1430494}
+      \strng{authorbibnamehash}{404052b68c1e534ffb8a29e2f1430494}
+      \strng{authornamehash}{404052b68c1e534ffb8a29e2f1430494}
+      \strng{authorfullhash}{404052b68c1e534ffb8a29e2f1430494}
+      \strng{authorfullhashraw}{404052b68c1e534ffb8a29e2f1430494}
+      \strng{editorbibnamehash}{862e9004d4d43d24db8687f1c8b94149}
+      \strng{editornamehash}{862e9004d4d43d24db8687f1c8b94149}
+      \strng{editorfullhash}{862e9004d4d43d24db8687f1c8b94149}
+      \strng{editorfullhashraw}{862e9004d4d43d24db8687f1c8b94149}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Algorithm Engineering: Selected Results and Surveys}
+      \field{isbn}{978-3-319-49487-6}
+      \field{title}{Route Planning in Transportation Networks}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{pages}{19\bibrangedash 80}
+      \range{pages}{62}
+      \verb{doi}
+      \verb 10.1007/978-3-319-49487-6_2
+      \endverb
+      \verb{file}
+      \verb arXiv Fulltext PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\V8NDUSCC\\Bast et al. - 2015 - Route Planning in Transportation Networks.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/978-3-319-49487-6_2
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-3-319-49487-6_2
+      \endverb
+    \endentry
+    \entry{biddle_psychological_1993}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=6bfb152c39f75c2b23c850ef40a06c51}{%
+           family={Biddle},
+           familyi={B\bibinitperiod},
+           given={Stuart\bibnamedelimb J.\bibnamedelimi H.},
+           giveni={S\bibinitperiod\bibinitdelim J\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \strng{namehash}{6bfb152c39f75c2b23c850ef40a06c51}
+      \strng{fullhash}{6bfb152c39f75c2b23c850ef40a06c51}
+      \strng{fullhashraw}{6bfb152c39f75c2b23c850ef40a06c51}
+      \strng{bibnamehash}{6bfb152c39f75c2b23c850ef40a06c51}
+      \strng{authorbibnamehash}{6bfb152c39f75c2b23c850ef40a06c51}
+      \strng{authornamehash}{6bfb152c39f75c2b23c850ef40a06c51}
+      \strng{authorfullhash}{6bfb152c39f75c2b23c850ef40a06c51}
+      \strng{authorfullhashraw}{6bfb152c39f75c2b23c850ef40a06c51}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1988-5636}
+      \field{journaltitle}{Revista de psicología del deporte}
+      \field{langid}{catalan}
+      \field{number}{2}
+      \field{title}{Psychological benefits of exercise and physical activity}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{2}
+      \field{year}{1993}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{0099\bibrangedash 107}
+      \range{pages}{9}
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\957\\Biddle - 1993 - Psychological benefits of exercise and physical ac.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ddd.uab.cat/record/131715
+      \endverb
+      \verb{url}
+      \verb https://ddd.uab.cat/record/131715
+      \endverb
+    \endentry
+    \entry{blondiau_economic_2016}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=777dece60b10d466a6a39f4790c2035e}{%
+           family={Blondiau},
+           familyi={B\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod}}}%
+        {{hash=cf42f1a0b3c4cb9a218bcdbff80575c0}{%
+           family={Zeebroeck},
+           familyi={Z\bibinitperiod},
+           given={Bruno},
+           giveni={B\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=e222baaf9b47e56806b3e9197c4a45e1}{%
+           family={Haubold},
+           familyi={H\bibinitperiod},
+           given={Holger},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{7c1ee74a49e7a97c314e1122a33aa043}
+      \strng{fullhash}{7c1ee74a49e7a97c314e1122a33aa043}
+      \strng{fullhashraw}{7c1ee74a49e7a97c314e1122a33aa043}
+      \strng{bibnamehash}{7c1ee74a49e7a97c314e1122a33aa043}
+      \strng{authorbibnamehash}{7c1ee74a49e7a97c314e1122a33aa043}
+      \strng{authornamehash}{7c1ee74a49e7a97c314e1122a33aa043}
+      \strng{authorfullhash}{7c1ee74a49e7a97c314e1122a33aa043}
+      \strng{authorfullhashraw}{7c1ee74a49e7a97c314e1122a33aa043}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{2352-1465}
+      \field{journaltitle}{Transportation Research Procedia}
+      \field{series}{Transport Research Arena {TRA}2016}
+      \field{shortjournal}{Transportation Research Procedia}
+      \field{title}{Economic Benefits of Increased Cycling}
+      \field{urlday}{2}
+      \field{urlmonth}{11}
+      \field{urlyear}{2023}
+      \field{volume}{14}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{2306\bibrangedash 2313}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1016/j.trpro.2016.05.247
+      \endverb
+      \verb{file}
+      \verb ScienceDirect Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\993\\Blondiau et al. - 2016 - Economic Benefits of Increased Cycling.pdf:application/pdf;ScienceDirect Snapshot:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\994\\S2352146516302538.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S2352146516302538
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S2352146516302538
+      \endverb
+      \keyw{Cycling,economics,employment,retail,urban transport}
+    \endentry
+    \entry{braysy_vehicle_2005}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=429e9997283f9ffbe8a4ecd93ff6a75b}{%
+           family={Bräysy},
+           familyi={B\bibinitperiod},
+           given={Olli},
+           giveni={O\bibinitperiod}}}%
+        {{hash=d4ebdd3fdc985c36f68c8295c5664c74}{%
+           family={Gendreau},
+           familyi={G\bibinitperiod},
+           given={Michel},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{7f1736c4e0b8ec5bea87b73e4c115429}
+      \strng{fullhash}{7f1736c4e0b8ec5bea87b73e4c115429}
+      \strng{fullhashraw}{7f1736c4e0b8ec5bea87b73e4c115429}
+      \strng{bibnamehash}{7f1736c4e0b8ec5bea87b73e4c115429}
+      \strng{authorbibnamehash}{7f1736c4e0b8ec5bea87b73e4c115429}
+      \strng{authornamehash}{7f1736c4e0b8ec5bea87b73e4c115429}
+      \strng{authorfullhash}{7f1736c4e0b8ec5bea87b73e4c115429}
+      \strng{authorfullhashraw}{7f1736c4e0b8ec5bea87b73e4c115429}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{journaltitle}{Transportation Science}
+      \field{langid}{english}
+      \field{number}{1}
+      \field{shorttitle}{Vehicle Routing Problem with Time Windows, Part I}
+      \field{title}{Vehicle Routing Problem with Time Windows, Part I: Route Construction and Local Search Algorithms}
+      \field{urlday}{2}
+      \field{urlmonth}{11}
+      \field{urlyear}{2023}
+      \field{volume}{39}
+      \field{year}{2005}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{104\bibrangedash 118}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1287/trsc.1030.0056
+      \endverb
+      \verb{file}
+      \verb Bräysy und Gendreau - 2005 - Vehicle Routing Problem with Time Windows, Part I.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\989\\Bräysy und Gendreau - 2005 - Vehicle Routing Problem with Time Windows, Part I.pdf:application/pdf;Snapshot:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\988\\trsc.1030.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://pubsonline.informs.org/doi/abs/10.1287/trsc.1030.0056
+      \endverb
+      \verb{url}
+      \verb https://pubsonline.informs.org/doi/abs/10.1287/trsc.1030.0056
+      \endverb
+    \endentry
+    \entry{buchin_tour4me_2022}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=a18d90eb2238899dc4b4c32c47956381}{%
+           family={Buchin},
+           familyi={B\bibinitperiod},
+           given={Kevin},
+           giveni={K\bibinitperiod}}}%
+        {{hash=68a8c8df65ec44246a3020de2603bb22}{%
+           family={Hagedoorn},
+           familyi={H\bibinitperiod},
+           given={Mart},
+           giveni={M\bibinitperiod}}}%
+        {{hash=55b7046b4a5ca36a79dc89e784354d36}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Guangping},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Seattle Washington}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{e7350094d42159f67fbd3df2ded650b5}
+      \strng{fullhash}{e7350094d42159f67fbd3df2ded650b5}
+      \strng{fullhashraw}{e7350094d42159f67fbd3df2ded650b5}
+      \strng{bibnamehash}{e7350094d42159f67fbd3df2ded650b5}
+      \strng{authorbibnamehash}{e7350094d42159f67fbd3df2ded650b5}
+      \strng{authornamehash}{e7350094d42159f67fbd3df2ded650b5}
+      \strng{authorfullhash}{e7350094d42159f67fbd3df2ded650b5}
+      \strng{authorfullhashraw}{e7350094d42159f67fbd3df2ded650b5}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{Proceedings of the 30th International Conference on Advances in Geographic Information Systems}
+      \field{eventtitle}{{SIGSPATIAL} '22: The 30th International Conference on Advances in Geographic Information Systems}
+      \field{isbn}{978-1-4503-9529-8}
+      \field{langid}{english}
+      \field{shorttitle}{Tour4Me}
+      \field{title}{Tour4Me: a framework for customized tour planning algorithms}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{year}{2022}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 4}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1145/3557915.3560992
+      \endverb
+      \verb{file}
+      \verb Buchin et al. - 2022 - Tour4Me a framework for customized tour planning .pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\BP4DSHBB\\Buchin et al. - 2022 - Tour4Me a framework for customized tour planning .pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/3557915.3560992
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/3557915.3560992
+      \endverb
+    \endentry
+    \entry{cekin_psychological_2015}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=64cf85f8db53e20b70cff584178b8286}{%
+           family={Cekin},
+           familyi={C\bibinitperiod},
+           given={Resul},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{64cf85f8db53e20b70cff584178b8286}
+      \strng{fullhash}{64cf85f8db53e20b70cff584178b8286}
+      \strng{fullhashraw}{64cf85f8db53e20b70cff584178b8286}
+      \strng{bibnamehash}{64cf85f8db53e20b70cff584178b8286}
+      \strng{authorbibnamehash}{64cf85f8db53e20b70cff584178b8286}
+      \strng{authornamehash}{64cf85f8db53e20b70cff584178b8286}
+      \strng{authorfullhash}{64cf85f8db53e20b70cff584178b8286}
+      \strng{authorfullhashraw}{64cf85f8db53e20b70cff584178b8286}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{issn}{2332-3205, 2332-3213}
+      \field{journaltitle}{Universal Journal of Educational Research}
+      \field{langid}{english}
+      \field{number}{10}
+      \field{shortjournal}{ujer}
+      \field{shorttitle}{Psychological Benefits of Regular Physical Activity}
+      \field{title}{Psychological Benefits of Regular Physical Activity: Evidence from Emerging Adults}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{3}
+      \field{year}{2015}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{710\bibrangedash 717}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.13189/ujer.2015.031008
+      \endverb
+      \verb{file}
+      \verb Cekin - 2015 - Psychological Benefits of Regular Physical Activit.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\950\\Cekin - 2015 - Psychological Benefits of Regular Physical Activit.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb http://www.hrpub.org/journals/article_info.php?aid=2942
+      \endverb
+      \verb{url}
+      \verb http://www.hrpub.org/journals/article_info.php?aid=2942
+      \endverb
+    \endentry
+    \entry{cherkassky_shortest_1996}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=137655b5e7cbc2874f014d3585e4aa87}{%
+           family={Cherkassky},
+           familyi={C\bibinitperiod},
+           given={Boris\bibnamedelima V.},
+           giveni={B\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=575546439bd6e9b2cbc49d9c92ced13f}{%
+           family={Goldberg},
+           familyi={G\bibinitperiod},
+           given={Andrew\bibnamedelima V.},
+           giveni={A\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=b5050993ff5f43f49cf5f039ffb44f74}{%
+           family={Radzik},
+           familyi={R\bibinitperiod},
+           given={Tomasz},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{b1adbdd35eeac6a397976c066eca0104}
+      \strng{fullhash}{b1adbdd35eeac6a397976c066eca0104}
+      \strng{fullhashraw}{b1adbdd35eeac6a397976c066eca0104}
+      \strng{bibnamehash}{b1adbdd35eeac6a397976c066eca0104}
+      \strng{authorbibnamehash}{b1adbdd35eeac6a397976c066eca0104}
+      \strng{authornamehash}{b1adbdd35eeac6a397976c066eca0104}
+      \strng{authorfullhash}{b1adbdd35eeac6a397976c066eca0104}
+      \strng{authorfullhashraw}{b1adbdd35eeac6a397976c066eca0104}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{issn}{1436-4646}
+      \field{journaltitle}{Mathematical Programming}
+      \field{langid}{english}
+      \field{number}{2}
+      \field{shortjournal}{Mathematical Programming}
+      \field{shorttitle}{Shortest paths algorithms}
+      \field{title}{Shortest paths algorithms: Theory and experimental evaluation}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{73}
+      \field{year}{1996}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{129\bibrangedash 174}
+      \range{pages}{46}
+      \verb{doi}
+      \verb 10.1007/BF02592101
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\968\\Cherkassky et al. - 1996 - Shortest paths algorithms Theory and experimental.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/BF02592101
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/BF02592101
+      \endverb
+      \keyw{Graph algorithms,Network optimization,Shortest paths,Theory and experimental evaluation of algorithms}
+    \endentry
+    \entry{curtis_rewire_2012}{inproceedings}{}{}
+      \name{author}{5}{}{%
+        {{hash=6c7f1031eeef04ba26028da5c14d9c96}{%
+           family={Curtis},
+           familyi={C\bibinitperiod},
+           given={Andrew\bibnamedelima R.},
+           giveni={A\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=3dea6641a5fe178d6b5c3d79f6bbcf23}{%
+           family={Carpenter},
+           familyi={C\bibinitperiod},
+           given={Tommy},
+           giveni={T\bibinitperiod}}}%
+        {{hash=f9b52d18ac94e3bb341afef9f6d49bf7}{%
+           family={Elsheikh},
+           familyi={E\bibinitperiod},
+           given={Mustafa},
+           giveni={M\bibinitperiod}}}%
+        {{hash=af11e3aa28a907c34883b02afc4348ea}{%
+           family={Lopez-Ortiz},
+           familyi={L\bibinithyphendelim O\bibinitperiod},
+           given={Alejandro},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8a08ba5105631a452a6293d01ad2199a}{%
+           family={Keshav},
+           familyi={K\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Orlando, {FL}, {USA}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{36e8540a059a2f4e1861cb618e02f20d}
+      \strng{fullhash}{36e8540a059a2f4e1861cb618e02f20d}
+      \strng{fullhashraw}{36e8540a059a2f4e1861cb618e02f20d}
+      \strng{bibnamehash}{36e8540a059a2f4e1861cb618e02f20d}
+      \strng{authorbibnamehash}{36e8540a059a2f4e1861cb618e02f20d}
+      \strng{authornamehash}{36e8540a059a2f4e1861cb618e02f20d}
+      \strng{authorfullhash}{36e8540a059a2f4e1861cb618e02f20d}
+      \strng{authorfullhashraw}{36e8540a059a2f4e1861cb618e02f20d}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{2012 Proceedings {IEEE} {INFOCOM}}
+      \field{eventtitle}{{IEEE} {INFOCOM} 2012 - {IEEE} Conference on Computer Communications}
+      \field{isbn}{978-1-4673-0775-8 978-1-4673-0773-4 978-1-4673-0774-1}
+      \field{langid}{english}
+      \field{shorttitle}{{REWIRE}}
+      \field{title}{{REWIRE}: An optimization-based framework for unstructured data center network design}
+      \field{urlday}{16}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{year}{2012}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1116\bibrangedash 1124}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/INFCOM.2012.6195470
+      \endverb
+      \verb{file}
+      \verb Curtis et al. - 2012 - REWIRE An optimization-based framework for unstru.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\TQEASRP8\\Curtis et al. - 2012 - REWIRE An optimization-based framework for unstru.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb http://ieeexplore.ieee.org/document/6195470/
+      \endverb
+      \verb{url}
+      \verb http://ieeexplore.ieee.org/document/6195470/
+      \endverb
+    \endentry
+    \entry{delahaye_simulated_2019}{incollection}{}{}
+      \name{author}{3}{}{%
+        {{hash=724f19394ff905be4ed7b245765f1656}{%
+           family={Delahaye},
+           familyi={D\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=e6d1900f733514d5c9b670410ae08c3f}{%
+           family={Chaimatanan},
+           familyi={C\bibinitperiod},
+           given={Supatcha},
+           giveni={S\bibinitperiod}}}%
+        {{hash=0aa4f8579303710b71430ead48cc5909}{%
+           family={Mongeau},
+           familyi={M\bibinitperiod},
+           given={Marcel},
+           giveni={M\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=d4ebdd3fdc985c36f68c8295c5664c74}{%
+           family={Gendreau},
+           familyi={G\bibinitperiod},
+           given={Michel},
+           giveni={M\bibinitperiod}}}%
+        {{hash=156d517208f70e145503aa8b5ec9849b}{%
+           family={Potvin},
+           familyi={P\bibinitperiod},
+           given={Jean-Yves},
+           giveni={J\bibinithyphendelim Y\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{d0d6c52cffbe38f91adb7894454bf665}
+      \strng{fullhash}{d0d6c52cffbe38f91adb7894454bf665}
+      \strng{fullhashraw}{d0d6c52cffbe38f91adb7894454bf665}
+      \strng{bibnamehash}{d0d6c52cffbe38f91adb7894454bf665}
+      \strng{authorbibnamehash}{d0d6c52cffbe38f91adb7894454bf665}
+      \strng{authornamehash}{d0d6c52cffbe38f91adb7894454bf665}
+      \strng{authorfullhash}{d0d6c52cffbe38f91adb7894454bf665}
+      \strng{authorfullhashraw}{d0d6c52cffbe38f91adb7894454bf665}
+      \strng{editorbibnamehash}{428631794113b74d16ac1f3a6f241136}
+      \strng{editornamehash}{428631794113b74d16ac1f3a6f241136}
+      \strng{editorfullhash}{428631794113b74d16ac1f3a6f241136}
+      \strng{editorfullhashraw}{428631794113b74d16ac1f3a6f241136}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{Handbook of Metaheuristics}
+      \field{isbn}{978-3-319-91086-4}
+      \field{langid}{english}
+      \field{shorttitle}{Simulated Annealing}
+      \field{title}{Simulated Annealing: From Basics to Applications}
+      \field{urlday}{29}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{year}{2019}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 35}
+      \range{pages}{35}
+      \verb{doi}
+      \verb https://doi.org/10.1007/978-3-319-91086-4_1
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\V5ZM62XG\\Delahaye et al. - 2019 - Simulated Annealing From Basics to Applications.pdf:application/pdf
+      \endverb
+      \keyw{European Continental Scale,Finite Time Approximation,Knapsack Problem,Local Search Optimization Algorithm,{SA} Algorithm}
+    \endentry
+    \entry{delling_time-dependent_2011}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=bc775b0bfe2f5eba2c0d55106a052b55}{%
+           family={Delling},
+           familyi={D\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{bc775b0bfe2f5eba2c0d55106a052b55}
+      \strng{fullhash}{bc775b0bfe2f5eba2c0d55106a052b55}
+      \strng{fullhashraw}{bc775b0bfe2f5eba2c0d55106a052b55}
+      \strng{bibnamehash}{bc775b0bfe2f5eba2c0d55106a052b55}
+      \strng{authorbibnamehash}{bc775b0bfe2f5eba2c0d55106a052b55}
+      \strng{authornamehash}{bc775b0bfe2f5eba2c0d55106a052b55}
+      \strng{authorfullhash}{bc775b0bfe2f5eba2c0d55106a052b55}
+      \strng{authorfullhashraw}{bc775b0bfe2f5eba2c0d55106a052b55}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1432-0541}
+      \field{journaltitle}{Algorithmica}
+      \field{langid}{english}
+      \field{number}{1}
+      \field{shortjournal}{Algorithmica}
+      \field{title}{Time-Dependent {SHARC}-Routing}
+      \field{urlday}{16}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{volume}{60}
+      \field{year}{2011}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{60\bibrangedash 94}
+      \range{pages}{35}
+      \verb{doi}
+      \verb 10.1007/s00453-009-9341-0
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\34CK49G2\\Delling - 2011 - Time-Dependent SHARC-Routing.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/s00453-009-9341-0
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/s00453-009-9341-0
+      \endverb
+      \keyw{Graph algorithms,Algorithm engineering,Time-dependent shortest paths,Timetable information}
+    \endentry
+    \entry{delling_customizable_2017}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=bc775b0bfe2f5eba2c0d55106a052b55}{%
+           family={Delling},
+           familyi={D\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=575546439bd6e9b2cbc49d9c92ced13f}{%
+           family={Goldberg},
+           familyi={G\bibinitperiod},
+           given={Andrew\bibnamedelima V.},
+           giveni={A\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=58fb32d0e500e97fc503f4e75953eaaf}{%
+           family={Pajor},
+           familyi={P\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod}}}%
+        {{hash=8839683a16ad350312493c2e29f35b86}{%
+           family={Werneck},
+           familyi={W\bibinitperiod},
+           given={Renato\bibnamedelima F.},
+           giveni={R\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \strng{namehash}{4229870603702ec0afaa634b02e53d41}
+      \strng{fullhash}{4229870603702ec0afaa634b02e53d41}
+      \strng{fullhashraw}{4229870603702ec0afaa634b02e53d41}
+      \strng{bibnamehash}{4229870603702ec0afaa634b02e53d41}
+      \strng{authorbibnamehash}{4229870603702ec0afaa634b02e53d41}
+      \strng{authornamehash}{4229870603702ec0afaa634b02e53d41}
+      \strng{authorfullhash}{4229870603702ec0afaa634b02e53d41}
+      \strng{authorfullhashraw}{4229870603702ec0afaa634b02e53d41}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0041-1655}
+      \field{journaltitle}{Transportation Science}
+      \field{number}{2}
+      \field{title}{Customizable Route Planning in Road Networks}
+      \field{urlday}{16}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{volume}{51}
+      \field{year}{2017}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{566\bibrangedash 591}
+      \range{pages}{26}
+      \verb{doi}
+      \verb 10.1287/trsc.2014.0579
+      \endverb
+      \verb{file}
+      \verb Delling et al. - 2017 - Customizable Route Planning in Road Networks.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\4IIMNYWL\\Delling et al. - 2017 - Customizable Route Planning in Road Networks.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://pubsonline.informs.org/doi/abs/10.1287/trsc.2014.0579
+      \endverb
+      \verb{url}
+      \verb https://pubsonline.informs.org/doi/abs/10.1287/trsc.2014.0579
+      \endverb
+      \keyw{alternative routes,Bing Maps,road networks,route planning,routing in traffic,shortest paths}
+    \endentry
+    \entry{delling_engineering_2009}{incollection}{}{}
+      \name{author}{4}{}{%
+        {{hash=bc775b0bfe2f5eba2c0d55106a052b55}{%
+           family={Delling},
+           familyi={D\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=be6c7f12620ef1a8d1d85d96d476a158}{%
+           family={Sanders},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=29b0627d9ddb65dcdfd14ddc22291e93}{%
+           family={Schultes},
+           familyi={S\bibinitperiod},
+           given={Dominik},
+           giveni={D\bibinitperiod}}}%
+        {{hash=f2f741491852a3b5c3ad17d40825e753}{%
+           family={Wagner},
+           familyi={W\bibinitperiod},
+           given={Dorothea},
+           giveni={D\bibinitperiod}}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=b017809beaa2849460b5e240f1559c61}{%
+           family={Lerner},
+           familyi={L\bibinitperiod},
+           given={Jürgen},
+           giveni={J\bibinitperiod}}}%
+        {{hash=f2f741491852a3b5c3ad17d40825e753}{%
+           family={Wagner},
+           familyi={W\bibinitperiod},
+           given={Dorothea},
+           giveni={D\bibinitperiod}}}%
+        {{hash=90b2e295468f2731724d14aa285dc348}{%
+           family={Zweig},
+           familyi={Z\bibinitperiod},
+           given={Katharina\bibnamedelima A.},
+           giveni={K\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin, Heidelberg}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{274c575b0970f83a1bcd81d41b76d380}
+      \strng{fullhash}{274c575b0970f83a1bcd81d41b76d380}
+      \strng{fullhashraw}{274c575b0970f83a1bcd81d41b76d380}
+      \strng{bibnamehash}{274c575b0970f83a1bcd81d41b76d380}
+      \strng{authorbibnamehash}{274c575b0970f83a1bcd81d41b76d380}
+      \strng{authornamehash}{274c575b0970f83a1bcd81d41b76d380}
+      \strng{authorfullhash}{274c575b0970f83a1bcd81d41b76d380}
+      \strng{authorfullhashraw}{274c575b0970f83a1bcd81d41b76d380}
+      \strng{editorbibnamehash}{7e2c9df5becde73d1a40e5f84b2dadbd}
+      \strng{editornamehash}{7e2c9df5becde73d1a40e5f84b2dadbd}
+      \strng{editorfullhash}{7e2c9df5becde73d1a40e5f84b2dadbd}
+      \strng{editorfullhashraw}{7e2c9df5becde73d1a40e5f84b2dadbd}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Algorithmics of Large and Complex Networks: Design, Analysis, and Simulation}
+      \field{isbn}{978-3-642-02094-0}
+      \field{langid}{english}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Engineering Route Planning Algorithms}
+      \field{urlday}{22}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{year}{2009}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{117\bibrangedash 139}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1007/978-3-642-02094-0_7
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\888\\Delling et al. - 2009 - Engineering Route Planning Algorithms.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/978-3-642-02094-0_7
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-3-642-02094-0_7
+      \endverb
+      \keyw{Short Path,Query Time,Road Network,Route Planning,Speedup Technique}
+    \endentry
+    \entry{deo_shortest-path_1984}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=a10ccd3dc51fe442da4e59d030faac65}{%
+           family={Deo},
+           familyi={D\bibinitperiod},
+           given={Narsingh},
+           giveni={N\bibinitperiod}}}%
+        {{hash=0afb922d6575bd3bfd56ffc75c6f8a87}{%
+           family={Pang},
+           familyi={P\bibinitperiod},
+           given={Chi-Yin},
+           giveni={C\bibinithyphendelim Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{64ddf1c1c8f55afc17a957d9bb38a092}
+      \strng{fullhash}{64ddf1c1c8f55afc17a957d9bb38a092}
+      \strng{fullhashraw}{64ddf1c1c8f55afc17a957d9bb38a092}
+      \strng{bibnamehash}{64ddf1c1c8f55afc17a957d9bb38a092}
+      \strng{authorbibnamehash}{64ddf1c1c8f55afc17a957d9bb38a092}
+      \strng{authornamehash}{64ddf1c1c8f55afc17a957d9bb38a092}
+      \strng{authorfullhash}{64ddf1c1c8f55afc17a957d9bb38a092}
+      \strng{authorfullhashraw}{64ddf1c1c8f55afc17a957d9bb38a092}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{issn}{1097-0037}
+      \field{journaltitle}{Networks}
+      \field{langid}{english}
+      \field{number}{2}
+      \field{shorttitle}{Shortest-path algorithms}
+      \field{title}{Shortest-path algorithms: Taxonomy and annotation}
+      \field{urlday}{16}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{volume}{14}
+      \field{year}{1984}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{275\bibrangedash 323}
+      \range{pages}{49}
+      \verb{doi}
+      \verb 10.1002/net.3230140208
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\4MT69R8T\\Deo and Pang - 1984 - Shortest-path algorithms Taxonomy and annotation.pdf:application/pdf;Snapshot:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\4U6E8TIC\\net.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/net.3230140208
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/net.3230140208
+      \endverb
+    \endentry
+    \entry{dorigo_ant_1996}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=26c8dbd8b76182fc666371044ae8dfa4}{%
+           family={Dorigo},
+           familyi={D\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=7b6faa0333fee867051b5379be913e72}{%
+           family={Maniezzo},
+           familyi={M\bibinitperiod},
+           given={Vittorio},
+           giveni={V\bibinitperiod}}}%
+        {{hash=44efc9d254c2007cd89405cb7887d99e}{%
+           family={Colorni},
+           familyi={C\bibinitperiod},
+           given={Alberto},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{21f3768588572456fa3b62094c818cf4}
+      \strng{fullhash}{21f3768588572456fa3b62094c818cf4}
+      \strng{fullhashraw}{21f3768588572456fa3b62094c818cf4}
+      \strng{bibnamehash}{21f3768588572456fa3b62094c818cf4}
+      \strng{authorbibnamehash}{21f3768588572456fa3b62094c818cf4}
+      \strng{authornamehash}{21f3768588572456fa3b62094c818cf4}
+      \strng{authorfullhash}{21f3768588572456fa3b62094c818cf4}
+      \strng{authorfullhashraw}{21f3768588572456fa3b62094c818cf4}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{issn}{1083-4419, 1941-0492}
+      \field{journaltitle}{{IEEE} Transactions on Systems, Man, and Cybernetics, Part B (Cybernetics)}
+      \field{langid}{english}
+      \field{number}{1}
+      \field{shortjournal}{{IEEE} Trans. Syst., Man, Cybern. B}
+      \field{shorttitle}{Ant system}
+      \field{title}{Ant system: optimization by a colony of cooperating agents}
+      \field{urlday}{18}
+      \field{urlmonth}{1}
+      \field{urlyear}{2024}
+      \field{volume}{26}
+      \field{year}{1996}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{29\bibrangedash 41}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1109/3477.484436
+      \endverb
+      \verb{file}
+      \verb Dorigo et al. - 1996 - Ant system optimization by a colony of cooperatin.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\WLRPHRIC\\Dorigo et al. - 1996 - Ant system optimization by a colony of cooperatin.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/document/484436/
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/document/484436/
+      \endverb
+    \endentry
+    \entry{eglese_simulated_1990}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=eae9815578e3965f8f45f880ac19532b}{%
+           family={Eglese},
+           familyi={E\bibinitperiod},
+           given={Richard\bibnamedelima W.},
+           giveni={R\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \strng{namehash}{eae9815578e3965f8f45f880ac19532b}
+      \strng{fullhash}{eae9815578e3965f8f45f880ac19532b}
+      \strng{fullhashraw}{eae9815578e3965f8f45f880ac19532b}
+      \strng{bibnamehash}{eae9815578e3965f8f45f880ac19532b}
+      \strng{authorbibnamehash}{eae9815578e3965f8f45f880ac19532b}
+      \strng{authornamehash}{eae9815578e3965f8f45f880ac19532b}
+      \strng{authorfullhash}{eae9815578e3965f8f45f880ac19532b}
+      \strng{authorfullhashraw}{eae9815578e3965f8f45f880ac19532b}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{issn}{0377-2217}
+      \field{journaltitle}{European Journal of Operational Research}
+      \field{number}{3}
+      \field{shortjournal}{European Journal of Operational Research}
+      \field{shorttitle}{Simulated annealing}
+      \field{title}{Simulated annealing: A tool for operational research}
+      \field{urlday}{12}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{volume}{46}
+      \field{year}{1990}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{271\bibrangedash 281}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1016/0377-2217(90)90001-R
+      \endverb
+      \verb{file}
+      \verb Eglese - 1990 - Simulated annealing A tool for operational resear.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\I63BGPNL\\Eglese - 1990 - Simulated annealing A tool for operational resear.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/037722179090001R
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/037722179090001R
+      \endverb
+      \keyw{Simulated annealing,heuristics,optimisation}
+    \endentry
+    \entry{ehrgott_bi-objective_2012}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=dd52f015c9f959c6a328469399e09e4c}{%
+           family={Ehrgott},
+           familyi={E\bibinitperiod},
+           given={Matthias},
+           giveni={M\bibinitperiod}}}%
+        {{hash=4cbe5dd4e572241cc07a629f8ad80749}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Judith\bibnamedelimb Y.\bibnamedelimi T.},
+           giveni={J\bibinitperiod\bibinitdelim Y\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=4c02e375829b0603539f4c00731b85e0}{%
+           family={Raith},
+           familyi={R\bibinitperiod},
+           given={Andrea},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0d61c9b4570990d87d98b632fa60bcad}{%
+           family={Houtte},
+           familyi={H\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+      }
+      \strng{namehash}{f56bc1cd4cfd583badfc90a84b1b3368}
+      \strng{fullhash}{f56bc1cd4cfd583badfc90a84b1b3368}
+      \strng{fullhashraw}{f56bc1cd4cfd583badfc90a84b1b3368}
+      \strng{bibnamehash}{f56bc1cd4cfd583badfc90a84b1b3368}
+      \strng{authorbibnamehash}{f56bc1cd4cfd583badfc90a84b1b3368}
+      \strng{authornamehash}{f56bc1cd4cfd583badfc90a84b1b3368}
+      \strng{authorfullhash}{f56bc1cd4cfd583badfc90a84b1b3368}
+      \strng{authorfullhashraw}{f56bc1cd4cfd583badfc90a84b1b3368}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0965-8564}
+      \field{journaltitle}{Transportation Research Part A: Policy and Practice}
+      \field{number}{4}
+      \field{shortjournal}{Transportation Research Part A: Policy and Practice}
+      \field{title}{A bi-objective cyclist route choice model}
+      \field{urlday}{22}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{46}
+      \field{year}{2012}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{652\bibrangedash 663}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1016/j.tra.2011.11.015
+      \endverb
+      \verb{file}
+      \verb Ehrgott et al. - 2012 - A bi-objective cyclist route choice model.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\927\\Ehrgott et al. - 2012 - A bi-objective cyclist route choice model.pdf:application/pdf;ScienceDirect Snapshot:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\884\\S0965856411001844.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S0965856411001844
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S0965856411001844
+      \endverb
+      \keyw{Bi-objective routing,Cycling,Efficient route,Route choice,Trip assignment}
+    \endentry
+    \entry{gallo_shortest_1988}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=5f77512de4d3eeef7996f641b69c8c19}{%
+           family={Gallo},
+           familyi={G\bibinitperiod},
+           given={Giorgio},
+           giveni={G\bibinitperiod}}}%
+        {{hash=9cfedfcb86f44b43c422e90895da0876}{%
+           family={Pallottino},
+           familyi={P\bibinitperiod},
+           given={Stefano},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{577c2198c2b74f72498efe02feba7570}
+      \strng{fullhash}{577c2198c2b74f72498efe02feba7570}
+      \strng{fullhashraw}{577c2198c2b74f72498efe02feba7570}
+      \strng{bibnamehash}{577c2198c2b74f72498efe02feba7570}
+      \strng{authorbibnamehash}{577c2198c2b74f72498efe02feba7570}
+      \strng{authornamehash}{577c2198c2b74f72498efe02feba7570}
+      \strng{authorfullhash}{577c2198c2b74f72498efe02feba7570}
+      \strng{authorfullhashraw}{577c2198c2b74f72498efe02feba7570}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{1}
+      \field{issn}{1572-9338}
+      \field{journaltitle}{Annals of Operations Research}
+      \field{langid}{english}
+      \field{month}{12}
+      \field{number}{1}
+      \field{shortjournal}{Ann Oper Res}
+      \field{title}{Shortest path algorithms}
+      \field{urlday}{16}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{volume}{13}
+      \field{year}{1988}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 79}
+      \range{pages}{79}
+      \verb{doi}
+      \verb 10.1007/BF02288320
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\4BSKMKF3\\Gallo and Pallottino - 1988 - Shortest path algorithms.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/BF02288320
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/BF02288320
+      \endverb
+      \keyw{Short Path,Data Structure,Directed Graph,Programming Language,Relative Performance}
+    \endentry
+    \entry{gemsa_efficient_2013}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=c3bf066364977c3cc1e2a97c603669e1}{%
+           family={Gemsa},
+           familyi={G\bibinitperiod},
+           given={Andreas},
+           giveni={A\bibinitperiod}}}%
+        {{hash=58fb32d0e500e97fc503f4e75953eaaf}{%
+           family={Pajor},
+           familyi={P\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod}}}%
+        {{hash=f2f741491852a3b5c3ad17d40825e753}{%
+           family={Wagner},
+           familyi={W\bibinitperiod},
+           given={Dorothea},
+           giveni={D\bibinitperiod}}}%
+        {{hash=81fb56ec5e0064297e72b1380c538120}{%
+           family={Zündorf},
+           familyi={Z\bibinitperiod},
+           given={Tobias},
+           giveni={T\bibinitperiod}}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=209e826b1061a1743e2635e7a57708c2}{%
+           family={Bonifaci},
+           familyi={B\bibinitperiod},
+           given={Vincenzo},
+           giveni={V\bibinitperiod}}}%
+        {{hash=0d818aa3e968cd8759e8d31211dc6382}{%
+           family={Demetrescu},
+           familyi={D\bibinitperiod},
+           given={Camil},
+           giveni={C\bibinitperiod}}}%
+        {{hash=0a32a40115a59553203cbd569e19218d}{%
+           family={Marchetti-Spaccamela},
+           familyi={M\bibinithyphendelim S\bibinitperiod},
+           given={Alberto},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin, Heidelberg}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{906fdbf55c26e22da17efdc80e085fea}
+      \strng{fullhash}{906fdbf55c26e22da17efdc80e085fea}
+      \strng{fullhashraw}{906fdbf55c26e22da17efdc80e085fea}
+      \strng{bibnamehash}{906fdbf55c26e22da17efdc80e085fea}
+      \strng{authorbibnamehash}{906fdbf55c26e22da17efdc80e085fea}
+      \strng{authornamehash}{906fdbf55c26e22da17efdc80e085fea}
+      \strng{authorfullhash}{906fdbf55c26e22da17efdc80e085fea}
+      \strng{authorfullhashraw}{906fdbf55c26e22da17efdc80e085fea}
+      \strng{editorbibnamehash}{64c953d70206eb28f5b7b1329b997a49}
+      \strng{editornamehash}{64c953d70206eb28f5b7b1329b997a49}
+      \strng{editorfullhash}{64c953d70206eb28f5b7b1329b997a49}
+      \strng{editorfullhashraw}{64c953d70206eb28f5b7b1329b997a49}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Experimental Algorithms}
+      \field{isbn}{978-3-642-38527-8}
+      \field{langid}{english}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Efficient Computation of Jogging Routes}
+      \field{year}{2013}
+      \field{dateera}{ce}
+      \field{pages}{272\bibrangedash 283}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1007/978-3-642-38527-8_25
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\725\\Gemsa et al. - 2013 - Efficient Computation of Jogging Routes.pdf:application/pdf
+      \endverb
+      \keyw{Planar Graph,Route Length,Short Path,Short Path Tree,Source Vertex}
+    \endentry
+    \entry{gendreau_handbook_2010}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=d4ebdd3fdc985c36f68c8295c5664c74}{%
+           family={Gendreau},
+           familyi={G\bibinitperiod},
+           given={Michel},
+           giveni={M\bibinitperiod}}}%
+        {{hash=156d517208f70e145503aa8b5ec9849b}{%
+           family={Potvin},
+           familyi={P\bibinitperiod},
+           given={Jean-Yves},
+           giveni={J\bibinithyphendelim Y\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Boston, {MA}}%
+      }
+      \list{publisher}{1}{%
+        {Springer {US}}%
+      }
+      \strng{namehash}{428631794113b74d16ac1f3a6f241136}
+      \strng{fullhash}{428631794113b74d16ac1f3a6f241136}
+      \strng{fullhashraw}{428631794113b74d16ac1f3a6f241136}
+      \strng{bibnamehash}{428631794113b74d16ac1f3a6f241136}
+      \strng{authorbibnamehash}{428631794113b74d16ac1f3a6f241136}
+      \strng{authornamehash}{428631794113b74d16ac1f3a6f241136}
+      \strng{authorfullhash}{428631794113b74d16ac1f3a6f241136}
+      \strng{authorfullhashraw}{428631794113b74d16ac1f3a6f241136}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-1-4419-1663-1 978-1-4419-1665-5}
+      \field{langid}{english}
+      \field{series}{International Series in Operations Research \& Management Science}
+      \field{title}{Handbook of Metaheuristics}
+      \field{urlday}{13}
+      \field{urlmonth}{9}
+      \field{urlyear}{2023}
+      \field{volume}{146}
+      \field{year}{2010}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.1007/978-1-4419-1665-5
+      \endverb
+      \verb{file}
+      \verb Volltext:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\721\\Gendreau und Potvin - 2010 - Handbook of Metaheuristics.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://link.springer.com/10.1007/978-1-4419-1665-5
+      \endverb
+      \verb{url}
+      \verb https://link.springer.com/10.1007/978-1-4419-1665-5
+      \endverb
+    \endentry
+    \entry{gorobets_development_2016}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=b489be845d055514881e43b1df3ae521}{%
+           family={Gorobets},
+           familyi={G\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{b489be845d055514881e43b1df3ae521}
+      \strng{fullhash}{b489be845d055514881e43b1df3ae521}
+      \strng{fullhashraw}{b489be845d055514881e43b1df3ae521}
+      \strng{bibnamehash}{b489be845d055514881e43b1df3ae521}
+      \strng{authorbibnamehash}{b489be845d055514881e43b1df3ae521}
+      \strng{authornamehash}{b489be845d055514881e43b1df3ae521}
+      \strng{authorfullhash}{b489be845d055514881e43b1df3ae521}
+      \strng{authorfullhashraw}{b489be845d055514881e43b1df3ae521}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{24}
+      \field{issn}{0140-6736, 1474-547X}
+      \field{journaltitle}{The Lancet}
+      \field{month}{9}
+      \field{note}{Publisher: Elsevier}
+      \field{number}{10051}
+      \field{shortjournal}{The Lancet}
+      \field{title}{Development of bicycle infrastructure for health and sustainability}
+      \field{urlday}{16}
+      \field{urlmonth}{7}
+      \field{urlyear}{2024}
+      \field{volume}{388}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1278}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/S0140-6736(16)31671-3
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\QJ6739SK\\Gorobets - 2016 - Development of bicycle infrastructure for health a.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(16)31671-3/fulltext
+      \endverb
+      \verb{url}
+      \verb https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(16)31671-3/fulltext
+      \endverb
+    \endentry
+    \entry{graver_foundations_1975}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=a27b212d601edb01aadcf867c82d1335}{%
+           family={Graver},
+           familyi={G\bibinitperiod},
+           given={Jack\bibnamedelima E.},
+           giveni={J\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \strng{namehash}{a27b212d601edb01aadcf867c82d1335}
+      \strng{fullhash}{a27b212d601edb01aadcf867c82d1335}
+      \strng{fullhashraw}{a27b212d601edb01aadcf867c82d1335}
+      \strng{bibnamehash}{a27b212d601edb01aadcf867c82d1335}
+      \strng{authorbibnamehash}{a27b212d601edb01aadcf867c82d1335}
+      \strng{authornamehash}{a27b212d601edb01aadcf867c82d1335}
+      \strng{authorfullhash}{a27b212d601edb01aadcf867c82d1335}
+      \strng{authorfullhashraw}{a27b212d601edb01aadcf867c82d1335}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{1}
+      \field{issn}{1436-4646}
+      \field{journaltitle}{Mathematical Programming}
+      \field{langid}{english}
+      \field{month}{12}
+      \field{number}{1}
+      \field{shortjournal}{Mathematical Programming}
+      \field{title}{On the foundations of linear and integer linear programming I}
+      \field{urlday}{16}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{volume}{9}
+      \field{year}{1975}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{207\bibrangedash 226}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.1007/BF01681344
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\GW5VDCWK\\Graver - 1975 - On the foundations of linear and integer linear pr.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/BF01681344
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/BF01681344
+      \endverb
+      \keyw{Integer Linear Programming,Linear Programming Problem,Natural Extension,Optimal Point,Programming Problem}
+    \endentry
+    \entry{irnich_sequential_2006}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=9eb15eec39287cc7d63b66933f8c7900}{%
+           family={Irnich},
+           familyi={I\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=f2f153956baf546afff8ac2ab842f9f4}{%
+           family={Funke},
+           familyi={F\bibinitperiod},
+           given={Birger},
+           giveni={B\bibinitperiod}}}%
+        {{hash=6914953b609e5eb0d0a1afe29274a161}{%
+           family={Grünert},
+           familyi={G\bibinitperiod},
+           given={Tore},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{ba1a41cf294b0bf67804262f43b29494}
+      \strng{fullhash}{ba1a41cf294b0bf67804262f43b29494}
+      \strng{fullhashraw}{ba1a41cf294b0bf67804262f43b29494}
+      \strng{bibnamehash}{ba1a41cf294b0bf67804262f43b29494}
+      \strng{authorbibnamehash}{ba1a41cf294b0bf67804262f43b29494}
+      \strng{authornamehash}{ba1a41cf294b0bf67804262f43b29494}
+      \strng{authorfullhash}{ba1a41cf294b0bf67804262f43b29494}
+      \strng{authorfullhashraw}{ba1a41cf294b0bf67804262f43b29494}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0305-0548}
+      \field{journaltitle}{Computers \& Operations Research}
+      \field{number}{8}
+      \field{shortjournal}{Computers \& Operations Research}
+      \field{title}{Sequential search and its application to vehicle-routing problems}
+      \field{urlday}{2}
+      \field{urlmonth}{11}
+      \field{urlyear}{2023}
+      \field{volume}{33}
+      \field{year}{2006}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{2405\bibrangedash 2429}
+      \range{pages}{25}
+      \verb{doi}
+      \verb 10.1016/j.cor.2005.02.020
+      \endverb
+      \verb{file}
+      \verb ScienceDirect Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\985\\Irnich et al. - 2006 - Sequential search and its application to vehicle-r.pdf:application/pdf;ScienceDirect Snapshot:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\986\\S0305054805000766.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S0305054805000766
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S0305054805000766
+      \endverb
+      \keyw{Local search,Vehicle-routing problem}
+    \endentry
+    \entry{jensen_running_2014}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=1831060b10b0a549319a69c3decdfebf}{%
+           family={Jensen},
+           familyi={J\bibinitperiod},
+           given={Mads\bibnamedelima M.},
+           giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=8efd93d084d58ef886e185abf45cbfcc}{%
+           family={Mueller},
+           familyi={M\bibinitperiod},
+           given={Florian\bibnamedelima F.},
+           giveni={F\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Sydney New South Wales Australia}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{697b8a243c51f34779059ecfd818a401}
+      \strng{fullhash}{697b8a243c51f34779059ecfd818a401}
+      \strng{fullhashraw}{697b8a243c51f34779059ecfd818a401}
+      \strng{bibnamehash}{697b8a243c51f34779059ecfd818a401}
+      \strng{authorbibnamehash}{697b8a243c51f34779059ecfd818a401}
+      \strng{authornamehash}{697b8a243c51f34779059ecfd818a401}
+      \strng{authorfullhash}{697b8a243c51f34779059ecfd818a401}
+      \strng{authorfullhashraw}{697b8a243c51f34779059ecfd818a401}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{Proceedings of the 26th Australian Computer-Human Interaction Conference on Designing Futures: the Future of Design}
+      \field{eventtitle}{{OzCHI} '14: the Future of Design}
+      \field{isbn}{978-1-4503-0653-9}
+      \field{langid}{english}
+      \field{shorttitle}{Running with technology}
+      \field{title}{Running with technology: where are we heading?}
+      \field{urlday}{18}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{year}{2014}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{527\bibrangedash 530}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1145/2686612.2686696
+      \endverb
+      \verb{file}
+      \verb Jensen and Mueller - 2014 - Running with technology where are we heading.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\4BZRAEVX\\Jensen and Mueller - 2014 - Running with technology where are we heading.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/2686612.2686696
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/2686612.2686696
+      \endverb
+    \endentry
+    \entry{khamayseh_efficient_2015}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=253b9dec631bfbdd6120660fd7c250f1}{%
+           family={Khamayseh},
+           familyi={K\bibinitperiod},
+           given={Faisal},
+           giveni={F\bibinitperiod}}}%
+        {{hash=6f23bf4f8f887b18415a9d72f3fd9b91}{%
+           family={Arman},
+           familyi={A\bibinitperiod},
+           given={Nabil},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{602a5d5135c30f0c1675f94487d3a6e2}
+      \strng{fullhash}{602a5d5135c30f0c1675f94487d3a6e2}
+      \strng{fullhashraw}{602a5d5135c30f0c1675f94487d3a6e2}
+      \strng{bibnamehash}{602a5d5135c30f0c1675f94487d3a6e2}
+      \strng{authorbibnamehash}{602a5d5135c30f0c1675f94487d3a6e2}
+      \strng{authornamehash}{602a5d5135c30f0c1675f94487d3a6e2}
+      \strng{authorfullhash}{602a5d5135c30f0c1675f94487d3a6e2}
+      \strng{authorfullhashraw}{602a5d5135c30f0c1675f94487d3a6e2}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Soft Computing}
+      \field{shortjournal}{International Journal of Soft Computing}
+      \field{title}{An Efficient Multiple Sources Single-Destination ({MSSD}) Heuristic Algorithm Using Nodes Exclusions}
+      \field{volume}{10}
+      \field{year}{2015}
+      \field{dateera}{ce}
+      \verb{doi}
+      \verb 10.3923/ijscomp.2015.301.306
+      \endverb
+      \verb{file}
+      \verb An efficient multiple source single destination heuristic algorithm.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\XGYD2R82\\An efficient multiple source single destination heuristic algorithm.pdf:application/pdf;Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\DB9WN768\\Khamayseh and Arman - 2015 - An Efficient Multiple Sources Single-Destination (.pdf:application/pdf
+      \endverb
+    \endentry
+    \entry{laporte_5_2002}{incollection}{}{}
+      \name{author}{2}{}{%
+        {{hash=1d6e9fe0f2d8b8a132ebe0ace7645d51}{%
+           family={Laporte},
+           familyi={L\bibinitperiod},
+           given={Gilbert},
+           giveni={G\bibinitperiod}}}%
+        {{hash=b6cdd8f8a44fda52953fd90d306644ea}{%
+           family={Semet},
+           familyi={S\bibinitperiod},
+           given={Frédéric},
+           giveni={F\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Society for Industrial}%
+        {Applied Mathematics}%
+      }
+      \strng{namehash}{372ddc1c2be680445202bd4e3bec5e50}
+      \strng{fullhash}{372ddc1c2be680445202bd4e3bec5e50}
+      \strng{fullhashraw}{372ddc1c2be680445202bd4e3bec5e50}
+      \strng{bibnamehash}{372ddc1c2be680445202bd4e3bec5e50}
+      \strng{authorbibnamehash}{372ddc1c2be680445202bd4e3bec5e50}
+      \strng{authornamehash}{372ddc1c2be680445202bd4e3bec5e50}
+      \strng{authorfullhash}{372ddc1c2be680445202bd4e3bec5e50}
+      \strng{authorfullhashraw}{372ddc1c2be680445202bd4e3bec5e50}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{The Vehicle Routing Problem}
+      \field{isbn}{978-0-89871-498-2}
+      \field{langid}{english}
+      \field{note}{10.1137/1.9780898718515.ch5}
+      \field{series}{Discrete Mathematics and Applications}
+      \field{title}{5. Classical Heuristics for the Capacitated {VRP}}
+      \field{urlday}{16}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{year}{2002}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{109\bibrangedash 128}
+      \range{pages}{20}
+      \verb{doi}
+      \verb https://epubs.siam.org/doi/abs/10.1137/1.9780898718515.ch5
+      \endverb
+      \verb{file}
+      \verb 5. Classical Heuristics for the Capacitated VRP.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\VP57KDPQ\\5. Classical Heuristics for the Capacitated VRP.pdf:application/pdf;Snapshot:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\MYEVVFAS\\1.9780898718515.html:text/html
+      \endverb
+    \endentry
+    \entry{lawler_branch-and-bound_1966}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=14a06eb44bc79240ed58ee22b049b234}{%
+           family={Lawler},
+           familyi={L\bibinitperiod},
+           given={Eugene\bibnamedelima L.},
+           giveni={E\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=d5dac5d96acb41a24fb94ef9732670c5}{%
+           family={Wood},
+           familyi={W\bibinitperiod},
+           given={D.\bibnamedelimi E.},
+           giveni={D\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \strng{namehash}{423d6d828e136b7dcdc00b8cecc27120}
+      \strng{fullhash}{423d6d828e136b7dcdc00b8cecc27120}
+      \strng{fullhashraw}{423d6d828e136b7dcdc00b8cecc27120}
+      \strng{bibnamehash}{423d6d828e136b7dcdc00b8cecc27120}
+      \strng{authorbibnamehash}{423d6d828e136b7dcdc00b8cecc27120}
+      \strng{authornamehash}{423d6d828e136b7dcdc00b8cecc27120}
+      \strng{authorfullhash}{423d6d828e136b7dcdc00b8cecc27120}
+      \strng{authorfullhashraw}{423d6d828e136b7dcdc00b8cecc27120}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{issn}{0030-364X}
+      \field{journaltitle}{Operations Research}
+      \field{number}{4}
+      \field{shorttitle}{Branch-and-Bound Methods}
+      \field{title}{Branch-and-Bound Methods: A Survey}
+      \field{urlday}{22}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{14}
+      \field{year}{1966}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{699\bibrangedash 719}
+      \range{pages}{21}
+      \verb{doi}
+      \verb 10.1287/opre.14.4.699
+      \endverb
+      \verb{file}
+      \verb lawler1966.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\961\\lawler1966.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://pubsonline.informs.org/doi/10.1287/opre.14.4.699
+      \endverb
+      \verb{url}
+      \verb https://pubsonline.informs.org/doi/10.1287/opre.14.4.699
+      \endverb
+    \endentry
+    \entry{loepp_recommending_2018}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=83146b3b482049af6a99bce784cf62b1}{%
+           family={Loepp},
+           familyi={L\bibinitperiod},
+           given={Benedikt},
+           giveni={B\bibinitperiod}}}%
+        {{hash=144a745417914e451d49fa85f43d29b7}{%
+           family={Ziegler},
+           familyi={Z\bibinitperiod},
+           given={Jürgen},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Vancouver, Canada}%
+      }
+      \strng{namehash}{42abdbbf6744a3d792db7956435afdc5}
+      \strng{fullhash}{42abdbbf6744a3d792db7956435afdc5}
+      \strng{fullhashraw}{42abdbbf6744a3d792db7956435afdc5}
+      \strng{bibnamehash}{42abdbbf6744a3d792db7956435afdc5}
+      \strng{authorbibnamehash}{42abdbbf6744a3d792db7956435afdc5}
+      \strng{authornamehash}{42abdbbf6744a3d792db7956435afdc5}
+      \strng{authorfullhash}{42abdbbf6744a3d792db7956435afdc5}
+      \strng{authorfullhashraw}{42abdbbf6744a3d792db7956435afdc5}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Workshop on Recommendation in Complex Scenarios}
+      \field{eventtitle}{Workshop on Recommendation in Complex Scenarios}
+      \field{langid}{english}
+      \field{title}{Recommending Running Routes: Framework and Demonstrator}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \verb{file}
+      \verb Loepp und Ziegler - Recommending Running Routes Framework and Demonst.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\895\\Loepp und Ziegler - Recommending Running Routes Framework and Demonst.pdf:application/pdf
+      \endverb
+    \endentry
+    \entry{lu_arc_2015}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=0b887241b8ca08ec2eb2b8b4c1e9d649}{%
+           family={Lu},
+           familyi={L\bibinitperiod},
+           given={Ying},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=b5ca6e426b0aff19346d2118d3844ef5}{%
+           family={Shahabi},
+           familyi={S\bibinitperiod},
+           given={Cyrus},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, {NY}, {USA}}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{e3afe4d44f296b5c7d47a058343d4794}
+      \strng{fullhash}{e3afe4d44f296b5c7d47a058343d4794}
+      \strng{fullhashraw}{e3afe4d44f296b5c7d47a058343d4794}
+      \strng{bibnamehash}{e3afe4d44f296b5c7d47a058343d4794}
+      \strng{authorbibnamehash}{e3afe4d44f296b5c7d47a058343d4794}
+      \strng{authornamehash}{e3afe4d44f296b5c7d47a058343d4794}
+      \strng{authorfullhash}{e3afe4d44f296b5c7d47a058343d4794}
+      \strng{authorfullhashraw}{e3afe4d44f296b5c7d47a058343d4794}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 23rd {SIGSPATIAL} International Conference on Advances in Geographic Information Systems}
+      \field{day}{3}
+      \field{isbn}{978-1-4503-3967-4}
+      \field{month}{11}
+      \field{series}{{SIGSPATIAL} '15}
+      \field{title}{An arc orienteering algorithm to find the most scenic path on a large-scale road network}
+      \field{urlday}{17}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{year}{2015}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 10}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/2820783.2820835
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\PLHPD28Y\\Lu and Shahabi - 2015 - An arc orienteering algorithm to find the most sce.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/2820783.2820835
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/2820783.2820835
+      \endverb
+      \keyw{arc orienteering problem,geo-tagging,scenic path,trip routing}
+    \endentry
+    \entry{mueller_jogging_2007}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=8efd93d084d58ef886e185abf45cbfcc}{%
+           family={Mueller},
+           familyi={M\bibinitperiod},
+           given={Florian\bibnamedelima F.},
+           giveni={F\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+        {{hash=ec0440509f40c6f18148a3dba2483d7f}{%
+           family={O'Brien},
+           familyi={O\bibinitperiod},
+           given={Shannon},
+           giveni={S\bibinitperiod}}}%
+        {{hash=6cbf606485cd054d2ddb1909895ebd76}{%
+           family={Thorogood},
+           familyi={T\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, {NY}, {USA}}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{d50b4cefff508d4e10b15cf368d93ec9}
+      \strng{fullhash}{d50b4cefff508d4e10b15cf368d93ec9}
+      \strng{fullhashraw}{d50b4cefff508d4e10b15cf368d93ec9}
+      \strng{bibnamehash}{d50b4cefff508d4e10b15cf368d93ec9}
+      \strng{authorbibnamehash}{d50b4cefff508d4e10b15cf368d93ec9}
+      \strng{authornamehash}{d50b4cefff508d4e10b15cf368d93ec9}
+      \strng{authorfullhash}{d50b4cefff508d4e10b15cf368d93ec9}
+      \strng{authorfullhashraw}{d50b4cefff508d4e10b15cf368d93ec9}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{{CHI} '07 Extended Abstracts on Human Factors in Computing Systems}
+      \field{isbn}{978-1-59593-642-4}
+      \field{series}{{CHI} {EA} '07}
+      \field{shorttitle}{Jogging over a distance}
+      \field{title}{Jogging over a distance: supporting a "jogging together" experience although being apart}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{year}{2007}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{2579\bibrangedash 2584}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1145/1240866.1241045
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\943\\Mueller et al. - 2007 - Jogging over a distance supporting a jogging tog.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/1240866.1241045
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/1240866.1241045
+      \endverb
+      \keyw{exertion interface,sports,active,exhausting,jogging,mobile phones,physical,running,social interaction,social support}
+    \endentry
+    \entry{nystoriak_cardiovascular_2018}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=87f8ad9ea482d978364c2a089f93cdc7}{%
+           family={Nystoriak},
+           familyi={N\bibinitperiod},
+           given={Matthew\bibnamedelima A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=93489d6810d069f12b3ab2dbc1591e69}{%
+           family={Bhatnagar},
+           familyi={B\bibinitperiod},
+           given={Aruni},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{772a564245140b993bc819b6b211b249}
+      \strng{fullhash}{772a564245140b993bc819b6b211b249}
+      \strng{fullhashraw}{772a564245140b993bc819b6b211b249}
+      \strng{bibnamehash}{772a564245140b993bc819b6b211b249}
+      \strng{authorbibnamehash}{772a564245140b993bc819b6b211b249}
+      \strng{authornamehash}{772a564245140b993bc819b6b211b249}
+      \strng{authorfullhash}{772a564245140b993bc819b6b211b249}
+      \strng{authorfullhashraw}{772a564245140b993bc819b6b211b249}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{It is widely accepted that regular physical activity is beneficial for cardiovascular health. Frequent exercise is robustly associated with a decrease in cardiovascular mortality as well as the risk of developing cardiovascular disease. Physically active individuals have lower blood pressure, higher insulin sensitivity, and a more favorable plasma lipoprotein profile. Animal models of exercise show that repeated physical activity suppresses atherogenesis and increases the availability of vasodilatory mediators such as nitric oxide. Exercise has also been found to have beneficial effects on the heart. Acutely, exercise increases cardiac output and blood pressure, but individuals adapted to exercise show lower resting heart rate and cardiac hypertrophy. Both cardiac and vascular changes have been linked to a variety of changes in tissue metabolism and signaling, although our understanding of the contribution of the underlying mechanisms remains incomplete. Even though moderate levels of exercise have been found to be consistently associated with a reduction in cardiovascular disease risk, there is evidence to suggest that continuously high levels of exercise (e.g., marathon running) could have detrimental effects on cardiovascular health. Nevertheless, a specific dose response relationship between the extent and duration of exercise and the reduction in cardiovascular disease risk and mortality remains unclear. Further studies are needed to identify the mechanisms that impart cardiovascular benefits of exercise in order to develop more effective exercise regimens, test the interaction of exercise with diet, and develop pharmacological interventions for those unwilling or unable to exercise.}
+      \field{issn}{2297-055X}
+      \field{journaltitle}{Frontiers in Cardiovascular Medicine}
+      \field{title}{Cardiovascular Effects and Benefits of Exercise}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{5}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{135}
+      \range{pages}{1}
+      \verb{doi}
+      \verb https://doi.org/10.3389/fcvm.2018.00135
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\936\\Nystoriak und Bhatnagar - 2018 - Cardiovascular Effects and Benefits of Exercise.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.frontiersin.org/articles/10.3389/fcvm.2018.00135
+      \endverb
+      \verb{url}
+      \verb https://www.frontiersin.org/articles/10.3389/fcvm.2018.00135
+      \endverb
+    \endentry
+    \entry{obrien_jogging_2007}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=ec0440509f40c6f18148a3dba2483d7f}{%
+           family={O'Brien},
+           familyi={O\bibinitperiod},
+           given={Shannon},
+           giveni={S\bibinitperiod}}}%
+        {{hash=8efd93d084d58ef886e185abf45cbfcc}{%
+           family={Mueller},
+           familyi={M\bibinitperiod},
+           given={Florian\bibnamedelima F.},
+           giveni={F\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {San Jose California {USA}}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{638b87496a96d791459b74b79c56e29f}
+      \strng{fullhash}{638b87496a96d791459b74b79c56e29f}
+      \strng{fullhashraw}{638b87496a96d791459b74b79c56e29f}
+      \strng{bibnamehash}{638b87496a96d791459b74b79c56e29f}
+      \strng{authorbibnamehash}{638b87496a96d791459b74b79c56e29f}
+      \strng{authornamehash}{638b87496a96d791459b74b79c56e29f}
+      \strng{authorfullhash}{638b87496a96d791459b74b79c56e29f}
+      \strng{authorfullhashraw}{638b87496a96d791459b74b79c56e29f}
+      \field{sortinit}{O}
+      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the {SIGCHI} Conference on Human Factors in Computing Systems}
+      \field{eventtitle}{{CHI}07: {CHI} Conference on Human Factors in Computing Systems}
+      \field{isbn}{978-1-59593-593-9}
+      \field{langid}{english}
+      \field{title}{Jogging the distance}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{year}{2007}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{523\bibrangedash 526}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1145/1240624.1240708
+      \endverb
+      \verb{file}
+      \verb O'Brien und Mueller - 2007 - Jogging the distance.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\944\\O'Brien und Mueller - 2007 - Jogging the distance.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/1240624.1240708
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/1240624.1240708
+      \endverb
+    \endentry
+    \entry{oja_health_2011}{article}{}{}
+      \name{author}{7}{}{%
+        {{hash=263ee698ab9261a26ee594c574f3cabc}{%
+           family={Oja},
+           familyi={O\bibinitperiod},
+           given={Pekka},
+           giveni={P\bibinitperiod}}}%
+        {{hash=9d74c46cb6bf079e92f5fe01b6faa6b0}{%
+           family={Titze},
+           familyi={T\bibinitperiod},
+           given={Sylvia},
+           giveni={S\bibinitperiod}}}%
+        {{hash=b9a013c79fcc27c7fa967ec3efabb90c}{%
+           family={Bauman},
+           familyi={B\bibinitperiod},
+           given={Adrian},
+           giveni={A\bibinitperiod}}}%
+        {{hash=bc560f4af3cc07a00f74090a6aef350b}{%
+           family={Geus},
+           familyi={G\bibinitperiod},
+           given={Bas},
+           giveni={B\bibinitperiod},
+           prefix={de},
+           prefixi={d\bibinitperiod}}}%
+        {{hash=6dbb955b72b6326dc18ec51309367a3d}{%
+           family={Krenn},
+           familyi={K\bibinitperiod},
+           given={Patricia},
+           giveni={P\bibinitperiod}}}%
+        {{hash=47926b60da3dd309d9e9d7b844533bf1}{%
+           family={Reger-Nash},
+           familyi={R\bibinithyphendelim N\bibinitperiod},
+           given={Ill},
+           giveni={I\bibinitperiod}}}%
+        {{hash=9a08b3da570f9df037bc690261d48f39}{%
+           family={Kohlberger},
+           familyi={K\bibinitperiod},
+           given={Theresa},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{699e4f08fc2d1a5843c3ddd6741e5a8c}
+      \strng{fullhash}{699e4f08fc2d1a5843c3ddd6741e5a8c}
+      \strng{fullhashraw}{699e4f08fc2d1a5843c3ddd6741e5a8c}
+      \strng{bibnamehash}{699e4f08fc2d1a5843c3ddd6741e5a8c}
+      \strng{authorbibnamehash}{699e4f08fc2d1a5843c3ddd6741e5a8c}
+      \strng{authornamehash}{699e4f08fc2d1a5843c3ddd6741e5a8c}
+      \strng{authorfullhash}{699e4f08fc2d1a5843c3ddd6741e5a8c}
+      \strng{authorfullhashraw}{699e4f08fc2d1a5843c3ddd6741e5a8c}
+      \field{sortinit}{O}
+      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{issn}{1600-0838}
+      \field{journaltitle}{Scandinavian Journal of Medicine \& Science in Sports}
+      \field{langid}{english}
+      \field{number}{4}
+      \field{shorttitle}{Health benefits of cycling}
+      \field{title}{Health benefits of cycling: a systematic review}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{21}
+      \field{year}{2011}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{496\bibrangedash 509}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1111/j.1600-0838.2011.01299.x
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\930\\Oja et al. - 2011 - Health benefits of cycling a systematic review.pdf:application/pdf;Snapshot:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\931\\j.1600-0838.2011.01299.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1600-0838.2011.01299.x
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1600-0838.2011.01299.x
+      \endverb
+      \keyw{bicycling,commuter cycling,disease,function,physical activity}
+    \endentry
+    \entry{pajor_algorithm_2013}{thesis}{}{}
+      \name{author}{1}{}{%
+        {{hash=58fb32d0e500e97fc503f4e75953eaaf}{%
+           family={Pajor},
+           familyi={P\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Karlsruher Institut f\{{\textbackslash}"u\}r Technologie ({KIT})}%
+      }
+      \list{location}{1}{%
+        {Karlsruhe, Germany}%
+      }
+      \strng{namehash}{58fb32d0e500e97fc503f4e75953eaaf}
+      \strng{fullhash}{58fb32d0e500e97fc503f4e75953eaaf}
+      \strng{fullhashraw}{58fb32d0e500e97fc503f4e75953eaaf}
+      \strng{bibnamehash}{58fb32d0e500e97fc503f4e75953eaaf}
+      \strng{authorbibnamehash}{58fb32d0e500e97fc503f4e75953eaaf}
+      \strng{authornamehash}{58fb32d0e500e97fc503f4e75953eaaf}
+      \strng{authorfullhash}{58fb32d0e500e97fc503f4e75953eaaf}
+      \strng{authorfullhashraw}{58fb32d0e500e97fc503f4e75953eaaf}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{Algorithm Engineering for Realistic Journey Planning in Transportation Networks}
+      \field{type}{phdthesis}
+      \field{urlday}{22}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{year}{2013}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.5445/IR/1000042955
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\892\\Pajor - 2013 - Algorithm Engineering for Realistic Journey Planni.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://publikationen.bibliothek.kit.edu/1000042955
+      \endverb
+      \verb{url}
+      \verb https://publikationen.bibliothek.kit.edu/1000042955
+      \endverb
+    \endentry
+    \entry{potamias_fast_2009}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=215edc43a3c51d9f87e82c9583991492}{%
+           family={Potamias},
+           familyi={P\bibinitperiod},
+           given={Michalis},
+           giveni={M\bibinitperiod}}}%
+        {{hash=e5f96000b50965c4c5a75005644d7e29}{%
+           family={Bonchi},
+           familyi={B\bibinitperiod},
+           given={Francesco},
+           giveni={F\bibinitperiod}}}%
+        {{hash=9945b3859caed4e19a23f700fa1b79db}{%
+           family={Castillo},
+           familyi={C\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+        {{hash=03024c0e33231524e0a2e9df2662a76c}{%
+           family={Gionis},
+           familyi={G\bibinitperiod},
+           given={Aristides},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, {NY}, {USA}}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{3988ef9343645debc002430dce646d8c}
+      \strng{fullhash}{3988ef9343645debc002430dce646d8c}
+      \strng{fullhashraw}{3988ef9343645debc002430dce646d8c}
+      \strng{bibnamehash}{3988ef9343645debc002430dce646d8c}
+      \strng{authorbibnamehash}{3988ef9343645debc002430dce646d8c}
+      \strng{authornamehash}{3988ef9343645debc002430dce646d8c}
+      \strng{authorfullhash}{3988ef9343645debc002430dce646d8c}
+      \strng{authorfullhashraw}{3988ef9343645debc002430dce646d8c}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 18th {ACM} conference on Information and knowledge management}
+      \field{isbn}{978-1-60558-512-3}
+      \field{series}{{CIKM} '09}
+      \field{title}{Fast shortest path distance estimation in large networks}
+      \field{urlday}{17}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{year}{2009}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{867\bibrangedash 876}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/1645953.1646063
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\RS7JVSYI\\Potamias et al. - 2009 - Fast shortest path distance estimation in large ne.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/1645953.1646063
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/1645953.1646063
+      \endverb
+      \keyw{graphs,landmarks methods,shortest-paths}
+    \endentry
+    \entry{reinelt_traveling_2003}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=38b844c9f4a823467f2581c274534664}{%
+           family={Reinelt},
+           familyi={R\bibinitperiod},
+           given={Gerhard},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin, Heidelberg}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{38b844c9f4a823467f2581c274534664}
+      \strng{fullhash}{38b844c9f4a823467f2581c274534664}
+      \strng{fullhashraw}{38b844c9f4a823467f2581c274534664}
+      \strng{bibnamehash}{38b844c9f4a823467f2581c274534664}
+      \strng{authorbibnamehash}{38b844c9f4a823467f2581c274534664}
+      \strng{authornamehash}{38b844c9f4a823467f2581c274534664}
+      \strng{authorfullhash}{38b844c9f4a823467f2581c274534664}
+      \strng{authorfullhashraw}{38b844c9f4a823467f2581c274534664}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{isbn}{978-3-540-48661-9}
+      \field{langid}{english}
+      \field{pagetotal}{231}
+      \field{shorttitle}{The Traveling Salesman}
+      \field{title}{The Traveling Salesman: Computational Solutions for {TSP} Applications}
+      \field{year}{2003}
+      \field{dateera}{ce}
+      \verb{doi}
+      \verb https://doi.org/10.1007/3-540-48661-5
+      \endverb
+      \keyw{Business \& Economics / Business Mathematics,Business \& Economics / Information Management,Business \& Economics / Operations Research,Computers / Programming / Algorithms,Computers / Software Development \& Engineering / Computer Graphics,Computers / Software Development \& Engineering / General,Language Arts \& Disciplines / Library \& Information Science / General,Mathematics / Combinatorics,Mathematics / Numerical Analysis,Technology \& Engineering / Engineering (General)}
+    \endentry
+    \entry{ropke_heuristic_2005}{thesis}{}{}
+      \name{author}{1}{}{%
+        {{hash=2938a57825fdb9a5a7f8c36d8fa2e37d}{%
+           family={Ropke},
+           familyi={R\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Technical University of Denmark}%
+      }
+      \strng{namehash}{2938a57825fdb9a5a7f8c36d8fa2e37d}
+      \strng{fullhash}{2938a57825fdb9a5a7f8c36d8fa2e37d}
+      \strng{fullhashraw}{2938a57825fdb9a5a7f8c36d8fa2e37d}
+      \strng{bibnamehash}{2938a57825fdb9a5a7f8c36d8fa2e37d}
+      \strng{authorbibnamehash}{2938a57825fdb9a5a7f8c36d8fa2e37d}
+      \strng{authornamehash}{2938a57825fdb9a5a7f8c36d8fa2e37d}
+      \strng{authorfullhash}{2938a57825fdb9a5a7f8c36d8fa2e37d}
+      \strng{authorfullhashraw}{2938a57825fdb9a5a7f8c36d8fa2e37d}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Heuristic and exact algorithms for vehicle routing problems}
+      \field{type}{phdthesis}
+      \field{year}{2005}
+      \field{dateera}{ce}
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\981\\Ropke - 2005 - Heuristic and exact algorithms for vehicle routing.pdf:application/pdf
+      \endverb
+    \endentry
+    \entry{ruegsegger_health_2018}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=bdd7802d4ce0d6805d23c7d7a5de2a45}{%
+           family={Ruegsegger},
+           familyi={R\bibinitperiod},
+           given={Gregory\bibnamedelima N.},
+           giveni={G\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=75a375f39c8b50e698e7e8c9773357f7}{%
+           family={Booth},
+           familyi={B\bibinitperiod},
+           given={Frank\bibnamedelima W.},
+           giveni={F\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \strng{namehash}{fdc75451e78f21627b11c63a1ff11112}
+      \strng{fullhash}{fdc75451e78f21627b11c63a1ff11112}
+      \strng{fullhashraw}{fdc75451e78f21627b11c63a1ff11112}
+      \strng{bibnamehash}{fdc75451e78f21627b11c63a1ff11112}
+      \strng{authorbibnamehash}{fdc75451e78f21627b11c63a1ff11112}
+      \strng{authornamehash}{fdc75451e78f21627b11c63a1ff11112}
+      \strng{authorfullhash}{fdc75451e78f21627b11c63a1ff11112}
+      \strng{authorfullhashraw}{fdc75451e78f21627b11c63a1ff11112}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{, 2157-1422}
+      \field{journaltitle}{Cold Spring Harbor Perspectives in Medicine}
+      \field{langid}{english}
+      \field{number}{7}
+      \field{shortjournal}{Cold Spring Harb Perspect Med}
+      \field{title}{Health Benefits of Exercise}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{8}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{a029694}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1101/cshperspect.a029694
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\938\\Ruegsegger und Booth - 2018 - Health Benefits of Exercise.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb http://perspectivesinmedicine.cshlp.org/content/8/7/a029694
+      \endverb
+      \verb{url}
+      \verb http://perspectivesinmedicine.cshlp.org/content/8/7/a029694
+      \endverb
+    \endentry
+    \entry{sanders_shortest_2019}{incollection}{}{}
+      \name{author}{4}{}{%
+        {{hash=be6c7f12620ef1a8d1d85d96d476a158}{%
+           family={Sanders},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=c2f239e3cf9c48b72ce5f4ca9b5e478e}{%
+           family={Mehlhorn},
+           familyi={M\bibinitperiod},
+           given={Kurt},
+           giveni={K\bibinitperiod}}}%
+        {{hash=b3729237385542cc130552f38ee83186}{%
+           family={Dietzfelbinger},
+           familyi={D\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=89256955c7f8f5097859cdcc42fafcdb}{%
+           family={Dementiev},
+           familyi={D\bibinitperiod},
+           given={Roman},
+           giveni={R\bibinitperiod}}}%
+      }
+      \name{editor}{4}{}{%
+        {{hash=be6c7f12620ef1a8d1d85d96d476a158}{%
+           family={Sanders},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=c2f239e3cf9c48b72ce5f4ca9b5e478e}{%
+           family={Mehlhorn},
+           familyi={M\bibinitperiod},
+           given={Kurt},
+           giveni={K\bibinitperiod}}}%
+        {{hash=b3729237385542cc130552f38ee83186}{%
+           family={Dietzfelbinger},
+           familyi={D\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=89256955c7f8f5097859cdcc42fafcdb}{%
+           family={Dementiev},
+           familyi={D\bibinitperiod},
+           given={Roman},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{fullhash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{fullhashraw}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{bibnamehash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{authorbibnamehash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{authornamehash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{authorfullhash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{authorfullhashraw}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{editorbibnamehash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{editornamehash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{editorfullhash}{5408da68a57796a4f0fda66f706e0b76}
+      \strng{editorfullhashraw}{5408da68a57796a4f0fda66f706e0b76}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Sequential and Parallel Algorithms and Data Structures: The Basic Toolbox}
+      \field{isbn}{978-3-030-25209-0}
+      \field{langid}{english}
+      \field{title}{Shortest Paths}
+      \field{urlday}{16}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{year}{2019}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{301\bibrangedash 332}
+      \range{pages}{32}
+      \verb{doi}
+      \verb 10.1007/978-3-030-25209-0_10
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\R42HRF96\\Sanders et al. - 2019 - Shortest Paths.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/978-3-030-25209-0_10
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-3-030-25209-0_10
+      \endverb
+    \endentry
+    \entry{sommer_shortest-path_2014}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=a62296a486ca4384177d3ecbbfae2df0}{%
+           family={Sommer},
+           familyi={S\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{a62296a486ca4384177d3ecbbfae2df0}
+      \strng{fullhash}{a62296a486ca4384177d3ecbbfae2df0}
+      \strng{fullhashraw}{a62296a486ca4384177d3ecbbfae2df0}
+      \strng{bibnamehash}{a62296a486ca4384177d3ecbbfae2df0}
+      \strng{authorbibnamehash}{a62296a486ca4384177d3ecbbfae2df0}
+      \strng{authornamehash}{a62296a486ca4384177d3ecbbfae2df0}
+      \strng{authorfullhash}{a62296a486ca4384177d3ecbbfae2df0}
+      \strng{authorfullhashraw}{a62296a486ca4384177d3ecbbfae2df0}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0360-0300, 1557-7341}
+      \field{journaltitle}{{ACM} Computing Surveys}
+      \field{langid}{english}
+      \field{number}{4}
+      \field{shortjournal}{{ACM} Comput. Surv.}
+      \field{title}{Shortest-path queries in static networks}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{46}
+      \field{year}{2014}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 31}
+      \range{pages}{31}
+      \verb{doi}
+      \verb 10.1145/2530531
+      \endverb
+      \verb{file}
+      \verb Sommer - 2014 - Shortest-path queries in static networks.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\963\\Sommer - 2014 - Shortest-path queries in static networks.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/2530531
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/2530531
+      \endverb
+    \endentry
+    \entry{souffriau_planning_2011}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=a12b232103bb8e3adbe9d1a1185dbd6a}{%
+           family={Souffriau},
+           familyi={S\bibinitperiod},
+           given={Wouter},
+           giveni={W\bibinitperiod}}}%
+        {{hash=85b194412e9df03e17681d032860a348}{%
+           family={Vansteenwegen},
+           familyi={V\bibinitperiod},
+           given={Pieter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=c11ef9709197ffd3bcf40cf2195a2222}{%
+           family={Vanden\bibnamedelima Berghe},
+           familyi={V\bibinitperiod\bibinitdelim B\bibinitperiod},
+           given={Greet},
+           giveni={G\bibinitperiod}}}%
+        {{hash=5a9ed2f22934edeaa22de8f98f74e717}{%
+           family={Van\bibnamedelima Oudheusden},
+           familyi={V\bibinitperiod\bibinitdelim O\bibinitperiod},
+           given={Dirk},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{bfda37d560c4e049d02c9dd02ac21fc0}
+      \strng{fullhash}{bfda37d560c4e049d02c9dd02ac21fc0}
+      \strng{fullhashraw}{bfda37d560c4e049d02c9dd02ac21fc0}
+      \strng{bibnamehash}{bfda37d560c4e049d02c9dd02ac21fc0}
+      \strng{authorbibnamehash}{bfda37d560c4e049d02c9dd02ac21fc0}
+      \strng{authornamehash}{bfda37d560c4e049d02c9dd02ac21fc0}
+      \strng{authorfullhash}{bfda37d560c4e049d02c9dd02ac21fc0}
+      \strng{authorfullhashraw}{bfda37d560c4e049d02c9dd02ac21fc0}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0305-0483}
+      \field{journaltitle}{Omega}
+      \field{number}{2}
+      \field{shortjournal}{Omega}
+      \field{title}{The planning of cycle trips in the province of East Flanders}
+      \field{urlday}{17}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{volume}{39}
+      \field{year}{2011}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{209\bibrangedash 213}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1016/j.omega.2010.05.001
+      \endverb
+      \verb{file}
+      \verb ScienceDirect Snapshot:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\M7HSTTZX\\S0305048310000496.html:text/html;Souffriau et al. - 2011 - The planning of cycle trips in the province of Eas.pdf:C\:\\Users\\Lisa Salewsky\\Zotero\\storage\\AWCT9AC9\\Souffriau et al. - 2011 - The planning of cycle trips in the province of Eas.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S0305048310000496
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S0305048310000496
+      \endverb
+      \keyw{Cycling,Arc orienteering problem,{GRASP},Tourism decision support}
+    \endentry
+    \entry{szabo_psychological_2013}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=dc52ed3315ff506a9d4fe6a0ab079ae2}{%
+           family={Szabo},
+           familyi={S\bibinitperiod},
+           given={Attila},
+           giveni={A\bibinitperiod}}}%
+        {{hash=01177826947568b491e394585d27e218}{%
+           family={Ábrahám},
+           familyi={Á\bibinitperiod},
+           given={Júlia},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{58234d5adbf45c22375f7e19810b13cf}
+      \strng{fullhash}{58234d5adbf45c22375f7e19810b13cf}
+      \strng{fullhashraw}{58234d5adbf45c22375f7e19810b13cf}
+      \strng{bibnamehash}{58234d5adbf45c22375f7e19810b13cf}
+      \strng{authorbibnamehash}{58234d5adbf45c22375f7e19810b13cf}
+      \strng{authornamehash}{58234d5adbf45c22375f7e19810b13cf}
+      \strng{authorfullhash}{58234d5adbf45c22375f7e19810b13cf}
+      \strng{authorfullhashraw}{58234d5adbf45c22375f7e19810b13cf}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{issn}{1354-8506}
+      \field{journaltitle}{Psychology, Health \& Medicine}
+      \field{number}{3}
+      \field{shorttitle}{The psychological benefits of recreational running}
+      \field{title}{The psychological benefits of recreational running: A field study}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{18}
+      \field{year}{2013}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{251\bibrangedash 261}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1080/13548506.2012.701755
+      \endverb
+      \verb{file}
+      \verb Szabo und Ábrahám - 2013 - The psychological benefits of recreational running.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\953\\Szabo und Ábrahám - 2013 - The psychological benefits of recreational running.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1080/13548506.2012.701755
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1080/13548506.2012.701755
+      \endverb
+      \keyw{exercise,physical activity,expectation,mood,placebo}
+    \endentry
+    \entry{verbeeck_extension_2014}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=9beea956bcbe97d23513f34c5fd65091}{%
+           family={Verbeeck},
+           familyi={V\bibinitperiod},
+           given={Cédric},
+           giveni={C\bibinitperiod}}}%
+        {{hash=85b194412e9df03e17681d032860a348}{%
+           family={Vansteenwegen},
+           familyi={V\bibinitperiod},
+           given={Pieter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=5c5768a0be838e132aef6ec95cc6cb5c}{%
+           family={Aghezzaf},
+           familyi={A\bibinitperiod},
+           given={El-Houssaine},
+           giveni={E\bibinithyphendelim H\bibinitperiod}}}%
+      }
+      \strng{namehash}{aa4e4c3ed2519c393fee9cf2f213bfac}
+      \strng{fullhash}{aa4e4c3ed2519c393fee9cf2f213bfac}
+      \strng{fullhashraw}{aa4e4c3ed2519c393fee9cf2f213bfac}
+      \strng{bibnamehash}{aa4e4c3ed2519c393fee9cf2f213bfac}
+      \strng{authorbibnamehash}{aa4e4c3ed2519c393fee9cf2f213bfac}
+      \strng{authornamehash}{aa4e4c3ed2519c393fee9cf2f213bfac}
+      \strng{authorfullhash}{aa4e4c3ed2519c393fee9cf2f213bfac}
+      \strng{authorfullhashraw}{aa4e4c3ed2519c393fee9cf2f213bfac}
+      \field{sortinit}{V}
+      \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{13665545}
+      \field{journaltitle}{Transportation Research Part E: Logistics and Transportation Review}
+      \field{langid}{english}
+      \field{shortjournal}{Transportation Research Part E: Logistics and Transportation Review}
+      \field{title}{An extension of the arc orienteering problem and its application to cycle trip planning}
+      \field{urlday}{13}
+      \field{urlmonth}{9}
+      \field{urlyear}{2023}
+      \field{volume}{68}
+      \field{year}{2014}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{64\bibrangedash 78}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1016/j.tre.2014.05.006
+      \endverb
+      \verb{file}
+      \verb Verbeeck et al. - 2014 - An extension of the arc orienteering problem and i.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\722\\Verbeeck et al. - 2014 - An extension of the arc orienteering problem and i.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://linkinghub.elsevier.com/retrieve/pii/S1366554514000751
+      \endverb
+      \verb{url}
+      \verb https://linkinghub.elsevier.com/retrieve/pii/S1366554514000751
+      \endverb
+    \endentry
+    \entry{vina_exercise_2012}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=bdb5bd6db22ad3037a0fc3d2bbbf96f0}{%
+           family={Viña},
+           familyi={V\bibinitperiod},
+           given={Jose},
+           giveni={J\bibinitperiod}}}%
+        {{hash=f4f4459db825815c1c39f5b9e5963941}{%
+           family={Sanchis-Gomar},
+           familyi={S\bibinithyphendelim G\bibinitperiod},
+           given={Fabian},
+           giveni={F\bibinitperiod}}}%
+        {{hash=bf5bf9eafe770b37ce424429d36a9a7d}{%
+           family={Martinez-Bello},
+           familyi={M\bibinithyphendelim B\bibinitperiod},
+           given={Vladimir},
+           giveni={V\bibinitperiod}}}%
+        {{hash=d8f66d2cf318a408e429adbfb7fdcb96}{%
+           family={Gomez-Cabrera},
+           familyi={G\bibinithyphendelim C\bibinitperiod},
+           given={Mari\bibnamedelima C.},
+           giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{98548caf10999ebcb7c344650d0a9b02}
+      \strng{fullhash}{98548caf10999ebcb7c344650d0a9b02}
+      \strng{fullhashraw}{98548caf10999ebcb7c344650d0a9b02}
+      \strng{bibnamehash}{98548caf10999ebcb7c344650d0a9b02}
+      \strng{authorbibnamehash}{98548caf10999ebcb7c344650d0a9b02}
+      \strng{authornamehash}{98548caf10999ebcb7c344650d0a9b02}
+      \strng{authorfullhash}{98548caf10999ebcb7c344650d0a9b02}
+      \strng{authorfullhashraw}{98548caf10999ebcb7c344650d0a9b02}
+      \field{sortinit}{V}
+      \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1476-5381}
+      \field{journaltitle}{British Journal of Pharmacology}
+      \field{langid}{english}
+      \field{number}{1}
+      \field{title}{Exercise acts as a drug; the pharmacological benefits of exercise}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{167}
+      \field{year}{2012}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 12}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1111/j.1476-5381.2012.01970.x
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\941\\Vina et al. - 2012 - Exercise acts as a drug\; the pharmacological benef.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1476-5381.2012.01970.x
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1476-5381.2012.01970.x
+      \endverb
+      \keyw{contraindications of exercise,dosing of exercise,health,sport,training}
+    \endentry
+    \entry{wang_application_2014}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=e1d5cde3410d14ba1092a1b55a8ed3e1}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xueyang},
+           giveni={X\bibinitperiod}}}%
+        {{hash=5d0e594660d8eeddf1803f796d58ab13}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Chonghua},
+           giveni={C\bibinitperiod}}}%
+        {{hash=9c02989c713a608e87c31254ef3611df}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Yupeng},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=6413617dcb4ac12804823c4d0f7f80e7}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Chengkai},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Beijing, China}%
+      }
+      \list{publisher}{2}{%
+        {Institute of Electrical}%
+        {Electronics Engineers ({IEEE})}%
+      }
+      \strng{namehash}{7ae8946d280678a23a64921623ab96ba}
+      \strng{fullhash}{7ae8946d280678a23a64921623ab96ba}
+      \strng{fullhashraw}{7ae8946d280678a23a64921623ab96ba}
+      \strng{bibnamehash}{7ae8946d280678a23a64921623ab96ba}
+      \strng{authorbibnamehash}{7ae8946d280678a23a64921623ab96ba}
+      \strng{authornamehash}{7ae8946d280678a23a64921623ab96ba}
+      \strng{authorfullhash}{7ae8946d280678a23a64921623ab96ba}
+      \strng{authorfullhashraw}{7ae8946d280678a23a64921623ab96ba}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2014 International Symposium on Wireless Personal Multimedia Communications ({WPMC})}
+      \field{eventtitle}{2014 International Symposium on Wireless Personal Multimedia Communications ({WPMC})}
+      \field{title}{Application of ant colony optimized routing algorithm based on evolving graph model in {VANETs}}
+      \field{urlday}{22}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{year}{2014}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{265\bibrangedash 270}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/WPMC.2014.7014828
+      \endverb
+      \verb{file}
+      \verb IEEE Xplore Abstract Record:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\868\\7014828.html:text/html;IEEE Xplore Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\867\\Wang et al. - 2014 - Application of ant colony optimized routing algori.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/abstract/document/7014828?casa_token=5DbECaB3MDUAAAAA:u-rxO2eMbauZr3F12XFwQfstgmWOOp7fTCrvmq6HlbPA4d8Bz3zamT7vLqtU9ejaFOFsecg1
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/abstract/document/7014828?casa_token=5DbECaB3MDUAAAAA:u-rxO2eMbauZr3F12XFwQfstgmWOOp7fTCrvmq6HlbPA4d8Bz3zamT7vLqtU9ejaFOFsecg1
+      \endverb
+    \endentry
+    \entry{wankel_psychological_1990}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=7fcfb1d146d33d639b4374a627f24a23}{%
+           family={Wankel},
+           familyi={W\bibinitperiod},
+           given={Leonard\bibnamedelima M.},
+           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=9733369b1032a34ba0857af616fa7995}{%
+           family={Berger},
+           familyi={B\bibinitperiod},
+           given={Bonnie\bibnamedelima G.},
+           giveni={B\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \strng{namehash}{28d2de7b1178903e03a6f96158bf543d}
+      \strng{fullhash}{28d2de7b1178903e03a6f96158bf543d}
+      \strng{fullhashraw}{28d2de7b1178903e03a6f96158bf543d}
+      \strng{bibnamehash}{28d2de7b1178903e03a6f96158bf543d}
+      \strng{authorbibnamehash}{28d2de7b1178903e03a6f96158bf543d}
+      \strng{authornamehash}{28d2de7b1178903e03a6f96158bf543d}
+      \strng{authorfullhash}{28d2de7b1178903e03a6f96158bf543d}
+      \strng{authorfullhashraw}{28d2de7b1178903e03a6f96158bf543d}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0022-2216}
+      \field{journaltitle}{Journal of Leisure Research}
+      \field{number}{2}
+      \field{title}{The Psychological and Social Benefits of Sport and Physical Activity}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{22}
+      \field{year}{1990}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{167\bibrangedash 182}
+      \range{pages}{16}
+      \verb{doi}
+      \verb https://doi.org/10.1080/00222216.1990.11969823
+      \endverb
+      \verb{file}
+      \verb Wankel und Berger - 1990 - The Psychological and Social Benefits of Sport and.pdf:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\955\\Wankel und Berger - 1990 - The Psychological and Social Benefits of Sport and.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.tandfonline.com/doi/abs/10.1080/00222216.1990.11969823
+      \endverb
+      \verb{url}
+      \verb https://www.tandfonline.com/doi/abs/10.1080/00222216.1990.11969823
+      \endverb
+    \endentry
+    \entry{wayahdi_greedy_2021}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=f8d64208c2e6887e76476dbb3c64bbcb}{%
+           family={Wayahdi},
+           familyi={W\bibinitperiod},
+           given={Muhammad\bibnamedelima R.},
+           giveni={M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=fb204286271589cc99266f94d726396b}{%
+           family={Ginting},
+           familyi={G\bibinitperiod},
+           given={Subhan\bibnamedelimb H.\bibnamedelimi N.},
+           giveni={S\bibinitperiod\bibinitdelim H\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=df2556347360e95ef253aa9ae4bb85f1}{%
+           family={Syahputra},
+           familyi={S\bibinitperiod},
+           given={Dinur},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{f4cb6345c4d195424fdbecb801e153ee}
+      \strng{fullhash}{f4cb6345c4d195424fdbecb801e153ee}
+      \strng{fullhashraw}{f4cb6345c4d195424fdbecb801e153ee}
+      \strng{bibnamehash}{f4cb6345c4d195424fdbecb801e153ee}
+      \strng{authorbibnamehash}{f4cb6345c4d195424fdbecb801e153ee}
+      \strng{authornamehash}{f4cb6345c4d195424fdbecb801e153ee}
+      \strng{authorfullhash}{f4cb6345c4d195424fdbecb801e153ee}
+      \strng{authorfullhashraw}{f4cb6345c4d195424fdbecb801e153ee}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{2721-3056}
+      \field{journaltitle}{International Journal of Advances in Data and Information Systems}
+      \field{langid}{english}
+      \field{number}{1}
+      \field{title}{Greedy, A-Star, and Dijkstra’s Algorithms in Finding Shortest Path}
+      \field{urlday}{30}
+      \field{urlmonth}{10}
+      \field{urlyear}{2023}
+      \field{volume}{2}
+      \field{year}{2021}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{45\bibrangedash 52}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.25008/ijadis.v2i1.1206
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Lisa Salewsky\\OneDrive\\Dokumente\\Uni\\Dortmund\\Master\\MA\\LS11 (Buchin)\\Literatur\\Ls11 Buchin MA Literatur\\files\\979\\Wayahdi et al. - 2021 - Greedy, A-Star, and Dijkstra’s Algorithms in Findi.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb http://ijadis.org/index.php/ijadis/article/view/greedy-a-star-and-dijkstras-algorithms-in-finding-shortest-path
+      \endverb
+      \verb{url}
+      \verb http://ijadis.org/index.php/ijadis/article/view/greedy-a-star-and-dijkstras-algorithms-in-finding-shortest-path
+      \endverb
+      \keyw{Shortest path}
+    \endentry
+    \entry{zhan_list-based_2016}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=560bcdb4e39cd0c402ad8cc500014254}{%
+           family={Zhan},
+           familyi={Z\bibinitperiod},
+           given={Shi-hua},
+           giveni={S\bibinithyphendelim h\bibinitperiod}}}%
+        {{hash=e1f64e5d7cda0909a6a326eca9bba7cf}{%
+           family={Lin},
+           familyi={L\bibinitperiod},
+           given={Juan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=a63574b902e242cbed5eea8a2cac8002}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Ze-jun},
+           giveni={Z\bibinithyphendelim j\bibinitperiod}}}%
+        {{hash=73b387a297cc42936efdc172edcb14f5}{%
+           family={Zhong},
+           familyi={Z\bibinitperiod},
+           given={Yi-wen},
+           giveni={Y\bibinithyphendelim w\bibinitperiod}}}%
+      }
+      \strng{namehash}{c4fc76f65a799e9bdc56d83d154959f6}
+      \strng{fullhash}{c4fc76f65a799e9bdc56d83d154959f6}
+      \strng{fullhashraw}{c4fc76f65a799e9bdc56d83d154959f6}
+      \strng{bibnamehash}{c4fc76f65a799e9bdc56d83d154959f6}
+      \strng{authorbibnamehash}{c4fc76f65a799e9bdc56d83d154959f6}
+      \strng{authornamehash}{c4fc76f65a799e9bdc56d83d154959f6}
+      \strng{authorfullhash}{c4fc76f65a799e9bdc56d83d154959f6}
+      \strng{authorfullhashraw}{c4fc76f65a799e9bdc56d83d154959f6}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1687-5265}
+      \field{journaltitle}{Computational Intelligence and Neuroscience}
+      \field{langid}{english}
+      \field{note}{Publisher: Hindawi}
+      \field{title}{List-Based Simulated Annealing Algorithm for Traveling Salesman Problem}
+      \field{urlday}{13}
+      \field{urlmonth}{4}
+      \field{urlyear}{2024}
+      \field{volume}{2016}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{e1712630}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1155/2016/1712630
+      \endverb
+      \verb{urlraw}
+      \verb https://www.hindawi.com/journals/cin/2016/1712630/
+      \endverb
+      \verb{url}
+      \verb https://www.hindawi.com/journals/cin/2016/1712630/
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

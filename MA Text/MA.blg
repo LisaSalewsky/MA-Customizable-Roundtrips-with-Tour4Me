@@ -1,0 +1,18 @@
+[0] Config.pm:308> INFO - This is Biber 2.20
+[0] Config.pm:311> INFO - Logfile is 'MA.blg'
+[79] biber-MSWIN64:340> INFO - === 
+[106] Biber.pm:420> INFO - Reading 'MA.bcf'
+[189] Biber.pm:994> INFO - Found 51 citekeys in bib section 0
+[201] Biber.pm:4463> INFO - Processing section 0
+[209] Biber.pm:4654> INFO - Looking for bibtex file 'literatur/LS11Buchin.bib' for section 0
+[246] bibtex.pm:1713> INFO - LaTeX decoding ...
+[307] bibtex.pm:1519> INFO - Found BibTeX data source 'literatur/LS11Buchin.bib'
+[558] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[558] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[558] Biber.pm:4283> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[558] Biber.pm:4289> INFO - No sort tailoring available for locale 'en-US'
+[612] bbl.pm:676> INFO - Writing 'MA.bbl' with encoding 'UTF-8'
+[649] bbl.pm:779> INFO - Output to MA.bbl
+[649] Biber.pm:131> WARN - ISBN '978-1-4419-1663-1 978-1-4419-1665-5' in entry 'gendreau_handbook_2010' is invalid - run biber with '--validate_datamodel' for details.
+[649] Biber.pm:131> WARN - ISBN '978-1-4673-0775-8 978-1-4673-0773-4 978-1-4673-0774-1' in entry 'curtis_rewire_2012' is invalid - run biber with '--validate_datamodel' for details.
+[649] Biber.pm:133> INFO - WARNINGS: 2

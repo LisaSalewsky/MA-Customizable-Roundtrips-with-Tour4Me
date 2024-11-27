@@ -1,0 +1,980 @@
+\documentclass[aspectratio=169,xcolor=dvipsnames, t]{beamer}
+
+\usepackage{cp24}
+\usepackage[square,numbers]{natbib}
+\usepackage{svg}
+\usepackage{pdfpages}
+
+\bibliographystyle{ACM-Reference-Format}
+
+%*************************************************************************************************************
+\title[Customizable Roundtrips with Tour4Me]{Customizable Roundtrips with Tour4Me}
+\subtitle{Metaheuristic Approaches for Personalized Running and Cycling Routes}
+\author[Lisa Salewsky]{
+	Lisa Salewsky
+}
+
+
+\institute[TU Dortmund]{
+	\begin{minipage}[t][2.3cm][b]{0.7\textwidth}
+		\centering
+		\begin{tikzpicture}[remember picture,overlay]
+			\node[inner sep=0] at (2.5,-0.8) {\includegraphics[scale=0.1]{logo.png}};
+		\end{tikzpicture}
+		TU Dortmund, Fakultät für Informatik\\
+		\vspace{1.5cm}
+		
+	\end{minipage}
+	
+}
+\date[]{}
+\beamertemplatenavigationsymbolsempty %Navigantionszeite unten aus
+%*************************************************************************************************************
+%\usetheme{Malmoe} 
+%\usetheme{Madrid}
+%\usecolortheme{rose} %schwache farben
+% Themes:
+%AnnArbor | Antibes | Bergen |Berkeley | Berlin | Boadilla |boxes | CambridgeUS | Copenhagen |Darmstadt | default | Dresden |
+%Frankfurt | Goettingen |Hannover | Ilmenau | JuanLesPins | Luebeck | Madrid | Malmoe | Marburg |
+%Montpellier | PaloAlto | Pittsburgh |Rochester | Singapore | Szeged |Warsaw
+\useinnertheme{rounded}
+%\useoutertheme{shadow} %schattierung in den Rechtecken der Blocken -- nix
+%*************************************************************************************************************
+
+\AtBeginSection[]{
+	\begin{frame}
+		\vfill
+		\centering
+		\vspace{1cm}
+		\begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+			\usebeamerfont{title}\Huge\insertsectionhead\par%
+		\end{beamercolorbox}
+		\vfill\normalsize
+	\end{frame}
+}
+
+
+% Customize the table of contents
+\setbeamertemplate{section in toc}[square]
+\setbeamertemplate{subsection in toc}[square]
+\setbeamertemplate{section/subsection in toc}[square]
+\setbeamercolor{section number projected}{bg=tu_green_full,fg=white}
+\setbeamercolor{subsection number projected}{bg=tu_green_full,fg=white}
+
+% Customize all the bulletpoints
+\setbeamertemplate{items}[square]
+
+% Customize the link colors
+\hypersetup{
+	colorlinks=true,
+	linkcolor=tu_green_full2,
+	urlcolor=tu_green_full2,
+	citecolor=tu_green_full2
+}
+
+\setbeamercolor{block title}{bg=tu_light_green_full2, fg=black}
+\setbeamercolor{block body}{bg=tu_light_green_full3, fg=black}
+
+
+\begin{document}
+	%*************************************************************
+	\begin{frame}
+		\thispagestyle{empty}
+		\titlepage
+	\end{frame}
+	%*************************************************************
+%		
+	\begin{frame}{}
+		\vspace{0.25cm}
+		\centering
+		\only<1-2>{\hfill
+			\uncover<1->{
+		\begin{minipage}[t][5.5cm][b]{0.48\textwidth}
+			\includesvg[width=0.8\linewidth]{images/AtoB.svg}
+			\end{minipage}} \uncover<2>{
+			\begin{minipage}[t][6.5cm][b]{0.38\textwidth}
+			\includegraphics[height=0.8\textheight]{images/maps tour.png}
+		\end{minipage}	}}
+		\only<3>{ \vspace{1.5cm} \Huge Der Weg ist das Ziel
+			
+			\includegraphics[height=0.5\textheight]{images/derwegistdasziel.jpg}
+		} \normalsize
+	\end{frame}
+	
+	\begin{frame}
+		\thispagestyle{empty}
+		\titlepage
+	\end{frame}
+%	\begin{frame}{Agenda}
+%		\centering	
+%		\tableofcontents
+%	\end{frame}
+	
+	\section{Introduction}
+	
+	\begin{frame}{Introduction}
+		\vspace{0.25cm}
+		\Large{Why do we need an app for creating round trips?}\normalsize
+		\only<2>{	
+			\begin{figure}
+				\includegraphics[height=0.6\textheight]{images/IMG-20231124-WA0010-cropped.jpg}
+			\end{figure}}
+		\only<3>{	
+			\begin{figure}
+				\includegraphics[height=0.6\textheight]{images/IMG-20231124-WA0039-cropped.jpg}
+			\end{figure}}
+		\only<4>{	
+			\begin{figure}
+				\includegraphics[height=0.6\textheight]{images/WhatsApp Bild 2023-11-24 um 14.35.53_5752c78a.jpg}
+			\end{figure}}
+	\end{frame}
+	\begin{frame}{Introcuction}
+		\vspace{0.25cm}
+		\Large{Why do we need an app for creating round trips?}\normalsize
+		\begin{columns}
+			\begin{column}{0.48\textwidth}
+				\includegraphics[height=0.3\textheight]{images/IMG-20231124-WA0010-cropped.jpg}
+			\vspace{-1.5cm}
+				\begin{flushright}
+					\includegraphics[height=0.3\textheight]{images/IMG-20231124-WA0039-cropped.jpg}
+				\end{flushright}
+			\vspace{-1cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/WhatsApp Bild 2023-11-24 um 14.35.53_5752c78a.jpg}
+				\end{flushleft}
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\vspace{-2.5cm}
+			\begin{block}{Similarities}
+				\pause
+				\begin{itemize}
+					\only<1-2>{\item Trips from A to B}
+					\only<3->{\item Trips from A to B?}
+					\item<4-> Oftentimes round trips when done as pastime hobbies
+					\item<5-> Want for tours that can be personalized according to subjective criteria
+				\end{itemize}
+			\end{block}	
+			\begin{itemize}	
+			\item<6-> Many existing ideas for shortest paths from A to B
+				\only<7>{\item Not many approaches to calculate round trips}
+				\only<8->{\item Not many approaches to calculate round trips with preferences}
+			\end{itemize}
+		\end{column}
+		\end{columns} ~\\		
+	\end{frame}
+	
+%	\begin{frame}{Einleitung}
+%	\vspace{0.25cm}
+%	Warum eine App zum Erstellen von Rundrips?
+%	\begin{itemize}	
+%		\item<1-> Viele Lösungen für kürzeste Wege von A nach B
+%		\item<2-> Optimieren alltägliche Routen
+%		\item<3-> Joggen und Radfahren in der Freizeit:
+%		\begin{itemize}	
+%		\item<3-> Weitere Bedingungen für gute Strecken nötig
+%		\only<4>{\item Und kaum Ansätze für Rundtrips}
+%		\only<5->{\item Und kaum Ansätze für Rundtrips mit Präferenzen}
+%		\end{itemize}
+%	\end{itemize}
+%	\end{frame}
+
+	\begin{frame}{Introduction}
+		\vspace{0.25cm}
+		\Large{What is an appealing tour?}\\
+		\normalsize
+		\pause
+		\vspace{-0.2cm}
+		\begin{minipage}[t]{0.48\textwidth}
+			\begin{itemize}[<+->]
+				\item Very subjective and based on individual preferences
+				\item Many different potential factors
+				\begin{itemize}[<+->]
+					\item Path type (street, path (in the forest), cycling path etc.)
+					\item Ground (tar, gravel, sand, soil, etc.)
+					\item Slope
+					\item Surroundings (forest, park, residential area, etc.)
+					\item Shape (round, U-turn, complex with many turns, etc.)
+				\end{itemize}
+				\item Influence of these on the tour quality is very subjective 
+		\end{itemize}
+		\end{minipage}
+		\begin{minipage}[t][0.7\textheight][b]{0.48\textwidth}
+			\only<4>{
+				\includegraphics[height=0.5\textheight]{images/IMG_20220921_181918.jpg}
+				\vspace{-4cm}
+				\begin{flushright}
+					\includegraphics[height=0.5\textheight]{images/IMG-20231124-WA0038.jpg}
+				\end{flushright}
+				\vspace{-1cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/DSC00708.JPG}
+				\end{flushleft}}
+			\only<5>{
+				\includegraphics[height=0.3\textheight]{images/DSC08658.JPG}
+				\vspace{-2cm}
+				\begin{flushright}
+					\includegraphics[height=0.5\textheight]{images/IMG_20220921_181918.jpg}
+				\end{flushright}
+				\vspace{-2cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/DSC03182.JPG}
+				\end{flushleft}}
+			\only<6>{
+				\includegraphics[height=0.3\textheight, angle=90]{images/DSC00758.JPG}
+				\vspace{-3cm}
+				\begin{flushright}
+					\includegraphics[height=0.3\textheight]{images/DSC08658.JPG}
+				\end{flushright}
+%				\vspace{0.5cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/DSC03182.JPG}
+				\end{flushleft}}
+			\only<7>{
+				\includegraphics[height=0.3\textheight]{images/DSC03653.JPG}
+				\vspace{-3cm}
+				\begin{flushright}
+					\includegraphics[height=0.3\textheight]{images/IMG_20230208_095155.jpg}
+				\end{flushright}
+				\vspace{0.5cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/IMG_20221008_161529.jpg}
+				\end{flushleft}
+				\vspace{-3cm}
+				\begin{flushright}
+					\includegraphics[height=0.3\textheight]{images/IMG_20220913_171859.jpg}
+				\end{flushright}}
+			\only<8>{
+			\includegraphics[height=0.4\textheight]{images/laufstrecke_rund.jpg}
+			\vspace{-3cm}
+				\begin{flushright}
+					\includegraphics[height=0.4\textheight]{images/laufstecke_uturn.jpg}
+				\end{flushright}
+				%				\vspace{0.5cm}
+				\begin{flushleft}
+					\includegraphics[height=0.3\textheight]{images/laufstrecke_komplex.jpg}
+				\end{flushleft}}
+		\end{minipage}
+ 	\end{frame}
+	
+	\begin{frame}{Tour4Me}
+		\vspace{0.25cm}
+	\centering	
+	\only<1>{\includegraphics[height=0.8\textheight]{images/tour4me_full.png}}
+	\only<2>{\includegraphics[height=0.8\textheight]{images/tour4me_settings.png}}
+	\only<3>{\includegraphics[height=0.8\textheight]{images/tour4me_mincost_example.png}}
+	\only<4>{\includegraphics[height=0.8\textheight]{images/tour4me_route_information.png}}
+	
+	\end{frame}
+	
+	\section{Goal}
+		
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the goals?}\normalsize
+		\pause
+		\begin{itemize}[<+->]
+			\item Basis: Tour4Me
+			\item Add extensions and improve general usability of the app
+		\end{itemize}
+		\uncover<3->{
+			\begin{minipage}[t][3.7cm][b]{0.48\linewidth}
+				\only<4-9>{
+				\begin{block}{ Algorithmic extensions: metaheuristics}	
+					\pause	
+					\only<4-7>{
+					\begin{itemize}[<+->]
+						\item AntColony
+						\item Simulated Annealing
+						\item Combinations
+					\end{itemize}
+					}	
+					\only<8-9>{
+					\begin{itemize}
+						\item AntColony \checkmark
+						\item Simulated Annealing \checkmark
+						\item Combinations \checkmark
+					\end{itemize}
+					}
+				\end{block}}
+			\only<4-9>{\textcolor{white}{a}}
+			\only<10>{
+				\centering
+					\includegraphics[height=0.5\textheight]{images/Concept only side menu cropped.png}}
+				
+			\only<11>{\includegraphics[height=0.5\textheight]{images/GUIIllustration.png}\footnote[frame]{https://github.com/Raruto/leaflet-elevation}}
+			\only<12>{\includegraphics[height=0.5\textheight]{images/GUISliderIlustration.png}\footnote[frame]{https://www.smashingmagazine.com/2017/07/designing-perfect-slider/}}
+			\only<14->{
+				\begin{block}{ Algorithmic extensions: metaheuristics}		
+					\begin{itemize}
+						\item AntColony \checkmark
+						\item Simulated Annealing \checkmark
+						\item Combinations \checkmark
+					\end{itemize}
+			\end{block}
+			\textcolor{white}{a}}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[t][4.15cm][b]{0.48\textwidth}
+				\only<5>{					
+					\includegraphics[height=0.5\textheight]{images/antColonyIllustration.png}
+				}
+				\only<6>{\includegraphics[height=0.5\textheight]{images/SimulatedAnnealingIllustration.png}\footnote[frame]{https://www.researchgate.net/figure/Simulated-Annealing-optimization-of-a-one-dimensional-objective-function\_fig1\_308786233}}
+				\only<7>{\includegraphics[height=0.5\textheight]{images/FriesShake.png}\footnote[frame]{https://www.pexels.com}}
+				\only<9->{
+				\begin{block}{UI extensions: more parameters, different interface}
+					\only<9-12>{
+					\begin{itemize}
+						\item<10-> Using previously mentioned attributes
+						\item<11-> In the implementation and UI
+						\item<12-> Change UI appearance accordingly
+					\end{itemize}}
+				\only<13->{
+					\begin{itemize}
+						\item Using previously mentioned attributes \checkmark
+						\item In the implementation and UI \checkmark
+						\item Change UI appearance accordingly \checkmark
+					\end{itemize}}
+				\end{block}
+			\textcolor{white}{a}\\
+			\textcolor{white}{a}}
+			\end{minipage}}
+		\only<15->{$\Rightarrow$ Generally: change Tour4Me so that it can generate and show a (as good as possible) solution for (almost) every starting point and configuration}
+	\end{frame}
+	
+	
+	\section{Implementation}
+			
+		\begin{frame}{Implementation}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/fullAppAll_hidden.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/fullApp_options_open.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\hfill
+			\begin{minipage}{0.48\textwidth}
+			\includegraphics[height=0.7\textheight]{images/options_algorithm_select_upper.png}
+			\end{minipage}
+			\begin{minipage}{0.38\textwidth}
+				\includegraphics[height=0.7\textheight]{images/options_algorithm_selectlower.png}
+			\end{minipage}
+		\end{frame}
+		
+		\begin{frame}{Implementation}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[width=0.9\textwidth]{images/results/antValuesOverview.png}
+		\end{frame}
+		
+		
+		\begin{frame}{Implementation - Ant}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/ant.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - Greedy}
+			\vspace{0.25cm}
+			\Large{What has been done?}
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/greedyGraph.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - Ant Greedy}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/antGreedy.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - MinCost}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/mincost.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - Ant MinCost}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/antMincost.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - SA Greedy}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/SAgreedy.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - SA MinCost}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/SAminCost.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - SA Ant}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/SAAnt2.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - SA Empty}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/SAempty2.png}
+		\end{frame}
+		
+		\begin{frame}{Implementation - SA FullyRandom}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\vspace{0.25cm}
+			
+			\centering
+			\includegraphics[height=0.7\textheight]{images/results/SAfullyRandomNice.png}
+		\end{frame}
+
+		
+		\begin{frame}{Implementation}
+			\vspace{0.25cm}
+			\Large{What has been done?}\normalsize
+			\only<1->{
+			\begin{block}{Database}
+			\begin{itemize}
+				\item<+-> DB import script for other cities than Dortmund
+				\item<+-> Adding elevation data
+				\item<+-> Adding surroundings data
+				\item<+-> Building a spatial DB $\rightarrow$ getting subgraphs is easier
+			\end{itemize}
+		\end{block}}
+	\only<6->{
+			\begin{block}{Parameter testing visualization}
+			\begin{itemize}
+				\item<+-> Graph visualization (all edges) $\rightarrow$ removing dead ends, checking undesirable path removal
+				\item<+-> Script for visualizing different results of parameter tests
+			\end{itemize}
+		\end{block}}
+		\end{frame}
+	
+	
+	\section{Evaluation}
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesNumberRunsQualityAvgWithoutFittedLine.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesTempFctionAvg.svg}
+	\end{frame}
+	
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Covered Area
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesCoveredAreaMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Elevation
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesElevationMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Edge Profit
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesProfitMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Covered Area
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsCoveredAreaMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Elevation
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsElevationMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Edge Profit
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsProfitMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item All Algorithms (Median)
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/All/AllCasesTimeQualityMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item MinCost \& Greedy (Median)
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/All/AllCasesGreedyMinCostTimeQualityMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Ant Variations
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/All/AllCasesAntTimeQualityMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item SA Variations
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/All/AllCasesSATimeQualityMed.svg}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item All Algorithms (Average)
+		\end{itemize}
+		
+		\centering
+		\includesvg[width=0.9\textwidth]{images/plots/All/AllCasesTimeQualityAvg.svg}
+	\end{frame}
+	
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Example algorithm
+		\end{itemize}
+		
+		\centering
+		\includegraphics[height=0.7\textheight]{images/results/SAantHigh(23)Graph.png}
+	\end{frame}
+	
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Example algorithm
+		\end{itemize}
+		 
+		\centering
+		\includegraphics[height=0.7\textheight]{images/results/SAantHigher(53)Graph.png}
+	\end{frame}
+	
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\Large{What are the most interesting results?}\normalsize
+		\vspace{0.25cm}
+		\begin{itemize}
+			\item Example algorithm
+		\end{itemize}
+		
+		\centering
+		\includegraphics[width=0.9\textwidth]{images/results/SAantLowestAndSecondLowestGraph.png}
+	\end{frame}
+	
+	\begin{frame}
+		\vspace{0.25cm}
+		\only<1->{\Large{What's more?}}\normalsize
+		\only<1->{%
+			\uncover<1->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}\centering
+					\includesvg[width=0.4\textwidth]{images/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<2->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesAlphaVariedBeta15Med.svg}
+				\end{minipage}%
+			}%
+			\uncover<3->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesBetaVariedAlpha08Med.svg}
+				\end{minipage}%
+			}%
+			\uncover<4->{ \vspace{-0.5cm}
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesNumberRunsQualityAvgWithoutFittedLine.svg}
+				\end{minipage}%
+			}%
+			\uncover<5->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesCoveredAreaOnlyAllMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<6->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesTempFctionTimeMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<7->{ \vspace{-0.5cm}
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesCoveredAreaQualityMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<8->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesElevationQualityMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<9->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesProfitQualityMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<10->{ \vspace{-0.5cm}
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsCoveredAreaQualityMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<11->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsElevationQualityMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<12->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsProfitQualityMed.svg}
+				\end{minipage}%
+			}%
+		}%
+		\only<13->{\vspace{-6cm}
+			\uncover<13->{\hfill
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[angle=35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesBetaVariedMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<14->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[angle=35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesAlphaVariedMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<15->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}\centering
+					\includesvg[angle=35,width=0.4\textwidth]{images/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<16->{ \vspace{-0.5cm}\hfill
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesCoveredAreaQualityAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<17->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesElevationQualityAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<18->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesProfitQualityAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<19->{\vspace{-0.5cm}\hfill
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=35,width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsCoveredAreaQualityAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<20->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=35,width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsElevationQualityAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<21->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=35,width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsProfitAvg.svg}
+				\end{minipage}%
+			}%
+		}%
+		\only<22->{\vspace{-7cm}
+			\uncover<22->{\hfill
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[angle=-35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesAlphaVariedBeta45Med.svg}
+				\end{minipage}%
+			}%
+			\uncover<23->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[angle=-35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesBetaVariedAlpha30Med.svg}
+				\end{minipage}%
+			}%
+			\uncover<24->{%
+				\begin{minipage}[t][1.5cm][b]{0.3\textwidth}
+					\includesvg[angle=-35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesCoveredAreaOnlyQualityMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<25->{\vspace{-0.5cm}\hfill
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=-35,width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesNumAntsMed.svg}
+				\end{minipage}%
+			}%
+			\uncover<26->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}\centering
+					\includesvg[angle=-35,width=0.4\textwidth]{images/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceAvgTopDown.svg}
+				\end{minipage}%
+			}%
+			\uncover<27->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}\centering
+					\includesvg[angle=-35,width=0.4\textwidth]{images/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<28->{\vspace{-0.5cm}\hfill
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=-35,width=0.9\textwidth]{images/plots/SACasesNumberRunsQualityAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<29->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=-35,width=0.9\textwidth]{images/plots/SAFinal/SACasesTempFctionZoomOnGreenAvg.svg}
+				\end{minipage}%
+			}%
+			\uncover<30->{%
+				\begin{minipage}[t][2cm][b]{0.3\textwidth}
+					\includesvg[angle=-35,width=0.9\textwidth]{images/plots/SAFinal/GenerateTestingValuesSARepititionsMed.svg}
+				\end{minipage}%
+			}%
+		}
+	\end{frame}
+
+
+
+\section{Future Work}
+\begin{frame}
+	\vspace{0.25cm}
+	\only<1->{\Large{What to do next?}}\normalsize
+	 \only<1-8>{
+		\begin{block}{Test cases}
+			\begin{itemize}
+				\item<1-8> With different starting configurations
+				\item<2-8> For more parameters
+				\item<3-8> More test runs per test case
+				\item<4-8> Combinations of more changed parameters
+			\end{itemize}
+		\end{block}
+	\only<5-8>{
+		\begin{block}{More parameters}
+			\begin{itemize}
+				\item<5-8> Steepness split into ascending and descending
+				\item<6-8> Directed tours
+				\item<7-8> More details for elevation configuration (limit on continuous ascend/descend, maximum elevation difference over selected distance)
+				\item<8> Height profile visualization
+			\end{itemize}
+		\end{block}
+	}}
+	
+	\only<9-16>{
+		\begin{block}{Elevation and Surroundings data}
+			\begin{itemize}
+				\item<9-16> More accurate elevation information (NASA, other sources)
+				\item<10-16> Finding a good version without throughput limits \& easy to use
+				\item<11-16> Gather surroundings information from OSM colors
+				\item<12-16> Where are these values stored? How to access \& use them?
+			\end{itemize}
+		\end{block}
+	\only<13-16>{
+		\begin{block}{Adding metaheuristics}
+			\begin{itemize}
+				\item<13-16> Genetic algorithms
+				\item<14-16> Other approaches
+				\item<15-16> Combinations
+				\item<16> More changes in implemented algorithms needed for combinations
+			\end{itemize}
+		\end{block}
+	}}
+	
+	\only<17->{
+		\begin{block}{Existing tour data}
+			\begin{itemize}
+				\item<17-> From Komoot/ cycle ways/ hiking trails
+				\item<18-> Offer as standalone tours
+				\item<19-> Use tours as basis and improve with implemented algorithms
+			\end{itemize}
+		\end{block}
+	\only<20->{
+		\begin{block}{Improved run time}
+			\begin{itemize}
+				\item<20-> Creating graph from DB currently sequential \& slow
+				\item<21-> Improve the creation, use different database
+				\item<22-> Optimize run times of the metaheuristics
+				\item<23-> Try other / better data structures, try more parallelization
+			\end{itemize}
+		\end{block}
+	}}
+
+\end{frame}
+
+\begin{frame}
+	\vspace{3.5cm}
+	\centering
+	\Huge
+	Thank you for your attention!
+\end{frame}
+%	
+%	\section{Future Work}
+%	\begin{frame}
+%		\vspace{0.25cm}
+%		Test cases
+%		
+%		\vspace{0.25cm}
+%		\centering
+%%		\only<1>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesBetaVariedMed.svg}}
+%%		\only<2>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesAlphaVariedMed.svg}}
+%%		\only<3>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceMed.svg}}
+%%		\only<4>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesAlphaAndBetaVariedSurfaceMedTopDown.svg}}
+%%		\only<5>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesBetaVariedAlpha08Med.svg}}
+%%		\only<6>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesAlphaVariedBeta15Med.svg}}
+%%		\only<7>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesCoveredAreaMed.svg}}
+%		\only<8>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesCoveredAreaQualityMed.svg}}
+%%		\only<9>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesElevationMed.svg}}
+%		\only<10>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesElevationQualityMed.svg}}
+%%		\only<11>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesProfitMed.svg}}
+%		\only<12>{\includesvg[width=0.9\textwidth]{images/plots/AntFinal/antColonyCasesProfitQualityMed.svg}}
+%%		\only<13>{\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesTempFctionMed.svg}}
+%%		\only<14>{\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsCoveredAreaMed.svg}}
+%		\only<15>{\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsCoveredAreaQualityMed.svg}}
+%%		\only<16>{\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsElevationMed.svg}}
+%		\only<17>{\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsElevationQualityMed.svg}}
+%%		\only<18>{\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsProfitMed.svg}}
+%		\only<19>{\includesvg[width=0.9\textwidth]{images/plots/SAFinal/SACasesNumberRunsProfitQualityMed.svg}}
+%		\only<11->{
+%			\begin{block}{Database}
+%				\pause	
+%				\only<11->{
+%					\pause
+%					\begin{itemize}
+%						\item<12-> DB import script for other cities than Dortmund
+%						\item<13->  Adding elevation data
+%						\item<14->  Adding surroundings data
+%						\item<15->  Building a spatial DB $\rightarrow$ getting subgraphs is easier
+%				\end{itemize}}
+%		\end{block}}
+%		\only<16->{
+%			\begin{block}{Parameter testing visualization}
+%				\pause	
+%				\only<16->{
+%					\pause
+%					\begin{itemize}
+%						\item<17-> Graph visualization (all edges) $\rightarrow$ removing dead ends, checking undesirable path removal
+%						\item<18-> Script for visualizing different result paths with varying parameters (so far only for a few ant colony parameters)
+%				\end{itemize}}
+%		\end{block}}
+%	\end{frame}
+	
+\end{document}
+
